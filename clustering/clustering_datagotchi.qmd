@@ -22,8 +22,29 @@ filters:
 
 ## PCA et sélection des variables
 
-Ici, tu peux ajouter du texte ou du code R pour décrire ta PCA et la sélection des variables.
+Pour déterminer quelles variables sont les moins pertinentes à conserver à partir des résultats de l'analyse en composantes principales (PCA), nous pouvons examiner leurs coefficients dans les premiers axes principaux (PC1 à PC4). Les variables ayant des coefficients proches de zéro pour ces axes peuvent être considérées comme faiblement contributives à la variance des données globales. En général, on garde les variables ayant des coefficients élevés (en valeur absolue) sur au moins un des premiers axes, car cela signifie qu'elles expliquent une part significative de la variance.
+
+```{r}
+library(kableExtra)
+
+# Charger et afficher le tableau avec du style
+tableau %>%
+  kbl(caption = "Tableau des variables conservées pour expliquer 80% de la variance") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+
+
+
 
 ## Méthode du coude
 
 Décris la méthode du coude ici et insère des visualisations si nécessaire.
+
+## Autres méthodes à hub
+
+Décris la méthode 
+
+## Nombre de cluster
+
+
+
+
