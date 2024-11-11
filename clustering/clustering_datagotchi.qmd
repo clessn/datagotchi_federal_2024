@@ -1,0 +1,29 @@
+---
+title: "Cluster Datagotchi"
+subtitle: "Données du pilot1-2021"
+lang: fr
+format: 
+  pdf:
+    documentclass: article
+    toc: true
+    number-sections: true
+    toc-depth: 2
+    number-depth: 3
+    mainfont: "DejaVu Serif"
+    sansfont: "DejaVu Sans"
+    monofont: "DejaVu Sans Mono"
+    fontsize: 11pt
+    geometry: [left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]
+filters:
+  - highlight
+---
+
+# Définir le nombre de clusters
+
+## PCA et sélection des variables
+
+Ici, tu peux ajouter du texte ou du code R pour décrire ta PCA et la sélection des variables.
+
+## Méthode du coude
+
+Décris la méthode du coude ici et insère des visualisations si nécessaire.
