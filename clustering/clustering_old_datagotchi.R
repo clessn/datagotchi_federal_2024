@@ -124,7 +124,7 @@ plot(2:15, sil_sum, type = "b")
 
 ### 7, 8 or 10 clusters
 
-for (i in c(3, 4, 5, 6, 7, 8, 9)) {
+for (i in c(3, 4, 5, 6, 7, 8, 9, 10)) {
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_num_scaled, centers = i, nstart = 25)
@@ -138,7 +138,7 @@ table(data_num_reduit$cluster_5)
 table(data_num_reduit$cluster_6)
 table(data_num_reduit$cluster_7)
 table(data_num_reduit$cluster_9)
-
+table(data_num_reduit$cluster_10)
 
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
 
@@ -167,9 +167,100 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   facet_wrap(~n_clusters) +
   stat_ellipse()
 
+### 10 clusters me semble être le parfait équilibre où il y a une distinction claire
+#### entre les clusters et où chaque cluster couvre un espace significatif
 
+## Checker rapidement la % de variance expliquée par les 2 dimensions
+km_res <- kmeans(data_num_scaled, centers = 8, nstart = 25)
+fviz_cluster(
+  km_res, data = data_num_scaled,
+  geom = "point",
+  ellipse.type = "convex", 
+  ggtheme = theme_bw()
+  )
 
+# Description des clusters -----------------------------------------------
 
+#### Function
+describe_clusters <- function(data, variables_to_describe, cluster_var){
+  data$cluster_var <- data[[cluster_var]]
+  ### variables to dummy
+  non_numeric_vars <- variables_to_describe[!sapply(data[,variables_to_describe], is.numeric)]
+  if (!purrr::is_empty(non_numeric_vars)) {
+    df_dummy_only <- data |> 
+      select(all_of(non_numeric_vars)) |> 
+      fastDummies::dummy_columns(
+        select_columns = non_numeric_vars,
+        omit_colname_prefix = TRUE,
+        remove_selected_columns = TRUE
+      ) |> 
+      janitor::clean_names()
+    variables_to_describe <- c(variables_to_describe[!variables_to_describe %in% non_numeric_vars], names(df_dummy_only))
+    df_description <- cbind(data, df_dummy_only) |> 
+      tidyr::pivot_longer(
+        cols = all_of(variables_to_describe),
+        names_to = "variable",
+        values_to = "value"
+      )
+  } else {
+      df_description <- data |> 
+        tidyr::pivot_longer(
+          cols = all_of(variables_to_describe),
+          names_to = "variable",
+          values_to = "value"
+        )
+  }
+  df_mean_all <- df_description |> 
+    group_by(variable) |> 
+    summarise(
+      mean_value = mean(value),
+      sd_value = sd(value)
+    )
+  df_mean_by_cluster <- df_description |> 
+    group_by(cluster_var, variable) |> 
+    summarise(mean_cluster = mean(value)) %>% 
+    left_join(
+      ., df_mean_all, by = "variable"
+    ) |> 
+    mutate(z_score = (mean_cluster - mean_value) / sd_value)
+  return(df_mean_by_cluster)
+}
+
+variables_to_describe <- c(
+"immigrant",
+"act_transport_PublicTransportation",
+"act_transport_Car",
+"ses_dwelling_house",
+"age34m",
+"age55p",
+"langFr",
+"langEn",
+"ses_languageOther",
+"female",
+"incomeHigh",
+"act_VisitsMuseumsGaleries",
+"act_Fishing",
+"act_Hunting",
+"act_MotorizedOutdoorActivities",
+"act_Volunteering",
+"act_Gym",
+"cons_coffee_McDo",
+"cons_coffee_place_noCoffee",
+"cons_coffee_TimH",
+"cons_Meat",
+"cons_Vege",
+"cons_Vegan",
+"cons_regBeers",
+"cons_redWineDrink",
+"cons_noDrink",
+"educHS" 
+)
+
+describe_clusters(
+  data_num_reduit,
+  variables_to_describe = variables_to_describe,
+  cluster_var = "cluster_5"
+) |> print(n = 271) 
 
 
 
