@@ -1,7 +1,7 @@
 # attitudes
 
 
-## issue_arboriginals ----------------------------------------------------
+## issue_aboriginals ----------------------------------------------------
 
 
 
@@ -87,4 +87,20 @@
 
 
 ## issue_mi --------------------------------------------------------------
+
+
+
+
+
+# issue_nationalanthem ----------------------------------------------------
+
+table(data_raw$issue_nationalanthem)
+data_clean$issue_nationalanthem_bilingual <- NA
+data_clean$issue_nationalanthem_bilingual[data_raw$issue_nationalanthem == 1] <- 0
+data_clean$issue_nationalanthem_bilingual[data_raw$issue_nationalanthem == 2] <- 0.33
+data_clean$issue_nationalanthem_bilingual[data_raw$issue_nationalanthem == 3] <- 0.66
+data_clean$issue_nationalanthem_bilingual[data_raw$issue_nationalanthem == 4] <- 1
+table(data_clean$issue_nationalanthem_bilingual)
+
+
 

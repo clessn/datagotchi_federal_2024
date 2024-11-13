@@ -5,7 +5,7 @@ library(dplyr)
 
 ## load raw data here
 
-data_raw <- haven::read_sav("_SharedFolder_datagotchi-santé/data/raw/Datagotchi-Santé_Pilote_May 13, 2024_08.59.sav")
+data_raw <- haven::read_sav("code/cleaning/datagotchi_federal_pilot_November+5,+2024_14.42.sav")
 
 # Clean variables ---------------------------------------------------------
 
