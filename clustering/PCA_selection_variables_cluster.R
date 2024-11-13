@@ -10,11 +10,72 @@ library(ggcorrplot)
 df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilot2021_merged_clustering.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
 
+# Étape 1 : Définir les groupes de variables --------------------------------
+groupes_variables <- list(
+  transport = c("act_transport_Car", "act_transport_SUV", "act_transport_Moto", 
+                "act_transport_Walk", "act_transport_Bicycle", 
+                "act_transport_PublicTransportation", "act_transport_Taxi"),
+  demographie = c("age34m", "age3554", "age55p", "langFr", "langEn", 
+                  "ses_languageOther", "male", "female", "ses_genderOther", 
+                  "incomeLow", "incomeHigh", "immigrant"),
+  orientation = c("ses_hetero", "ses_gai", "ses_bisex"),
+  activites = c("act_VisitsMuseumsGaleries", "act_Fishing", "act_Hunting", 
+                "act_MotorizedOutdoorActivities", "act_Volunteering", 
+                "act_Walk", "act_Gym", "act_TeamSport", "act_Run", 
+                "act_Yoga", "act_None", "act_Other"),
+  apparence = c("app_swag_Formel", "app_swag_Classique", "app_swag_Casual", 
+                "app_swag_Sport", "app_swag_Chic", "app_swag_VintageHippBoheme", 
+                "app_swag_Other", "app_swag_Rock", "app_noTattoo"),
+  cons_brand = c("cons_brand_MaR", "cons_brand_BInd", "cons_brand_OnlineOnly", 
+                 "cons_brand_ChainesB", "cons_brand_GSurf", "cons_brand_Frip", 
+                 "cons_brand_Other"),
+  cons_coffee = c("cons_coffee_place_noCoffee", "cons_coffee_TimH", "cons_coffee_Other", 
+                  "cons_coffee_Starbucks", "cons_coffee_SC", "cons_coffee_McDo", 
+                  "cons_coffee_place_ind"),
+  cons_food = c("cons_Meat", "cons_Vege", "cons_Vegan"),
+  habitat = c("ses_dwelling_app", "ses_dwelling_loft", "ses_dwelling_condo", 
+              "ses_dwelling_tour", "ses_dwelling_detachedHouse", 
+              "ses_dwelling_semiDetached", 
+              "ses_dwelling_coop", "ses_dwelling_HLM", "ses_dwelling_mobile", 
+              "ses_dwelling_other"),
+  cons_alcool = c("cons_noDrink", "cons_redWineDrink", "cons_whiteWineDrink", 
+                  "cons_roseDrink", "cons_sparklingDrink", "cons_regBeers", 
+                  "cons_microBeers", "cons_spiritDrink", "cons_cocktailsDrink"),
+  cons_tabac = c("cons_Smoke", "cons_SmokeStopping", "cons_SmokeStopped", 
+                 "cons_SmokeNever", "cons_VapeNation"),
+  education = c("educBHS", "educUniv")
+)
+
+# Étape 2 : Sélectionner toutes les variables d'intérêt
+data_filtered <- df_pilot_2021_merged |> 
+  select(-c(X, source)) |> 
+  drop_na()
+
+# Étape 3 : PCA initiale ---------------------------------------------------
+pca_result <- prcomp(data_filtered, scale. = TRUE)
+summary(pca_result)
+
+pca_result$rotation[,1:4]
+
+fviz_eig(pca_result, addlabels = TRUE)
+
+## Interpret dimensions ---------------------------------------------------
+fviz_pca_var(
+  pca_result,
+  col.var = "contrib", # Color by contributions to the PC
+  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+  axes = c(1, 2),
+  repel = TRUE
+  )
+
+
+
+
 # PCA -------------------------------------------------------------
 
 ## selection des variables et drop_na (essaie/erreur avec pca)
 data_num <- df_pilot_2021_merged |> 
-  select() |> 
+ # select() |> 
    drop_na()
 
 ## corr_matrix
