@@ -1,0 +1,57 @@
+---
+title: "Implied and anonymous consent form"
+author: "The Datagotchi pilot survey : The 2022 Quebec general election"
+date: '2022-07-04'
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Information on the questionnaire
+
+The team of the Leadership Chair in the Teaching of Digital Social Sciences (CLESSN) of Université Laval is looking for participants aged 18 years and older living in Canada to complete a survey on socio-demographic information, lifestyle and consumption habits, preferences, personality traits, appearance, attitudes, values, allegiances and political beliefs to make predictions about citizens' political behaviour.
+
+The Datagotchi project is led by Yannick Dufresne, professors in the Department of Political Science at Université Laval; Simon Coulombe, professor in the Department of Industrial Relations at Université Laval; Sébastien Tremblay, professor in the School of Psychology at Université Laval ; Dietlind Stolle, professor in the Department of Political Science at McGill University; Corentin Vande Kerckhove, assistant professor at the Catholic University of Louvain; Mickael Temporão, associate professor in Computational Social Science at Sciences Po Bordeaux and Émilie Dionne, researcher at VITAM - Centre de recherche en santé durable. The project also counts on the collaboration of Catherine Ouellet, doctoral student at the Department of Political Science of the University of Toronto and Youri Rivest, director at Synopsis.  <!-- and Youri Rivest, director at Synopsis. J'ai enlevé quelques noms, mais peut-être me confirmer qui on garde -->
+
+Before agreeing to participate in this project, please take the time to read the following information.
+
+## Project description and objectives
+
+Your participation in the Datagotchi pilot survey : The 2022 Quebec general election will provide a scientific measure of the factors that influence (or not) political behavior in the development of the Datagotchi platform. Datagotchi will allow users to get a prediction of their voting choice and explore the effect of different characteristics on the prediction made by the application (for example, visualizing how being older or younger would affect your voting choice according to statistical models).
+
+## Your participation
+
+Your participation consists of answering approximately 121 questions and the online questionnaire takes approximately 25 minutes to complete. Although the answers to each question are important to the research, you are free to choose not to answer and thus end your participation at any time by closing your browser page.
+
+## Anonymity and data conservation
+
+The information collected through Datagotchi will only be made available to researchers in aggregate, anonymized, and non-attributable form. The risk of re-identification of a participant is present, but minimal. The data collected is used only for academic research purposes and will never be sold, assigned or transferred to third parties for other purposes. 
+
+# Certificate of consent
+
+Completion of this questionnaire will be considered an implied expression of your consent to participate in the project. 
+
+## Additional information
+
+If you have any questions about the research, the implications of your participation, or to withdraw from the project, please contact info@clessn.com.
+
+## Complaints or criticisms
+
+If you have any complaints or criticisms regarding your participation in this research, you may contact, in complete confidentiality, the Office of the Ombudsman of Laval University at the following coordinates
+
+Pavillon Alphonse-Desjardins, suite 3320 2325, rue de l'Université  
+Université Laval  
+Quebec City, Quebec G1V 0A6  
+Information - Secretariat: (418) 656-3081 Toll free: 1-866-323-2271  
+E-mail: info@ombudsman.ulaval.ca
+
+## Acknowledgements
+
+Your collaboration is invaluable in enabling us to conduct this study. Therefore, we would like to thank you for your time and participation.
+
+## Ethical approval
+
+This project has been approved by the Research Ethics Committee of Université Laval: Approval number: 2022-181 / 27-06-2022.
