@@ -5,11 +5,7 @@ library(dplyr)
 
 ## load raw data here
 
-<<<<<<< HEAD
-data_raw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/datagotchi_federal_pilot_November+5,+2024_14.42.sav")
-=======
 data_raw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/datagotchi_federal_pilot_November+12,+2024_20.55.sav")
->>>>>>> ae1f9c1f4148d3ba4a6a380194fe2b34e15b4524
 
 # Clean variables ---------------------------------------------------------
 
