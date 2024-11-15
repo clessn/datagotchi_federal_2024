@@ -413,22 +413,178 @@ table(data_clean$lifestyle_unmotorized_activities_bin)
 
 ## activity_10 -----------------------------------------------------------
 
+table(data_raw$activity_10) 
+data_clean$lifestyle_volunteering_freq <- NA
+data_raw$activity_10 <- as.numeric(data_raw$activity_10)
+data_clean$lifestyle_volunteering_freq[data_raw$activity_10 == 1] <- 1
+data_clean$lifestyle_volunteering_freq[data_raw$activity_10 == 2] <- 2
+data_clean$lifestyle_volunteering_freq[data_raw$activity_10 == 3] <- 3
+data_clean$lifestyle_volunteering_freq[data_raw$activity_10 == 4] <- 4
+data_clean$lifestyle_volunteering_freq[data_raw$activity_10 == 5] <- 5
+table(data_clean$lifestyle_volunteering_freq)
 
+## factor
+
+table(data_clean$lifestyle_volunteering_freq)
+data_clean$lifestyle_volunteering_freq_factor <- NA
+data_clean$lifestyle_volunteering_freq_factor[data_raw$activity_10 == 1] <- "never"
+data_clean$lifestyle_volunteering_freq_factor[data_raw$activity_10 == 2] <- "almost_never"
+data_clean$lifestyle_volunteering_freq_factor[data_raw$activity_10 == 3] <- "sometimes"
+data_clean$lifestyle_volunteering_freq_factor[data_raw$activity_10 == 4] <- "often"
+data_clean$lifestyle_volunteering_freq_factor[data_raw$activity_10 == 5] <- "very_often"
+data_clean$lifestyle_volunteering_freq_factor <- factor(data_clean$lifestyle_volunteering_freq_factor,
+                                                                  levels = c("never",
+                                                                             "almost_never",
+                                                                             "sometimes",
+                                                                             "often",
+                                                                             "very_often"),
+                                                                  ordered = TRUE)
+table(data_clean$lifestyle_volunteering_freq_factor)
+
+## numeric
+
+data_clean$lifestyle_volunteering_freq_numeric <- NA 
+data_clean$lifestyle_volunteering_freq_numeric <- (data_raw$activity_10 - 1) / 4
+table(data_clean$lifestyle_volunteering_freq_numeric)
+
+## bin
+
+data_clean$lifestyle_volunteering_bin <- NA
+data_clean$lifestyle_volunteering_bin[data_raw$activity_10  == 1] <- 0
+data_clean$lifestyle_volunteering_bin[data_raw$activity_10  %in% c(2, 3, 4, 5)] <- 1
+table(data_clean$lifestyle_volunteering_bin)
 
 
 ## activity_11 -----------------------------------------------------------
 
+table(data_raw$activity_11) 
+data_clean$lifestyle_art_activities_freq <- NA
+data_raw$activity_11 <- as.numeric(data_raw$activity_11)
+data_clean$lifestyle_art_activities_freq[data_raw$activity_11 == 1] <- 1
+data_clean$lifestyle_art_activities_freq[data_raw$activity_11 == 2] <- 2
+data_clean$lifestyle_art_activities_freq[data_raw$activity_11 == 3] <- 3
+data_clean$lifestyle_art_activities_freq[data_raw$activity_11 == 4] <- 4
+data_clean$lifestyle_art_activities_freq[data_raw$activity_11 == 5] <- 5
+table(data_clean$lifestyle_art_activities_freq)
 
+## factor
+
+table(data_clean$lifestyle_art_activities_freq)
+data_clean$lifestyle_art_activities_freq_factor <- NA
+data_clean$lifestyle_art_activities_freq_factor[data_raw$activity_11 == 1] <- "never"
+data_clean$lifestyle_art_activities_freq_factor[data_raw$activity_11 == 2] <- "almost_never"
+data_clean$lifestyle_art_activities_freq_factor[data_raw$activity_11 == 3] <- "sometimes"
+data_clean$lifestyle_art_activities_freq_factor[data_raw$activity_11 == 4] <- "often"
+data_clean$lifestyle_art_activities_freq_factor[data_raw$activity_11 == 5] <- "very_often"
+data_clean$lifestyle_art_activities_freq_factor <- factor(data_clean$lifestyle_art_activities_freq_factor,
+                                                        levels = c("never",
+                                                                   "almost_never",
+                                                                   "sometimes",
+                                                                   "often",
+                                                                   "very_often"),
+                                                        ordered = TRUE)
+table(data_clean$lifestyle_art_activities_freq_factor)
+
+## numeric
+
+data_clean$lifestyle_art_activities_freq_numeric <- NA 
+data_clean$lifestyle_art_activities_freq_numeric <- (data_raw$activity_11 - 1) / 4
+table(data_clean$lifestyle_art_activities_freq_numeric)
+
+## bin
+
+data_clean$lifestyle_art_activities_bin <- NA
+data_clean$lifestyle_art_activities_bin[data_raw$activity_11  == 1] <- 0
+data_clean$lifestyle_art_activities_bin[data_raw$activity_11  %in% c(2, 3, 4, 5)] <- 1
+table(data_clean$lifestyle_art_activities_bin)
 
 
 ## activity_12 -----------------------------------------------------------
 
+table(data_raw$activity_12) 
+data_clean$lifestyle_traveling_freq <- NA
+data_raw$activity_12 <- as.numeric(data_raw$activity_12)
+data_clean$lifestyle_traveling_freq[data_raw$activity_12 == 1] <- 1
+data_clean$lifestyle_traveling_freq[data_raw$activity_12 == 2] <- 2
+data_clean$lifestyle_traveling_freq[data_raw$activity_12 == 3] <- 3
+data_clean$lifestyle_traveling_freq[data_raw$activity_12 == 4] <- 4
+data_clean$lifestyle_traveling_freq[data_raw$activity_12 == 5] <- 5
+table(data_clean$lifestyle_traveling_freq)
 
+## factor
+
+table(data_clean$lifestyle_traveling_freq)
+data_clean$lifestyle_traveling_freq_factor <- NA
+data_clean$lifestyle_traveling_freq_factor[data_raw$activity_12 == 1] <- "never"
+data_clean$lifestyle_traveling_freq_factor[data_raw$activity_12 == 2] <- "almost_never"
+data_clean$lifestyle_traveling_freq_factor[data_raw$activity_12 == 3] <- "sometimes"
+data_clean$lifestyle_traveling_freq_factor[data_raw$activity_12 == 4] <- "often"
+data_clean$lifestyle_traveling_freq_factor[data_raw$activity_12 == 5] <- "very_often"
+data_clean$lifestyle_traveling_freq_factor <- factor(data_clean$lifestyle_traveling_freq_factor,
+                                                          levels = c("never",
+                                                                     "almost_never",
+                                                                     "sometimes",
+                                                                     "often",
+                                                                     "very_often"),
+                                                          ordered = TRUE)
+table(data_clean$lifestyle_traveling_freq_factor)
+
+## numeric
+
+data_clean$lifestyle_traveling_freq_numeric <- NA 
+data_clean$lifestyle_traveling_freq_numeric <- (data_raw$activity_12 - 1) / 4
+table(data_clean$lifestyle_traveling_freq_numeric)
+
+## bin
+
+data_clean$lifestyle_traveling_bin <- NA
+data_clean$lifestyle_traveling_bin[data_raw$activity_12  == 1] <- 0
+data_clean$lifestyle_traveling_bin[data_raw$activity_12  %in% c(2, 3, 4, 5)] <- 1
+table(data_clean$lifestyle_traveling_bin)
 
 
 ## activity_13 -----------------------------------------------------------
 
+table(data_raw$activity_13) 
+data_clean$lifestyle_gaming_freq <- NA
+data_raw$activity_13 <- as.numeric(data_raw$activity_13)
+data_clean$lifestyle_gaming_freq[data_raw$activity_13 == 1] <- 1
+data_clean$lifestyle_gaming_freq[data_raw$activity_13 == 2] <- 2
+data_clean$lifestyle_gaming_freq[data_raw$activity_13 == 3] <- 3
+data_clean$lifestyle_gaming_freq[data_raw$activity_13 == 4] <- 4
+data_clean$lifestyle_gaming_freq[data_raw$activity_13 == 5] <- 5
+table(data_clean$lifestyle_gaming_freq)
 
+## factor
+
+table(data_clean$lifestyle_gaming_freq)
+data_clean$lifestyle_gaming_freq_factor <- NA
+data_clean$lifestyle_gaming_freq_factor[data_raw$activity_13 == 1] <- "never"
+data_clean$lifestyle_gaming_freq_factor[data_raw$activity_13 == 2] <- "almost_never"
+data_clean$lifestyle_gaming_freq_factor[data_raw$activity_13 == 3] <- "sometimes"
+data_clean$lifestyle_gaming_freq_factor[data_raw$activity_13 == 4] <- "often"
+data_clean$lifestyle_gaming_freq_factor[data_raw$activity_13 == 5] <- "very_often"
+data_clean$lifestyle_gaming_freq_factor <- factor(data_clean$lifestyle_gaming_freq_factor,
+                                                     levels = c("never",
+                                                                "almost_never",
+                                                                "sometimes",
+                                                                "often",
+                                                                "very_often"),
+                                                     ordered = TRUE)
+table(data_clean$lifestyle_gaming_freq_factor)
+
+## numeric
+
+data_clean$lifestyle_gaming_freq_numeric <- NA 
+data_clean$lifestyle_gaming_freq_numeric <- (data_raw$activity_13 - 1) / 4
+table(data_clean$lifestyle_gaming_freq_numeric)
+
+## bin
+
+data_clean$lifestyle_gaming_bin <- NA
+data_clean$lifestyle_gaming_bin[data_raw$activity_13  == 1] <- 0
+data_clean$lifestyle_gaming_bin[data_raw$activity_13  %in% c(2, 3, 4, 5)] <- 1
+table(data_clean$lifestyle_gaming_bin)
 
 
 ## activity_14 -----------------------------------------------------------
@@ -438,7 +594,7 @@ table(data_clean$lifestyle_unmotorized_activities_bin)
 
 ## type_transport --------------------------------------------------------
 
-
+lifestyle_transport_occ
 
 
 ## choice_transport ------------------------------------------------------
