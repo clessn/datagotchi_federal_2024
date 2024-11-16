@@ -746,19 +746,83 @@ lifestyle_transport_occ
 
 ## clothing_style --------------------------------------------------------
 
+attributes(data_raw$clothing_style)
+table(data_raw$clothing_style)
 
+## disaggregated
+data_clean$lifestyle_clothing_style <- NA
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 1] <- "formal"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 2] <- "classic"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 3] <- "casual"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 4] <- "sport"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 5] <- "elegant"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 6] <- "hippie"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 7] <- "punk"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 8] <- "rock"
+data_clean$lifestyle_clothing_style[data_raw$clothing_style == 9] <- "other"
+data_clean$lifestyle_clothing_style <- factor(data_clean$lifestyle_clothing_style)
+table(data_clean$lifestyle_clothing_style)
 
+## grouped
+data_clean$lifestyle_clothing_style_grouped <- NA
+data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(1, 5)] <- "formal"
+data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(2, 3, 4)] <- "easygoing"
+data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(6, 7, 8)] <- "edgy"
+data_clean$lifestyle_clothing_style_grouped <- factor(data_clean$lifestyle_clothing_style_grouped)
+table(data_clean$lifestyle_clothing_style_grouped)
 
 ## number_tattoos --------------------------------------------------------
+
+attributes(data_raw$number_tattoos)
+table(data_raw$number_tattoos)
+
+data_clean$number_tattoos <- NA
+data_clean$number_tattoos <- data_raw$number_tattoos
+data_clean$number_tattoos <- as.numeric(data_clean$number_tattoos)
+table(data_clean$number_tattoos)
+
+# Créer la variable binaire 'has_tattoos'
+data_clean$has_tattoos <- as.numeric(data_clean$number_tattoos > 0)
+
+# Conserver NA là où il y en avait
+data_clean$has_tattoos[is.na(data_clean$number_tattoos)] <- NA
+
+# Vérifier la distribution de la nouvelle variable
+table(data_clean$has_tattoos, useNA = "ifany")
 
 
 
 
 ## chronotype ------------------------------------------------------------
 
+attributes(data_raw$chronotype)
+table(data_raw$chronotype)
+
+data_clean$lifestyle_chronotype <- NA
+data_clean$lifestyle_chronotype[data_raw$chronotype == 1] <- 0
+data_clean$lifestyle_chronotype[data_raw$chronotype == 2] <- 0.25
+data_clean$lifestyle_chronotype[data_raw$chronotype == 3] <- 0.5
+data_clean$lifestyle_chronotype[data_raw$chronotype == 4] <- 0.75
+data_clean$lifestyle_chronotype[data_raw$chronotype == 5] <- 1
+table(data_clean$lifestyle_chronotype)
+  
+
 
 
 
 ## trip ------------------------------------------------------------------
+
+attributes(data_raw$trip)
+table(data_raw$trip)
+
+data_clean$lifestyle_trip <- NA
+data_clean$lifestyle_trip[data_raw$trip == 1] <- "beach"
+data_clean$lifestyle_trip[data_raw$trip == 2] <- "jungle"
+data_clean$lifestyle_trip[data_raw$trip == 3] <- "historic"
+data_clean$lifestyle_trip[data_raw$trip == 4] <- "mountains"
+data_clean$lifestyle_trip <- factor(data_clean$lifestyle_trip)
+table(data_clean$lifestyle_trip)
+
+
 
 
