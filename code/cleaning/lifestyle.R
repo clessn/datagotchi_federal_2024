@@ -860,19 +860,17 @@ table(data_clean$lifestyle_clothing_style_grouped)
 attributes(data_raw$number_tattoos)
 table(data_raw$number_tattoos)
 
-data_clean$number_tattoos <- NA
-data_clean$number_tattoos <- data_raw$number_tattoos
-data_clean$number_tattoos <- as.numeric(data_clean$number_tattoos)
-table(data_clean$number_tattoos)
+data_clean$lifestyle_number_tattoos <- NA
+data_clean$lifestyle_number_tattoos <- data_raw$number_tattoos
+data_clean$lifestyle_number_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos)
+table(data_clean$lifestyle_number_tattoos)
 
 # Créer la variable binaire 'has_tattoos'
-data_clean$has_tattoos <- as.numeric(data_clean$number_tattoos > 0)
+data_clean$lifestyle_has_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos > 0)
+data_clean$lifestyle_has_tattoos[is.na(data_clean$lifestyle_number_tattoos)] <- NA
 
-# Conserver NA là où il y en avait
-data_clean$has_tattoos[is.na(data_clean$number_tattoos)] <- NA
 
-# Vérifier la distribution de la nouvelle variable
-table(data_clean$has_tattoos, useNA = "ifany")
+table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
 
 
 
