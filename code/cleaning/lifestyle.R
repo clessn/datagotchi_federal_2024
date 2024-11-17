@@ -780,11 +780,56 @@ table(data_clean$lifestyle_efficiency_bin)
 
 ## cons_pet --------------------------------------------------------------
 
+data_clean$lifestyle_pet_ownership <- NA
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- 1
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- 2
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- 3
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- 4
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- 5
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- 6
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- 7
+table(data_clean$pet_ownership)
+
+
+
+# FACTOR
+data_clean$plifestyle_pet_ownership_factor <- NA
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 1] <- "Chat(s)"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 2] <- "Chien(s)"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 6] <- "Animaux de ferme"
+data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
+
+data_clean$lifestyle_pet_ownership_factor <- factor(data_clean$lifestyle_pet_ownership_factor,
+                                          levels = c("Chat(s)", "Chien(s)", "Chat(s) et chien(s)", 
+                                                     "Diverses sortes d'animaux", "Autres animaux domestiques",
+                                                     "Animaux de ferme", "Je n'ai pas d'animal de compagnie"),
+                                          ordered = FALSE)
+
+# NUM
+data_clean$lifestyle_pet_ownership_numeric <- NA
+data_clean$lifestyle_pet_ownership_numeric <- (data_raw$cons_pets - 1) / 6
+table(data_clean$pet_ownership_numeric)
+
+# BIN
+data_clean$lifestyle_pet_ownership_bin <- NA
+data_clean$lifestyle_pet_ownership_bin[data_raw$cons_pets == 7] <- 0
+data_clean$lifestyle_pet_ownership_bin[data_raw$cons_pets %in% c(1, 2, 3, 4, 5, 6)] <- 1
 
 
 
 ## smoking ---------------------------------------------------------------
-
+table(data_raw$smoking)
+data_clean$lifestyle_smoke_freq <- NA
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 1] <- 0
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 2] <- 0.1667
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 3] <- 0.3333
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 4] <- 0.5
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 5] <- 0.6667
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 6] <- 0.8333
+data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
 
 
 
@@ -792,14 +837,31 @@ table(data_clean$lifestyle_efficiency_bin)
 
 
 
+data_clean$lifestyle_favourite_alcool <- NA
+data_clean$lifestyle_favourite_alcool[data_raw$cons_pets == 7] <- 0
+data_clean$lifestyle_favourite_alcool[data_raw$cons_pets %in% c(1, 2, 3, 4, 5, 6)] <- 1
 
 ## alcool_frequency ------------------------------------------------------
-
+data_clean$lifestyle_alcool_freq <- NA
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 1] <- 0
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 2] <- 0.1667
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 3] <- 0.3333
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 4] <- 0.5
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 5] <- 0.6667
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 6] <- 0.8333
+data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 7] <- 1
 
 
 
 ## marijuana_frequency ---------------------------------------------------
-
+data_clean$lifestyle_mari_freq <- NA
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 1] <- 0
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 2] <- 0.1667
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 3] <- 0.3333
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 4] <- 0.5
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 5] <- 0.6667
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 6] <- 0.8333
+data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 7] <- 1
 
 
 
@@ -819,11 +881,18 @@ table(data_clean$lifestyle_efficiency_bin)
 
 
 ## social_media_use ------------------------------------------------------
-
+data_clean$Lifestyle_medsociaux_plus_frequent <- NA
 
 
 
 ## social_media_time -----------------------------------------------------
+data_clean$lifestyle_tempsparjour_medsociaux <- NA
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 1] <- 0
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 2] <- 0.2
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 3] <- 0.4
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 4] <- 0.6
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 5] <- 0.8
+data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 6] <- 1
 
 
 
