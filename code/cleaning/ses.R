@@ -178,30 +178,143 @@ table(data_clean$ses_religion)
 
 ## religiosity -------------------------------------------------------------
 
+table(data_raw$ses_religiosity_1)
+data_clean$ses_religiosity <- NA
+data_clean$ses_religiosity <- data_raw$ses_religiosity_1/100
+table(data_clean$ses_religiosity)
 
 
 ## education ---------------------------------------------------------------
 
+attributes(data_raw$ses_education)
+table(data_raw$ses_education)
+data_clean$ses_education <- NA
+data_clean$ses_education[data_raw$ses_education == 1] <- "no_schooling"
+data_clean$ses_education[data_raw$ses_education == 2] <- "elementary_school"
+data_clean$ses_education[data_raw$ses_education == 3] <- "high_school"
+data_clean$ses_education[data_raw$ses_education == 4] <- "technical_community_cegep"
+data_clean$ses_education[data_raw$ses_education == 5] <- "bachelor"
+data_clean$ses_education[data_raw$ses_education == 6] <- "masters"
+data_clean$ses_education[data_raw$ses_education == 7] <- "doctorate"
+data_clean$ses_education <- factor(data_clean$ses_education, levels = c("no_schooling",
+                                                                        "elementary_school",
+                                                                        "high_school",
+                                                                        "technical_community_cegep",
+                                                                        "bachelor",
+                                                                        "masters",
+                                                                        "doctorate"))
+table(data_clean$ses_education)
+
+data_clean$ses_education_group <- NA
+data_clean$ses_education_group[data_raw$ses_education == 1 | data_raw$ses_education == 2] <- "educBHS"
+data_clean$ses_education_group[data_raw$ses_education == 3] <- "educHS"
+data_clean$ses_education_group[data_raw$ses_education == 4] <- "educPostHS"
+data_clean$ses_education_group[data_raw$ses_education == 5 ]<- "educUnivBac"
+data_clean$ses_education_group[data_raw$ses_education == 6 | data_raw$ses_education == 7] <- "educUnivSup"
+data_clean$ses_education_group <- factor(data_clean$ses_education_group, levels = c("educBHS",
+                                                                        "educHS",
+                                                                        "educPostHS",
+                                                                        "educUnivBac",
+                                                                        "educUnivSup"))
+table(data_clean$ses_education_group)
 
 
 ## income ----------------------------------------------------------------
+
+attributes(data_raw$ses_income)
+table(data_raw$ses_income)
+data_clean$ses_income <- NA
+data_clean$ses_income[data_raw$ses_income == 1] <- "no_income"
+data_clean$ses_income[data_raw$ses_income == 2] <- "1_to_30000"
+data_clean$ses_income[data_raw$ses_income == 3] <- "30001_to_60000"
+data_clean$ses_income[data_raw$ses_income == 4] <- "60001_to_90000"
+data_clean$ses_income[data_raw$ses_income == 5] <- "90001_to_110000"
+data_clean$ses_income[data_raw$ses_income == 6] <- "110001_to_150000"
+data_clean$ses_income[data_raw$ses_income == 7] <- "150001_to_200000"
+data_clean$ses_income[data_raw$ses_income == 8] <- "more_than_200000"
+data_clean$ses_income <- factor(data_clean$ses_income, levels = c("no_income",
+                                                                  "1_to_30000",
+                                                                  "30001_to_60000",
+                                                                  "60001_to_90000",
+                                                                  "90001_to_110000",
+                                                                  "110001_to_150000",
+                                                                  "150001_to_200000",
+                                                                  "more_than_200000"))
+table(data_clean$ses_income)
+
+## bilingualism-------------------------------------------------------------
 
 
 
 ## environment -------------------------------------------------------------
 
+attributes(data_raw$ses_environment)
+table(data_raw$ses_environment)
+
+data_clean$ses_environment <- NA
+data_clean$ses_environment[data_raw$ses_environment == 1] <- "urban"
+data_clean$ses_environment[data_raw$ses_environment == 2] <- "suburban"
+data_clean$ses_environment[data_raw$ses_environment == 3] <- "rural"
+data_clean$ses_environment <- factor(data_clean$ses_environment, levels = c("urban",
+                                                                            "suburban",
+                                                                            "rural"))
+table(data_clean$ses_environment)
+
 
 
 ## status ------------------------------------------------------------------
 
+attributes(data_raw$ses_status)
+table(data_raw$ses_status)
+
+data_clean$ses_status <- NA
+data_clean$ses_status[data_raw$ses_status == 1] <- "single"
+data_clean$ses_status[data_raw$ses_status == 2] <- "married"
+data_clean$ses_status[data_raw$ses_status == 3] <- "common_law_relationship"
+data_clean$ses_status[data_raw$ses_status == 4] <- "widower_widow"
+data_clean$ses_status[data_raw$ses_status == 5] <- "divorced_separated"
+data_clean$ses_status <- factor(data_clean$ses_status, levels = c("single",
+                                                                  "married",
+                                                                  "common_law_relationship",
+                                                                  "widower_widow",
+                                                                  "divorced_separated"))
+table(data_clean$ses_status)
 
 
 ## owner -------------------------------------------------------------------
 
+attributes(data_raw$ses_owner)
+table(data_raw$ses_owner)
+
+data_clean$ses_owner <- NA
+data_clean$ses_owner[data_raw$ses_owner == 1] <- "owner"
+data_clean$ses_owner[data_raw$ses_owner == 2] <- "tenant"
+data_clean$ses_owner[data_raw$ses_owner == 3] <- "neither"
+data_clean$ses_owner <- factor(data_clean$ses_owner, levels = c("owner",
+                                                                  "tenant",
+                                                                  "neither"))
+table(data_clean$ses_owner)
 
 
 ## kids --------------------------------------------------------------------
 
+attributes(data_raw$ses_kids)
+table(data_raw$ses_kids)
+
+data_clean$ses_living_status <- NA
+data_clean$ses_living_status[data_raw$ses_kids == 1] <- "partner_no_children"
+data_clean$ses_living_status[data_raw$ses_kids == 2] <- "partner_with_children"
+data_clean$ses_living_status[data_raw$ses_kids == 3] <- "no_partner_no_children"
+data_clean$ses_living_status[data_raw$ses_kids == 4] <- "no_partner_with_children"
+data_clean$ses_living_status[data_raw$ses_kids == 5] <- "roommates"
+data_clean$ses_living_status[data_raw$ses_kids == 6] <- "other"
+data_clean$ses_living_status <- factor(data_clean$ses_living_status, levels = c("partner_no_children",
+                                                                                "partner_with_children",
+                                                                                "no_partner_no_children",
+                                                                                "no_partner_with_children",
+                                                                                "roommates",
+                                                                                "other"))
+table(data_clean$ses_living_status)
 
 
 ## ses_occupation --------------------------------------------------------------
