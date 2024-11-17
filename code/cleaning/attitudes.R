@@ -97,7 +97,7 @@ table(data_clean$iss_help_ukraine)
 
 table(data_raw$issue_mi)
 attributes(data_raw$issue_mi)
-data_clean$iss_most_imp <- NA
+data_clean$iss_most_imp <- (data_raw$issue_mi)
 table(data_clean$iss_most_imp)
 
 # issue_economy_curren ----------------------------------------------------
