@@ -779,44 +779,18 @@ table(data_clean$lifestyle_efficiency_bin)
 
 
 ## cons_pet --------------------------------------------------------------
+data_clean$plifestyle_pet_ownership <- NA
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "Chat(s)"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "Chien(s)"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "Animaux de ferme"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
+data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership)
+table(data_clean$lifestyle_pet_ownership)
 
-data_clean$lifestyle_pet_ownership <- NA
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- 1
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- 2
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- 3
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- 4
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- 5
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- 6
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- 7
-table(data_clean$pet_ownership)
 
-
-
-# FACTOR
-data_clean$plifestyle_pet_ownership_factor <- NA
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 1] <- "Chat(s)"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 2] <- "Chien(s)"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 6] <- "Animaux de ferme"
-data_clean$lifestyle_pet_ownership_factor[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
-
-data_clean$lifestyle_pet_ownership_factor <- factor(data_clean$lifestyle_pet_ownership_factor,
-                                          levels = c("Chat(s)", "Chien(s)", "Chat(s) et chien(s)", 
-                                                     "Diverses sortes d'animaux", "Autres animaux domestiques",
-                                                     "Animaux de ferme", "Je n'ai pas d'animal de compagnie"),
-                                          ordered = FALSE)
-
-# NUM
-data_clean$lifestyle_pet_ownership_numeric <- NA
-data_clean$lifestyle_pet_ownership_numeric <- (data_raw$cons_pets - 1) / 6
-table(data_clean$pet_ownership_numeric)
-
-# BIN
-data_clean$lifestyle_pet_ownership_bin <- NA
-data_clean$lifestyle_pet_ownership_bin[data_raw$cons_pets == 7] <- 0
-data_clean$lifestyle_pet_ownership_bin[data_raw$cons_pets %in% c(1, 2, 3, 4, 5, 6)] <- 1
 
 
 
@@ -830,16 +804,23 @@ data_clean$lifestyle_smoke_freq[data_raw$smoking == 4] <- 0.5
 data_clean$lifestyle_smoke_freq[data_raw$smoking == 5] <- 0.6667
 data_clean$lifestyle_smoke_freq[data_raw$smoking == 6] <- 0.8333
 data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
-
+table(data_clean$lifestyle_smoke_freq)
 
 
 ## alcool_type -----------------------------------------------------------
-
-
-
 data_clean$lifestyle_favourite_alcool <- NA
-data_clean$lifestyle_favourite_alcool[data_raw$cons_pets == 7] <- 0
-data_clean$lifestyle_favourite_alcool[data_raw$cons_pets %in% c(1, 2, 3, 4, 5, 6)] <- 1
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- "Vin rouge"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- "Vin blanc"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- "Vin rosé"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "Vin mousseux ou champagne"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 5] <- "Bière régulière"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 6] <- "Bière artisanale et de microbrasserie"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "Boissons spiritueuses"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "Cocktails ou prêts-à-boire"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "Je ne consomme pas d'alcool"
+data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_avourite_alcool)
+table(data_clean$lifestyle_favourite_alcool)
+
 
 ## alcool_frequency ------------------------------------------------------
 data_clean$lifestyle_alcool_freq <- NA
@@ -850,7 +831,7 @@ data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 4] <- 0.5
 data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 5] <- 0.6667
 data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 6] <- 0.8333
 data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 7] <- 1
-
+table(data_clean$lifestyle_alcool_freq)
 
 
 ## marijuana_frequency ---------------------------------------------------
@@ -862,6 +843,7 @@ data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 4] <- 0.5
 data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 5] <- 0.6667
 data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 6] <- 0.8333
 data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 7] <- 1
+table(data_clean$lifestyle_mari_freq)
 
 
 
@@ -881,9 +863,18 @@ data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 7] <- 1
 
 
 ## social_media_use ------------------------------------------------------
-data_clean$Lifestyle_medsociaux_plus_frequent <- NA
-
-
+data_clean$lifestyle_medsociaux_plus_frequent <- NA
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 1] <- "Facebook"
+data_clean$lifestyle_fmedsociaux_plus_frequent[data_raw$social_media_use == 2] <- "Twitter / X"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 3] <- "Instagram"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 4] <- "Snapchat"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use== 5] <- "TikTok"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 6] <- "Pinterest"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 7] <- "LinkedIn"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 8] <- "Youtube"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 9] <- "Autre (veuillez préciser)"
+data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_avourite_alcool)
+table(data_clean$lifestyle_medsociaux_plus_frequent)
 
 ## social_media_time -----------------------------------------------------
 data_clean$lifestyle_tempsparjour_medsociaux <- NA
@@ -893,7 +884,7 @@ data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 3] <-
 data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 4] <- 0.6
 data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 5] <- 0.8
 data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 6] <- 1
-
+table(data_clean$lifestyle_tempsparjour_medsociaux)
 
 
 
