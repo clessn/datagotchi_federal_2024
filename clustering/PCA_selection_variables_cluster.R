@@ -9,7 +9,7 @@ library(tibble)
 library(gridExtra)
 
 # Data -------------------------------------------------------------------
-df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilot2021_merged_clustering.csv")
+df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
 
 # Définir les groupes de variables --------------------------------
@@ -247,8 +247,6 @@ plot(2:15, sil_sum, type = "b")
 
 ### 7, 8 or 10 clusters
 
-# Initialiser une liste pour stocker tous les résultats k-means
-kmeans_results <- list()
 
 # Boucle pour appliquer k-means pour différents nombres de clusters
 for (i in c(3, 5, 7, 10, 12, 14, 15)) {
@@ -262,8 +260,9 @@ for (i in c(3, 5, 7, 10, 12, 14, 15)) {
   data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-# Sauvegarder tous les résultats k-means dans un fichier .rds
-saveRDS(kmeans_results, file = "kmeans_results.rds")
+kmeans_result10 <- kmeans(data_scaled, centers = 10, nstart = 25)
+saveRDS(kmeans_result10, file = "kmeans_results.rds")
+
 
 table(data_select$cluster_3)
 table(data_select$cluster_4)

@@ -62,4 +62,4 @@ df_pilot_2021_merged <- bind_rows(df_pilot1_2021, df_pilot2_2021)
 # Enregistrer le jeux de donnees merged
 
 # Enregistrer le jeu de données fusionné sous forme de CSV
-write.csv(df_pilot_2021_merged, "/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilot2021_merged_clustering.csv")
+write.csv(df_pilot_2021_merged, "/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
