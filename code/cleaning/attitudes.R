@@ -42,42 +42,102 @@
 
 
 ## issue_french ----------------------------------------------------------
-
+table(data_raw$issue_french)
+attributes(data_raw$issue_french)
+data_clean$issue_french <- NA
+data_clean$issue_french[data_raw$issue_french == 1] <- 0
+data_clean$issue_french[data_raw$issue_french == 2] <- 0.25
+data_clean$issue_french[data_raw$issue_french == 3] <- 0.5
+data_clean$issue_french[data_raw$issue_french == 4] <- 0.75
+data_clean$issue_french[data_raw$issue_french == 5] <- 1
+table(data_clean$issue_french)
 
 
 
 ## issue_religious_accommodation -----------------------------------------
-
+table(data_raw$issue_religious_acco)
+attributes(data_raw$issue_religious_acco)
+data_clean$issue_religious_acco <- NA
+data_clean$issue_religious_acco[data_raw$issue_religious_acco == 1] <- 0
+data_clean$issue_religious_acco[data_raw$issue_religious_acco == 2] <- 0.33
+data_clean$issue_religious_acco[data_raw$issue_religious_acco == 3] <- 0.66
+data_clean$issue_religious_acco[data_raw$issue_religious_acco == 4] <- 1
+table(data_clean$issue_religious_acco)
 
 
 
 ## issue_sex_ed ----------------------------------------------------------
-
+table(data_raw$issue_sex_ed)
+attributes(data_raw$issue_sex_ed)
+data_clean$issue_sex_ed <- NA
+data_clean$issue_sex_ed[data_raw$issue_sex_ed == 1] <- 0
+data_clean$issue_sex_ed[data_raw$issue_sex_ed == 2] <- 0.33
+data_clean$issue_sex_ed[data_raw$issue_sex_ed == 3] <- 0.66
+data_clean$issue_sex_ed[data_raw$issue_sex_ed == 4] <- 1
+table(data_clean$issue_sex_ed)
 
 
 
 ## issue_carbon_tax ------------------------------------------------------
-
+table(data_raw$issue_carbon_tax)
+attributes(data_raw$issue_carbon_tax)
+data_clean$issue_carbon_tax <- NA
+data_clean$issue_carbon_tax[data_raw$issue_carbon_tax == 1] <- 0
+data_clean$issue_carbon_tax[data_raw$issue_carbon_tax == 2] <- 0.33
+data_clean$issue_carbon_tax[data_raw$issue_carbon_tax == 3] <- 0.66
+data_clean$issue_carbon_tax[data_raw$issue_carbon_tax == 4] <- 1
+table(data_clean$issue_carbon_tax)
 
 
 
 ## issue_oil -------------------------------------------------------------
-
-
+table(data_raw$issue_oil)
+attributes(data_raw$issue_oil)
+data_clean$issue_oil <- NA
+data_clean$issue_oil[data_raw$issue_oil == 1] <- 0
+data_clean$issue_oil[data_raw$issue_oil == 2] <- 0.25
+data_clean$issue_oil[data_raw$issue_oil == 3] <- 0.5
+data_clean$issue_oil[data_raw$issue_oil == 4] <- 0.75
+data_clean$issue_oil[data_raw$issue_oil == 5] <- 1
+table(data_clean$issue_oil)
 
 
 ## issue_climate_change --------------------------------------------------
+table(data_raw$issue_climate_change)
+attributes(data_raw$issue_climate_change)
+data_clean$issue_climate_change <- NA
+data_clean$issue_climate_change[data_raw$issue_climate_change == 1] <- 0
+data_clean$issue_climate_change[data_raw$issue_climate_change == 2] <- 0.33
+data_clean$issue_climate_change[data_raw$issue_climate_change == 3] <- 0.66
+data_clean$issue_climate_change[data_raw$issue_climate_change == 4] <- 1
+table(data_clean$issue_climate_change)
 
 
 
 
 ## issue_lgbtq+ ----------------------------------------------------------
-
+table(data_raw$issue_lgbtq_)
+attributes(data_raw$issue_lgbtq_)
+data_clean$issue_lgbtq_ <- NA
+data_clean$issue_lgbtq_[data_raw$issue_lgbtq_ == 1] <- 0
+data_clean$issue_lgbtq_[data_raw$issue_lgbtq_ == 2] <- 0.25
+data_clean$issue_lgbtq_[data_raw$issue_lgbtq_ == 3] <- 0.5
+data_clean$issue_lgbtq_[data_raw$issue_lgbtq_ == 4] <- 0.75
+data_clean$issue_lgbtq_[data_raw$issue_lgbtq_ == 5] <- 1
+table(data_clean$issue_lgbtq_)
 
 
 
 ## issue_israel ----------------------------------------------------------
-
+table(data_raw$issue_israel)
+attributes(data_raw$issue_israel)
+data_clean$issue_israel <- NA
+data_clean$issue_israel[data_raw$issue_israel == 1] <- 0
+data_clean$issue_israel[data_raw$issue_israel == 2] <- 0.25
+data_clean$issue_israel[data_raw$issue_israel == 3] <- 0.5
+data_clean$issue_israel[data_raw$issue_israel == 4] <- 0.75
+data_clean$issue_israel[data_raw$issue_israel == 5] <- 1
+table(data_clean$issue_israel)
 
 
 
