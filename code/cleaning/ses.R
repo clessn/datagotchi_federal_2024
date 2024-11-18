@@ -2,54 +2,319 @@
 
 ## gender ----------------------------------------------------------------------
 
-
+attributes(data_raw$ses_gender)
+table(data_raw$ses_gender)
+data_clean$ses_gender_factor <- NA
+data_clean$ses_gender_factor[data_raw$ses_gender == 1] <- "male"
+data_clean$ses_gender_factor[data_raw$ses_gender == 2] <- "female"
+data_clean$ses_gender_factor[data_raw$ses_gender == 3] <- "trans_man"
+data_clean$ses_gender_factor[data_raw$ses_gender == 4] <- "trans_woman"
+data_clean$ses_gender_factor[data_raw$ses_gender == 5] <- "non_binary"
+data_clean$ses_gender_factor[data_raw$ses_gender == 6] <- "queer"
+data_clean$ses_gender_factor[data_raw$ses_gender == 7] <- "agender"
+data_clean$ses_gender_factor <- factor(data_clean$ses_gender_factor)
+table(data_clean$ses_gender_factor)
 
 ## age--------------------------------------------------------------------------
+
+attributes(data_raw$ses_age)
+table(data_raw$ses_age)
+data_clean$ses_age <- NA
+data_clean$ses_age <- data_raw$ses_age
+table(data_clean$ses_age)
+
+data_clean$ses_age_group_by_5 <- NA
+data_clean$ses_age_group_by_5[data_raw$ses_age == 18 | data_raw$ses_age == 19] <- "18_19"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 20 & data_raw$ses_age < 25] <- "20_24"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 25 & data_raw$ses_age < 30] <- "25_29"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 30 & data_raw$ses_age < 35] <- "30_34"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 35 & data_raw$ses_age < 40] <- "35_39"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 40 & data_raw$ses_age < 45] <- "40-44"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 45 & data_raw$ses_age < 50] <- "45_49"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 50 & data_raw$ses_age < 55] <- "50_54"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 55 & data_raw$ses_age < 60] <- "55_59"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 60 & data_raw$ses_age < 65] <- "60_64"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 65 & data_raw$ses_age < 70] <- "65_69"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 70 & data_raw$ses_age < 75] <- "70_74"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 75 & data_raw$ses_age < 80] <- "75_79"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 80 & data_raw$ses_age < 85] <- "80_84"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 85 & data_raw$ses_age < 90] <- "85_89"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 90 & data_raw$ses_age < 95] <- "90_94"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 95 & data_raw$ses_age < 100] <- "95_99"
+data_clean$ses_age_group_by_5[data_raw$ses_age >= 100] <- "100+"
+data_clean$ses_age_group_by_5 <- factor(data_clean$ses_age_group_by_5, levels = c("18_19",
+                                                                        "20_24",
+                                                                        "25_29",
+                                                                        "30_34",
+                                                                        "35_39",
+                                                                        "40_44",
+                                                                        "45_49",
+                                                                        "50_54",
+                                                                        "55_59",
+                                                                        "60_64",
+                                                                        "65_69",
+                                                                        "70_74",
+                                                                        "75_79",
+                                                                        "80_84",
+                                                                        "85_89",
+                                                                        "90_94",
+                                                                        "95_99",
+                                                                        "100+"))
+table(data_clean$ses_age_group_by_5)
+
+data_clean$ses_age_group <- NA
+data_clean$ses_age_group[data_raw$ses_age < 25 & data_raw$ses_age > 18] <- "18_24"
+data_clean$ses_age_group[data_raw$ses_age >= 25 & data_raw$ses_age < 45] <- "25_44"
+data_clean$ses_age_group[data_raw$ses_age >= 45 & data_raw$ses_age < 65] <- "45_64"
+data_clean$ses_age_group[data_raw$ses_age >= 65] <- "65+"
+data_clean$ses_age_group <- factor(data_clean$ses_age_group, levels = c("18_24",
+                                                                        "25_44",
+                                                                        "45_64",
+                                                                        "65+"))
+table(data_clean$ses_age_group)
 
 
 
 ## region ----------------------------------------------------------------------
 
+attributes(data_raw$ses_region)
+table(data_raw$ses_region)
+data_clean$ses_province <- NA
+data_clean$ses_province[data_raw$ses_region == 1] <- "AB"
+data_clean$ses_province[data_raw$ses_region == 2] <- "BC"
+data_clean$ses_province[data_raw$ses_region == 3] <- "MB"
+data_clean$ses_province[data_raw$ses_region == 4] <- "NB"
+data_clean$ses_province[data_raw$ses_region == 5] <- "NL"
+data_clean$ses_province[data_raw$ses_region == 6] <- "NT"
+data_clean$ses_province[data_raw$ses_region == 7] <- "NS"
+data_clean$ses_province[data_raw$ses_region == 8] <- "NU"
+data_clean$ses_province[data_raw$ses_region == 9] <- "ON"
+data_clean$ses_province[data_raw$ses_region == 10] <- "PE"
+data_clean$ses_province[data_raw$ses_region == 11] <- "QC"
+data_clean$ses_province[data_raw$ses_region == 12] <- "SK"
+data_clean$ses_province[data_raw$ses_region == 13] <- "YT"
+data_clean$ses_province <- factor(data_clean$ses_province, levels = c("AB",
+                                                                      "BC",
+                                                                      "MB",
+                                                                      "NB",
+                                                                      "NL",
+                                                                      "NT",
+                                                                      "NS",
+                                                                      "NU",
+                                                                      "ON",
+                                                                      "PE",
+                                                                      "QC",
+                                                                      "SK",
+                                                                      "YT"))
+table(data_clean$ses_province)
 
+data_clean$ses_region <- NA
+data_clean$ses_region[data_raw$ses_region == 1 |
+                        data_raw$ses_region == 3 |
+                        data_raw$ses_region == 12] <- "prairie"
+data_clean$ses_region[data_raw$ses_region == 2] <- "british_columbia"
+data_clean$ses_region[data_raw$ses_region == 5 |
+                        data_raw$ses_region == 7 |
+                        data_raw$ses_region == 10] <- "atlantic"
+data_clean$ses_region[data_raw$ses_region == 9] <- "ontario"
+data_clean$ses_region[data_raw$ses_region == 11] <- "quebec"
+data_clean$ses_region[data_raw$ses_region == 6 |
+                        data_raw$ses_region == 8 |
+                        data_raw$ses_region == 13] <- "territories"
+table(data_clean$ses_region)
 
 ## postal_code -----------------------------------------------------------------
 
-
+attributes(data_raw$ses_postal_code)
+table(data_raw$ses_postal_code)
+data_clean$ses_postal_code <- NA
+data_clean$ses_postal_code <- data_raw$ses_postal_code
+table(data_clean$ses_postal_code)
 
 ## language --------------------------------------------------------------------
 
+attributes(data_raw$ses_language)
+table(data_raw$ses_language)
+data_clean$ses_language <- NA
+data_clean$ses_language[data_raw$ses_language == 1] <- "english"
+data_clean$ses_language[data_raw$ses_language == 2] <- "french"
+data_clean$ses_language[data_raw$ses_language == 3] <- "other"
+data_clean$ses_language <- factor(data_clean$ses_language, levels = c("english",
+                                                                      "french",
+                                                                      "other"))
+table(data_clean$ses_language)
 
 
 ## religion --------------------------------------------------------------------
 
-
+attributes(data_raw$ses_religion)
+table(data_raw$ses_religion)
+data_clean$ses_religion <- NA
+data_clean$ses_religion[data_raw$ses_religion == 1] <- "agnostic"
+data_clean$ses_religion[data_raw$ses_religion == 2] <- "atheist"
+data_clean$ses_religion[data_raw$ses_religion == 3] <- "buddhist"
+data_clean$ses_religion[data_raw$ses_religion == 4] <- "catholic"
+data_clean$ses_religion[data_raw$ses_religion == 5] <- "orthodox_christian"
+data_clean$ses_religion[data_raw$ses_religion == 6] <- "hindu"
+data_clean$ses_religion[data_raw$ses_religion == 7] <- "muslim"
+data_clean$ses_religion[data_raw$ses_religion == 8] <- "jew"
+data_clean$ses_religion[data_raw$ses_religion == 9] <- "protestant"
+data_clean$ses_religion[data_raw$ses_religion == 10] <- "sikh"
+data_clean$ses_religion[data_raw$ses_religion == 11] <- "evangelical"
+data_clean$ses_religion[data_raw$ses_religion == 12] <- "other"
+data_clean$ses_religion <- factor(data_clean$ses_religion, levels = c("agnostic",
+                                                                      "atheist",
+                                                                      "buddhist",
+                                                                      "catholic",
+                                                                      "orthodox_christian",
+                                                                      "hindu",
+                                                                      "muslim",
+                                                                      "jew",
+                                                                      "protestant",
+                                                                      "sikh",
+                                                                      "evangelical",
+                                                                      "other"))
+table(data_clean$ses_religion)
 
 ## religiosity -------------------------------------------------------------
 
+table(data_raw$ses_religiosity_1)
+data_clean$ses_religiosity <- NA
+data_clean$ses_religiosity <- data_raw$ses_religiosity_1/100
+table(data_clean$ses_religiosity)
 
 
 ## education ---------------------------------------------------------------
 
+attributes(data_raw$ses_education)
+table(data_raw$ses_education)
+data_clean$ses_education <- NA
+data_clean$ses_education[data_raw$ses_education == 1] <- "no_schooling"
+data_clean$ses_education[data_raw$ses_education == 2] <- "elementary_school"
+data_clean$ses_education[data_raw$ses_education == 3] <- "high_school"
+data_clean$ses_education[data_raw$ses_education == 4] <- "technical_community_cegep"
+data_clean$ses_education[data_raw$ses_education == 5] <- "bachelor"
+data_clean$ses_education[data_raw$ses_education == 6] <- "masters"
+data_clean$ses_education[data_raw$ses_education == 7] <- "doctorate"
+data_clean$ses_education <- factor(data_clean$ses_education, levels = c("no_schooling",
+                                                                        "elementary_school",
+                                                                        "high_school",
+                                                                        "technical_community_cegep",
+                                                                        "bachelor",
+                                                                        "masters",
+                                                                        "doctorate"))
+table(data_clean$ses_education)
+
+data_clean$ses_education_group <- NA
+data_clean$ses_education_group[data_raw$ses_education == 1 | data_raw$ses_education == 2] <- "educBHS"
+data_clean$ses_education_group[data_raw$ses_education == 3] <- "educHS"
+data_clean$ses_education_group[data_raw$ses_education == 4] <- "educPostHS"
+data_clean$ses_education_group[data_raw$ses_education == 5 ]<- "educUnivBac"
+data_clean$ses_education_group[data_raw$ses_education == 6 | data_raw$ses_education == 7] <- "educUnivSup"
+data_clean$ses_education_group <- factor(data_clean$ses_education_group, levels = c("educBHS",
+                                                                        "educHS",
+                                                                        "educPostHS",
+                                                                        "educUnivBac",
+                                                                        "educUnivSup"))
+table(data_clean$ses_education_group)
 
 
 ## income ----------------------------------------------------------------
+
+attributes(data_raw$ses_income)
+table(data_raw$ses_income)
+data_clean$ses_income <- NA
+data_clean$ses_income[data_raw$ses_income == 1] <- "no_income"
+data_clean$ses_income[data_raw$ses_income == 2] <- "1_to_30000"
+data_clean$ses_income[data_raw$ses_income == 3] <- "30001_to_60000"
+data_clean$ses_income[data_raw$ses_income == 4] <- "60001_to_90000"
+data_clean$ses_income[data_raw$ses_income == 5] <- "90001_to_110000"
+data_clean$ses_income[data_raw$ses_income == 6] <- "110001_to_150000"
+data_clean$ses_income[data_raw$ses_income == 7] <- "150001_to_200000"
+data_clean$ses_income[data_raw$ses_income == 8] <- "more_than_200000"
+data_clean$ses_income <- factor(data_clean$ses_income, levels = c("no_income",
+                                                                  "1_to_30000",
+                                                                  "30001_to_60000",
+                                                                  "60001_to_90000",
+                                                                  "90001_to_110000",
+                                                                  "110001_to_150000",
+                                                                  "150001_to_200000",
+                                                                  "more_than_200000"))
+table(data_clean$ses_income)
+
+## bilingualism-------------------------------------------------------------
 
 
 
 ## environment -------------------------------------------------------------
 
+attributes(data_raw$ses_environment)
+table(data_raw$ses_environment)
+
+data_clean$ses_environment <- NA
+data_clean$ses_environment[data_raw$ses_environment == 1] <- "urban"
+data_clean$ses_environment[data_raw$ses_environment == 2] <- "suburban"
+data_clean$ses_environment[data_raw$ses_environment == 3] <- "rural"
+data_clean$ses_environment <- factor(data_clean$ses_environment, levels = c("urban",
+                                                                            "suburban",
+                                                                            "rural"))
+table(data_clean$ses_environment)
+
 
 
 ## status ------------------------------------------------------------------
 
+attributes(data_raw$ses_status)
+table(data_raw$ses_status)
+
+data_clean$ses_status <- NA
+data_clean$ses_status[data_raw$ses_status == 1] <- "single"
+data_clean$ses_status[data_raw$ses_status == 2] <- "married"
+data_clean$ses_status[data_raw$ses_status == 3] <- "common_law_relationship"
+data_clean$ses_status[data_raw$ses_status == 4] <- "widower_widow"
+data_clean$ses_status[data_raw$ses_status == 5] <- "divorced_separated"
+data_clean$ses_status <- factor(data_clean$ses_status, levels = c("single",
+                                                                  "married",
+                                                                  "common_law_relationship",
+                                                                  "widower_widow",
+                                                                  "divorced_separated"))
+table(data_clean$ses_status)
 
 
 ## owner -------------------------------------------------------------------
 
+attributes(data_raw$ses_owner)
+table(data_raw$ses_owner)
+
+data_clean$ses_owner <- NA
+data_clean$ses_owner[data_raw$ses_owner == 1] <- "owner"
+data_clean$ses_owner[data_raw$ses_owner == 2] <- "tenant"
+data_clean$ses_owner[data_raw$ses_owner == 3] <- "neither"
+data_clean$ses_owner <- factor(data_clean$ses_owner, levels = c("owner",
+                                                                  "tenant",
+                                                                  "neither"))
+table(data_clean$ses_owner)
 
 
 ## kids --------------------------------------------------------------------
 
+attributes(data_raw$ses_kids)
+table(data_raw$ses_kids)
+
+data_clean$ses_living_status <- NA
+data_clean$ses_living_status[data_raw$ses_kids == 1] <- "partner_no_children"
+data_clean$ses_living_status[data_raw$ses_kids == 2] <- "partner_with_children"
+data_clean$ses_living_status[data_raw$ses_kids == 3] <- "no_partner_no_children"
+data_clean$ses_living_status[data_raw$ses_kids == 4] <- "no_partner_with_children"
+data_clean$ses_living_status[data_raw$ses_kids == 5] <- "roommates"
+data_clean$ses_living_status[data_raw$ses_kids == 6] <- "other"
+data_clean$ses_living_status <- factor(data_clean$ses_living_status, levels = c("partner_no_children",
+                                                                                "partner_with_children",
+                                                                                "no_partner_no_children",
+                                                                                "no_partner_with_children",
+                                                                                "roommates",
+                                                                                "other"))
+table(data_clean$ses_living_status)
 
 
 ## ses_occupation --------------------------------------------------------------
