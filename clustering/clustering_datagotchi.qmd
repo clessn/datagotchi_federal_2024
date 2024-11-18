@@ -24,16 +24,59 @@ filters:
 
 Pour déterminer quelles variables sont les moins pertinentes à conserver à partir des résultats de l'analyse en composantes principales (PCA), nous pouvons examiner leurs coefficients dans les premiers axes principaux (PC1 à PC4). Les variables ayant des coefficients proches de zéro pour ces axes peuvent être considérées comme faiblement contributives à la variance des données globales. En général, on garde les variables ayant des coefficients élevés (en valeur absolue) sur au moins un des premiers axes, car cela signifie qu'elles expliquent une part significative de la variance.
 
-```{r}
-library(kableExtra)
+Graphiques contribution pondérée et 4 dimensions
 
-# Charger et afficher le tableau avec du style
-tableau %>%
-  kbl(caption = "Tableau des variables conservées pour expliquer 80% de la variance") %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+Tableaux corrélation et comparaisons contributions exactes des variables 
 
+### Sélection variables activité
+*act_VisitsMuseumsGaleries*, *act_Volunteering*, *act_Yoga*, *act_Run*, *act_Gym* ont des contributions intéressantes à au moins 1 des 4 dimensions et ne sont pas corrélées entre-elles.
 
+*act_MotorizedOutdoorActivities*, *act_Fishing*, et *act_Hunting* ont de très bonnes contributions mais sont corrélées entre-elles. *act_MotorizedOutdoorActivities* est conservée car elle a la plus grande contribution pondérée.
 
+### Sélection variables apparence
+*app_noTattoo*, *app_swag_Casual* et *app_swag_VintageHippBoheme* 
+
+### Sélection variables cons_alcool
+*cons_regBeers*, *cons_cocktailsDrink*, *cons_microBeers*, *cons_redWineDrink*, *cons_noDrink* 
+
+### Sélection variables cons_brand
+*cons_brand_ChainesB*, *cons_brand_GSurf*, *cons_brand_MaR*, *cons_brand_Frip*
+
+### Sélection variables cons_coffee
+*cons_coffee_Starbucks* est sélectionnée
+
+*cons_coffee_place_noCoffee* et *cons_coffee_TimH* sont corrélées.
+*cons_coffee_place_noCoffee* est sélectionnée car plus grande contribution pondérée.
+
+### Sélection variables cons_food
+Les trois variables sont corrélées mais *cons_Meat* a la plus grande contribution.
+
+### Sélection variables cons_tabac
+*cons_SmokeNever* est sélectionnée, était corrélée avec *cons_SmokeStopped*
+*cons_Smoke* aussi sélectionnée car pas corrélée?
+
+### Sélection variables demographie
+*immigrant* et *educUniv* sont sélectionnées
+
+*age34m* et *age55p* sont corrélées, *age55p* est sélectionnée
+
+*male* et *female* sont parfaitement corrélées, *male* a une contribution légèrement suppérieure
+
+*ses_hetero*, *ses_gai*, *ses_bisex* sont corrélées, *ses_hetero* est sélectionnée
+
+*langFr* et *ses_languageOther* sont corrélées, *langFr* est sélectionnée 
+
+*incomeLow* et *incomeHigh* sont corrélées, *incomeHigh* est sélectionnée 
+
+### Sélection variables habitat
+*ses_dwelling_condo* est sélectionnée
+
+*ses_dwelling_app* et *ses_dwelling_detachedHouse* sont corrélées, *ses_dwelling_detachedHouse* est sélectionnée 
+
+### Sélection variables transport
+*act_transport_PublicTransportation* est sélectionnée
+
+*act_transport_Walk* et *act_transport_Car* sont corrélées, *act_transport_Car* est sélectionnée 
 
 ## Méthode du coude
 

@@ -5,20 +5,22 @@ library(cluster)
 library(factoextra)
 library(tidyr)
 library(ggcorrplot)
+library(tibble)
+library(gridExtra)
 
 # Data -------------------------------------------------------------------
 df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilot2021_merged_clustering.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
 
-# Étape 1 : Définir les groupes de variables --------------------------------
+# Définir les groupes de variables --------------------------------
 groupes_variables <- list(
   transport = c("act_transport_Car", "act_transport_SUV", "act_transport_Moto", 
                 "act_transport_Walk", "act_transport_Bicycle", 
                 "act_transport_PublicTransportation", "act_transport_Taxi"),
-  demographie = c("age34m", "age3554", "age55p", "langFr", "langEn", 
-                  "ses_languageOther", "male", "female", "ses_genderOther", 
-                  "incomeLow", "incomeHigh", "immigrant"),
-  orientation = c("ses_hetero", "ses_gai", "ses_bisex"),
+  demographie1 = c("age34m", "age3554", "age55p", "male", "female", "ses_genderOther", 
+                   "ses_hetero", "ses_gai", "ses_bisex"),
+  demographie2 = c("langFr", "langEn", "ses_languageOther", "incomeLow", "incomeHigh", 
+                   "immigrant", "educBHS", "educUniv"),
   activites = c("act_VisitsMuseumsGaleries", "act_Fishing", "act_Hunting", 
                 "act_MotorizedOutdoorActivities", "act_Volunteering", 
                 "act_Walk", "act_Gym", "act_TeamSport", "act_Run", 
@@ -42,45 +44,111 @@ groupes_variables <- list(
                   "cons_roseDrink", "cons_sparklingDrink", "cons_regBeers", 
                   "cons_microBeers", "cons_spiritDrink", "cons_cocktailsDrink"),
   cons_tabac = c("cons_Smoke", "cons_SmokeStopping", "cons_SmokeStopped", 
-                 "cons_SmokeNever", "cons_VapeNation"),
-  education = c("educBHS", "educUniv")
+                 "cons_SmokeNever", "cons_VapeNation")
 )
 
-# Étape 2 : Sélectionner toutes les variables d'intérêt
-data_filtered <- df_pilot_2021_merged |> 
-  select(-c(X, source)) |> 
+
+# Préparer les données
+data_filtered <- df_pilot_2021_merged %>%
+  select(-c(X, source)) %>%
   drop_na()
 
-# Étape 3 : PCA initiale ---------------------------------------------------
-pca_result <- prcomp(data_filtered, scale. = TRUE)
-summary(pca_result)
+pca_result0 <- prcomp(
+  data_filtered,
+  scale = TRUE
+)
 
-pca_result$rotation[,1:4]
+summary(pca_result0)
+### Environ 3-4 composantes font l'affaire
 
-fviz_eig(pca_result, addlabels = TRUE)
+pca_result0$rotation[,1:4]
 
-## Interpret dimensions ---------------------------------------------------
-fviz_pca_var(
-  pca_result,
-  col.var = "contrib", # Color by contributions to the PC
-  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-  axes = c(1, 2),
-  repel = TRUE
-  )
+fviz_eig(pca_result0, addlabels = TRUE)
 
 
+# Effectuer l'ACP
+pca_all <- prcomp(data_filtered, scale. = TRUE)
+var_contrib <- factoextra::get_pca_var(pca_all)$contrib
+variance_explained <- factoextra::get_eigenvalue(pca_all)$variance.percent
 
+num_axes <- 4
+all_contrib <- data.frame()
 
-# PCA -------------------------------------------------------------
+# Calculer les contributions pondérées
+for (group_name in names(groupes_variables)) {
+  vars_in_group <- groupes_variables[[group_name]]
+  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
+  if (length(vars_present) == 0) next
+  
+  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
+  
+  # Calculer les contributions pondérées
+  for (i in 1:num_axes) {
+    contrib_group[, i] <- contrib_group[, i] * (variance_explained[i] / 100)
+  }
+  
+  df_contrib <- as.data.frame(contrib_group)
+  df_contrib$Variable <- rownames(df_contrib)
+  df_contrib$Group <- group_name
+  
+  # Contribution pondérée totale
+  df_contrib <- df_contrib %>%
+    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution") %>%
+    group_by(Group, Variable) %>%
+    summarise(TotalContributionWeighted = sum(Contribution), .groups = "drop")
+  
+  all_contrib <- bind_rows(all_contrib, df_contrib)
+}
 
-## selection des variables et drop_na (essaie/erreur avec pca)
-data_num <- df_pilot_2021_merged |> 
- # select() |> 
-   drop_na()
+# Graphique 1 : Contribution pondérée
+ggplot(all_contrib, aes(x = reorder(Variable, -TotalContributionWeighted), y = TotalContributionWeighted, fill = Group)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  facet_wrap(~ Group, scales = "free_y") +
+  labs(title = "Contributions pondérées des variables aux axes",
+       x = "Variables", y = "Contribution pondérée (%)") +
+  theme_minimal() +
+  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
+
+# Préparer les contributions par axe pour le second graphique
+all_contrib_dodge <- data.frame()
+for (group_name in names(groupes_variables)) {
+  vars_in_group <- groupes_variables[[group_name]]
+  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
+  if (length(vars_present) == 0) next
+  
+  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
+  
+  df_contrib <- as.data.frame(contrib_group)
+  df_contrib$Variable <- rownames(df_contrib)
+  df_contrib$Group <- group_name
+  
+  df_contrib <- df_contrib %>%
+    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution")
+  
+  all_contrib_dodge <- bind_rows(all_contrib_dodge, df_contrib)
+}
+
+# Graphique 2 : Contributions par axe avec dodge
+ggplot(all_contrib_dodge, aes(x = Variable, y = Contribution, fill = Axe)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  coord_flip() +
+  facet_wrap(~ Group, scales = "free_y") +
+  labs(title = "Contributions des variables par axe",
+       x = "Variables", y = "Contribution (%)") +
+  scale_fill_brewer(palette = "Set2", name = "Axes principaux") +
+  theme_minimal() +
+  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
 
 ## corr_matrix
+cor_matrix <- cor(x = data_filtered)
 
-cor_matrix <- cor(x = data_num_reduit)
+# Transformer la matrice en un format long (tidy)
+cor_df <- as.data.frame(as.table(cor_matrix)) %>%
+  rename(Variable1 = Var1, Variable2 = Var2, Correlation = Freq)
+
+# Afficher un aperçu du tableau
+print(cor_df)
 
 ggcorrplot::ggcorrplot(
   cor_matrix,
@@ -91,43 +159,51 @@ ggcorrplot::ggcorrplot(
   colors = c("#d4206b", "#ececec", "#20d48f")
 )
 
+# Variables sélectionnées selon contrib et correlation -------------------
 
-## PCA -------------------------------------------------------------
+data_select <- df_pilot_2021_merged %>%
+  select(
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
+    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+    cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
+    cons_Meat,
+    cons_SmokeNever, cons_Smoke,
+    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
+    ses_dwelling_condo, ses_dwelling_detachedHouse,
+    act_transport_PublicTransportation, act_transport_Car
+  ) %>%
+  drop_na()
+
+# PCA --------------------------------------------------------------------
 
 pca_result <- prcomp(
-  data_num_reduit,
+  data_select,
   scale = TRUE
 )
 
 summary(pca_result)
-
 ### Environ 3-4 composantes font l'affaire
 
 pca_result$rotation[,1:4]
 
 fviz_eig(pca_result, addlabels = TRUE)
 
-## Interpret dimensions ---------------------------------------------------
-fviz_pca_var(
-  pca_result,
-  col.var = "contrib", # Color by contributions to the PC
-  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-  axes = c(1, 2),
-  repel = TRUE
-  )
+
+# Clustering -------------------------------------------------------------
 
 ## Normalisation des données (optionnelle, recommandé pour k-means)
-data_num_scaled <- scale(data_num_reduit)
-
+data_scaled <- scale(data_select)
 
 
 ### 10 clusters me semble être le parfait équilibre où il y a une distinction claire
 #### entre les clusters et où chaque cluster couvre un espace significatif
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_num_scaled, centers = 3, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 11, nstart = 25)
 fviz_cluster(
-  km_res, data = data_num_scaled,
+  km_res, data = data_scaled,
   geom = "point",
   ellipse.type = "convex", 
   ggtheme = theme_bw()
@@ -138,7 +214,7 @@ fviz_cluster(
 
 ### Coude
 wss <- sapply(2:15, function(k){
-  kmeans(data_num_scaled, centers = k, nstart = 25)$tot.withinss
+  kmeans(data_scaled, centers = k, nstart = 25)$tot.withinss
 })
 
 # Tracer la courbe du coude
@@ -150,8 +226,8 @@ plot(2:15, wss, type = "b", pch = 19, frame = FALSE,
 
 # Calculer l'indice de silhouette pour différents k
 sil_width <- sapply(2:15, function(k){
-  km.res <- kmeans(data_num_scaled, centers = k, nstart = 25)
-  ss <- cluster::silhouette(km.res$cluster, dist(data_num_scaled))
+  km.res <- kmeans(data_scaled, centers = k, nstart = 25)
+  ss <- cluster::silhouette(km.res$cluster, dist(data_scaled))
   mean(ss[, 3])
 })
 
@@ -171,35 +247,46 @@ plot(2:15, sil_sum, type = "b")
 
 ### 7, 8 or 10 clusters
 
-for (i in c(3, 4, 5, 6, 7, 8, 9, 10)) {
-  # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
+# Initialiser une liste pour stocker tous les résultats k-means
+kmeans_results <- list()
+
+# Boucle pour appliquer k-means pour différents nombres de clusters
+for (i in c(3, 5, 7, 10, 12, 14, 15)) {
   set.seed(123)  # Pour rendre les résultats reproductibles
-  kmeans_result <- kmeans(data_num_scaled, centers = i, nstart = 25)
+  kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
+  
+  # Ajouter le résultat dans la liste avec le nombre de clusters comme nom
+  kmeans_results[[paste0("k_", i)]] <- kmeans_result
+  
   # Ajouter les clusters aux données d'origine
-  data_num_reduit[[paste0("cluster_", i)]] <- kmeans_result$cluster
+  data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-table(data_num_reduit$cluster_3)
-table(data_num_reduit$cluster_4)
-table(data_num_reduit$cluster_5)
-table(data_num_reduit$cluster_6)
-table(data_num_reduit$cluster_7)
-table(data_num_reduit$cluster_9)
-table(data_num_reduit$cluster_10)
+# Sauvegarder tous les résultats k-means dans un fichier .rds
+saveRDS(kmeans_results, file = "kmeans_results.rds")
+
+table(data_select$cluster_3)
+table(data_select$cluster_4)
+table(data_select$cluster_5)
+table(data_select$cluster_6)
+table(data_select$cluster_10)
+table(data_select$cluster_12)
+table(data_select$cluster_14)
+table(data_select$cluster_15)
 
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
 
 # Calcul de la distance (ici, distance euclidienne)
-distance_matrix <- dist(data_num_scaled)
+distance_matrix <- dist(data_scaled)
 
 # MDS pour réduction à 2 dimensions
 mds_result <- cmdscale(distance_matrix, k = 2)
 
 # Ajouter les coordonnées MDS aux données
-data_num_reduit$MDS1 <- mds_result[,1]
-data_num_reduit$MDS2 <- mds_result[,2]
+data_select$MDS1 <- mds_result[,1]
+data_select$MDS2 <- mds_result[,2]
 
-plot_data <- data_num_reduit |> 
+plot_data <- data_select |> 
   tidyr::pivot_longer(
     cols = starts_with("cluster_"),
     names_to = "n_clusters",
@@ -213,6 +300,8 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   clessnize::theme_clean_light() +
   facet_wrap(~n_clusters) +
   stat_ellipse()
+
+
 
 
 
