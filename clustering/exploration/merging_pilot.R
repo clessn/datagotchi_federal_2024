@@ -41,7 +41,9 @@ variables_interet <- c(
   "cons_spiritDrink", "cons_cocktailsDrink",
   "cons_Smoke", "cons_SmokeStopping", "cons_SmokeStopped", 
   "cons_SmokeNever", "cons_VapeNation",
-  "educBHS", "educUniv"
+  "educBHS", "educUniv",
+  "op_voteIntent_Lib", "op_voteIntent_Cons", "op_voteIntent_Ndp", "op_voteIntent_Bloc", "op_voteIntent_Green", "op_voteIntent_PPC",
+  "op_voteIntent_NoVote", "op_voteIntent_Other", "op_voteCertainty"
 )
 
 ## Sélectionner les colonnes d'intérêt dans chaque dataset
