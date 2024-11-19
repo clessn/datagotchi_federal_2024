@@ -10,7 +10,7 @@ library(ggcorrplot)
 df_pilot1_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilote-1-federal-2021.csv")
 df_pilot2_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/pilotes/pilote-2-federal-2021.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
-df_pilot1_2021$
+
 ## identifier les variables d'interet presentes dans les 2 pilots + app
 variables_interet <- c(
   "act_transport_Car", "act_transport_SUV", "act_transport_Moto", "act_transport_Walk", 
@@ -43,7 +43,7 @@ variables_interet <- c(
   "cons_SmokeNever", "cons_VapeNation",
   "educBHS", "educUniv",
   "op_voteIntent_Lib", "op_voteIntent_Cons", "op_voteIntent_Ndp", "op_voteIntent_Bloc", "op_voteIntent_Green", "op_voteIntent_PPC",
-  "op_voteIntent_NoVote", "op_voteIntent_Other", "op_voteCertainty"
+  "op_voteIntent_NoVote"
 )
 
 ## Sélectionner les colonnes d'intérêt dans chaque dataset
