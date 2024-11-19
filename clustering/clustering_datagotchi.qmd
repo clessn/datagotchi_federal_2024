@@ -82,95 +82,409 @@ Les trois variables sont corrélées mais *cons_Meat* a la plus grande contribut
 
 Décris la méthode du coude ici et insère des visualisations si nécessaire.
 
-## Autres méthodes à hub
+## Silouhette
 
-Décris la méthode 
+Décrire la méthode 
 
 ## Nombre de cluster
 
-10 cluster
+10 clusters
 
 # Description des clusters
 
 ## Cluster 1 : Adultes urbains éduqués, amateurs de culture et de mode de vie modéré
 
-Activités
+    act_Gym : 22,4 % des individus du cluster vont au gym, comparé à 18,7 % dans la population générale. Cela représente une légère surreprésentation (+0,0953 standardisé).
+    act_MotorizedOutdoorActivities : 13,8 % des individus pratiquent des activités de plein air motorisées, en dessous de la population générale (16,2 %), ce qui est légèrement sous-représenté (-0,0978).
+    act_Run : 15,4 % des individus courent, contre 13,8 % dans la population générale, une différence mineure (+0,0436).
+    act_VisitsMuseumsGaleries : Les visites de musées et galeries sont fréquentes dans ce groupe (38,7 %), bien plus élevées que la population générale (32,9 %), une surreprésentation notable (+0,237).
+    act_Volunteering : Le volontariat est aussi courant (34,3 %), légèrement supérieur à la population générale (32,5 %, +0,0588).
+    act_Yoga : Le yoga est rare dans le cluster (11,4 %), proche de la moyenne globale (11,3 %, +0,00312).
+    act_transport_Car : La voiture est le principal moyen de transport (61,4 %), correspondant à la moyenne globale (-0,00354).
+    act_transport_PublicTransportation : L'utilisation des transports publics est quasi nulle (0 %), bien inférieure à la moyenne (7,28 %, -0,280), indiquant une sous-représentation marquée.
+    age55p : Une grande proportion est âgée de 55 ans ou plus (45,7 %), supérieure à la moyenne (36,6 %, +0,187).
+    app_noTattoo : La majorité n’a pas de tatouages (83,9 %), bien plus que la moyenne générale (75,9 %, +0,187).
+    app_swag_Casual : Le style vestimentaire casual est dominant (69,3 %), proche de la population générale (68,2 %, +0,0245).
+    app_swag_VintageHippBoheme : Les styles vintage, hippie ou bohème sont absents (0 %), contre 3,25 % dans la population, une sous-représentation (-0,183).
+    cons_Meat : La consommation de viande est très élevée (94,9 %), proche de la moyenne (95,7 %, -0,0401).
+    cons_Smoke : La consommation de tabac est rare (6,69 %), inférieure à la population (9,36 %, -0,0916).
+    cons_SmokeNever : Près de la moitié n’a jamais fumé (49,2 %), légèrement inférieur à la population générale (55,8 %, -0,133).
+    cons_brand_ChainesB : Les chaînes de magasins « B » sont consommées à des niveaux similaires (28,7 % vs. 28,2 %, +0,0112).
+    cons_brand_Frip : Les friperies sont rarement fréquentées (1,97 %), nettement moins que la population générale (9,30 %, -0,252).
+    cons_brand_GSurf : La consommation de marques surf est faible (15 %), légèrement sous-représentée (21,9 %, -0,169).
+    cons_brand_MaR : La consommation de marques « MaR » est importante (30,7 %), bien supérieure à la moyenne (20,9 %, +0,241).
+    cons_cocktailsDrink : La consommation de cocktails est faible (9,06 %), inférieure à la moyenne (11,3 %, -0,0723).
+    cons_coffee_Starbucks : Starbucks est consommé modérément (16,9 %), légèrement supérieur à la moyenne (12,7 %, +0,127).
+    cons_coffee_place_noCoffee : Ne pas consommer de café est fréquent (34,6 %), proche de la moyenne (37,2 %, -0,0530).
+    cons_microBeers : Les bières artisanales sont rares (6,30 %), moins fréquentes que la moyenne (9,63 %, -0,113).
+    cons_noDrink : La non-consommation d'alcool est modérée (17,7 %), proche de la population générale (19,4 %, -0,0437).
+    cons_redWineDrink : La consommation de vin rouge est notable (26,8 %), bien au-dessus de la moyenne (18,1 %, +0,225).
+    cons_regBeers : La consommation de bières régulières est faible (9,45 %), inférieure à la moyenne (13,0 %, -0,106).
+    educUniv : Le niveau universitaire est très présent (83,5 %), bien supérieur à la population (77,3 %, +0,146).
+    immigrant : Les immigrants représentent 23,6 %, plus élevés que la moyenne (16,5 %, +0,193).
+    incomeHigh : Les revenus élevés sont fréquents (37,8 %), proches de la population (36,2 %, +0,0329).
+    langFr : Une majorité parle français (68,9 %), mais un peu moins que la population générale (74,3 %, -0,124).
+    male : Les hommes sont légèrement majoritaires (54,3 %), comparé à la population générale (48 %, +0,126).
 
-    act_Gym : Plus fréquents au gym que la moyenne (mean_cluster = 0.224, z = 0.095).
-    act_VisitsMuseums : Fréquentent davantage les musées que la moyenne (mean_cluster = 0.387, z = 0.237).
-    act_Yoga : Proche de la moyenne pour le yoga (mean_cluster = 0.114, z = 0.003).
-    act_transport_Car : Très proche de la moyenne pour l’utilisation de la voiture (mean_cluster = 0.614, z = -0.003).
-    act_transport_Public : Utilisent beaucoup moins le transport en commun que la moyenne (mean_cluster = 0.000, z = -0.280).
-
-Apparence
-
-    app_noTattoo : Plus nombreux à ne pas avoir de tatouages (mean_cluster = 0.839, z = 0.187).
-    app_swag_Casual : Préférence légèrement au-dessus de la moyenne pour un style casual (mean_cluster = 0.693, z = 0.024).
-    app_swag_Vintage : Nettement moins enclins à un style vintage (mean_cluster = 0.000, z = -0.183).
-
-Consommation
-
-    cons_Meat : Légèrement moins consommateurs de viande que la moyenne (mean_cluster = 0.949, z = -0.040).
-    cons_redWineDrinkers : Consommation de vin rouge au-dessus de la moyenne (mean_cluster = 0.268, z = 0.225).
-    cons_coffee_Starbucks : Légèrement au-dessus de la moyenne (mean_cluster = 0.169, z = 0.127).
-    cons_microBeers : En dessous de la moyenne pour les bières artisanales (mean_cluster = 0.0630, z = -0.113).
-
-Caractéristiques sociodémographiques
-
-    educUniv : Plus diplômés (universitaires) que la moyenne (mean_cluster = 0.835, z = 0.146).
-    incomeHigh : Proche de la moyenne pour les revenus élevés (mean_cluster = 0.378, z = 0.033).
-    age55p : Proportion plus importante de personnes âgées de 55 ans et plus (mean_cluster = 0.457, z = 0.187).
-    immigrant : Légèrement plus d’immigrants que la moyenne (mean_cluster = 0.236, z = 0.193).
-    male : Plus d’hommes que la moyenne (mean_cluster = 0.543, z = 0.126).
-    langFr : Légèrement moins francophones que la moyenne (mean_cluster = 0.689, z = -0.124).
-
-SES et logement
-
-    ses_dwelling_condo : Très au-dessus de la moyenne pour les logements en copropriété (mean_cluster = 1.00, z = 2.99).
-    ses_dwelling_detached : Très en dessous de la moyenne pour les maisons unifamiliales (mean_cluster = 0.000, z = -1.03).
-
-Résumé
-
-Ce cluster se distingue par une population légèrement plus âgée, instruite, vivant majoritairement en copropriétés. Ils adoptent un style casual et consomment modérément du vin rouge. Ils fréquentent souvent les musées et le gym, mais ne privilégient ni le transport public ni les maisons unifamiliales.
+Résumé : Ce cluster se distingue par un profil éduqué, majoritairement francophone, âgé et actif dans des activités culturelles et bénévoles. La consommation de vin rouge et de marques spécifiques est notable, tandis que les transports publics, le style vintage et les friperies sont largement sous-représentés.
 
 ## Cluster 2 : Jeunes hommes éduqués, amateurs de bières artisanales et de mode de vie actif
 
-Activités
-
-    act_Gym : Proche de la moyenne pour la fréquentation du gym (mean_cluster = 0.187, z = -0.001).
-    act_Run : Courent significativement plus que la moyenne (mean_cluster = 0.230, z = 0.264).
-    act_VisitsMuseums : Fréquentent davantage les musées que la moyenne (mean_cluster = 0.374, z = 0.183).
-    act_transport_Car : Légèrement plus enclins à utiliser une voiture (mean_cluster = 0.685, z = 0.142).
-    act_transport_Public : Nettement moins enclins à utiliser les transports en commun (mean_cluster = 0.0156, z = -0.220).
-
-Apparence
-
-    app_noTattoo : Légèrement moins nombreux à ne pas avoir de tatouages (mean_cluster = 0.700, z = -0.136).
-    app_swag_Casual : Légèrement au-dessus de la moyenne pour le style casual (mean_cluster = 0.693, z = 0.0238).
-    app_swag_Vintage : Beaucoup moins enclins au style vintage (mean_cluster = 0.000, z = -0.183).
-
-Consommation
-
-    cons_Meat : Consomment plus de viande que la moyenne (mean_cluster = 0.981, z = 0.116).
-    cons_SmokeNever : Significativement plus nombreux à ne jamais fumer (mean_cluster = 0.638, z = 0.161).
-    cons_microBeers : Consommation de bières artisanales nettement au-dessus de la moyenne (mean_cluster = 1.00, z = 3.06).
-    cons_noDrink : Beaucoup moins enclins à ne pas boire d’alcool (mean_cluster = 0.000, z = -0.491).
-    cons_redWineDrinkers : Nettement moins enclins à boire du vin rouge (mean_cluster = 0.000, z = -0.470).
-    cons_regBeers : Très en dessous de la moyenne pour les bières régulières (mean_cluster = 0.000, z = -0.387).
-
-Caractéristiques sociodémographiques
-
-    educUniv : Plus diplômés que la moyenne (mean_cluster = 0.860, z = 0.207).
-    incomeHigh : Nettement plus nombreux à avoir un revenu élevé (mean_cluster = 0.560, z = 0.412).
-    age55p : Beaucoup moins nombreux dans la tranche des 55 ans et plus (mean_cluster = 0.265, z = -0.211).
-    male : Majoritairement masculins, bien au-dessus de la moyenne (mean_cluster = 0.767, z = 0.573).
-    langFr : Légèrement plus francophones que la moyenne (mean_cluster = 0.782, z = 0.089).
-
-SES et logement
-
-    ses_dwelling_condo : Moins nombreux à vivre en copropriété (mean_cluster = 0.0311, z = -0.231).
-    ses_dwelling_detached : Plus nombreux à vivre en maison unifamiliale (mean_cluster = 0.611, z = 0.191).
+    act_Gym : La fréquentation du gym est similaire à la population générale (18,7 % vs. 18,7 %, -0,00119 standardisé).
+    act_MotorizedOutdoorActivities : Une légère surreprésentation pour les activités motorisées de plein air (16,7 % vs. 16,2 %, +0,0221).
+    act_Run : Courir est nettement plus fréquent dans ce cluster (23,0 %) comparé à la population générale (13,8 %, +0,264).
+    act_VisitsMuseumsGaleries : Les visites de musées et galeries sont plus fréquentes (37,4 % vs. 32,9 %, +0,183).
+    act_Volunteering : Le volontariat est légèrement plus présent (34,1 % vs. 32,5 %, +0,0551).
+    act_Yoga : La pratique du yoga est légèrement inférieure (10,5 % vs. 11,3 %, -0,0256).
+    act_transport_Car : Ce groupe utilise davantage la voiture (68,5 % vs. 61,6 %, +0,142).
+    act_transport_PublicTransportation : Les transports publics sont peu utilisés (1,56 % vs. 7,28 %, -0,220), marquant une sous-représentation.
+    age55p : Les individus de 55 ans et plus sont sous-représentés (26,5 % vs. 36,6 %, -0,211).
+    app_noTattoo : Moins d'individus n'ont pas de tatouages (70,0 %) que dans la population générale (75,9 %, -0,136).
+    app_swag_Casual : Le style casual est similaire au reste de la population (69,3 % vs. 68,2 %, +0,0238).
+    app_swag_VintageHippBoheme : Absence du style vintage ou bohème (0 % vs. 3,25 %, -0,183).
+    cons_Meat : La consommation de viande est très élevée (98,1 % vs. 95,7 %, +0,116).
+    cons_Smoke : La consommation de tabac est inférieure (5,06 % vs. 9,36 %, -0,148).
+    cons_SmokeNever : Une forte proportion n’a jamais fumé (63,8 % vs. 55,8 %, +0,161).
+    cons_brand_ChainesB : Consommation légèrement supérieure des chaînes B (30,4 % vs. 28,2 %, +0,0470).
+    cons_brand_Frip : Très faible fréquentation des friperies (0,39 % vs. 9,30 %, -0,307), indiquant une sous-représentation significative.
+    cons_brand_GSurf : Légèrement plus de consommation de marques surf (24,5 % vs. 21,9 %, +0,0621).
+    cons_brand_MaR : Consommation équivalente de marques « MaR » (21,0 % vs. 20,9 %, +0,00297).
+    cons_cocktailsDrink : Aucune consommation de cocktails (0 % vs. 11,3 %, -0,358), marquant une sous-représentation importante.
+    cons_coffee_Starbucks : Starbucks est consommé à des niveaux similaires (13,2 % vs. 12,7 %, +0,0158).
+    cons_coffee_place_noCoffee : L'absence de consommation de café est proche de la moyenne (35,4 % vs. 37,2 %, -0,0372).
+    cons_microBeers : La consommation de bières artisanales est extrêmement élevée (100 % vs. 9,63 %, +3,06), ce qui est une caractéristique marquante.
+    cons_noDrink : L'abstinence d'alcool est totalement absente (0 % vs. 19,4 %, -0,491), marquant une forte sous-représentation.
+    cons_redWineDrink : Absence totale de consommation de vin rouge (0 % vs. 18,1 %, -0,470).
+    cons_regBeers : Aucune consommation de bières régulières (0 % vs. 13,0 %, -0,387).
+    educUniv : Très forte proportion d’individus ayant un niveau universitaire (86,0 % vs. 77,3 %, +0,207).
+    immigrant : Légèrement moins d’immigrants (14,0 % vs. 16,5 %, -0,0663).
+    incomeHigh : Forte proportion de revenus élevés (56,0 % vs. 36,2 %, +0,412).
+    langFr : Une majorité francophone (78,2 % vs. 74,3 %, +0,0890).
+    male : Forte surreprésentation des hommes (76,7 % vs. 48,0 %, +0,573).
+    ses_dwelling_condo : Faible proportion habitant en condo (3,11 % vs. 10,1 %, -0,231).
+    ses_dwelling_detachedHouse : Une majorité vit dans des maisons détachées (61,1 % vs. 51,5 %, +0,191).
+    ses_hetero : Très forte proportion d’hétérosexualité (93,4 % vs. 88,7 %, +0,148).
 
 Résumé
 
-Ce cluster se distingue par une population majoritairement masculine, jeune, éduquée, à revenu élevé, et consommant des bières artisanales. Ils courent davantage, visitent les musées, préfèrent les maisons unifamiliales et utilisent principalement une voiture.
+Ce cluster est dominé par des hommes francophones, jeunes (peu de 55+), bien éduqués, avec des revenus élevés. Ils consomment exclusivement des bières artisanales et sont grands consommateurs de viande. Ils privilégient les maisons détachées et la voiture pour se déplacer. Les transports publics, le vin rouge, les cocktails, et les friperies sont très peu présents.
+
+## Cluster 3 : Individus sobres, peu diplômés, et enclins au style de vie simple
+act_Gym : Faible fréquentation (13,5 % vs. 18,7 %, -0,135).
+act_MotorizedOutdoorActivities : Faible pratique (12,6 % vs. 16,2 %, -0,145).
+act_Run : Rarement pratiqué (9,13 % vs. 13,8 %, -0,136).
+act_VisitsMuseumsGaleries : Sous-représentation (24,8 % vs. 32,9 %, -0,329).
+act_Volunteering : Participation réduite (24,4 % vs. 32,5 %, -0,277).
+act_Yoga : Pratique limitée (4,79 % vs. 11,3 %, -0,206).
+act_transport_Car : Fréquemment utilisé (67,4 % vs. 61,6 %, +0,118).
+act_transport_PublicTransportation : Absent (0 % vs. 7,28 %, -0,280).
+age55p : Légèrement moins de 55+ (32,4 % vs. 36,6 %, -0,0875).
+app_noTattoo : Majoritairement sans tatouages (81,1 % vs. 75,9 %, +0,121).
+app_swag_Casual : Style casual sur-représenté (74,4 % vs. 68,2 %, +0,135).
+app_swag_VintageHippBoheme : Style absent (0 % vs. 3,25 %, -0,183).
+cons_Meat : Consommation élevée (96,3 % vs. 95,7 %, +0,0321).
+cons_Smoke : Consommation proche de la moyenne (8,68 % vs. 9,36 %, -0,0235).
+cons_SmokeNever : Forte proportion n’a jamais fumé (64,6 % vs. 55,8 %, +0,177).
+cons_brand_ChainesB : Légèrement inférieur (27,4 % vs. 28,2 %, -0,0186).
+cons_brand_Frip : Non consommé (0 % vs. 9,30 %, -0,320).
+cons_brand_GSurf : Sur-représentation (31,5 % vs. 21,9 %, +0,231).
+cons_brand_MaR : Légèrement sous-représenté (18,5 % vs. 20,9 %, -0,0590).
+cons_cocktailsDrink : Non consommé (0 % vs. 11,3 %, -0,358).
+cons_coffee_Starbucks : Sous-représenté (7,31 % vs. 12,7 %, -0,162).
+cons_coffee_place_noCoffee : Sur-représenté (51,6 % vs. 37,2 %, +0,298).
+cons_microBeers : Non consommé (0 % vs. 9,63 %, -0,326).
+cons_noDrink : Complètement abstinent (100 % vs. 19,4 %, +2,03).
+cons_redWineDrink : Non consommé (0 % vs. 18,1 %, -0,470).
+cons_regBeers : Non consommé (0 % vs. 13,0 %, -0,387).
+educUniv : Moins représenté (71,0 % vs. 77,3 %, -0,151).
+immigrant : Légèrement sur-représenté (17,8 % vs. 16,5 %, +0,0362).
+incomeHigh : Sous-représentation des hauts revenus (26,7 % vs. 36,2 %, -0,198).
+langFr : Légèrement sous-représenté (70,1 % vs. 74,3 %, -0,0968).
+male : Proportion légèrement inférieure (43,6 % vs. 48 %, -0,0888).
+ses_dwelling_condo : Non représenté (0 % vs. 10,1 %, -0,334).
+ses_dwelling_detachedHouse : Proportion similaire (51,1 % vs. 51,5 %, -0,00788).
+ses_hetero : Légèrement sur-représenté (89,5 % vs. 88,7 %, +0,0258).
+
+Ce cluster est composé d’individus légèrement plus âgés, majoritairement francophones, moins éduqués que la moyenne, et sans tatouages. Ils consomment principalement de la viande, évitent totalement l’alcool (bières, vin rouge, et cocktails), et préfèrent les marques surf. Ils privilégient la voiture comme mode de transport et vivent souvent dans des maisons détachées, jamais en condos. Les activités physiques, culturelles et bénévoles, ainsi que les friperies, sont très peu présentes dans ce groupe.
+
+## Cluster 4 : Jeunes femmes au style vintage, actives culturellement et modérées dans leur consommation de viande
+
+act_Gym : Fréquentation du gym légèrement au-dessus de la moyenne (20,4 % vs. 18,7 %, +0,0422).
+act_MotorizedOutdoorActivities : Pratique des activités motorisées de plein air sur-représentée (22,2 % vs. 16,2 %, +0,245).
+act_Run : Courir est beaucoup plus fréquent dans ce cluster (25,9 % vs. 13,8 %, +0,350).
+act_VisitsMuseumsGaleries : Les visites de musées et galeries sont très sur-représentées (43,5 % vs. 32,9 %, +0,435).
+act_Volunteering : Volontariat légèrement supérieur à la moyenne (35,4 % vs. 32,5 %, +0,0987).
+act_Yoga : Yoga fortement sur-représenté (26,9 % vs. 11,3 %, +0,490).
+act_transport_Car : Utilisation de la voiture légèrement sous-représentée (54,6 % vs. 61,6 %, -0,143).
+act_transport_PublicTransportation : Usage des transports publics similaire à la moyenne (7,41 % vs. 7,28 %, +0,00472).
+age55p : Proportion faible de 55 ans et plus (23,1 % vs. 36,6 %, -0,280).
+app_noTattoo : Moins de personnes sans tatouages (63,9 % vs. 75,9 %, -0,280).
+app_swag_Casual : Style casual totalement absent (0 % vs. 68,2 %, -1,46).
+app_swag_VintageHippBoheme : Style vintage, hippie ou bohème très sur-représenté (100 % vs. 3,25 %, +5,45).
+cons_Meat : Consommation de viande sous-représentée (85,2 % vs. 95,7 %, -0,518).
+cons_Smoke : Consommation de tabac sur-représentée (16,7 % vs. 9,36 %, +0,251).
+cons_SmokeNever : Moins d’individus n’ayant jamais fumé (48,1 % vs. 55,8 %, -0,154).
+cons_brand_ChainesB : Consommation des chaînes B sous-représentée (15,7 % vs. 28,2 %, -0,278).
+cons_brand_Frip : Consommation des friperies très sur-représentée (28,7 % vs. 9,30 %, +0,668).
+cons_brand_GSurf : Marques surf sous-représentées (12 % vs. 21,9 %, -0,239).
+cons_brand_MaR : Consommation de marques « MaR » légèrement inférieure (18,5 % vs. 20,9 %, -0,0584).
+cons_cocktailsDrink : Consommation de cocktails légèrement supérieure (17,6 % vs. 11,3 %, +0,197).
+cons_coffee_Starbucks : Starbucks légèrement sous-représenté (10,2 % vs. 12,7 %, -0,0756).
+cons_coffee_place_noCoffee : Moins de non-consommateurs de café (25,9 % vs. 37,2 %, -0,233).
+cons_microBeers : Consommation de bières artisanales similaire à la moyenne (9,26 % vs. 9,63 %, -0,0127).
+cons_noDrink : Proportion de non-buveurs équivalente à la moyenne (19,4 % vs. 19,4 %, -0,0000422).
+cons_redWineDrink : Consommation de vin rouge légèrement sous-représentée (13,9 % vs. 18,1 %, -0,110).
+cons_regBeers : Consommation de bières régulières légèrement supérieure (17,6 % vs. 13 %, +0,136).
+educUniv : Proportion d’universitaires légèrement inférieure (74,1 % vs. 77,3 %, -0,0778).
+immigrant : Proportion d’immigrants similaire à la moyenne (15,7 % vs. 16,5 %, -0,0196).
+incomeHigh : Revenus élevés sous-représentés (23,1 % vs. 36,2 %, -0,272).
+langFr : Proportion légèrement inférieure de francophones (69,4 % vs. 74,3 %, -0,112).
+male : Proportion d’hommes nettement inférieure (35,2 % vs. 48 %, -0,257).
+ses_dwelling_condo : Proportion légèrement supérieure de personnes vivant en condos (12 % vs. 10,1 %, +0,0659).
+ses_dwelling_detachedHouse : Proportion plus faible vivant en maisons détachées (43,5 % vs. 51,5 %, -0,160).
+ses_hetero : Proportion plus faible d’hétérosexuels (78,7 % vs. 88,7 %, -0,315).
+
+Résumé des points saillants :
+
+Ce cluster se caractérise par une forte représentation des jeunes femmes francophones avec un style vestimentaire vintage, hippie ou bohème. Elles sont très actives physiquement (yoga, course, gym) et culturellement (visites de musées, bénévolat), mais consomment peu de viande. La consommation de friperies et de cocktails est sur-représentée, tandis que les marques surf, chaînes B, et le style casual sont absents. Les revenus élevés, l'éducation universitaire, et les maisons détachées sont sous-représentés, tout comme la proportion d’hétérosexuels.
+
+## Cluster 5 : Seniors traditionnels et consommateurs de vin rouge
+act_Gym : Faible fréquentation du gym (8,06 % vs. 18,7 %, -0,273).
+act_MotorizedOutdoorActivities : Participation réduite aux activités motorisées de plein air (9,95 % vs. 16,2 %, -0,253).
+act_Run : Courir est très rare (3,38 % vs. 13,8 %, -0,303).
+act_VisitsMuseumsGaleries : Participation légèrement inférieure aux visites de musées (30,6 % vs. 32,9 %, -0,0932).
+act_Volunteering : Niveau de volontariat proche de la moyenne (32,3 % vs. 32,5 %, -0,00748).
+act_Yoga : Yoga très peu pratiqué (3,77 % vs. 11,3 %, -0,238).
+act_transport_Car : Usage de la voiture légèrement supérieur (65,5 % vs. 61,6 %, +0,0812).
+act_transport_PublicTransportation : Aucune utilisation des transports publics (0 % vs. 7,28 %, -0,280).
+age55p : Fortement dominé par les 55 ans et plus (64,4 % vs. 36,6 %, +0,576).
+app_noTattoo : Très peu de tatouages (86 % vs. 75,9 %, +0,236).
+app_swag_Casual : Style casual fortement sur-représenté (77,8 % vs. 68,2 %, +0,206).
+app_swag_VintageHippBoheme : Style vintage, hippie ou bohème absent (0 % vs. 3,25 %, -0,183).
+cons_Meat : Consommation de viande très élevée (98,7 % vs. 95,7 %, +0,148).
+cons_Smoke : Consommation de tabac légèrement inférieure (6,50 % vs. 9,36 %, -0,0982).
+cons_SmokeNever : Proportion légèrement inférieure de non-fumeurs (52,4 % vs. 55,8 %, -0,0685).
+cons_brand_ChainesB : Consommation de chaînes B sous-représentée (17,4 % vs. 28,2 %, -0,240).
+cons_brand_Frip : Absence de consommation de friperies (0 % vs. 9,30 %, -0,320).
+cons_brand_GSurf : Marques surf légèrement sur-représentées (28,6 % vs. 21,9 %, +0,161).
+cons_brand_MaR : Marques « MaR » fortement consommées (31,3 % vs. 20,9 %, +0,257).
+cons_cocktailsDrink : Absence totale de consommation de cocktails (0 % vs. 11,3 %, -0,358).
+cons_coffee_Starbucks : Starbucks très sous-représenté (3,12 % vs. 12,7 %, -0,288).
+cons_coffee_place_noCoffee : Sur-représentation des non-consommateurs de café (49,7 % vs. 37,2 %, +0,258).
+cons_microBeers : Bières artisanales absentes (0 % vs. 9,63 %, -0,326).
+cons_noDrink : Aucune abstinence d'alcool (0 % vs. 19,4 %, -0,491).
+cons_redWineDrink : Consommation de vin rouge fortement sur-représentée (44,1 % vs. 18,1 %, +0,674).
+cons_regBeers : Bières régulières absentes (0 % vs. 13 %, -0,387).
+educUniv : Proportion légèrement inférieure d’universitaires (72,6 % vs. 77,3 %, -0,114).
+immigrant : Moins d’immigrants (11,1 % vs. 16,5 %, -0,146).
+incomeHigh : Proportion de hauts revenus proche de la moyenne (32,9 % vs. 36,2 %, -0,0689).
+langFr : Francophones légèrement sur-représentés (78,0 % vs. 74,3 %, +0,0847).
+male : Proportion d’hommes proche de la moyenne (47,5 % vs. 48 %, -0,0116).
+ses_dwelling_condo : Aucune présence en condos (0 % vs. 10,1 %, -0,334).
+ses_dwelling_detachedHouse : Sur-représentation des maisons détachées (64,6 % vs. 51,5 %, +0,262).
+ses_hetero : Forte proportion d’hétérosexuels (92,7 % vs. 88,7 %, +0,127).
+
+Résumé des points saillants :
+
+Le Cluster 5 est dominé par des individus âgés de 55 ans et plus, majoritairement francophones, sans tatouages, et avec un style vestimentaire casual. Ils consomment principalement de la viande et du vin rouge, évitant totalement les cocktails, la bière artisanale et les bières régulières. Ils privilégient les maisons détachées comme lieu de résidence et la voiture pour se déplacer. Les activités physiques (yoga, gym, course) et culturelles (musées) sont peu présentes, et ils ne fréquentent pas les friperies. Les transports publics et les condos sont complètement absents de leur mode de vie.
+
+## Cluster 6 : Hommes francophones amateurs de bière régulière
+act_Gym : Fréquentation du gym légèrement inférieure à la moyenne (18,0 % vs. 18,7 %, -0,0190).
+act_MotorizedOutdoorActivities : Activités motorisées de plein air légèrement sur-représentées (18,5 % vs. 16,2 %, +0,0952).
+act_Run : Courir est moins fréquent (10,1 % vs. 13,8 %, -0,109).
+act_VisitsMuseumsGaleries : Visites de musées nettement sous-représentées (24,1 % vs. 32,9 %, -0,360).
+act_Volunteering : Volontariat réduit (26,0 % vs. 32,5 %, -0,223).
+act_Yoga : Yoga très peu pratiqué (3,15 % vs. 11,3 %, -0,258).
+act_transport_Car : Forte utilisation de la voiture (65,3 % vs. 61,6 %, +0,0763).
+act_transport_PublicTransportation : Aucune utilisation des transports publics (0 % vs. 7,28 %, -0,280).
+age55p : Légère sur-représentation des 55 ans et plus (43,2 % vs. 36,6 %, +0,137).
+app_noTattoo : Majorité sans tatouages (77,9 % vs. 75,9 %, +0,0481).
+app_swag_Casual : Style casual fortement sur-représenté (76,3 % vs. 68,2 %, +0,176).
+app_swag_VintageHippBoheme : Style vintage ou bohème absent (0 % vs. 3,25 %, -0,183).
+cons_Meat : Consommation de viande très élevée (98,4 % vs. 95,7 %, +0,134).
+cons_Smoke : Consommation de tabac légèrement plus fréquente (14,5 % vs. 9,36 %, +0,177).
+cons_SmokeNever : Moins de non-fumeurs (40,7 % vs. 55,8 %, -0,304).
+cons_brand_ChainesB : Consommation des chaînes B légèrement inférieure (23,0 % vs. 28,2 %, -0,116).
+cons_brand_Frip : Absence totale de consommation de friperies (0 % vs. 9,30 %, -0,320).
+cons_brand_GSurf : Marques surf sur-représentées (37,2 % vs. 21,9 %, +0,369).
+cons_brand_MaR : Consommation de marques « MaR » légèrement supérieure (22,4 % vs. 20,9 %, +0,0371).
+cons_cocktailsDrink : Aucune consommation de cocktails (0 % vs. 11,3 %, -0,358).
+cons_coffee_Starbucks : Starbucks très sous-représenté (6,62 % vs. 12,7 %, -0,183).
+cons_coffee_place_noCoffee : Non-consommateurs de café légèrement sous-représentés (32,8 % vs. 37,2 %, -0,0910).
+cons_microBeers : Bières artisanales totalement absentes (0 % vs. 9,63 %, -0,326).
+cons_noDrink : Aucun abstinent d'alcool (0 % vs. 19,4 %, -0,491).
+cons_redWineDrink : Aucune consommation de vin rouge (0 % vs. 18,1 %, -0,470).
+cons_regBeers : Consommation de bières régulières extrêmement sur-représentée (100 % vs. 13 %, +2,59).
+educUniv : Proportion légèrement inférieure d’universitaires (70,3 % vs. 77,3 %, -0,167).
+immigrant : Moins d’immigrants (11,7 % vs. 16,5 %, -0,129).
+incomeHigh : Revenus élevés légèrement sous-représentés (32,2 % vs. 36,2 %, -0,0840).
+langFr : Francophones légèrement sur-représentés (75,7 % vs. 74,3 %, +0,0317).
+male : Majorité écrasante d’hommes (82,0 % vs. 48 %, +0,680).
+ses_dwelling_condo : Proportion très faible vivant en condos (0,95 % vs. 10,1 %, -0,303).
+ses_dwelling_detachedHouse : Légère sur-représentation des maisons détachées (55,8 % vs. 51,5 %, +0,0860).
+ses_hetero : Forte proportion d’hétérosexuels (93,1 % vs. 88,7 %, +0,138).
+
+Résumé des points saillants :
+
+Le Cluster 6 est dominé par des hommes francophones, légèrement plus âgés, sans tatouages, et au style casual. Ce groupe consomme exclusivement des bières régulières et beaucoup de viande, tout en évitant complètement le vin rouge, les cocktails et les bières artisanales. Ils privilégient la voiture pour se déplacer et vivent majoritairement dans des maisons détachées, rarement en condos. Les activités culturelles, bénévoles et physiques (yoga, gym, course) sont peu présentes. Les transports publics et les friperies sont totalement absents de leur mode de vie.
+
+## Cluster 7 : Jeunes urbains adeptes des transports publics
+
+act_Gym : Fréquentation du gym sur-représentée (24,9 % vs. 18,7 %, +0,158).
+act_MotorizedOutdoorActivities : Participation aux activités motorisées de plein air sous-représentée (13,0 % vs. 16,2 %, -0,130).
+act_Run : Courir est légèrement plus fréquent (19,2 % vs. 13,8 %, +0,155).
+act_VisitsMuseumsGaleries : Visites de musées et galeries sur-représentées (37,1 % vs. 32,9 %, +0,174).
+act_Volunteering : Niveau de volontariat proche de la moyenne (33,5 % vs. 32,5 %, +0,0336).
+act_Yoga : Yoga légèrement sur-représenté (15,3 % vs. 11,3 %, +0,125).
+act_transport_Car : Aucune utilisation de la voiture (0 % vs. 61,6 %, -1,27).
+act_transport_PublicTransportation : Usage exclusif des transports publics (100 % vs. 7,28 %, +3,57).
+age55p : Faible proportion de 55 ans et plus (21,4 % vs. 36,6 %, -0,316).
+app_noTattoo : Proportion sans tatouages proche de la moyenne (75,1 % vs. 75,9 %, -0,0175).
+app_swag_Casual : Style casual légèrement sous-représenté (64,6 % vs. 68,2 %, -0,0756).
+app_swag_VintageHippBoheme : Style vintage, hippie ou bohème absent (0 % vs. 3,25 %, -0,183).
+cons_Meat : Consommation de viande légèrement sous-représentée (94,3 % vs. 95,7 %, -0,0676).
+cons_Smoke : Consommation de tabac légèrement plus fréquente (13,1 % vs. 9,36 %, +0,128).
+cons_SmokeNever : Plus de non-fumeurs (62,4 % vs. 55,8 %, +0,134).
+cons_brand_ChainesB : Consommation des chaînes B sur-représentée (35,4 % vs. 28,2 %, +0,158).
+cons_brand_Frip : Légère sur-représentation des friperies (11,8 % vs. 9,30 %, +0,0857).
+cons_brand_GSurf : Marques surf légèrement sous-représentées (17,5 % vs. 21,9 %, -0,108).
+cons_brand_MaR : Consommation de marques « MaR » proche de la moyenne (18,3 % vs. 20,9 %, -0,0627).
+cons_cocktailsDrink : Consommation de cocktails légèrement sur-représentée (15,7 % vs. 11,3 %, +0,138).
+cons_coffee_Starbucks : Starbucks légèrement sous-représenté (11,8 % vs. 12,7 %, -0,0274).
+cons_coffee_place_noCoffee : Proportion de non-consommateurs de café proche de la moyenne (37,6 % vs. 37,2 %, +0,00720).
+cons_microBeers : Consommation de bières artisanales légèrement inférieure (7,86 % vs. 9,63 %, -0,0601).
+cons_noDrink : Proportion de non-consommateurs d’alcool sur-représentée (26,2 % vs. 19,4 %, +0,171).
+cons_redWineDrink : Consommation de vin rouge sous-représentée (13,5 % vs. 18,1 %, -0,119).
+cons_regBeers : Consommation de bières régulières légèrement sur-représentée (16,2 % vs. 13 %, +0,0937).
+educUniv : Niveau universitaire conforme à la moyenne (77,3 % vs. 77,3 %, -0,000964).
+immigrant : Forte sur-représentation des immigrants (29,7 % vs. 16,5 %, +0,357).
+incomeHigh : Faible proportion de hauts revenus (19,7 % vs. 36,2 %, -0,345).
+langFr : Proportion de francophones légèrement inférieure (65,9 % vs. 74,3 %, -0,192).
+male : Proportion d’hommes proche de la moyenne (49,8 % vs. 48 %, +0,0348).
+ses_dwelling_condo : Sur-représentation des condos (18,3 % vs. 10,1 %, +0,276).
+ses_dwelling_detachedHouse : Faible proportion de maisons détachées (19,7 % vs. 51,5 %, -0,638).
+ses_hetero : Moins d’hétérosexuels (79,5 % vs. 88,7 %, -0,291).
+
+Résumé des points saillants :
+
+Le Cluster 7 se distingue par son usage exclusif des transports publics (mean = 1, z = +3.57) et l’absence totale de voiture (mean = 0, z = -1.27). Les visites de musées sont fréquentes (mean = 37.1 %, z = +0.174), de même que la consommation de chaînes B (mean = 35.4 %, z = +0.158) et de friperies (mean = 11.8 %, z = +0.0857). Une proportion notable est abstinente d’alcool (mean = 26.2 %, z = +0.171), tandis que les maisons détachées sont rares (mean = 19.7 %, z = -0.638). Les condos sont sur-représentés (mean = 18.3 %, z = +0.276), tout comme les immigrants (mean = 29.7 %, z = +0.357).
+
+## Cluster 8 : Femmes francophones, éduquées et consommatrices de cocktails
+act_Gym : Fréquentation du gym légèrement supérieure à la moyenne (mean = 20.4 %, z = +0.0439).
+act_MotorizedOutdoorActivities : Participation aux activités motorisées de plein air légèrement au-dessus de la moyenne (mean = 18.2 %, z = +0.0837).
+act_Run : Course légèrement plus fréquente que la moyenne (mean = 14.6 %, z = +0.0218).
+act_VisitsMuseumsGaleries : Visites de musées et galeries sous-représentées (mean = 27.6 %, z = -0.214).
+act_Volunteering : Participation au volontariat proche de la moyenne (mean = 33.6 %, z = +0.0357).
+act_Yoga : Pratique du yoga légèrement sous-représentée (mean = 10.9 %, z = -0.0117).
+act_transport_Car : Forte utilisation de la voiture (mean = 73.4 %, z = +0.242).
+act_transport_PublicTransportation : Aucune utilisation des transports publics (mean = 0 %, z = -0.280).
+age55p : Faible proportion de 55 ans et plus (mean = 20.1 %, z = -0.344).
+app_noTattoo : Moins de membres sans tatouages (mean = 66.1 %, z = -0.229).
+app_swag_Casual : Préférence pour le style casual (mean = 73.4 %, z = +0.112).
+app_swag_VintageHippBoheme : Absence totale du style vintage ou bohème (mean = 0 %, z = -0.183).
+cons_Meat : Consommation de viande légèrement inférieure à la moyenne (mean = 95.3 %, z = -0.0217).
+cons_Smoke : Consommation de tabac légèrement sous-représentée (mean = 6.93 %, z = -0.0833).
+cons_SmokeNever : Forte proportion de non-fumeurs (mean = 68.6 %, z = +0.258).
+cons_brand_ChainesB : Consommation de chaînes B nettement sur-représentée (mean = 43.8 %, z = +0.346).
+cons_brand_Frip : Friperies quasiment absentes (mean = 0.37 %, z = -0.308).
+cons_brand_GSurf : Marques surf légèrement sous-représentées (mean = 19.3 %, z = -0.0628).
+cons_brand_MaR : Consommation de marques « MaR » proche de la moyenne (mean = 19.0 %, z = -0.0470).
+cons_cocktailsDrink : Consommation exclusive de cocktails (mean = 100 %, z = +2.79).
+cons_coffee_Starbucks : Starbucks nettement sur-représenté (mean = 20.1 %, z = +0.221).
+cons_coffee_place_noCoffee : Moins de non-consommateurs de café (mean = 30.3 %, z = -0.143).
+cons_microBeers : Bières artisanales absentes (mean = 0 %, z = -0.326).
+cons_noDrink : Aucune abstinence d’alcool (mean = 0 %, z = -0.491).
+cons_redWineDrink : Aucune consommation de vin rouge (mean = 0 %, z = -0.470).
+cons_regBeers : Aucune consommation de bières régulières (mean = 0 %, z = -0.387).
+educUniv : Niveau universitaire légèrement au-dessus de la moyenne (mean = 79.2 %, z = +0.0445).
+immigrant : Proportion d’immigrants légèrement sous-représentée (mean = 13.5 %, z = -0.0799).
+incomeHigh : Revenus élevés sur-représentés (mean = 47.1 %, z = +0.226).
+langFr : Francophones légèrement sur-représentés (mean = 78.8 %, z = +0.103).
+male : Faible proportion d’hommes (mean = 24.1 %, z = -0.479).
+ses_dwelling_condo : Condos nettement sous-représentés (mean = 1.82 %, z = -0.274).
+ses_dwelling_detachedHouse : Maisons détachées légèrement sur-représentées (mean = 59.5 %, z = +0.159).
+ses_hetero : Proportion d’hétérosexuels conforme à la moyenne (mean = 87.6 %, z = -0.0344).
+
+Résumé des points saillants :
+
+Le Cluster 8 est composé majoritairement de femmes francophones (mean = 24.1 % hommes, z = -0.479) éduquées (mean = 79.2 % universitaires, z = +0.0445) et avec des revenus élevés (mean = 47.1 %, z = +0.226). Ce groupe privilégie le style casual (mean = 73.4 %, z = +0.112) et consomme exclusivement des cocktails (mean = 100 %, z = +2.79) ainsi que des produits de chaînes B (mean = 43.8 %, z = +0.346). Les transports publics, les condos et les bières (artisanales ou régulières) sont absents de leur mode de vie. Enfin, ce groupe préfère la voiture pour se déplacer (mean = 73.4 %, z = +0.242) et les maisons détachées sont légèrement sur-représentées (mean = 59.5 %, z = +0.159).
+
+# Cluster 9 : Jeunes urbains actifs et amateurs de café Starbucks
+act_Gym : Fréquentation du gym fortement sur-représentée (mean = 39.4 %, z = +0.530).
+act_MotorizedOutdoorActivities : Activités motorisées de plein air nettement au-dessus de la moyenne (mean = 28.0 %, z = +0.479).
+act_Run : La course est très pratiquée (mean = 29.5 %, z = +0.453).
+act_VisitsMuseumsGaleries : Visites de musées et galeries sur-représentées (mean = 43.0 %, z = +0.415).
+act_Volunteering : Volontariat au-dessus de la moyenne (mean = 40.6 %, z = +0.275).
+act_Yoga : Yoga largement sur-représenté (mean = 31.1 %, z = +0.624).
+act_transport_Car : Utilisation de la voiture légèrement au-dessus de la moyenne (mean = 67.7 %, z = +0.126).
+act_transport_PublicTransportation : Aucune utilisation des transports publics (mean = 0 %, z = -0.280).
+age55p : Très faible proportion de 55 ans et plus (mean = 7.83 %, z = -0.598).
+app_noTattoo : Moins de membres sans tatouages (mean = 61.8 %, z = -0.330).
+app_swag_Casual : Style casual sous-représenté (mean = 50.9 %, z = -0.370).
+app_swag_VintageHippBoheme : Style vintage, hippie ou bohème absent (mean = 0 %, z = -0.183).
+cons_Meat : Consommation de viande légèrement inférieure (mean = 93.1 %, z = -0.128).
+cons_Smoke : Consommation de tabac légèrement plus fréquente (mean = 12.7 %, z = +0.114).
+cons_SmokeNever : Non-fumeurs proches de la moyenne (mean = 56.9 %, z = +0.0222).
+cons_brand_ChainesB : Consommation des chaînes B fortement sur-représentée (mean = 55.8 %, z = +0.611).
+cons_brand_Frip : Friperies quasiment absentes (mean = 0.46 %, z = -0.304).
+cons_brand_GSurf : Marques surf sous-représentées (mean = 10.6 %, z = -0.274).
+cons_brand_MaR : Marques « MaR » nettement sous-représentées (mean = 12.7 %, z = -0.202).
+cons_cocktailsDrink : Consommation de cocktails fortement sous-représentée (mean = 1.15 %, z = -0.321).
+cons_coffee_Starbucks : Starbucks fortement sur-représenté (mean = 35.5 %, z = +0.684).
+cons_coffee_place_noCoffee : Non-consommateurs de café largement sous-représentés (mean = 9.45 %, z = -0.574).
+cons_microBeers : Bières artisanales absentes (mean = 0 %, z = -0.326).
+cons_noDrink : Proportion de non-consommateurs d’alcool inférieure (mean = 4.84 %, z = -0.369).
+cons_redWineDrink : Consommation de vin rouge au-dessus de la moyenne (mean = 27.2 %, z = +0.235).
+cons_regBeers : Bières régulières peu consommées (mean = 2.3 %, z = -0.318).
+educUniv : Très forte proportion d’universitaires (mean = 91.5 %, z = +0.338).
+immigrant : Immigrants légèrement sur-représentés (mean = 22.8 %, z = +0.171).
+incomeHigh : Revenus élevés nettement sur-représentés (mean = 51.6 %, z = +0.320).
+langFr : Proportion de francophones proche de la moyenne (mean = 73.0 %, z = -0.0293).
+male : Faible proportion d’hommes (mean = 35.0 %, z = -0.261).
+ses_dwelling_condo : Condos très peu présents (mean = 0.46 %, z = -0.319).
+ses_dwelling_detachedHouse : Maisons détachées légèrement sur-représentées (mean = 60.1 %, z = +0.172).
+ses_hetero : Proportion d’hétérosexuels proche de la moyenne (mean = 86.2 %, z = -0.0791).
+
+Résumé des points saillants :
+
+Le Cluster 9 est composé de jeunes urbains très actifs physiquement (gym = 39.4 %, z = +0.530 ; course = 29.5 %, z = +0.453 ; yoga = 31.1 %, z = +0.624) et engagés dans des activités culturelles (musées = 43.0 %, z = +0.415) et de volontariat (volontariat = 40.6 %, z = +0.275). Ils consomment fréquemment des produits de chaînes B (mean = 55.8 %, z = +0.611) et de Starbucks (mean = 35.5 %, z = +0.684) mais évitent les bières artisanales et cocktails. Ce groupe est très éduqué (universitaires = 91.5 %, z = +0.338) et dispose de revenus élevés (mean = 51.6 %, z = +0.320). La proportion de femmes y est élevée (hommes = 35.0 %, z = -0.261) et ils préfèrent les maisons détachées aux condos. Les transports publics et le style casual sont peu présents dans leur mode de vie.
+
+## Cluster 10 : Femmes francophones adeptes des friperies
+act_Gym : Fréquentation du gym légèrement sous-représentée (mean = 13.6 %, z = -0.130).
+act_MotorizedOutdoorActivities : Activités motorisées légèrement au-dessus de la moyenne (mean = 18.2 %, z = +0.0810).
+act_Run : Pratique de la course en-dessous de la moyenne (mean = 9.92 %, z = -0.114).
+act_VisitsMuseumsGaleries : Visites de musées légèrement au-dessus de la moyenne (mean = 34.3 %, z = +0.0583).
+act_Volunteering : Volontariat légèrement sur-représenté (mean = 35.1 %, z = +0.0887).
+act_Yoga : Pratique du yoga légèrement au-dessus de la moyenne (mean = 12.8 %, z = +0.0471).
+act_transport_Car : Usage de la voiture légèrement au-dessus de la moyenne (mean = 63.6 %, z = +0.0421).
+act_transport_PublicTransportation : Usage quasi nul des transports publics (mean = 0.41 %, z = -0.264).
+age55p : Proportion de 55 ans et plus proche de la moyenne (mean = 39.7 %, z = +0.0630).
+app_noTattoo : Proportion sans tatouages légèrement inférieure (mean = 71.9 %, z = -0.0925).
+app_swag_Casual : Style casual légèrement sur-représenté (mean = 71.9 %, z = +0.0805).
+app_swag_VintageHippBoheme : Absence du style vintage ou bohème (mean = 0 %, z = -0.183).
+cons_Meat : Consommation de viande sous-représentée (mean = 90.9 %, z = -0.236).
+cons_Smoke : Consommation de tabac proche de la moyenne (mean = 10.3 %, z = +0.0333).
+cons_SmokeNever : Proportion de non-fumeurs sous-représentée (mean = 49.6 %, z = -0.125).
+cons_brand_ChainesB : Absence de consommation des chaînes B (mean = 0 %, z = -0.627).
+cons_brand_Frip : Consommation exclusive des friperies (mean = 100 %, z = +3.12).
+cons_brand_GSurf : Absence des marques surf (mean = 0 %, z = -0.530).
+cons_brand_MaR : Absence des marques « MaR » (mean = 0 %, z = -0.514).
+cons_cocktailsDrink : Consommation de cocktails sous-représentée (mean = 8.26 %, z = -0.0972).
+cons_coffee_Starbucks : Starbucks sous-représenté (mean = 8.68 %, z = -0.121).
+cons_coffee_place_noCoffee : Proportion de non-consommateurs de café légèrement sur-représentée (mean = 44.2 %, z = +0.145).
+cons_microBeers : Bières artisanales peu présentes (mean = 7.85 %, z = -0.0604).
+cons_noDrink : Abstinence d’alcool légèrement sur-représentée (mean = 25.2 %, z = +0.146).
+cons_redWineDrink : Consommation de vin rouge sous-représentée (mean = 12.8 %, z = -0.138).
+cons_regBeers : Consommation de bières régulières sous-représentée (mean = 10.3 %, z = -0.0795).
+educUniv : Proportion d’universitaires légèrement inférieure à la moyenne (mean = 71.5 %, z = -0.140).
+immigrant : Proportion d’immigrants légèrement sous-représentée (mean = 12.4 %, z = -0.110).
+incomeHigh : Revenus élevés sous-représentés (mean = 28.1 %, z = -0.169).
+langFr : Proportion de francophones légèrement sur-représentée (mean = 77.3 %, z = +0.0675).
+male : Faible proportion d’hommes (mean = 31.0 %, z = -0.341).
+ses_dwelling_condo : Faible proportion vivant en condos (mean = 2.89 %, z = -0.238).
+ses_dwelling_detachedHouse : Proportion légèrement au-dessus de la moyenne vivant en maisons détachées (mean = 58.3 %, z = +0.135).
+ses_hetero : Proportion d’hétérosexuels proche de la moyenne (mean = 85.1 %, z = -0.112).
+
+Résumé des points saillants :
+
+Le Cluster 10 se distingue par une consommation exclusive des friperies (mean = 100 %, z = +3.12) et une absence totale des chaînes B, des marques surf et des marques « MaR ». Ce groupe est majoritairement composé de femmes francophones (hommes = 31.0 %, z = -0.341 ; francophones = 77.3 %, z = +0.0675) ayant un intérêt pour le style casual (mean = 71.9 %, z = +0.0805). L'abstinence d’alcool est légèrement sur-représentée (mean = 25.2 %, z = +0.146), de même que l’usage de la voiture (mean = 63.6 %, z = +0.0421). Les revenus élevés et les universitaires sont sous-représentés, tout comme les transports publics, les cocktails, et le vin rouge.
