@@ -69,22 +69,25 @@ ul.task-list li input[type="checkbox"] {
 <p>Pour déterminer quelles variables sont les moins pertinentes à conserver à partir des résultats de l’analyse en composantes principales (PCA), nous pouvons examiner leurs coefficients dans les premiers axes principaux (PC1 à PC4). Les variables ayant des coefficients proches de zéro pour ces axes peuvent être considérées comme faiblement contributives à la variance des données globales. En général, on garde les variables ayant des coefficients élevés (en valeur absolue) sur au moins un des premiers axes, car cela signifie qu’elles expliquent une part significative de la variance.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="clustering_datagotchi_files/figure-html/pca-graph-1.png" class="img-fluid" width="672"></p>
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph1-1.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+<p>Visualisation des contributions des variables pour les premiers axes principaux fviz_pca_ind(pca_result0, geom.ind = “point”, col.ind = “cos2”, palette = “jco”, addEllipses = TRUE)</p>
+<p>Les résultats de l’analyse en composantes principales montrent la variance expliquée par chaque axe. Dans ce cas, nous choisissons de retenir les quatre premiers axes, qui expliquent la majorité de la variance dans les données.</p>
+<p>Les variables ayant des coefficients élevés sur ces axes sont les plus importantes pour expliquer la variance des données. Par exemple, les variables qui ont une forte contribution dans le premier ou deuxième axe doivent être retenues, tandis que celles avec une faible contribution sur les premiers axes peuvent être considérées comme moins pertinentes.</p>
+<section id="contribution-des-variables" class="level3">
+<h3 class="anchored" data-anchor-id="contribution-des-variables">Contribution des variables</h3>
+<p>La contribution des variables est calculée</p>
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="clustering_datagotchi_files/figure-html/pca-graph-2.png" class="img-fluid" width="672"></p>
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="clustering/graph/tableau_corr.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Tableau corrélation</figcaption>
-</figure>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph3-1.png" class="img-fluid" width="672"></p>
 </div>
-<section id="contribution-des-variables-et-corrélation" class="level3">
-<h3 class="anchored" data-anchor-id="contribution-des-variables-et-corrélation">Contribution des variables et corrélation</h3>
-<p>Graphiques contribution pondérée et 4 dimensions</p>
-<p>Tableaux corrélation et comparaisons contributions exactes des variables</p>
+</div>
 </section>
 <section id="sélection-variables-activité" class="level3">
 <h3 class="anchored" data-anchor-id="sélection-variables-activité">Sélection variables activité</h3>
@@ -106,7 +109,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="sélection-variables-cons_coffee" class="level3">
 <h3 class="anchored" data-anchor-id="sélection-variables-cons_coffee">Sélection variables cons_coffee</h3>
 <p><strong>cons_coffee_Starbucks</strong> est sélectionnée</p>
-<p><strong>cons_coffee_place_noCoffee</strong> et <strong>cons_coffee_TimH</strong> sont corrélées. <strong>cons_coffee_place_noCoffee</strong> est sélectionnée car plus grande contribution pondérée.</p>
+<p><strong>cons_coffee_place_noCoffee</strong> et <strong>cons_coffee_TimH</strong> sont corrélées.</p>
+<p><strong>cons_coffee_place_noCoffee</strong> est sélectionnée car plus grande contribution pondérée.</p>
 </section>
 <section id="sélection-variables-cons_food" class="level3">
 <h3 class="anchored" data-anchor-id="sélection-variables-cons_food">Sélection variables cons_food</h3>

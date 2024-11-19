@@ -23,49 +23,40 @@ format:
 
 Pour déterminer quelles variables sont les moins pertinentes à conserver à partir des résultats de l'analyse en composantes principales (PCA), nous pouvons examiner leurs coefficients dans les premiers axes principaux (PC1 à PC4). Les variables ayant des coefficients proches de zéro pour ces axes peuvent être considérées comme faiblement contributives à la variance des données globales. En général, on garde les variables ayant des coefficients élevés (en valeur absolue) sur au moins un des premiers axes, car cela signifie qu'elles expliquent une part significative de la variance.
 
-```{r pca-graph, echo=FALSE, fig.width=7, fig.height=5, message=FALSE, warning=FALSE}
+```{r pca-graph1, echo=FALSE, fig.width=7, fig.height=5, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
-library(cluster)
 library(factoextra)
 library(tidyr)
 library(ggcorrplot)
-library(tibble)
-library(gridExtra)
 
+# Charger les données
 df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
 data_filtered <- df_pilot_2021_merged %>%
   select(-c(X, source)) %>%
   drop_na()
 
+# Appliquer la PCA
 pca_result0 <- prcomp(
   data_filtered,
   scale = TRUE
 )
 
+summary(pca_result0)
+### Environ 3-4 composantes font l'affaire
+
+pca_result0$rotation[,1:4]
+
 fviz_eig(pca_result0, addlabels = TRUE)
 
-cor_matrix <- cor(x = data_filtered)
-
-cor_df <- as.data.frame(as.table(cor_matrix)) %>%
-  rename(Variable1 = Var1, Variable2 = Var2, Correlation = Freq)
-
-ggcorrplot::ggcorrplot(
-  cor_matrix,
-  method = "circle",
-  hc.order = TRUE,
-  type = "upper",
-  outline.color = "#00000000",
-  colors = c("#d4206b", "#ececec", "#20d48f")
-)
-
-knitr::include_graphics("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/graph/tableau_corr.png")
 
 ```
 
-### Contribution des variables
-La contribution des variables est calculée 
-```{r pca-graph, echo=FALSE, fig.width=7, fig.height=5, message=FALSE, warning=FALSE}
+Les résultats de l'analyse en composantes principales montrent la variance expliquée par chaque axe. Dans ce cas, nous choisissons de retenir les quatre premiers axes, qui expliquent la majorité de la variance dans les données.
+
+### Contribution des variables et corrélation
+Les variables ayant des coefficients élevés sur ces axes sont les plus importantes pour expliquer la variance des données. Par exemple, les variables qui ont une forte contribution dans le premier ou deuxième axe doivent être retenues, tandis que celles avec une faible contribution sur les premiers axes peuvent être considérées comme moins pertinentes.
+```{r pca-graph2, echo=FALSE, fig.width=12, fig.height=8, dpi=300, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
 library(dplyr)
 library(ggplot2)
 library(cluster)
@@ -129,7 +120,7 @@ for (group_name in names(groupes_variables)) {
   
   contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
 
-for (i in 1:num_axes) {
+  for (i in 1:num_axes) {
     contrib_group[, i] <- contrib_group[, i] * (variance_explained[i] / 100)
   }
   
@@ -137,7 +128,7 @@ for (i in 1:num_axes) {
   df_contrib$Variable <- rownames(df_contrib)
   df_contrib$Group <- group_name  
 
-   df_contrib <- df_contrib %>%
+  df_contrib <- df_contrib %>%
     pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution") %>%
     group_by(Group, Variable) %>%
     summarise(TotalContributionWeighted = sum(Contribution), .groups = "drop")
@@ -154,6 +145,18 @@ ggplot(all_contrib, aes(x = reorder(Variable, -TotalContributionWeighted), y = T
   theme_minimal() +
   theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
 
+```
+
+```{r pca-graph3, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+library(dplyr)
+library(ggplot2)
+library(factoextra)
+library(tidyr)
+library(tibble)
+
+# Supposons que vous avez déjà exécuté le code précédent et que `all_contrib` est disponible.
+
+# Création de all_contrib_dodge
 all_contrib_dodge <- data.frame()
 for (group_name in names(groupes_variables)) {
   vars_in_group <- groupes_variables[[group_name]]
@@ -172,6 +175,18 @@ for (group_name in names(groupes_variables)) {
   all_contrib_dodge <- bind_rows(all_contrib_dodge, df_contrib)
 }
 
+# Fusionner les contributions totales pondérées avec all_contrib_dodge
+all_contrib_dodge <- all_contrib_dodge %>%
+  left_join(all_contrib %>% select(Variable, TotalContributionWeighted), by = "Variable")
+
+# Reordonner les variables en fonction de la contribution totale pondérée
+all_contrib_dodge$Variable <- factor(all_contrib_dodge$Variable,
+                                     levels = all_contrib_dodge %>%
+                                       distinct(Variable, TotalContributionWeighted) %>%
+                                       arrange(TotalContributionWeighted) %>%
+                                       pull(Variable))
+
+# Créer le graphique avec les variables reclassées
 ggplot(all_contrib_dodge, aes(x = Variable, y = Contribution, fill = Axe)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
@@ -184,6 +199,33 @@ ggplot(all_contrib_dodge, aes(x = Variable, y = Contribution, fill = Axe)) +
 
 ```
 
+```{r corr-graph1, echo=FALSE, fig.width=20, fig.height=16, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+
+## corr_matrix
+cor_matrix <- cor(x = data_filtered)
+
+# Transformer la matrice en un format long (tidy)
+cor_df <- as.data.frame(as.table(cor_matrix)) %>%
+  rename(Variable1 = Var1, Variable2 = Var2, Correlation = Freq)
+
+ggcorrplot::ggcorrplot(
+  cor_matrix,
+  method = "circle",
+  hc.order = TRUE,
+  type = "upper",
+  outline.color = "#00000000",
+  colors = c("#d4206b", "#ececec", "#20d48f")
+)
+
+
+```
+
+```{r corr-graph2, echo=FALSE, fig.width=20, fig.height=16, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+knitr::include_graphics("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/graph/tableau_corr.png")
+
+```
+
+## Variables sélectionnées
 ### Sélection variables activité
 **act_VisitsMuseumsGaleries**, **act_Volunteering**, **act_Yoga**, **act_Run**, **act_Gym** ont des contributions intéressantes à au moins 1 des 4 dimensions et ne sont pas corrélées entre-elles.
 
@@ -235,6 +277,42 @@ Les trois variables sont corrélées mais **cons_Meat** a la plus grande contrib
 **act_transport_PublicTransportation** est sélectionnée
 
 **act_transport_Walk** et **act_transport_Car** sont corrélées, **act_transport_Car** est sélectionnée 
+
+## PCA sur variables sélectionnées
+```{r pcaSelect-graph1, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+# Variables sélectionnées selon contrib et correlation -------------------
+
+data_select <- df_pilot_2021_merged %>%
+  select(
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
+    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+    cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
+    cons_Meat,
+    cons_SmokeNever, cons_Smoke,
+    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
+    ses_dwelling_condo, ses_dwelling_detachedHouse,
+    act_transport_PublicTransportation, act_transport_Car
+  ) %>%
+  drop_na()
+
+# PCA --------------------------------------------------------------------
+
+pca_result <- prcomp(
+  data_select,
+  scale = TRUE
+)
+
+summary(pca_result)
+### Environ 3-4 composantes font l'affaire
+
+pca_result$rotation[,1:4]
+
+fviz_eig(pca_result, addlabels = TRUE)
+
+
+```
 
 ## Méthode du coude
 
