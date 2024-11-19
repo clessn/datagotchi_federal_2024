@@ -315,14 +315,90 @@ fviz_eig(pca_result, addlabels = TRUE)
 ```
 
 ## Méthode du coude
+```{r cluster-graph1, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+# Clustering -------------------------------------------------------------
 
-Décris la méthode du coude ici et insère des visualisations si nécessaire.
+## Normalisation des données (optionnelle, recommandé pour k-means)
+data_scaled <- scale(data_select)
 
-## Silouhette
 
-Décrire la méthode 
+### Coude
+wss <- sapply(2:15, function(k){
+  kmeans(data_scaled, centers = k, nstart = 25)$tot.withinss
+})
+
+# Tracer la courbe du coude
+plot(2:15, wss, type = "b", pch = 19, frame = FALSE, 
+     xlab = "Nombre de clusters K",
+     ylab = "Somme des carrés intra-cluster (withinss)",
+     main = "Méthode du coude pour déterminer K")
+
+```
+
+## Silhouette
+
+```{r cluster-graph2, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+# Calculer l'indice de silhouette pour différents k
+sil_width <- sapply(2:15, function(k){
+  km.res <- kmeans(data_scaled, centers = k, nstart = 25)
+  ss <- cluster::silhouette(km.res$cluster, dist(data_scaled))
+  mean(ss[, 3])
+})
+
+# Tracer la courbe de l'indice de silhouette
+plot(2:15, sil_width, type = "b", pch = 19, frame = FALSE,
+     xlab = "Nombre de clusters K",
+     ylab = "Largeur moyenne de la silhouette",
+     main = "Indice de silhouette pour déterminer K")
+```
+
+```{r cluster-graph3, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+wss_scaled <- (wss - min(wss)) / (max(wss) - min(wss))
+sil_width_scaled <- (sil_width - min(sil_width)) / (max(sil_width) - min(sil_width))
+
+wss_scaled_rev <- rev(wss_scaled)
+sil_sum <- wss_scaled_rev + sil_width_scaled
+
+plot(2:15, sil_sum, type = "b")
+```
+
 
 ## Nombre de cluster
+
+```{r cluster-graph4, echo=FALSE, fig.width=20, fig.height=16, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+
+for (i in c(3, 4, 5, 6, 8, 10)){
+  # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
+  set.seed(123)  # Pour rendre les résultats reproductibles
+  kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
+  # Ajouter les clusters aux données d'origine
+  data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
+}
+ #Calcul de la distance (ici, distance euclidienne)
+distance_matrix <- dist(data_scaled)
+
+# MDS pour réduction à 2 dimensions
+mds_result <- cmdscale(distance_matrix, k = 2)
+
+# Ajouter les coordonnées MDS aux données
+data_select$MDS1 <- mds_result[,1]
+data_select$MDS2 <- mds_result[,2]
+
+plot_data <- data_select |> 
+  tidyr::pivot_longer(
+    cols = starts_with("cluster_"),
+    names_to = "n_clusters",
+    values_to = "cluster",
+    names_prefix = "cluster_"
+  ) |> 
+  mutate(n_clusters = as.numeric(n_clusters))
+
+ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
+  geom_point(alpha = 0.3) +
+  clessnize::theme_clean_light() +
+  facet_wrap(~n_clusters) +
+  stat_ellipse()
+```
 
 10 clusters
 
