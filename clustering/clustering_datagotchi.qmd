@@ -88,6 +88,89 @@ Décris la méthode
 
 ## Nombre de cluster
 
+10 cluster
 
+# Description des clusters
 
+## Cluster 1 : Adultes urbains éduqués, amateurs de culture et de mode de vie modéré
 
+Activités
+
+    act_Gym : Plus fréquents au gym que la moyenne (mean_cluster = 0.224, z = 0.095).
+    act_VisitsMuseums : Fréquentent davantage les musées que la moyenne (mean_cluster = 0.387, z = 0.237).
+    act_Yoga : Proche de la moyenne pour le yoga (mean_cluster = 0.114, z = 0.003).
+    act_transport_Car : Très proche de la moyenne pour l’utilisation de la voiture (mean_cluster = 0.614, z = -0.003).
+    act_transport_Public : Utilisent beaucoup moins le transport en commun que la moyenne (mean_cluster = 0.000, z = -0.280).
+
+Apparence
+
+    app_noTattoo : Plus nombreux à ne pas avoir de tatouages (mean_cluster = 0.839, z = 0.187).
+    app_swag_Casual : Préférence légèrement au-dessus de la moyenne pour un style casual (mean_cluster = 0.693, z = 0.024).
+    app_swag_Vintage : Nettement moins enclins à un style vintage (mean_cluster = 0.000, z = -0.183).
+
+Consommation
+
+    cons_Meat : Légèrement moins consommateurs de viande que la moyenne (mean_cluster = 0.949, z = -0.040).
+    cons_redWineDrinkers : Consommation de vin rouge au-dessus de la moyenne (mean_cluster = 0.268, z = 0.225).
+    cons_coffee_Starbucks : Légèrement au-dessus de la moyenne (mean_cluster = 0.169, z = 0.127).
+    cons_microBeers : En dessous de la moyenne pour les bières artisanales (mean_cluster = 0.0630, z = -0.113).
+
+Caractéristiques sociodémographiques
+
+    educUniv : Plus diplômés (universitaires) que la moyenne (mean_cluster = 0.835, z = 0.146).
+    incomeHigh : Proche de la moyenne pour les revenus élevés (mean_cluster = 0.378, z = 0.033).
+    age55p : Proportion plus importante de personnes âgées de 55 ans et plus (mean_cluster = 0.457, z = 0.187).
+    immigrant : Légèrement plus d’immigrants que la moyenne (mean_cluster = 0.236, z = 0.193).
+    male : Plus d’hommes que la moyenne (mean_cluster = 0.543, z = 0.126).
+    langFr : Légèrement moins francophones que la moyenne (mean_cluster = 0.689, z = -0.124).
+
+SES et logement
+
+    ses_dwelling_condo : Très au-dessus de la moyenne pour les logements en copropriété (mean_cluster = 1.00, z = 2.99).
+    ses_dwelling_detached : Très en dessous de la moyenne pour les maisons unifamiliales (mean_cluster = 0.000, z = -1.03).
+
+Résumé
+
+Ce cluster se distingue par une population légèrement plus âgée, instruite, vivant majoritairement en copropriétés. Ils adoptent un style casual et consomment modérément du vin rouge. Ils fréquentent souvent les musées et le gym, mais ne privilégient ni le transport public ni les maisons unifamiliales.
+
+## Cluster 2 : Jeunes hommes éduqués, amateurs de bières artisanales et de mode de vie actif
+
+Activités
+
+    act_Gym : Proche de la moyenne pour la fréquentation du gym (mean_cluster = 0.187, z = -0.001).
+    act_Run : Courent significativement plus que la moyenne (mean_cluster = 0.230, z = 0.264).
+    act_VisitsMuseums : Fréquentent davantage les musées que la moyenne (mean_cluster = 0.374, z = 0.183).
+    act_transport_Car : Légèrement plus enclins à utiliser une voiture (mean_cluster = 0.685, z = 0.142).
+    act_transport_Public : Nettement moins enclins à utiliser les transports en commun (mean_cluster = 0.0156, z = -0.220).
+
+Apparence
+
+    app_noTattoo : Légèrement moins nombreux à ne pas avoir de tatouages (mean_cluster = 0.700, z = -0.136).
+    app_swag_Casual : Légèrement au-dessus de la moyenne pour le style casual (mean_cluster = 0.693, z = 0.0238).
+    app_swag_Vintage : Beaucoup moins enclins au style vintage (mean_cluster = 0.000, z = -0.183).
+
+Consommation
+
+    cons_Meat : Consomment plus de viande que la moyenne (mean_cluster = 0.981, z = 0.116).
+    cons_SmokeNever : Significativement plus nombreux à ne jamais fumer (mean_cluster = 0.638, z = 0.161).
+    cons_microBeers : Consommation de bières artisanales nettement au-dessus de la moyenne (mean_cluster = 1.00, z = 3.06).
+    cons_noDrink : Beaucoup moins enclins à ne pas boire d’alcool (mean_cluster = 0.000, z = -0.491).
+    cons_redWineDrinkers : Nettement moins enclins à boire du vin rouge (mean_cluster = 0.000, z = -0.470).
+    cons_regBeers : Très en dessous de la moyenne pour les bières régulières (mean_cluster = 0.000, z = -0.387).
+
+Caractéristiques sociodémographiques
+
+    educUniv : Plus diplômés que la moyenne (mean_cluster = 0.860, z = 0.207).
+    incomeHigh : Nettement plus nombreux à avoir un revenu élevé (mean_cluster = 0.560, z = 0.412).
+    age55p : Beaucoup moins nombreux dans la tranche des 55 ans et plus (mean_cluster = 0.265, z = -0.211).
+    male : Majoritairement masculins, bien au-dessus de la moyenne (mean_cluster = 0.767, z = 0.573).
+    langFr : Légèrement plus francophones que la moyenne (mean_cluster = 0.782, z = 0.089).
+
+SES et logement
+
+    ses_dwelling_condo : Moins nombreux à vivre en copropriété (mean_cluster = 0.0311, z = -0.231).
+    ses_dwelling_detached : Plus nombreux à vivre en maison unifamiliale (mean_cluster = 0.611, z = 0.191).
+
+Résumé
+
+Ce cluster se distingue par une population majoritairement masculine, jeune, éduquée, à revenu élevé, et consommant des bières artisanales. Ils courent davantage, visitent les musées, préfèrent les maisons unifamiliales et utilisent principalement une voiture.

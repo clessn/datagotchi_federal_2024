@@ -248,14 +248,10 @@ plot(2:15, sil_sum, type = "b")
 ### 7, 8 or 10 clusters
 
 
-# Boucle pour appliquer k-means pour différents nombres de clusters
-for (i in c(3, 5, 7, 10, 12, 14, 15)) {
+for (i in c(3, 4, 5, 6, 8, 10)){
+  # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
-  
-  # Ajouter le résultat dans la liste avec le nombre de clusters comme nom
-  kmeans_results[[paste0("k_", i)]] <- kmeans_result
-  
   # Ajouter les clusters aux données d'origine
   data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }

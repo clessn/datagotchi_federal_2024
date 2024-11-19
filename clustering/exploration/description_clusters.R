@@ -6,9 +6,6 @@ library(factoextra)
 library(tidyr)
 library(ggcorrplot)
 
-
-
-
 # Description des clusters -----------------------------------------------
 
 #### Function
@@ -57,37 +54,44 @@ describe_clusters <- function(data, variables_to_describe, cluster_var){
 }
 
 variables_to_describe <- c(
-"immigrant",
-"act_transport_PublicTransportation",
-"act_transport_Car",
-"ses_dwelling_house",
-"age34m",
-"age55p",
-"langFr",
-"langEn",
-"ses_languageOther",
-"female",
-"incomeHigh",
-"act_VisitsMuseumsGaleries",
-"act_Fishing",
-"act_Hunting",
-"act_MotorizedOutdoorActivities",
-"act_Volunteering",
-"act_Gym",
-"cons_coffee_McDo",
-"cons_coffee_place_noCoffee",
-"cons_coffee_TimH",
-"cons_Meat",
-"cons_Vege",
-"cons_Vegan",
-"cons_regBeers",
-"cons_redWineDrink",
-"cons_noDrink",
-"educHS" 
+  "act_VisitsMuseumsGaleries", 
+  "act_Volunteering", 
+  "act_Yoga", 
+  "act_Run", 
+  "act_Gym", 
+  "act_MotorizedOutdoorActivities",
+  "app_noTattoo", 
+  "app_swag_Casual", 
+  "app_swag_VintageHippBoheme",
+  "cons_regBeers", 
+  "cons_cocktailsDrink", 
+  "cons_microBeers", 
+  "cons_redWineDrink", 
+  "cons_noDrink",
+  "cons_brand_ChainesB", 
+  "cons_brand_GSurf", 
+  "cons_brand_MaR", 
+  "cons_brand_Frip",
+  "cons_coffee_Starbucks", 
+  "cons_coffee_place_noCoffee",
+  "cons_Meat",
+  "cons_SmokeNever", 
+  "cons_Smoke",
+  "immigrant", 
+  "educUniv", 
+  "age55p", 
+  "male", 
+  "ses_hetero", 
+  "langFr", 
+  "incomeHigh",
+  "ses_dwelling_condo", 
+  "ses_dwelling_detachedHouse",
+  "act_transport_PublicTransportation", 
+  "act_transport_Car"
 )
 
 describe_clusters(
-  data_num_reduit,
+  data_select,
   variables_to_describe = variables_to_describe,
-  cluster_var = "cluster_5"
-) |> print(n = 271) 
+  cluster_var = "cluster_10"
+) |> print(n = 340) 
