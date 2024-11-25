@@ -241,14 +241,10 @@ knitr::include_graphics("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2
 **cons_brand_ChainesB**, **cons_brand_GSurf**, **cons_brand_MaR**, **cons_brand_Frip**
 
 ### Sélection variables cons_coffee
-**cons_coffee_Starbucks** est sélectionnée
-
-**cons_coffee_place_noCoffee** et **cons_coffee_TimH** sont corrélées.
-
-**cons_coffee_place_noCoffee** est sélectionnée car plus grande contribution pondérée.
+**cons_coffee_Starbucks** **cons_coffee_place_noCoffee** et **cons_coffee_TimH** sont sélectionnées
 
 ### Sélection variables cons_food
-Les trois variables sont corrélées mais **cons_Meat** a la plus grande contribution.
+**cons_Meat**  et **cons_Vege** sont sélectionnées.
 
 ### Sélection variables cons_tabac
 **cons_SmokeNever** est sélectionnée, était corrélée avec **cons_SmokeStopped**
@@ -257,26 +253,21 @@ Les trois variables sont corrélées mais **cons_Meat** a la plus grande contrib
 ### Sélection variables demographie
 **immigrant** et **educUniv** sont sélectionnées
 
-**age34m** et **age55p** sont corrélées, **age55p** est sélectionnée
+**age34m** et **age55p** sont sélectionnées, 
 
 **male** et **female** sont parfaitement corrélées, **male** a une contribution légèrement suppérieure
 
-**ses_hetero**, **ses_gai**, **ses_bisex** sont corrélées, **ses_hetero** est sélectionnée
+**ses_hetero**, **ses_gai**, **ses_bisex** sont sélectionnées
 
-**langFr** et **ses_languageOther** sont corrélées, **langFr** est sélectionnée 
+**langFr**, **langEN** et **ses_languageOther** sont sélectionnées
 
-**incomeLow** et **incomeHigh** sont corrélées, **incomeHigh** est sélectionnée 
+**incomeLow** et **incomeHigh** sont sélectionnées 
 
 ### Sélection variables habitat
-**ses_dwelling_condo** est sélectionnée
-
-**ses_dwelling_app** et **ses_dwelling_detachedHouse** sont corrélées,
- **ses_dwelling_detachedHouse** est sélectionnée 
+**ses_dwelling_condo**, **ses_dwelling_app** et **ses_dwelling_detachedHouse** sont sélectionnées
 
 ### Sélection variables transport
-**act_transport_PublicTransportation** est sélectionnée
-
-**act_transport_Walk** et **act_transport_Car** sont corrélées, **act_transport_Car** est sélectionnée 
+**act_transport_PublicTransportation**, **act_transport_Walk** et **act_transport_Car** sont sélectionnées
 
 ## PCA sur variables sélectionnées
 ```{r pcaSelect-graph1, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
@@ -284,16 +275,22 @@ Les trois variables sont corrélées mais **cons_Meat** a la plus grande contrib
 
 data_select <- df_pilot_2021_merged %>%
   select(
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
     app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
     cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
-    cons_Meat,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
+    cons_Meat, cons_Vege,
     cons_SmokeNever, cons_Smoke,
-    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
-    ses_dwelling_condo, ses_dwelling_detachedHouse,
-    act_transport_PublicTransportation, act_transport_Car
+    immigrant, 
+    educUniv, educBHS,
+    age55p, age34m,
+    male,
+    ses_hetero, ses_gai,
+    langEn, langFr, ses_languageOther,
+    incomeHigh, incomeLow,
+    ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
   ) %>%
   drop_na()
 
@@ -367,7 +364,7 @@ plot(2:15, sil_sum, type = "b")
 
 ```{r cluster-graph4, echo=FALSE, fig.width=20, fig.height=16, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
 
-for (i in c(3, 4, 5, 6, 8, 10)){
+for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 12)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
@@ -398,6 +395,54 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   clessnize::theme_clean_light() +
   facet_wrap(~n_clusters) +
   stat_ellipse()
+```
+
+
+## répondants par cluster
+
+```{r cluster-graph5, echo=FALSE, fig.width=12, fig.height=8, message=FALSE, warning=FALSE, fig.landscape=TRUE, fig.fullwidth=TRUE}
+# Charger les librairies nécessaires
+# Charger les librairies nécessaires
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# Obtenir le nombre de répondants par cluster pour chaque k
+cluster_counts <- lapply(c(3, 4, 5, 6, 7, 8, 9, 10, 12), function(k) {
+  # Calculer le tableau de fréquences pour chaque cluster
+  table <- table(data_select[[paste0("cluster_", k)]])
+  
+  # Créer un vecteur avec toutes les positions de clusters pour k (1:k)
+  all_clusters <- 1:max(c(12, k)) # Jusqu'à 12 car c'est le plus grand k
+  
+  # Remplir les clusters avec les valeurs ou une case vide
+  sapply(all_clusters, function(cluster) {
+    if (cluster %in% names(table)) {
+      table[as.character(cluster)]
+    } else if (cluster <= k) {
+      0  # Si le cluster existe mais n'a pas de répondants
+    } else {
+      ""  # Laisser vide pour les clusters inexistants
+    }
+  })
+})
+
+# Transformer en data.frame avec les tailles de k comme rangées
+summary_table <- do.call(rbind, cluster_counts)
+rownames(summary_table) <- paste0("k = ", c(3, 4, 5, 6, 7, 8, 9, 10, 12))
+
+# Convertir en data.frame pour affichage
+summary_table <- as.data.frame(summary_table)
+
+# Ajouter des noms de colonnes pour les clusters
+colnames(summary_table) <- paste0("Cluster_", 1:ncol(summary_table))
+
+# Afficher le tableau avec LaTeX-friendly options pour PDF
+# Afficher le tableau avec `scale_down`
+summary_table %>%
+  kable(format = "latex", caption = "Nombre de répondants par cluster") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"), full_width = FALSE)
+
 ```
 
 10 clusters

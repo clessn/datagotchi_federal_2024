@@ -12,6 +12,7 @@ library(gridExtra)
 df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
 
+
 # Définir les groupes de variables --------------------------------
 groupes_variables <- list(
   transport = c("act_transport_Car", "act_transport_SUV", "act_transport_Moto", 
@@ -163,16 +164,22 @@ ggcorrplot::ggcorrplot(
 
 data_select <- df_pilot_2021_merged %>%
   select(
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
     app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
     cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
-    cons_Meat,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
+    cons_Meat, cons_Vege,
     cons_SmokeNever, cons_Smoke,
-    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
-    ses_dwelling_condo, ses_dwelling_detachedHouse,
-    act_transport_PublicTransportation, act_transport_Car
+    immigrant, 
+    educUniv, educBHS,
+    age55p, age34m,
+    male,
+    ses_hetero, ses_gai,
+    langEn, langFr, ses_languageOther,
+    incomeHigh, incomeLow,
+    ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
   ) %>%
   drop_na()
 
@@ -201,7 +208,7 @@ data_scaled <- scale(data_select)
 #### entre les clusters et où chaque cluster couvre un espace significatif
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 11, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 8, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -248,7 +255,7 @@ plot(2:15, sil_sum, type = "b")
 ### 7, 8 or 10 clusters
 
 
-for (i in c(3, 4, 5, 6, 8, 10)){
+for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 12)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
@@ -264,10 +271,12 @@ table(data_select$cluster_3)
 table(data_select$cluster_4)
 table(data_select$cluster_5)
 table(data_select$cluster_6)
+table(data_select$cluster_7)
+table(data_select$cluster_8)
+table(data_select$cluster_9)
 table(data_select$cluster_10)
 table(data_select$cluster_12)
-table(data_select$cluster_14)
-table(data_select$cluster_15)
+
 
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
 
