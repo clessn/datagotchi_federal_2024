@@ -586,12 +586,6 @@ data_clean$lifestyle_gaming_bin[data_raw$activity_13  == 1] <- 0
 data_clean$lifestyle_gaming_bin[data_raw$activity_13  %in% c(2, 3, 4, 5)] <- 1
 table(data_clean$lifestyle_gaming_bin)
 
-
-## activity_14 -----------------------------------------------------------
-
-
-
-
 ## type_transport --------------------------------------------------------
 
 table(data_raw$type_transport) 
