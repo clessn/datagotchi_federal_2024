@@ -586,6 +586,12 @@ data_clean$lifestyle_gaming_bin[data_raw$activity_13  == 1] <- 0
 data_clean$lifestyle_gaming_bin[data_raw$activity_13  %in% c(2, 3, 4, 5)] <- 1
 table(data_clean$lifestyle_gaming_bin)
 
+
+## activity_14 -----------------------------------------------------------
+
+
+
+
 ## type_transport --------------------------------------------------------
 
 table(data_raw$type_transport) 
@@ -682,95 +688,235 @@ table(data_clean$lifestyle_efficiency_bin)
 
 ## field_occupation ------------------------------------------------------
 
-
-
+table(data_raw$field_occupation)
+data_clean$lifestyle_field_occ <- NA
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 1] <- "management"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 2] <- "business"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 3] <- "natural_sciences"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 4] <- "health"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 5] <- "education_law_politics"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 6] <- "culture_sports"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 7] <- "sales"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 8] <- "trades"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 9] <- "agriculture"
+data_clean$lifestyle_field_occ[data_raw$field_occupation == 10] <- "manufacturing"
+data_clean$lifestyle_field_occ <- factor(data_clean$lifestyle_field_occ,
+                                                   levels = c("management",
+                                                              "business",
+                                                              "natural_sciences",
+                                                              "health",
+                                                              "education_law_politics",
+                                                              "culture_sports",
+                                                              "sales",
+                                                              "trades",
+                                                              "agriculture",
+                                                              "manufacturing"),
+                                                   ordered = TRUE)
+table(data_clean$lifestyle_field_occ)
 
 ## type_occupation -------------------------------------------------------
 
-
-
+table(data_raw$type_occupation)
+data_clean$lifestyle_type_occ <- NA
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 1] <- "labour_job"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 2] <- "intermediate_job"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 3] <- "technical_job"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 4] <- "professional_job"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 5] <- "management_job"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 6] <- "other"
+data_clean$lifestyle_type_occ[data_raw$type_occupation == 7] <- "no_job"
+data_clean$lifestyle_type_occ <- factor(data_clean$lifestyle_type_occ,
+                                         levels = c("labour_job",
+                                                    "intermediate_job",
+                                                    "technical_job",
+                                                    "professional_job",
+                                                    "management_job",
+                                                    "other",
+                                                    "no_job"),
+                                         ordered = TRUE)
+table(data_clean$lifestyle_type_occ)
 
 ## clothes_consumption ---------------------------------------------------
 
+table(data_raw$clothes_consumption)
+data_clean$lifestyle_clothes_cons <- NA
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 1] <- "department_store"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 2] <- "independent_store"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 3] <- "chain_store"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 4] <- "superstore"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 5] <- "online_store"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 6] <- "second_hand_store"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 7] <- "other"
+data_clean$lifestyle_clothes_cons <- factor(data_clean$lifestyle_clothes_cons,
+                                         levels = c("department_store",
+                                                    "independent_store",
+                                                    "chain_store",
+                                                    "superstore",
+                                                    "online_store",
+                                                    "second_hand_store",
+                                                    "other"),
+                                         ordered = TRUE)
+table(data_clean$lifestyle_clothes_cons)
 
+## mode_attitude_1 ---------------------------------------------------------
 
-
-## mode_attitude ---------------------------------------------------------
-
-
+table(data_raw$mode_attitude_1)
+data_clean$lifestyle_mode_att <- NA
+data_clean$lifestyle_mode_att <- data_raw$mode_attitude_1 / 10
+table(data_clean$lifestyle_mode_att)
 
 
 ## meat_consumption ------------------------------------------------------
 
-
-
+table(data_raw$meat_consumption)
+data_clean$lifestyle_meat_cons <- NA
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 1] <- 1
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 2] <- 0.83
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 3] <- 0.67
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 4] <- 0.5
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 5] <- 0.33
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 6] <- 0.17
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 7] <- 0
+table(data_clean$lifestyle_meat_cons)
 
 ## meal_time -------------------------------------------------------------
 
+## Sais pas trop comment cleaner ça ##
 
+## fridge_1 ----------------------------------------------------------------
 
-
-## fridge ----------------------------------------------------------------
-
-### fridge_1 -------------------------------------------------------------
-
-
-
+table(data_raw$fridge_1)
+data_clean$lifestyle_fridge_milk <- NA
+data_clean$lifestyle_fridge_milk[data_raw$fridge_1 == 1] <- 1
+data_clean$lifestyle_fridge_milk[data_raw$fridge_1 == 2] <- 0
+table(data_clean$lifestyle_fridge_milk)
 
 ### fridge_2 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_2)
+data_clean$lifestyle_fridge_tofu_tempeh <- NA
+data_clean$lifestyle_fridge_tofu_tempeh[data_raw$fridge_2 == 1] <- 1
+data_clean$lifestyle_fridge_tofu_tempeh[data_raw$fridge_2 == 2] <- 0
+table(data_clean$lifestyle_fridge_tofu_tempeh)
 
 ### fridge_3 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_3)
+data_clean$lifestyle_fridge_enerdrink <- NA
+data_clean$lifestyle_fridge_enerdrink[data_raw$fridge_3 == 1] <- 1
+data_clean$lifestyle_fridge_enerdrink[data_raw$fridge_3 == 2] <- 0
+table(data_clean$lifestyle_fridge_enerdrink)
 
 ### fridge_4 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_4)
+data_clean$lifestyle_fridge_pizza <- NA
+data_clean$lifestyle_fridge_pizza[data_raw$fridge_4 == 1] <- 1
+data_clean$lifestyle_fridge_pizza[data_raw$fridge_4 == 2] <- 0
+table(data_clean$lifestyle_fridge_pizza)
 
 ### fridge_5 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_5)
+data_clean$lifestyle_fridge_butter_tarts <- NA
+data_clean$lifestyle_fridge_butter_tarts[data_raw$fridge_5 == 1] <- 1
+data_clean$lifestyle_fridge_butter_tarts[data_raw$fridge_5 == 2] <- 0
+table(data_clean$lifestyle_fridge_butter_tarts)
 
 ### fridge_6 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_6)
+data_clean$lifestyle_fridge_bacon <- NA
+data_clean$lifestyle_fridge_bacon[data_raw$fridge_6 == 1] <- 1
+data_clean$lifestyle_fridge_bacon[data_raw$fridge_6 == 2] <- 0
+table(data_clean$lifestyle_fridge_bacon)
 
 ### fridge_7 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_7)
+data_clean$lifestyle_fridge_ceasar_dressing <- NA
+data_clean$lifestyle_fridge_ceasar_dressing[data_raw$fridge_7 == 1] <- 1
+data_clean$lifestyle_fridge_ceasar_dressing[data_raw$fridge_7 == 2] <- 0
+table(data_clean$lifestyle_fridge_ceasar_dressing)
 
 ### fridge_8 -------------------------------------------------------------
 
-
-
+table(data_raw$fridge_8)
+data_clean$lifestyle_fridge_org_veggies <- NA
+data_clean$lifestyle_fridge_org_veggies[data_raw$fridge_8 == 1] <- 1
+data_clean$lifestyle_fridge_org_veggies[data_raw$fridge_8 == 2] <- 0
+table(data_clean$lifestyle_fridge_org_veggies)
 
 ### fridge_9 -------------------------------------------------------------
 
+table(data_raw$fridge_9)
+data_clean$lifestyle_fridge_hot_sauce <- NA
+data_clean$lifestyle_fridge_hot_sauce[data_raw$fridge_9 == 1] <- 1
+data_clean$lifestyle_fridge_hot_sauce[data_raw$fridge_9 == 2] <- 0
+table(data_clean$lifestyle_fridge_hot_sauce)
 
+### fridge_10 -------------------------------------------------------------
 
+table(data_raw$fridge_10)
+data_clean$lifestyle_fridge_soft_drinks <- NA
+data_clean$lifestyle_fridge_soft_drinks[data_raw$fridge_10 == 1] <- 1
+data_clean$lifestyle_fridge_soft_drinks[data_raw$fridge_10 == 2] <- 0
+table(data_clean$lifestyle_fridge_soft_drink)
 
-### fridge_10 ------------------------------------------------------------
+### fridge_11 ------------------------------------------------------------
 
-
+table(data_raw$fridge_11)
+data_clean$lifestyle_fridge_ground_beef <- NA
+data_clean$lifestyle_fridge_ground_beef[data_raw$fridge_11 == 1] <- 1
+data_clean$lifestyle_fridge_ground_beef[data_raw$fridge_11 == 2] <- 0
+table(data_clean$lifestyle_fridge_ground_beef)
 
 
 ## coffee_consumption ---------------------------------------------------
 
-
-
+table(data_raw$coffee_consumption)
+data_clean$lifestyle_coffee_cons <- NA
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 1] <- "tim_hortons"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 2] <- "starbucks"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 3] <- "second_cup"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 4] <- "mcdonalds"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 5] <- "other"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 6] <- "independent"
+data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 7] <- "no_coffee"
+data_clean$lifestyle_coffee_cons <- factor(data_clean$lifestyle_coffee_cons,
+                                         levels = c("tim_hortons",
+                                                    "starbucks",
+                                                    "second_cup",
+                                                    "mcdonalds",
+                                                    "other",
+                                                    "independent",
+                                                    "no_coffee"),
+                                         ordered = TRUE)
+table(data_clean$lifestyle_coffee_cons)
 
 ## coffee_machine --------------------------------------------------------
 
-
-
+table(data_raw$coffee_machine)
+data_clean$lifestyle_coffee_mac <- NA
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 1] <- "filter_coffee_maker"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 2] <- "automatic_manual_machine"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 3] <- "percolator"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 4] <- "french_press"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 5] <- "single_cup_coffee"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 6] <- "instant_coffee"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 7] <- "italian_coffee_maker"
+data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 8] <- "no_coffee"
+data_clean$lifestyle_coffee_mac <- factor(data_clean$lifestyle_coffee_mac,
+                                         levels = c("filter_coffee_maker",
+                                                    "automatic_manual_machine",
+                                                    "percolator",
+                                                    "french_press",
+                                                    "single_cup_coffee",
+                                                    "instant_coffee",
+                                                    "italian_coffee_maker",
+                                                    "no_coffee"),
+                                         ordered = TRUE)
+table(data_clean$lifestyle_coffee_mac)
 
 ## cons_pet --------------------------------------------------------------
 data_clean$plifestyle_pet_ownership <- NA
@@ -842,26 +988,17 @@ table(data_clean$lifestyle_mari_freq)
 
 
 ## musical_band ----------------------------------------------------------
-table(data_raw$musical_band)
-data_clean$favourite_band <- NA
-data_clean$favourite_band[data_raw$musical_band == 1] <- 1
-table(data_clean$favourite_band)
+
 
 
 
 ## musical_style ---------------------------------------------------------
-table(data_raw$musical_style)
-data_clean$fav_music_style <- NA
-data_clean$fav_music_style[data_raw$musical_style == 1] <- 1
-table(data_clean$fav_music_style)
+
 
 
 
 ## movie_preference ------------------------------------------------------
-table(data_raw$movie_preference)
-data_clean$favourite_movie <- NA
-data_clean$favourite_movie[data_raw$movie_preference == 1] <- 1
-table(data_clean$favourite_movie)
+
 
 
 
