@@ -244,6 +244,35 @@ table(data_clean$ses_income)
 
 ## bilingualism-------------------------------------------------------------
 
+attributes(data_raw$ses_bilingual_2)
+table(data_raw$ses_bilingual_1)
+
+data_clean$ses_english_skills <- NA
+data_clean$ses_english_skills[data_raw$ses_bilingual_1 == 1] <- "Full proficiency"
+data_clean$ses_english_skills[data_raw$ses_bilingual_1 == 2] <- "Conversational level"
+data_clean$ses_english_skills[data_raw$ses_bilingual_1 == 3] <- "Basic level"
+data_clean$ses_english_skills[data_raw$ses_bilingual_1 == 4] <- "No proficiency"
+data_clean$ses_english_skills <- factor(data_clean$ses_english_skills, levels = c("Full proficiency",
+                                                                  "Conversational level",
+                                                                  "Basic level",
+                                                                  "No proficiency"))
+table(data_clean$ses_english_skills)
+  
+  
+  
+  
+data_clean$ses_french_skills <- NA
+data_clean$ses_french_skills[data_raw$ses_bilingual_2 == 1] <- "Full proficiency"
+data_clean$ses_french_skills[data_raw$ses_bilingual_2 == 2] <- "Conversational level"
+data_clean$ses_french_skills[data_raw$ses_bilingual_2 == 3] <- "Basic level"
+data_clean$ses_french_skills[data_raw$ses_bilingual_2 == 4] <- "No proficiency"
+data_clean$ses_french_skills <- factor(data_clean$ses_french_skills, levels = c("Full proficiency",
+                                                                          "Conversational level",
+                                                                          "Basic level",
+                                                                          "No proficiency"))
+table(data_clean$ses_french_skills)
+
+
 
 
 ## environment -------------------------------------------------------------
