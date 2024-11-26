@@ -848,17 +848,26 @@ table(data_clean$lifestyle_mari_freq)
 
 
 ## musical_band ----------------------------------------------------------
-
+table(data_raw$musical_band)
+data_clean$favourite_band <- NA
+data_clean$favourite_band[data_raw$musical_band == 1] <- 1
+table(data_clean$favourite_band)
 
 
 
 ## musical_style ---------------------------------------------------------
-
+table(data_raw$musical_style)
+data_clean$fav_music_style <- NA
+data_clean$fav_music_style[data_raw$musical_style == 1] <- 1
+table(data_clean$fav_music_style)
 
 
 
 ## movie_preference ------------------------------------------------------
-
+table(data_raw$movie_preference)
+data_clean$favourite_movie <- NA
+data_clean$favourite_movie[data_raw$movie_preference == 1] <- 1
+table(data_clean$favourite_movie)
 
 
 
