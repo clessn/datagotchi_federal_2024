@@ -18,7 +18,7 @@ df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clusteri
     educUniv, educBHS,
     age55p, age34m,
     male,
-    ses_hetero,  # Retirer ses_gai
+    ses_hetero, ses_gai,
     langEn, langFr, ses_languageOther,
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
@@ -82,7 +82,7 @@ process_app_data <- function(data) {
       educUniv, educBHS,
       age55p, age34m,
       male,
-      ses_hetero,  # Retirer ses_gai
+      ses_hetero, ses_gai,
       langEn, langFr, ses_languageOther,
       incomeHigh, incomeLow,
       ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
@@ -110,7 +110,7 @@ data_model_prior <- data_prior %>%
     educUniv, educBHS,
     age55p, age34m,
     male,
-    ses_hetero,  # Retirer ses_gai
+    ses_hetero, ses_gai,
     langEn, langFr, ses_languageOther,
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,

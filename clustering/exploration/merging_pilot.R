@@ -92,13 +92,16 @@ df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder
 df_datagotchi_raw <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_bav-2021/Data/Raw/RawData-Hub.csv") 
 
 raw_selected <- df_datagotchi_raw |> 
-  select(created, is_self, answers.age, correction, 
+  select(created, is_self, answers.age, correction, answers.sexual_orientation,
     prediction.1.name, prediction.1.value, prediction.2.name, prediction.2.value, prediction.3.name, prediction.3.value,
   prediction.4.name, prediction.4.value, prediction.5.name, prediction.5.value)
 
 datagotchi_merged <- df_datagotchi_2021 %>% 
    cbind(., raw_selected) |> 
    filter(answers.age >= 18, is_self == TRUE)
+
+  datagotchi_merged <- datagotchi_merged %>%
+    mutate(ses_gai = ifelse(answers.sexual_orientation == "Gai ou lesbienne", 1, 0))
 
 # Étape 1 : Convertir les colonnes de valeurs de prédiction en numériques si nécessaire
 prediction_value_cols <- c('prediction.1.value', 'prediction.2.value', 'prediction.3.value', 'prediction.4.value', 'prediction.5.value')
@@ -151,7 +154,7 @@ app_datagotchi_clean <- datagotchi_merged |>
     educUniv, educBHS,
     age55p, age34m,
     male,
-    ses_hetero, #ses_gai,
+    ses_hetero, ses_gai,
     langEn, langFr, ses_languageOther,
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,

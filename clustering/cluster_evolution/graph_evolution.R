@@ -36,7 +36,8 @@ party_colors <- c(
 )
 
 # Déterminer le minimum et le maximum des jours
-min_day <- min(0)
+# Si vous voulez que les jours commencent à 0
+min_day <- 0
 max_day <- max(data_long$day)
 
 # Créer une séquence de jours tous les 5 jours
@@ -53,7 +54,8 @@ for (p in parties) {
   
   p_plot <- ggplot(data_p, aes(x = day, y = probability, color = factor(cluster))) +
     geom_line(size = 1) +
-    scale_x_continuous(breaks = breaks_days) +
+    scale_x_continuous(breaks = breaks_days, limits = c(min_day, max_day)) +
+    scale_y_continuous(limits = c(0, 1)) +
     labs(
       title = paste("Probabilité du parti", p, "par cluster"),
       x = "Jour",
@@ -83,7 +85,8 @@ for (c in clusters) {
   c_plot <- ggplot(data_c, aes(x = day, y = probability, color = party)) +
     geom_line(size = 1) +
     scale_color_manual(values = party_colors) +
-    scale_x_continuous(breaks = breaks_days) +
+    scale_x_continuous(breaks = breaks_days, limits = c(min_day, max_day)) +
+    scale_y_continuous(limits = c(0, 1)) +
     labs(
       title = paste("Probabilité des partis pour le cluster", c),
       x = "Jour",
@@ -100,4 +103,3 @@ for (c in clusters) {
     height = 6
   )
 }
-

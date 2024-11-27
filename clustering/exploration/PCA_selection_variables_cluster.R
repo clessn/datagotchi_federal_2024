@@ -205,7 +205,7 @@ data_scaled <- scale(data_select)
 
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 8, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 5, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
