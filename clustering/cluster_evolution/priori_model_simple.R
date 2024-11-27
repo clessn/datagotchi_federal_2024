@@ -39,13 +39,11 @@ data_prior <- data_prior %>%
       op_voteIntent_Ndp == 1 ~ "NDP",
       op_voteIntent_Bloc == 1 ~ "Bloc",
       op_voteIntent_Green == 1 ~ "Green",
-      op_voteIntent_PPC == 1 ~ "PPC",
-      op_voteIntent_NoVote == 1 ~ "NoVote",
       TRUE ~ NA_character_
     )
   ) %>%
   select(-starts_with("op_voteIntent_")) %>% 
-  drop_na(vote_intent) 
+  drop_na(vote_intent)
 
 # Conversion en facteur
 data_prior$vote_intent <- as.factor(data_prior$vote_intent)
@@ -74,7 +72,10 @@ data_model <- data_prior %>%
   )
 
 # Modèle -----------------------------------------------------------------
-multinom_model <- multinom(vote_intent ~ ., data = data_model)
+multinom_model <- multinom(
+  vote_intent ~ age55p + age34m + cons_Meat,
+  data = data_model
+)
 
 summary <- summary(multinom_model)
 
@@ -93,10 +94,9 @@ data_model$predictions <- predict(multinom_model, newdata = data_model)
 # Matrice de confusion
 table(data_model$vote_intent, data_model$predictions)
 
-
 # Sauvegarder en RDS -----------------------------------------------------
 
-saveRDS(summary, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
+saveRDS(summary, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model_simple.rds")
 
 # Calcul de l'exactitude globale
 correct_predictions <- sum(diag(table(data_model$vote_intent, data_model$predictions)))
