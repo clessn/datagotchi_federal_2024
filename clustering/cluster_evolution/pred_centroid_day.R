@@ -2,7 +2,8 @@
 library(nnet)
 library(dplyr)
 library(tidyr)
-library(lubridate)  # Pour manipuler les dates
+library(lubridate)
+library(ggplot2)
 
 # Charger les données de base
 df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv") %>%
@@ -23,9 +24,8 @@ df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clusteri
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
     act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
-    op_voteIntent_Lib, op_voteIntent_Cons, op_voteIntent_Ndp, op_voteIntent_Bloc,
-    op_voteIntent_Green
-    # Exclure op_voteIntent_PPC et op_voteIntent_NoVote
+    op_voteIntent_Lib, op_voteIntent_Cons, op_voteIntent_Ndp, op_voteIntent_Bloc, op_voteIntent_Green
+    
   ) %>%
   drop_na()
 
@@ -66,6 +66,49 @@ app_data <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/app_d
     date = as.Date(created)
   ) %>%
   drop_na(vote_intent)  # Supprimer les lignes avec vote_intent manquant
+
+# Créer une liste des variables de province
+province_vars <- c("quebec", "ontario", "alberta", "british_colombia", "manitoba", "saskatchewan",
+                   "pei", "new_brunswick", "nova_scotia", "new_foundland", "yukon", "nunavut", "northwest_territories")
+
+# Calculer le nombre de répondants par jour et par province
+obs_per_day_province <- app_data %>%
+  select(date, all_of(province_vars)) %>%
+  pivot_longer(cols = all_of(province_vars), names_to = "province", values_to = "value") %>%
+  filter(value == 1) %>%
+  group_by(date, province) %>%
+  summarise(num_obs = n(), .groups = 'drop')
+
+# 1. Graphique du nombre total d'observations par jour
+# Étape 1 : Calculer le nombre total d'observations par jour
+obs_per_day <- obs_per_day_province %>%
+  group_by(date) %>%
+  summarise(total_obs = sum(num_obs))
+
+# Étape 2 : Créer le graphique
+ggplot(obs_per_day, aes(x = date, y = total_obs)) +
+  geom_line(color = "blue") +
+  geom_point(color = "red") +
+  labs(title = "Nombre total d'observations par jour",
+       x = "Date",
+       y = "Nombre d'observations") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 2. Graphique du nombre total d'observations par province
+# Étape 1 : Calculer le nombre total d'observations par province
+obs_per_province <- obs_per_day_province %>%
+  group_by(province) %>%
+  summarise(total_obs = sum(num_obs))
+
+# Étape 2 : Créer le graphique
+ggplot(obs_per_province, aes(x = reorder(province, -total_obs), y = total_obs)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Nombre total d'observations par province",
+       x = "Province",
+       y = "Nombre d'observations") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Fonction pour traiter les données de l'application
 process_app_data <- function(data) {

@@ -87,7 +87,9 @@ df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder
     langEn, langFr, ses_languageOther,
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
-    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk)
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
+    quebec, ontario, alberta, british_colombia, manitoba, saskatchewan,
+    pei, new_brunswick, nova_scotia, new_foundland, yukon, nunavut, northwest_territories)
 
 df_datagotchi_raw <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_bav-2021/Data/Raw/RawData-Hub.csv") 
 
@@ -158,6 +160,8 @@ app_datagotchi_clean <- datagotchi_merged |>
     langEn, langFr, ses_languageOther,
     incomeHigh, incomeLow,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
-    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk)
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
+    quebec, ontario, alberta, british_colombia, manitoba, saskatchewan,
+    pei, new_brunswick, nova_scotia, new_foundland, yukon, nunavut, northwest_territories)
 
     saveRDS(app_datagotchi_clean, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/app_datagotchi_clean.rds")
