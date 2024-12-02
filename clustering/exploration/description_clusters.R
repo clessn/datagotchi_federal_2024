@@ -119,7 +119,7 @@ library(forcats)
 df_mean_by_cluster <- describe_clusters(
   data_select,
   variables_to_describe = variables_to_describe,
-  cluster_var = "cluster_9"
+  cluster_var = "cluster_8"
 )
 
 # Limiter les scores z entre -2 et 2 (optionnel)
@@ -155,7 +155,7 @@ for(cluster_id in clusters){
     ggtitle(paste("Scores z des variables pour le cluster", cluster_id))
   
   # Enregistrer le graphique
-  output_file <- file.path(output_dir, paste0("cluster_", cluster_id, ".png"))
+  output_file <- file.path(output_dir, paste0("8cluster_", cluster_id, ".png"))
   ggsave(filename = output_file, plot = p, width = 8, height = 6)
 }
 

@@ -1,6 +1,7 @@
 # Load packages ----------------------------------------------------------
 library(nnet)
 library(dplyr)
+library(tidyr)
 
 # Data -------------------------------------------------------------------
 df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
@@ -8,16 +9,22 @@ df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clusteri
 # Sélection des variables inclues dans le clustering et celles de voteIntent
 data_prior <- df_pilot_2021_merged %>%
   select(
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
     app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
     cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
-    cons_Meat,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
+    cons_Meat, cons_Vege,
     cons_SmokeNever, cons_Smoke,
-    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
-    ses_dwelling_condo, ses_dwelling_detachedHouse,
-    act_transport_PublicTransportation, act_transport_Car,
+    immigrant, 
+    educUniv, educBHS,
+    age55p, age34m,
+    male,
+    ses_hetero, ses_gai,
+    langEn, langFr, ses_languageOther,
+    incomeHigh, incomeLow,
+    ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
     op_voteIntent_Lib, op_voteIntent_Cons, op_voteIntent_Ndp, op_voteIntent_Bloc,
     op_voteIntent_Green, op_voteIntent_PPC, op_voteIntent_NoVote
   ) %>%
@@ -42,30 +49,41 @@ data_prior <- data_prior %>%
 
 # Conversion en facteur
 data_prior$vote_intent <- as.factor(data_prior$vote_intent)
+levels(data_prior$vote_intent)
+data_prior$vote_intent <- relevel(data_prior$vote_intent, ref = "Liberal")
 
 data_model <- data_prior %>%
   select(
     vote_intent,
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities,
+    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
     app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
     cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee,
-    cons_Meat,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
+    cons_Meat, cons_Vege,
     cons_SmokeNever, cons_Smoke,
-    immigrant, educUniv, age55p, male, ses_hetero, langFr, incomeHigh,
-    ses_dwelling_condo, ses_dwelling_detachedHouse,
-    act_transport_PublicTransportation, act_transport_Car
+    immigrant, 
+    educUniv, educBHS,
+    age55p, age34m,
+    male,
+    ses_hetero, ses_gai,
+    langEn, langFr, ses_languageOther,
+    incomeHigh, incomeLow,
+    ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
   )
 
 # Modèle -----------------------------------------------------------------
 multinom_model <- multinom(vote_intent ~ ., data = data_model)
 
-summary(multinom_model)
+summary <- summary(multinom_model)
 
 # Interprétation des coefficients -----------------------------------------
 # Les coefficients peuvent être transformés en probabilités relatives
 exp(coef(multinom_model))
+
+summary$coefficients
+summary$standard.errors
 
 # Prédictions ------------------------------------------------------------
 # Prédiction sur les données utilisées pour l'entraînement
@@ -78,4 +96,15 @@ table(data_model$vote_intent, data_model$predictions)
 
 # Sauvegarder en RDS -----------------------------------------------------
 
-saveRDS(multinom_model, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
+saveRDS(summary, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
+
+# Calcul de l'exactitude globale
+correct_predictions <- sum(diag(table(data_model$vote_intent, data_model$predictions)))
+total_predictions <- sum(table(data_model$vote_intent, data_model$predictions))
+accuracy <- correct_predictions / total_predictions
+print(paste("Exactitude Globale :", round(accuracy * 100, 2), "%"))
+
+# Matrice de confusion normalisée par ligne (classes réelles)
+confusion_matrix <- table(data_model$vote_intent, data_model$predictions)
+confusion_matrix_normalized <- prop.table(confusion_matrix, 1)
+print(round(confusion_matrix_normalized, 2))

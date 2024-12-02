@@ -204,11 +204,8 @@ fviz_eig(pca_result, addlabels = TRUE)
 data_scaled <- scale(data_select)
 
 
-### 10 clusters me semble être le parfait équilibre où il y a une distinction claire
-#### entre les clusters et où chaque cluster couvre un espace significatif
-
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 8, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 5, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -252,8 +249,9 @@ sil_sum <- wss_scaled_rev + sil_width_scaled
 
 plot(2:15, sil_sum, type = "b")
 
-### 7, 8 or 10 clusters
 
+
+### loop pour cluster
 
 for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 12)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
@@ -263,8 +261,8 @@ for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 12)){
   data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-kmeans_result10 <- kmeans(data_scaled, centers = 10, nstart = 25)
-saveRDS(kmeans_result10, file = "kmeans_results.rds")
+kmeans_result8 <- kmeans(data_scaled, centers = 8, nstart = 25)
+saveRDS(kmeans_result8, file = "kmeans_results8.rds")
 
 
 table(data_select$cluster_3)
