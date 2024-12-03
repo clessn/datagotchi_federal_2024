@@ -9,49 +9,109 @@ library(tibble)
 library(gridExtra)
 
 # Data -------------------------------------------------------------------
-df_pilot_2021_merged <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering.csv")
+df_pilot_2021_merged_qc <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering_qc.csv")
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv")
 
 
-# Définir les groupes de variables --------------------------------
-groupes_variables <- list(
-  transport = c("act_transport_Car", "act_transport_SUV", "act_transport_Moto", 
-                "act_transport_Walk", "act_transport_Bicycle", 
-                "act_transport_PublicTransportation", "act_transport_Taxi"),
-  demographie1 = c("age34m", "age3554", "age55p", "male", "female", "ses_genderOther", 
-                   "ses_hetero", "ses_gai", "ses_bisex"),
-  demographie2 = c("langFr", "langEn", "ses_languageOther", "incomeLow", "incomeHigh", 
-                   "immigrant", "educBHS", "educUniv"),
-  activites = c("act_VisitsMuseumsGaleries", "act_Fishing", "act_Hunting", 
-                "act_MotorizedOutdoorActivities", "act_Volunteering", 
-                "act_Walk", "act_Gym", "act_TeamSport", "act_Run", 
-                "act_Yoga", "act_None", "act_Other"),
-  apparence = c("app_swag_Formel", "app_swag_Classique", "app_swag_Casual", 
-                "app_swag_Sport", "app_swag_Chic", "app_swag_VintageHippBoheme", 
-                "app_swag_Other", "app_swag_Rock", "app_noTattoo"),
-  cons_brand = c("cons_brand_MaR", "cons_brand_BInd", "cons_brand_OnlineOnly", 
-                 "cons_brand_ChainesB", "cons_brand_GSurf", "cons_brand_Frip", 
-                 "cons_brand_Other"),
-  cons_coffee = c("cons_coffee_place_noCoffee", "cons_coffee_TimH", "cons_coffee_Other", 
-                  "cons_coffee_Starbucks", "cons_coffee_SC", "cons_coffee_McDo", 
-                  "cons_coffee_place_ind"),
-  cons_food = c("cons_Meat", "cons_Vege", "cons_Vegan"),
-  habitat = c("ses_dwelling_app", "ses_dwelling_loft", "ses_dwelling_condo", 
-              "ses_dwelling_tour", "ses_dwelling_detachedHouse", 
-              "ses_dwelling_semiDetached", 
-              "ses_dwelling_coop", "ses_dwelling_HLM", "ses_dwelling_mobile", 
-              "ses_dwelling_other"),
-  cons_alcool = c("cons_noDrink", "cons_redWineDrink", "cons_whiteWineDrink", 
-                  "cons_roseDrink", "cons_sparklingDrink", "cons_regBeers", 
-                  "cons_microBeers", "cons_spiritDrink", "cons_cocktailsDrink"),
-  cons_tabac = c("cons_Smoke", "cons_SmokeStopping", "cons_SmokeStopped", 
-                 "cons_SmokeNever", "cons_VapeNation")
+# Variables --------------------------------
+variables_int <- c(
+  "educBHS",
+  "educHS",
+  "educUniv",
+  "incomeLow",
+  "incomeMid",
+  "incomeHigh",
+  "ses_hetero",
+  "ses_gai",
+#  "ses_bisex",
+  "ses_sexOri_other",
+  "immigrant",
+  "male",
+#  "female",
+#  "ses_genderOther",
+  "age34m",
+  "age3554",
+  "age55p",
+  "langFr",
+  "langEn",
+  "ses_languageOther",
+  "act_transport_Car",
+#  "act_transport_SUV",
+#  "act_transport_Moto",
+  "act_transport_Walk",
+#  "act_transport_Bicycle",
+  "act_transport_PublicTransportation",
+#  "act_Walk",
+  "act_Gym",
+  "act_TeamSport",
+  "act_Run",
+  "act_Yoga",
+#  "act_Swimming",
+#  "act_Other",
+  "act_None",
+  "act_Fishing",
+  "act_Hunting",
+  "act_VisitsMuseumsGaleries",
+  "act_MotorizedOutdoorActivities",
+#  "act_Volunteering",
+  "cons_brand_MaR",
+#  "cons_brand_OnlineOnly",
+#  "cons_brand_BInd",
+  "cons_brand_ChainesB",
+  "cons_brand_GSurf",
+  "cons_brand_Frip",
+#  "cons_brand_Other",
+  "cons_Meat",
+  "cons_Vege",
+  "cons_Vegan",
+  "cons_coffee_TimH",
+#  "cons_coffee_Other",
+  "cons_coffee_Starbucks",
+#  "cons_coffee_SC",
+  "cons_coffee_McDo",
+#  "cons_coffee_place_ind",
+  "cons_coffee_place_noCoffee",
+  "cons_Smoke",
+#  "cons_SmokeStopping",
+  "cons_SmokeStopped",
+  "cons_SmokeNever",
+#  "cons_VapeNation",
+  "cons_noDrink",
+  "cons_redWineDrink",
+#  "cons_whiteWineDrink",
+#  "cons_roseDrink",
+#  "cons_sparklingDrink",
+  "cons_regBeers",
+  "cons_microBeers",
+#  "cons_spiritDrink",
+  "cons_cocktailsDrink",
+#  "app_swag_Formel",
+#  "app_swag_Classique",
+#  "app_swag_Casual",
+#  "app_swag_Sport",
+#  "app_swag_Chic",
+#  "app_swag_VintageHippBoheme",
+#  "app_swag_Other",
+#  "app_swag_Rock",
+  "app_noTattoo",
+  "ses_dwelling_app",
+#  "ses_dwelling_loft",
+  "ses_dwelling_condo",
+#  "ses_dwelling_tour",
+  "ses_dwelling_detachedHouse"#,
+#  "ses_dwelling_townHouse",
+#  "ses_dwelling_semiDetached",
+#  "ses_dwelling_coop",
+#  "ses_dwelling_HLM",
+#  "ses_dwelling_mobile",
+#  "ses_dwelling_other"#,
+#  "ses_dwelling_house"
 )
 
 
 # Préparer les données
-data_filtered <- df_pilot_2021_merged %>%
-  select(-c(X, source)) %>%
+data_filtered <- df_pilot_2021_merged_qc %>%
+  select(all_of(variables_int)) %>%
   drop_na()
 
 pca_result0 <- prcomp(
@@ -70,77 +130,104 @@ fviz_eig(pca_result0, addlabels = TRUE)
 # Effectuer la PCA
 pca_all <- prcomp(data_filtered, scale. = TRUE)
 var_contrib <- factoextra::get_pca_var(pca_all)$contrib
-variance_explained <- factoextra::get_eigenvalue(pca_all)$variance.percent
 
+# Nombre d'axes principaux à considérer
 num_axes <- 4
-all_contrib <- data.frame()
 
-# Calculer les contributions pondérées
-for (group_name in names(groupes_variables)) {
-  vars_in_group <- groupes_variables[[group_name]]
-  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
-  if (length(vars_present) == 0) next
-  
-  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
-  
-  # Calculer les contributions pondérées
-  for (i in 1:num_axes) {
-    contrib_group[, i] <- contrib_group[, i] * (variance_explained[i] / 100)
-  }
-  
-  df_contrib <- as.data.frame(contrib_group)
-  df_contrib$Variable <- rownames(df_contrib)
-  df_contrib$Group <- group_name
-  
-  # Contribution pondérée totale
-  df_contrib <- df_contrib %>%
-    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution") %>%
-    group_by(Group, Variable) %>%
-    summarise(TotalContributionWeighted = sum(Contribution), .groups = "drop")
-  
-  all_contrib <- bind_rows(all_contrib, df_contrib)
-}
+# Préparer les contributions par axe sans groupement
+all_contrib_dodge <- as.data.frame(var_contrib[, 1:num_axes])
+all_contrib_dodge$Variable <- rownames(all_contrib_dodge)
 
-# Graphique 1 : Contribution pondérée
-ggplot(all_contrib, aes(x = reorder(Variable, -TotalContributionWeighted), y = TotalContributionWeighted, fill = Group)) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  facet_wrap(~ Group, scales = "free_y") +
-  labs(title = "Contributions pondérées des variables aux axes",
-       x = "Variables", y = "Contribution pondérée (%)") +
-  theme_minimal() +
-  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
+# Réorganiser les données pour ggplot2
+all_contrib_dodge <- all_contrib_dodge %>%
+  pivot_longer(
+    cols = starts_with("Dim"),
+    names_to = "Axe",
+    values_to = "Contribution"
+  )
 
-# Préparer les contributions par axe pour le second graphique
-all_contrib_dodge <- data.frame()
-for (group_name in names(groupes_variables)) {
-  vars_in_group <- groupes_variables[[group_name]]
-  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
-  if (length(vars_present) == 0) next
-  
-  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
-  
-  df_contrib <- as.data.frame(contrib_group)
-  df_contrib$Variable <- rownames(df_contrib)
-  df_contrib$Group <- group_name
-  
-  df_contrib <- df_contrib %>%
-    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution")
-  
-  all_contrib_dodge <- bind_rows(all_contrib_dodge, df_contrib)
-}
-
-# Graphique 2 : Contributions par axe avec dodge
-ggplot(all_contrib_dodge, aes(x = Variable, y = Contribution, fill = Axe)) +
+# Graphique 2 : Contributions des variables par axe sans groupement
+ggplot(all_contrib_dodge, aes(x = reorder(Variable, Contribution), y = Contribution, fill = Axe)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
-  facet_wrap(~ Group, scales = "free_y") +
-  labs(title = "Contributions des variables par axe",
-       x = "Variables", y = "Contribution (%)") +
+  labs(
+    title = "Contributions des variables par axe",
+    x = "Variables",
+    y = "Contribution (%)"
+  ) +
   scale_fill_brewer(palette = "Set2", name = "Axes principaux") +
   theme_minimal() +
-  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
+  theme(
+    legend.position = "bottom",
+    axis.text.y = element_text(size = 7)
+  )
 
+# Calculer les contributions pondérées
+#for (group_name in names(groupes_variables)) {
+#  vars_in_group <- groupes_variables[[group_name]]
+#  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
+#  if (length(vars_present) == 0) next
+#  
+#  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
+#  
+#  # Calculer les contributions pondérées
+#  for (i in 1:num_axes) {
+#    contrib_group[, i] <- contrib_group[, i] * (variance_explained[i] / 100)
+#  }
+#  
+#  df_contrib <- as.data.frame(contrib_group)
+#  df_contrib$Variable <- rownames(df_contrib)
+#  df_contrib$Group <- group_name
+#  
+#  # Contribution pondérée totale
+#  df_contrib <- df_contrib %>%
+#    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution") %>%
+#    group_by(Group, Variable) %>%
+#    summarise(TotalContributionWeighted = sum(Contribution), .groups = "drop")
+#  
+#  all_contrib <- bind_rows(all_contrib, df_contrib)
+#}
+
+# Graphique 1 : Contribution pondérée
+#ggplot(all_contrib, aes(x = reorder(Variable, -TotalContributionWeighted), y = TotalContributionWeighted, fill = Group)) +
+#  geom_bar(stat = "identity") +
+#  coord_flip() +
+#  facet_wrap(~ Group, scales = "free_y") +
+#  labs(title = "Contributions pondérées des variables aux axes",
+#       x = "Variables", y = "Contribution pondérée (%)") +
+#  theme_minimal() +
+#  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
+
+# Préparer les contributions par axe pour le second graphique
+#all_contrib_dodge <- data.frame()
+#for (group_name in names(groupes_variables)) {
+#  vars_in_group <- groupes_variables[[group_name]]
+#  vars_present <- vars_in_group[vars_in_group %in% rownames(var_contrib)]
+#  if (length(vars_present) == 0) next
+#  
+#  contrib_group <- var_contrib[vars_present, 1:num_axes, drop = FALSE]
+#  
+#  df_contrib <- as.data.frame(contrib_group)
+#  df_contrib$Variable <- rownames(df_contrib)
+#  df_contrib$Group <- group_name
+#  
+#  df_contrib <- df_contrib %>%
+#    pivot_longer(cols = starts_with("Dim"), names_to = "Axe", values_to = "Contribution")
+#  
+#  all_contrib_dodge <- bind_rows(all_contrib_dodge, df_contrib)
+#}
+#
+# Graphique 2 : Contributions par axe avec dodge
+#ggplot(all_contrib_dodge, aes(x = Variable, y = Contribution, fill = Axe)) +
+#  geom_bar(stat = "identity", position = position_dodge()) +
+#  coord_flip() +
+#  facet_wrap(~ Group, scales = "free_y") +
+#  labs(title = "Contributions des variables par axe",
+#       x = "Variables", y = "Contribution (%)") +
+#  scale_fill_brewer(palette = "Set2", name = "Axes principaux") +
+#  theme_minimal() +
+#  theme(legend.position = "bottom", axis.text.y = element_text(size = 7))
+#
 ## corr_matrix
 cor_matrix <- cor(x = data_filtered)
 
@@ -160,52 +247,14 @@ ggcorrplot::ggcorrplot(
   colors = c("#d4206b", "#ececec", "#20d48f")
 )
 
-# Variables sélectionnées selon contrib et correlation -------------------
-
-data_select <- df_pilot_2021_merged %>%
-  select(
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
-    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
-    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
-    cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
-    cons_Meat, cons_Vege,
-    cons_SmokeNever, cons_Smoke,
-    immigrant, 
-    educUniv, educBHS,
-    age55p, age34m,
-    male,
-    ses_hetero, ses_gai,
-    langEn, langFr, ses_languageOther,
-    incomeHigh, incomeLow,
-    ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
-    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
-  ) %>%
-  drop_na()
-
-# PCA --------------------------------------------------------------------
-
-pca_result <- prcomp(
-  data_select,
-  scale = TRUE
-)
-
-summary(pca_result)
-### Environ 3-4 composantes font l'affaire
-
-pca_result$rotation[,1:4]
-
-fviz_eig(pca_result, addlabels = TRUE)
-
-
 # Clustering -------------------------------------------------------------
 
 ## Normalisation des données (optionnelle, recommandé pour k-means)
-data_scaled <- scale(data_select)
+data_scaled <- scale(data_filtered)
 
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 5, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 6, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -213,8 +262,7 @@ fviz_cluster(
   ggtheme = theme_bw()
   )
 
-
-# Trouver le nombre de clusters idéal ------------------------------------------
+#Trouver le nombre de clusters idéal ------------------------------------------
 
 ### Coude
 wss <- sapply(2:15, function(k){
@@ -249,31 +297,63 @@ sil_sum <- wss_scaled_rev + sil_width_scaled
 
 plot(2:15, sil_sum, type = "b")
 
-
+#Choix conservateur : K=4
+#
+#    Justifié par le coude sur le graphique de la méthode Elbow.
+#    Solution simple avec un bon compromis entre complexité et cohérence des clusters.#
+#
+#Option intermédiaire : K=7
+#
+#    Basée sur une augmentation notable dans les coefficients de silhouette.
+#    Potentiellement meilleure séparation entre les clusters.
+#
+#Option plus granulaire : K=8 ou K=10
+#
+#    Maximisation des coefficients de silhouette.
+#    Utile si des distinctions plus fines entre les groupes sont pertinentes pour l'objectif.
 
 ### loop pour cluster
 
-for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 12)){
+for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
   # Ajouter les clusters aux données d'origine
-  data_select[[paste0("cluster_", i)]] <- kmeans_result$cluster
+  data_filtered[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
 kmeans_result8 <- kmeans(data_scaled, centers = 8, nstart = 25)
 saveRDS(kmeans_result8, file = "kmeans_results8.rds")
 
 
-table(data_select$cluster_3)
-table(data_select$cluster_4)
-table(data_select$cluster_5)
-table(data_select$cluster_6)
-table(data_select$cluster_7)
-table(data_select$cluster_8)
-table(data_select$cluster_9)
-table(data_select$cluster_10)
-table(data_select$cluster_12)
+table(data_filtered$cluster_3)
+#   1   2   3 
+# 302 948  45 
+table(data_filtered$cluster_4)
+#   1   2   3   4 
+#  294 360 596  45 
+table(data_filtered$cluster_5)
+#   1   2   3   4   5 
+# 260  45 320 147 523 
+table(data_filtered$cluster_6)
+# 1   2   3   4   5   6 
+# 141 253 481  66  45 309 
+table(data_filtered$cluster_7)
+# 1   2   3   4   5   6   7 
+# 141 233 242 280  66 288  45 
+table(data_filtered$cluster_8)
+#   1   2   3   4   5   6   7   8 
+# 65 107  35 241 198  45 318 286 
+
+table(data_filtered$cluster_9)
+#   1   2   3   4   5   6   7   8   9 
+# 195  65 107  35 227 219  45 132 270
+
+table(data_filtered$cluster_10)
+#   1   2   3   4   5   6   7   8   9  10 
+# 35  65 118 382 194 105  18  34  11 333 
+table(data_filtered$cluster_11)
+table(data_filtered$cluster_12)
 
 
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
@@ -285,10 +365,10 @@ distance_matrix <- dist(data_scaled)
 mds_result <- cmdscale(distance_matrix, k = 2)
 
 # Ajouter les coordonnées MDS aux données
-data_select$MDS1 <- mds_result[,1]
-data_select$MDS2 <- mds_result[,2]
+data_filtered$MDS1 <- mds_result[,1]
+data_filtered$MDS2 <- mds_result[,2]
 
-plot_data <- data_select |> 
+plot_data <- data_filtered |> 
   tidyr::pivot_longer(
     cols = starts_with("cluster_"),
     names_to = "n_clusters",
@@ -303,6 +383,9 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   facet_wrap(~n_clusters) +
   stat_ellipse()
 
+
+# selon les 3 graphs
+#4, 5, 6 ou 7 clusters
 
 
 
