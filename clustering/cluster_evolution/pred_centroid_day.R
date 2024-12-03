@@ -229,6 +229,16 @@ saveRDS(results_df, file = "_SharedFolder_datagotchi_federal_2024/clustering/dat
 # Afficher les premiers résultats
 head(results_df)
 
+results_df |> 
+  tidyr::pivot_longer(
+    cols = c("Bloc", "Conservative", "Green", "Liberal", "NDP"),
+    names_to = "party",
+    values_to = "prob"
+  ) |>
+  ggplot(aes(x = day, y = prob)) +
+  facet_wrap(~cluster) +
+  geom_line(aes(group = party, color = party)) +
+  scale_x_continuous(limits = c(1, 10))
 
 
 
