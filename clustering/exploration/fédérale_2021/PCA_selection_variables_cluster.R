@@ -67,7 +67,7 @@ pca_result0$rotation[,1:4]
 fviz_eig(pca_result0, addlabels = TRUE)
 
 
-# Effectuer l'ACP
+# Effectuer la PCA
 pca_all <- prcomp(data_filtered, scale. = TRUE)
 var_contrib <- factoextra::get_pca_var(pca_all)$contrib
 variance_explained <- factoextra::get_eigenvalue(pca_all)$variance.percent

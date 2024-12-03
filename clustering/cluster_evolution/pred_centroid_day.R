@@ -174,7 +174,7 @@ app_data <- app_data %>% left_join(date_to_day_number, by = "date")
 # Boucle sur chaque jour
 for (current_day in date_to_day_number$day) {
   # Extraire les données du jour courant
-  data_day <- app_data %>% filter(day == current_day)
+  data_day <- app_data %>% filter(day <= current_day)
   
   # Passer au jour suivant si aucune donnée
   if(nrow(data_day) == 0) {
