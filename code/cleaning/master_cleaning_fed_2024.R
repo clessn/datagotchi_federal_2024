@@ -15,16 +15,13 @@ data_clean <- data.frame(id = 1:nrow(data_raw))
 
 source("code/cleaning/ses.R")
 
-
 ## lifestyle -------------------------------------------------------------------
 
 source("code/cleaning/lifestyle.R")
 
-
 ## Values & Perceptions -------------------------------------------------------------------
 
-source("code/cleaning/values_perceptions.R")
-
+source("code/cleaning/values.R")
 
 ## DV --------------------------------------------------------------
 

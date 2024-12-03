@@ -946,20 +946,21 @@ data_clean$lifestyle_smoke_freq[data_raw$smoking == 6] <- 0.8333
 data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
 table(data_clean$lifestyle_smoke_freq)
 
-
 ## alcool_type -----------------------------------------------------------
+attributes(data_raw$alcool_type)
+table(data_raw$alcool_type, useNA = "ifany")
 data_clean$lifestyle_favourite_alcool <- NA
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- "Vin rouge"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- "Vin blanc"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- "Vin rosé"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "Vin mousseux ou champagne"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 5] <- "Bière régulière"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 6] <- "Bière artisanale et de microbrasserie"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "Boissons spiritueuses"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "Cocktails ou prêts-à-boire"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "Je ne consomme pas d'alcool"
-data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_avourite_alcool)
-table(data_clean$lifestyle_favourite_alcool)
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- "red_wine"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- "white_wine"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- "rose_wine"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "sparkling_wine"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 5] <- "reg_beer"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 6] <- "micro_beer"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "spirits"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "cocktail"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "dont_drink"
+data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_favourite_alcool)
+table(data_clean$lifestyle_favourite_alcool, useNA = "ifany")
 
 
 ## alcool_frequency ------------------------------------------------------
