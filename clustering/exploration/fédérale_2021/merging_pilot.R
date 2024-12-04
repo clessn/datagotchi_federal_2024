@@ -154,30 +154,39 @@ write.csv(df_pilot_2021_merged_qc, "/home/alexab/Dropbox/Ulaval/CLESSN/datagotch
 # Merging App Datagotchi -------------------------------------------------
 
 df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_datagotchi-developpement/federal_can_2021/hub/DatagotchiHub-federal-2021-08-03-2022-.csv") |> 
+  filter(quebec == 1) |> 
   select(vote_intent,
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
-    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
-    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+    act_VisitsMuseumsGaleries,
+    act_Yoga, act_Run, act_Gym, act_TeamSport, act_None,
+    act_MotorizedOutdoorActivities, act_Fishing, act_Hunting, 
+    app_noTattoo,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
-    cons_Meat, cons_Vege,
-    cons_SmokeNever, cons_Smoke,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH, cons_coffee_McDo, 
+    cons_Meat, cons_Vege, cons_Vegan,
+    cons_Smoke,
+    cons_SmokeStopped,
+    cons_SmokeNever,
+    cons_noDrink,
+    cons_redWineDrink,
+    cons_regBeers,
+    cons_microBeers,
+    cons_cocktailsDrink,
     immigrant, 
-    educUniv, educBHS,
-    age55p, age34m,
+    #educUniv, educBHS, #educHS,
+    age55p, age34m, #age3554,
     male,
     ses_hetero, #ses_gai,
     langEn, langFr, ses_languageOther,
-    incomeHigh, incomeLow,
+    #incomeHigh, incomeLow, #incomeMid,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
-    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
-    quebec, ontario, alberta, british_colombia, manitoba, saskatchewan,
-    pei, new_brunswick, nova_scotia, new_foundland, yukon, nunavut, northwest_territories)
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
+    )
 
 df_datagotchi_raw <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_bav-2021/Data/Raw/RawData-Hub.csv") 
 
 raw_selected <- df_datagotchi_raw |> 
-  select(created, is_self, answers.age, correction, answers.sexual_orientation,
+  filter(answers.province == "Québec") |> 
+  select(created, is_self, answers.age, correction, answers.sexual_orientation, answers.education, answers.income,
     prediction.1.name, prediction.1.value, prediction.2.name, prediction.2.value, prediction.3.name, prediction.3.value,
   prediction.4.name, prediction.4.value, prediction.5.name, prediction.5.value)
 
@@ -185,7 +194,27 @@ datagotchi_merged <- df_datagotchi_2021 %>%
    cbind(., raw_selected) |> 
    filter(answers.age >= 18, is_self == TRUE)
 
+datagotchi_merged<- datagotchi_merged %>%
+  mutate(age3554 = ifelse(answers.age %in% c(34, 54), 1, 0))
+
+datagotchi_merged<- datagotchi_merged %>%
+  mutate(
+    educUniv = ifelse(answers.education %in% c("Baccalauréat", "Maîtrise", "Doctorat"), 1, 0),
+    educHS = ifelse(answers.education == "Collège, CÉGEP ou Collège classique", 1, 0),
+    educBHS = ifelse(answers.education %in% c("École secondaire", "École primaire", "Aucune scolarité"), 1, 0)
+  )
+  
   datagotchi_merged <- datagotchi_merged %>%
+    mutate(
+      incomeLow = ifelse(answers.income %in% c("Aucun revenu", "1 $ à 30 000 $"), 1, 0),
+      incomeMid = ifelse(answers.income %in% c("30 001 $ à 60 000 $", "60 001 $ à 90 000 $"), 1, 0),
+      incomeHigh = ifelse(answers.income %in% c("90 001 $ à 110 000 $", 
+                                                "110 001 $ à 150 000 $", 
+                                                "150 001 $ à 200 000 $", 
+                                                "Plus de 200 000 $"), 1, 0)
+    )
+
+datagotchi_merged <- datagotchi_merged %>%
     mutate(ses_gai = ifelse(answers.sexual_orientation == "Gai ou lesbienne", 1, 0))
 
 # Étape 1 : Convertir les colonnes de valeurs de prédiction en numériques si nécessaire
@@ -228,23 +257,29 @@ datagotchi_merged$vote_intent <- ifelse(datagotchi_merged$vote_intent %in% names
 
 app_datagotchi_clean <- datagotchi_merged |>
   select(created, vote_intent,
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
-    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
-    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+    act_VisitsMuseumsGaleries,
+    act_Yoga, act_Run, act_Gym, act_TeamSport, act_None,
+    act_MotorizedOutdoorActivities, act_Fishing, act_Hunting, 
+    app_noTattoo,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
-    cons_Meat, cons_Vege,
-    cons_SmokeNever, cons_Smoke,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH, cons_coffee_McDo, 
+    cons_Meat, cons_Vege, cons_Vegan,
+    cons_Smoke,
+    cons_SmokeStopped,
+    cons_SmokeNever,
+    cons_noDrink,
+    cons_redWineDrink,
+    cons_regBeers,
+    cons_microBeers,
+    cons_cocktailsDrink,
     immigrant, 
-    educUniv, educBHS,
-    age55p, age34m,
+    educUniv, educBHS, educHS,
+    age55p, age34m, age3554,
     male,
     ses_hetero, ses_gai,
     langEn, langFr, ses_languageOther,
-    incomeHigh, incomeLow,
+    incomeHigh, incomeLow, incomeMid,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
-    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
-    quebec, ontario, alberta, british_colombia, manitoba, saskatchewan,
-    pei, new_brunswick, nova_scotia, new_foundland, yukon, nunavut, northwest_territories)
+    act_transport_PublicTransportation, act_transport_Car, act_transport_Walk)
 
     saveRDS(app_datagotchi_clean, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/app_datagotchi_clean.rds")
