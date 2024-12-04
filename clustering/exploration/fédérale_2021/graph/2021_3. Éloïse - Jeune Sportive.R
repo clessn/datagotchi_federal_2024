@@ -198,7 +198,7 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle("Scores z des variables pour le cluster 3. Éloïse - Jeune Sportive")
+    ggtitle("Description du cluster 3. Éloïse - Jeune Sportive (n=267)")
   
   # Enregistrer le graphique
   output_file <- file.path(output_dir, paste0("2021_3. Éloïse - Jeune Sportive.png"))

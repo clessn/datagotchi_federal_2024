@@ -9,7 +9,7 @@ df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clusteri
 # Variables --------------------------------
 variables_int <- c(
   "educBHS",
-  "educHS",
+#  "educHS",
   "educUniv",
   "incomeLow",
   "incomeMid",
@@ -17,7 +17,7 @@ variables_int <- c(
   "ses_hetero",
   "ses_gai",
 #  "ses_bisex",
-  "ses_sexOri_other",
+#  "ses_sexOri_other",
   "immigrant",
   "male",
 #  "female",
@@ -103,9 +103,9 @@ variables_int <- c(
 "op_voteIntent_Cons",
 "op_voteIntent_Ndp",
 "op_voteIntent_Bloc",
-"op_voteIntent_Green",
-"op_voteIntent_PPC",
-"op_voteIntent_NoVote"
+"op_voteIntent_Green"#,
+#"op_voteIntent_PPC",
+#"op_voteIntent_NoVote"
 )
 
 
@@ -124,8 +124,8 @@ data_prior <- data_prior %>%
       op_voteIntent_Ndp == 1 ~ "NDP",
       op_voteIntent_Bloc == 1 ~ "Bloc",
       op_voteIntent_Green == 1 ~ "Green",
-      op_voteIntent_PPC == 1 ~ "PPC",
-      op_voteIntent_NoVote == 1 ~ "NoVote",
+    #  op_voteIntent_PPC == 1 ~ "PPC",
+    #  op_voteIntent_NoVote == 1 ~ "NoVote",
       TRUE ~ NA_character_
     )
   ) %>%
@@ -141,15 +141,13 @@ data_model <- data_prior %>%
   select(
     vote_intent,
     educBHS,
-    educHS,
     educUniv,
     incomeLow,
     incomeMid,
     incomeHigh,
     ses_hetero,
     ses_gai,
-    ses_sexOri_other,
-immigrant,
+    immigrant,
 male,
 age34m,
 age3554,
@@ -217,7 +215,7 @@ table(data_model$vote_intent, data_model$predictions)
 
 # Sauvegarder en RDS -----------------------------------------------------
 
-saveRDS(summary, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
+saveRDS(multinom_model, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
 
 # Calcul de l'exactitude globale
 correct_predictions <- sum(diag(table(data_model$vote_intent, data_model$predictions)))

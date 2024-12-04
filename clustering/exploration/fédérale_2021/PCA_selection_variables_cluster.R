@@ -7,6 +7,7 @@ library(tidyr)
 library(ggcorrplot)
 library(tibble)
 library(gridExtra)
+library(forcats)
 
 # Data -------------------------------------------------------------------
 df_pilot_2021_merged_qc <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering_qc.csv")
@@ -322,8 +323,8 @@ for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)){
   data_filtered[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-kmeans_result7 <- kmeans(data_scaled, centers = 7, nstart = 25)
-saveRDS(kmeans_result7, file = "kmeans_results7.rds")
+kmeans_result6 <- kmeans(data_scaled, centers = 6, nstart = 25)
+saveRDS(kmeans_result6, file = "kmeans_results6.rds")
 
 
 table(data_filtered$cluster_3)

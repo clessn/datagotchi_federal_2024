@@ -1,3 +1,4 @@
+library(forcats)
 # variables à décrire ----------------------------------------------------
 variables_to_describe <- c(
   "educBHS",
@@ -198,7 +199,7 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle("Scores z des variables pour le cluster 1. Sophia - Non-franco Urbaine")
+    ggtitle("Description du cluster 1. Sophia - Non-franco Urbaine (n=141)")
   
   # Enregistrer le graphique
   output_file <- file.path(output_dir, paste0("2021_1. Sophia - Non-franco Urbaine.png"))

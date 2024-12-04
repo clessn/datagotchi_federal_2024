@@ -198,7 +198,7 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle("Scores z des variables pour le cluster 5. 6. Michel - Senior Traditionnaliste")
+    ggtitle("Description du cluster 6. Michel - Senior Traditionnaliste (n=409)")
   
   # Enregistrer le graphique
   output_file <- file.path(output_dir, paste0("2021_6. Michel - Senior Traditionnaliste.png"))

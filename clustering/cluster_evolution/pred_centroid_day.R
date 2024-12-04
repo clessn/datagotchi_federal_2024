@@ -9,14 +9,12 @@ library(ggplot2)
 df_pilot_2021_merged <- read.csv("_SharedFolder_datagotchi_federal_2024/clustering/data/pilot2021_merged_clustering_qc.csv") %>%
   select(
     educBHS,
-    educHS,
     educUniv,
     incomeLow,
     incomeMid,
     incomeHigh,
     ses_hetero,
     ses_gai,
-    ses_sexOri_other,
 immigrant,
 male,
 age34m,
@@ -81,10 +79,16 @@ data_prior <- df_pilot_2021_merged %>%
   mutate(
     vote_intent = as.factor(vote_intent)
   )
+#table(data_prior$vote_intent)
+
+#Bloc Conservative        Green      Liberal          NDP 
+#  267          157           51          279          104 
+#
+# Normal d'avoir autant de Vert???
 
 # Charger le modèle initial et les centroids
 model0 <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model.rds")
-kmeans_result <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/kmeans_results8.rds")
+kmeans_result <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/kmeans_results6.rds")
 
 # Charger et préparer les données de l'application
 app_data <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/app_datagotchi_clean.rds") %>%
@@ -169,7 +173,7 @@ process_app_data <- function(data) {
       cons_microBeers,
       cons_cocktailsDrink,
       immigrant, 
-      educUniv, educBHS, educHS,
+      educUniv, educBHS,
       age55p, age34m, age3554,
       male,
       ses_hetero, ses_gai,
@@ -205,7 +209,7 @@ data_model_prior <- data_prior %>%
     cons_microBeers,
     cons_cocktailsDrink,
     immigrant, 
-    educUniv, educBHS, educHS,
+    educUniv, educBHS,
     age55p, age34m, age3554,
     male,
     ses_hetero, ses_gai,
@@ -232,7 +236,7 @@ for (current_day in date_to_day_number$day) {
   data_day <- app_data %>% filter(day <= current_day)
   
   # Passer au jour suivant si aucune donnée
-  if(nrow(data_day) == 0) {
+  if (nrow(data_day) == 0) {
     next
   }
   
@@ -240,29 +244,35 @@ for (current_day in date_to_day_number$day) {
   data_day_processed <- process_app_data(data_day)
   
   # Passer au jour suivant si aucune donnée après traitement
-  if(nrow(data_day_processed) == 0) {
+  if (nrow(data_day_processed) == 0) {
     next
   }
   
   # Combiner avec les données initiales
   data_model_i <- bind_rows(data_model_prior, data_day_processed)
   
-  # S'assurer que les variables sont les mêmes
+  # S’assurer que les variables sont les mêmes
   data_model_i <- data_model_i %>%
     select(names(data_model_prior))
   
-  # Construire le modèle multinomial
-  model_i <- multinom(vote_intent ~ ., data = data_model_i)
+  # Construire le modèle :
+  # Pour le premier jour, on utilise le modèle initial (model0).
+  # Pour les jours suivants, on construit un nouveau modèle avec les données jusqu'à ce jour.
+  if (current_day == 1) {
+    model_i <- model0
+  } else {
+    model_i <- multinom(vote_intent ~ ., data = data_model_i)
+  }
   
   # Extraire les centroids
   centroids <- as.data.frame(kmeans_result$centers)
   
-  # S'assurer que les variables correspondent
+  # S’assurer que les variables correspondent
   predictor_vars <- colnames(data_model_i)[colnames(data_model_i) != "vote_intent"]
   centroids <- centroids[, predictor_vars, drop = FALSE]
   
   # Prédire les probabilités pour chaque centroid
-  probs <- marginaleffects::predictions(model_i, newdata = centroids, type = "probs")
+  probs <- predict(model_i, newdata = centroids, type = "probs")
   
   # Convertir les probabilités en dataframe
   probs_df <- as.data.frame(probs)
