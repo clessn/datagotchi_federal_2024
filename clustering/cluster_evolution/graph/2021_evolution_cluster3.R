@@ -12,6 +12,7 @@ breaks_days <- seq(from = min_day, to = max_day, by = 5)
 # Graphique pour le cluster 1
 plot_cluster3 <- ggplot(data_cluster3, aes(x = day, y = probability, color = party)) +
   geom_line(size = 1) +
+    geom_vline(xintercept = 8, linetype = "dashed", color = "black") +
   scale_color_manual(values = party_colors) +
   scale_x_continuous(breaks = breaks_days, limits = c(min_day, max_day)) +
   scale_y_continuous(limits = c(0, 1)) +

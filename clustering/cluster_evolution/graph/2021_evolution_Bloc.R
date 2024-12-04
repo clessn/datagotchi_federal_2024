@@ -34,6 +34,7 @@ breaks_days <- seq(from = min_day, to = max_day, by = 5)
 # Graphique pour le Bloc avec noms et couleurs de cluster
 plot_bloc <- ggplot(data_bloc, aes(x = day, y = probability, color = cluster_name)) +
   geom_line(linewidth = 1) +
+    geom_vline(xintercept = 8, linetype = "dashed", color = "black") +
   scale_x_continuous(breaks = breaks_days, limits = c(min_day, max_day)) +
   scale_y_continuous(limits = c(0, 1)) +
   scale_color_manual(values = cluster_colors) +
@@ -58,3 +59,5 @@ ggsave(
   width = 10,
   height = 6
 )
+
+# Ajouter ligne pointillée 20 sept élections
