@@ -172,7 +172,7 @@ df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder
     cons_microBeers,
     cons_cocktailsDrink,
     immigrant, 
-    #educUniv, educBHS, #educHS,
+    educUniv, educBHS,
     age55p, age34m, #age3554,
     male,
     ses_hetero, #ses_gai,
@@ -197,12 +197,6 @@ datagotchi_merged <- df_datagotchi_2021 %>%
 datagotchi_merged<- datagotchi_merged %>%
   mutate(age3554 = ifelse(answers.age %in% c(34, 54), 1, 0))
 
-datagotchi_merged<- datagotchi_merged %>%
-  mutate(
-    educUniv = ifelse(answers.education %in% c("Baccalauréat", "Maîtrise", "Doctorat"), 1, 0),
-    educHS = ifelse(answers.education == "Collège, CÉGEP ou Collège classique", 1, 0),
-    educBHS = ifelse(answers.education %in% c("École secondaire", "École primaire", "Aucune scolarité"), 1, 0)
-  )
   
   datagotchi_merged <- datagotchi_merged %>%
     mutate(
@@ -273,7 +267,7 @@ app_datagotchi_clean <- datagotchi_merged |>
     cons_microBeers,
     cons_cocktailsDrink,
     immigrant, 
-    educUniv, educBHS, educHS,
+    educUniv, educBHS,
     age55p, age34m, age3554,
     male,
     ses_hetero, ses_gai,

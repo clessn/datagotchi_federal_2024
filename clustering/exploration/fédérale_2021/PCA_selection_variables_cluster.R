@@ -16,7 +16,7 @@ df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder
 # Variables --------------------------------
 variables_int <- c(
   "educBHS",
-  "educHS",
+#  "educHS",
   "educUniv",
   "incomeLow",
   "incomeMid",
@@ -24,7 +24,7 @@ variables_int <- c(
   "ses_hetero",
   "ses_gai",
 #  "ses_bisex",
-  "ses_sexOri_other",
+#  "ses_sexOri_other",
   "immigrant",
   "male",
 #  "female",
@@ -254,7 +254,7 @@ data_scaled <- scale(data_filtered)
 
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 6, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 7, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -322,28 +322,28 @@ for (i in c(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)){
   data_filtered[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-kmeans_result8 <- kmeans(data_scaled, centers = 8, nstart = 25)
-saveRDS(kmeans_result8, file = "kmeans_results8.rds")
+kmeans_result7 <- kmeans(data_scaled, centers = 7, nstart = 25)
+saveRDS(kmeans_result7, file = "kmeans_results7.rds")
 
 
 table(data_filtered$cluster_3)
 #   1   2   3 
-# 302 948  45 
+# 747 503  45 
 table(data_filtered$cluster_4)
 #   1   2   3   4 
-#  294 360 596  45 
+#  447 147 656 45 
 table(data_filtered$cluster_5)
 #   1   2   3   4   5 
-# 260  45 320 147 523 
+# 623  45  66  141 420 
 table(data_filtered$cluster_6)
 # 1   2   3   4   5   6 
-# 141 253 481  66  45 309 
+# 141 367 267  66  45 409 
 table(data_filtered$cluster_7)
 # 1   2   3   4   5   6   7 
-# 141 233 242 280  66 288  45 
+# 14 367 66  140 45 405  258 
 table(data_filtered$cluster_8)
 #   1   2   3   4   5   6   7   8 
-# 65 107  35 241 198  45 318 286 
+# 185 251 343 141  66  34  11 264 
 
 table(data_filtered$cluster_9)
 #   1   2   3   4   5   6   7   8   9 
@@ -385,7 +385,7 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
 
 
 # selon les 3 graphs
-#4, 5, 6 ou 7 clusters
+# 7 clusters
 
 
 

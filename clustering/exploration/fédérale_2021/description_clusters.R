@@ -55,7 +55,7 @@ describe_clusters <- function(data, variables_to_describe, cluster_var){
 
 variables_to_describe <- c(
   "educBHS",
-  "educHS",
+#  "educHS",
   "educUniv",
   "incomeLow",
   "incomeMid",
@@ -63,7 +63,7 @@ variables_to_describe <- c(
   "ses_hetero",
   "ses_gai",
 #  "ses_bisex",
-  "ses_sexOri_other",
+#  "ses_sexOri_other",
   "immigrant",
   "male",
 #  "female",
@@ -165,7 +165,7 @@ library(forcats)
 df_mean_by_cluster <- describe_clusters(
   data_filtered,
   variables_to_describe = variables_to_describe,
-  cluster_var = "cluster_8"
+  cluster_var = "cluster_6"
 )
 
 # Limiter les scores z entre -2 et 2 (optionnel)
@@ -175,15 +175,13 @@ df_mean_by_cluster <- df_mean_by_cluster %>%
 df_mean_by_cluster <- df_mean_by_cluster %>%
   mutate(
     variable = case_when(
-      variable == "educBHS" ~ "Secondaire partiel",
-      variable == "educHS" ~ "Secondaire",
+      variable == "educBHS" ~ "Secondaire",
       variable == "educUniv" ~ "Universitaire",
       variable == "incomeLow" ~ "Revenu faible",
       variable == "incomeMid" ~ "Revenu moyen",
       variable == "incomeHigh" ~ "Revenu élevé",
       variable == "ses_hetero" ~ "Hétéro",
       variable == "ses_gai" ~ "Gai",
-      variable == "ses_sexOri_other" ~ "Autre orientation",
       variable == "immigrant" ~ "Immigrant",
       variable == "male" ~ "Homme",
       variable == "age34m" ~ "Moins de 34 ans",
@@ -273,10 +271,10 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle(paste("Scores z des variables pour le cluster", cluster_labels))
+    ggtitle(paste("Scores z des variables pour le cluster", cluster_id))
   
   # Enregistrer le graphique
-  output_file <- file.path(output_dir, paste0("2021_9cluster_", cluster_labels, ".png"))
+  output_file <- file.path(output_dir, paste0("2021_6cluster_", cluster_id, ".png"))
   ggsave(filename = output_file, plot = graph, width = 8, height = 6)
 }
 
@@ -320,58 +318,50 @@ generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0
 }
 
 # Exemple d'utilisation avec df_cluster (remplacer par votre dataframe réel)
-prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 8)
+prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 6)
 cat(prompt_persona)
 
 # Cluster par categories
 data_filtered$cluster_labels <- NA
-data_filtered$cluster_labels[data_filtered$cluster_8 == 1] <- "1. Gabriel - Urbain Raffiné"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 2] <- "2. Susan - Anglophone Citadine"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 3] <- "3. Daniela - Allophone Urbaine"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 4] <- "4. Guy - Francophone Modeste"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 5] <- "5. Nicolas - Sportif Tout-terrain"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 6] <- "6. Zoé - Écolo Avant-gardiste"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 7] <- "7. Lucie - Professionnelle Discrète"
-data_filtered$cluster_labels[data_filtered$cluster_8 == 8] <- "8. Michel - Sage Traditionnel"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 1] <- "1. Sophia - Non-franco Urbaine"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 2] <- "2. Stéphane - Travailleur Discret"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 3] <- "3. Éloïse - Jeune Sportive"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 4] <- "4. Gabriel - L'Urbain Raffiné"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 5] <- "5. Zoé - Écolo Avant-gardiste"
+data_filtered$cluster_labels[data_filtered$cluster_6 == 6] <- "6. Michel - Senior Traditionnaliste"
 
-#Nom du persona 1: Gabriel : L'Urbain Raffiné
+
+#Nom du persona 1: Sophia : Non-franco urbaine
+#35 à 54 ans, est une personne urbaine et active qui adopte un style de vie équilibré.
+#Utilisatrice régulière des transports en commun, elle pratique le yoga et préfère le café Starbucks
+#pour ses moments de détente. Immigrante parlant une autre langue que le français ou l’anglais,
+#elle se distingue par son choix de ne jamais avoir fumé et par des habitudes qui reflètent un intérêt
+#pour le bien-être et la simplicité citadine.
+#est une anglophone montréalaise typique, préférant la vie en milieu urbain
+#et évitant les banlieues avec leurs maisons individuelles. 
+
+#Nom du persona 2: Stéphane :  Travailleur Discret
+#Description :
+
+
+
+#Nom du persona 3: Éloïse : Jeune Sportive
+#Description :
+#Le groupe d’Éloïse se distingue par des valeurs élevées pour des activités comme le gym,
+#les sports d’équipe, la course et les activités motorisées. Ils sont majoritairement âgés
+#de moins de 34 ans, n’ont jamais fumé et préfèrent les cocktails. Francophones,
+#ils affichent des valeurs faibles pour les catégories liées à l’âge (35 ans et plus),
+#aux grandes surfaces, au café, au vin rouge, et sont moins susceptibles d’être des hommes
+#ou d’avoir arrêté de fumer.
+
+#Nom du persona 4: Gabriel : L'Urbain Raffiné
 #Description du persona :
 #Gabriel est un homme gai urbain et sophistiqué, vivant dans un condo et incarnant un style de vie raffiné.
 #Ce cluster se démarque par un fort intérêt pour les activités culturelles comme les musées,
 #un goût prononcé pour le vin rouge, et une préférence pour le transport public,
 #reflétant une sensibilité esthétique et un engagement envers un mode de vie urbain.
 
-
-#Nom du persona 2: Susan : L'anglophone
-#Description :
-#est une anglophone montréalaise typique, préférant la vie en milieu urbain
-#et évitant les banlieues avec leurs maisons individuelles. 
-
-
-#Nom du persona 3: Daniela : Allophone urbaine
-#Description :
-#35 à 54 ans, est une personne urbaine et active qui adopte un style de vie équilibré.
-#Utilisatrice régulière des transports en commun, elle pratique le yoga et préfère le café Starbucks
-#pour ses moments de détente. Immigrante parlant une autre langue que le français ou l’anglais,
-#elle se distingue par son choix de ne jamais avoir fumé et par des habitudes qui reflètent un intérêt
-#pour le bien-être et la simplicité citadine.
-
-#Nom du persona 4: Guy : Le Francophone Modeste
-#Description du persona :
-#Guy est un individu francophone avec un parcours éducatif secondaire,
-#incarnant un mode de vie simple et sans prétention.
-#Ce groupe est moins intéressé par des activités culturelles comme les musées ou galeries
-#et est éloigné des milieux universitaires et des hauts revenus. 
-
-#Nom du persona 5: Nicolas : Sportif tout-terrain
-#Description du persona :
-#Nicolas représente un groupe de jeunes adultes de moins de 34 ans,
-#diplômés universitaires et ayant un revenu élevé, qui vivent majoritairement dans des maisons individuelles.
-#Ce groupe est passionné par des activités comme la pêche, la chasse, les sports d'équipe,
-#et la fréquentation du gym. Ils apprécient les microbrasseries, consomment du café Tim Hortons,
-#ne fument pas, et sont majoritairement francophones.
-
-#Nom du persona 6: Zoé : L'écolo avant-gardiste 
+#Nom du persona 5: Zoé : L'écolo avant-gardiste 
 #Description :
 #Zoé incarne une génération jeune et active, très engagée dans des habitudes de vie saines
 #et respectueuses de l'environnement.
@@ -379,27 +369,17 @@ data_filtered$cluster_labels[data_filtered$cluster_8 == 8] <- "8. Michel - Sage 
 #tout en adoptant un régime alimentaire végétarien ou végan.
 #Préférant des choix modernes comme le café Starbucks,
 #elle se distingue aussi par son ouverture d'esprit, notamment sur le plan de l'orientation sexuelle.
-#Nom du persona 4: Lucie : La francophone accomplie
-
-#Nom du persona 7: Lucie : Professionnelle discrète
-#Description du persona :
-#Lucie représente un groupe de personnes âgées de 35 à 54 ans, francophones et diplômées universitaires,
-#qui n'ont jamais fumé. Ce groupe fréquente principalement des chaînes de boutiques pour leurs achats,
-#préférant des options pratiques et accessibles. À l'opposé, ils se démarquent par un faible intérêt pour
-#la pêche et incluent peu de personnes de 55 ans et plus, ou ayant arrêté de fumer.
 
 
-#Nom du persona 8: Michel : Le Classique Cultivé
+#Nom du persona 6: Michel : Le Senior Traditionnaliste
 
 #Description du persona :
-#Michel représente un groupe de personnes âgées de 55 ans et plus, majoritairement francophones,
-#éduquées au niveau universitaire, et hétérosexuelles. Ce groupe privilégie des plaisirs raffinés
-#comme le vin rouge, tout en s’abstenant de café ou de cocktails, et ayant arrêté de fumer.
-#Avec un mode de vie posé, ils n’ont pas de tatouages, participent peu à des activités motorisées ou sportives
-#comme la course, et évitent les options plus populaires comme le café Tim Hortons.
-#Ce profil illustre une maturité marquée par des choix réfléchis et un penchant pour des goûts classiques
-#et sophistiqués.
-
+#Michel incarne les valeurs traditionnelles d'une génération mature et stable.
+#Ce persona représente principalement des individus âgés de 55 ans ou plus, ayant fait des choix de vie
+#marqués par la simplicité et la modération : ils ont arrêté de fumer, ne consomment pas de café
+#et affichent un mode de vie sobre. Leur identité francophone et hétérosexuelle est un aspect central,
+#tandis qu’ils se distinguent par une faible propension à adopter des comportements modernes ou audacieux,
+#comme le tatouage ou la course à pied.
 
 
 

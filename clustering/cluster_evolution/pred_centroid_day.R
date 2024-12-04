@@ -153,20 +153,28 @@ app_data <- readRDS("_SharedFolder_datagotchi_federal_2024/clustering/data/app_d
 process_app_data <- function(data) {
   data %>%
     select(
-      act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
-      app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
-      cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+      act_VisitsMuseumsGaleries,
+      act_Yoga, act_Run, act_Gym, act_TeamSport, act_None,
+      act_MotorizedOutdoorActivities, act_Fishing, act_Hunting, 
+      app_noTattoo,
       cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-      cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
-      cons_Meat, cons_Vege,
-      cons_SmokeNever, cons_Smoke,
+      cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH, cons_coffee_McDo, 
+      cons_Meat, cons_Vege, cons_Vegan,
+      cons_Smoke,
+      cons_SmokeStopped,
+      cons_SmokeNever,
+      cons_noDrink,
+      cons_redWineDrink,
+      cons_regBeers,
+      cons_microBeers,
+      cons_cocktailsDrink,
       immigrant, 
-      educUniv, educBHS,
-      age55p, age34m,
+      educUniv, educBHS, educHS,
+      age55p, age34m, age3554,
       male,
       ses_hetero, ses_gai,
       langEn, langFr, ses_languageOther,
-      incomeHigh, incomeLow,
+      incomeHigh, incomeLow, incomeMid,
       ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
       act_transport_PublicTransportation, act_transport_Car, act_transport_Walk,
       vote_intent
@@ -181,20 +189,28 @@ process_app_data <- function(data) {
 data_model_prior <- data_prior %>%
   select(
     vote_intent,
-    act_VisitsMuseumsGaleries, act_Volunteering, act_Yoga, act_Run, act_Gym, act_MotorizedOutdoorActivities, act_None,
-    app_noTattoo, app_swag_Casual, app_swag_VintageHippBoheme,
-    cons_regBeers, cons_cocktailsDrink, cons_microBeers, cons_redWineDrink, cons_noDrink,
+    act_VisitsMuseumsGaleries,
+    act_Yoga, act_Run, act_Gym, act_TeamSport, act_None,
+    act_MotorizedOutdoorActivities, act_Fishing, act_Hunting, 
+    app_noTattoo,
     cons_brand_ChainesB, cons_brand_GSurf, cons_brand_MaR, cons_brand_Frip,
-    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH,
-    cons_Meat, cons_Vege,
-    cons_SmokeNever, cons_Smoke,
+    cons_coffee_Starbucks, cons_coffee_place_noCoffee, cons_coffee_TimH, cons_coffee_McDo, 
+    cons_Meat, cons_Vege, cons_Vegan,
+    cons_Smoke,
+    cons_SmokeStopped,
+    cons_SmokeNever,
+    cons_noDrink,
+    cons_redWineDrink,
+    cons_regBeers,
+    cons_microBeers,
+    cons_cocktailsDrink,
     immigrant, 
-    educUniv, educBHS,
-    age55p, age34m,
+    educUniv, educBHS, educHS,
+    age55p, age34m, age3554,
     male,
     ses_hetero, ses_gai,
     langEn, langFr, ses_languageOther,
-    incomeHigh, incomeLow,
+    incomeHigh, incomeLow, incomeMid,
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
     act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
   )
@@ -246,7 +262,7 @@ for (current_day in date_to_day_number$day) {
   centroids <- centroids[, predictor_vars, drop = FALSE]
   
   # Prédire les probabilités pour chaque centroid
-  probs <- predict(model_i, newdata = centroids, type = "probs")
+  probs <- marginaleffects::predictions(model_i, newdata = centroids, type = "probs")
   
   # Convertir les probabilités en dataframe
   probs_df <- as.data.frame(probs)

@@ -1,7 +1,7 @@
 # variables à décrire ----------------------------------------------------
 variables_to_describe <- c(
   "educBHS",
-  "educHS",
+#  "educHS",
   "educUniv",
   "incomeLow",
   "incomeMid",
@@ -9,7 +9,7 @@ variables_to_describe <- c(
   "ses_hetero",
   "ses_gai",
 #  "ses_bisex",
-  "ses_sexOri_other",
+#  "ses_sexOri_other",
   "immigrant",
   "male",
 #  "female",
@@ -100,7 +100,7 @@ output_dir <- "/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_Share
 df_mean_by_cluster <- opubliqr::describe_clusters(
   data_filtered,
   variables_to_describe = variables_to_describe,
-  cluster_var = "cluster_8"
+  cluster_var = "cluster_6"
 )
 
 # Limiter les scores z entre -2 et 2 (optionnel)
@@ -109,20 +109,18 @@ df_mean_by_cluster <- df_mean_by_cluster %>%
 
 # Filtrer les données pour le cluster 1
 df_cluster <- df_mean_by_cluster %>%
-  filter(cluster_var == 6)
+  filter(cluster_var == 3)
 
 df_cluster <- df_cluster %>%
   mutate(
     variable = case_when(
-      variable == "educBHS" ~ "Secondaire partiel",
-      variable == "educHS" ~ "Secondaire",
+      variable == "educBHS" ~ "Secondaire",
       variable == "educUniv" ~ "Universitaire",
       variable == "incomeLow" ~ "Revenu faible",
       variable == "incomeMid" ~ "Revenu moyen",
       variable == "incomeHigh" ~ "Revenu élevé",
       variable == "ses_hetero" ~ "Hétéro",
       variable == "ses_gai" ~ "Gai",
-      variable == "ses_sexOri_other" ~ "Autre orientation",
       variable == "immigrant" ~ "Immigrant",
       variable == "male" ~ "Homme",
       variable == "age34m" ~ "Moins de 34 ans",
@@ -200,8 +198,8 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle("Scores z des variables pour le cluster 6. Zoé - Écolo Avant-gardiste")
+    ggtitle("Scores z des variables pour le cluster 3. Éloïse - Jeune Sportive")
   
   # Enregistrer le graphique
-  output_file <- file.path(output_dir, paste0("2021_6. Zoé - Écolo Avant-gardiste.png"))
+  output_file <- file.path(output_dir, paste0("2021_3. Éloïse - Jeune Sportive.png"))
   ggsave(filename = output_file, plot = graph, width = 12, height = 8)
