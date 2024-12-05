@@ -129,6 +129,7 @@ table(data_clean$dv_attitude_leftvsright)
 
 ## attitude_party --------------------------------------------------------
 
+attributes(data_raw$attitude_party)
 table(data_raw$attitude_party)
 data_clean$dv_attitude_party <- NA
 data_clean$dv_attitude_party <- data_raw$attitude_party / 10
