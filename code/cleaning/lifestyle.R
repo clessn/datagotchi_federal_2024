@@ -1028,7 +1028,7 @@ data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 6] <-
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 7] <- "LinkedIn"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 8] <- "Youtube"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 9] <- "Autre (veuillez préciser)"
-data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_avourite_alcool)
+data_clean$lifestyle_medsociaux_plus_frequent <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
 table(data_clean$lifestyle_medsociaux_plus_frequent)
 
 ## social_media_time -----------------------------------------------------
