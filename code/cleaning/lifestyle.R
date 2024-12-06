@@ -1078,9 +1078,14 @@ attributes(data_raw$number_tattoos)
 table(data_raw$number_tattoos)
 
 data_clean$lifestyle_number_tattoos <- NA
-data_clean$lifestyle_number_tattoos <- data_raw$number_tattoos
-data_clean$lifestyle_number_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos)
-table(data_clean$lifestyle_number_tattoos)
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 9] <- 0  # "0 tatouage"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 10] <- 1 # "1 tatouage"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 11] <- 2 # "2 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 4] <- 3  # "3 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 5] <- 4  # "4 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 6] <- 5  # "5+ tatouages" traité comme 5
+
+table(data_clean$lifestyle_number_tattoos, useNA = "ifany")
 
 # Créer la variable binaire 'has_tattoos'
 data_clean$lifestyle_has_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos > 0)
@@ -1097,13 +1102,13 @@ table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
 attributes(data_raw$chronotype)
 table(data_raw$chronotype)
 
-data_clean$lifestyle_chronotype <- NA
-data_clean$lifestyle_chronotype[data_raw$chronotype == 1] <- 0
-data_clean$lifestyle_chronotype[data_raw$chronotype == 2] <- 0.25
-data_clean$lifestyle_chronotype[data_raw$chronotype == 3] <- 0.5
-data_clean$lifestyle_chronotype[data_raw$chronotype == 4] <- 0.75
-data_clean$lifestyle_chronotype[data_raw$chronotype == 5] <- 1
-table(data_clean$lifestyle_chronotype)
+data_clean$lifestyle_morning_to_evening <- NA
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 1] <- 0
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 2] <- 0.25
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 3] <- 0.5
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 4] <- 0.75
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 5] <- 1
+table(data_clean$lifestyle_morning_to_evening)
   
 
 
