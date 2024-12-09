@@ -2,44 +2,89 @@
 
 
 ## issue_aboriginals ----------------------------------------------------
-
-
-
+table(data_raw$issue_aboriginals)
+attributes(data_raw$issue_aboriginals)
+data_clean$iss_pro_reconcil_aboriginals <- NA
+data_clean$iss_pro_reconcil_aboriginals[data_raw$issue_aboriginals == 1] <- 0
+data_clean$iss_pro_reconcil_aboriginals[data_raw$issue_aboriginals == 2] <- 0.25
+data_clean$iss_pro_reconcil_aboriginals[data_raw$issue_aboriginals == 3] <- 0.5
+data_clean$iss_pro_reconcil_aboriginals[data_raw$issue_aboriginals == 4] <- 0.75
+data_clean$iss_pro_reconcil_aboriginals[data_raw$issue_aboriginals == 5] <- 1
+table(data_clean$iss_pro_reconcil_aboriginals)
 
 ## issue_immigration -----------------------------------------------------
-
-
-
+table(data_raw$issue_immigration)
+attributes(data_raw$issue_immigration)
+data_clean$iss_pro_immigration <- NA
+data_clean$iss_pro_immigration[data_raw$issue_immigration == 1] <- 0
+data_clean$iss_pro_immigration[data_raw$issue_immigration == 2] <- 0.25
+data_clean$iss_pro_immigration[data_raw$issue_immigration == 3] <- 0.5
+data_clean$iss_pro_immigration[data_raw$issue_immigration == 4] <- 0.75
+data_clean$iss_pro_immigration[data_raw$issue_immigration == 5] <- 1
+table(data_clean$iss_pro_immigration)
 
 ## issue_refugee ---------------------------------------------------------
-
-
-
+table(data_raw$issue_refugee)
+attributes(data_raw$issue_refugee)
+data_clean$iss_pro_bordercontrol <- NA
+data_clean$iss_pro_bordercontrol[data_raw$issue_refugee == 1] <- 0
+data_clean$iss_pro_bordercontrol[data_raw$issue_refugee == 2] <- 0.33
+data_clean$iss_pro_bordercontrol[data_raw$issue_refugee == 3] <- 0.66
+data_clean$iss_pro_bordercontrol[data_raw$issue_refugee == 4] <- 1
+table(data_clean$iss_pro_bordercontrol)
 
 ## issue_gun_control -----------------------------------------------------
-
-
-
+table(data_raw$issue_gun_control)
+attributes(data_raw$issue_gun_control)
+data_clean$iss_pro_guncontrol <- NA
+data_clean$iss_pro_guncontrol[data_raw$issue_gun_control == 1] <- 0
+data_clean$iss_pro_guncontrol[data_raw$issue_gun_control == 2] <- 0.25
+data_clean$iss_pro_guncontrol[data_raw$issue_gun_control == 3] <- 0.5
+data_clean$iss_pro_guncontrol[data_raw$issue_gun_control == 4] <- 0.75
+data_clean$iss_pro_guncontrol[data_raw$issue_gun_control == 5] <- 1
+table(data_clean$iss_pro_guncontrol)
 
 ## issue_economy ---------------------------------------------------------
-
-
-
+table(data_raw$issue_economy)
+attributes(data_raw$issue_economy)
+data_clean$iss_reducedeficit <- NA
+data_clean$iss_reducedeficit[data_raw$issue_immigration == 1] <- 0
+data_clean$iss_reducedeficit[data_raw$issue_immigration == 2] <- 0.33
+data_clean$iss_reducedeficit[data_raw$issue_immigration == 3] <- 0.66
+data_clean$iss_reducedeficit[data_raw$issue_immigration == 4] <- 1
+table(data_clean$iss_reducedeficit)
 
 ## issue_health ----------------------------------------------------------
-
-
-
+table(data_raw$issue_health)
+attributes(data_raw$issue_health)
+data_clean$iss_pro_privatehealth <- NA
+data_clean$iss_pro_privatehealth[data_raw$issue_health == 1] <- 0
+data_clean$iss_pro_privatehealth[data_raw$issue_health == 2] <- 0.25
+data_clean$iss_pro_privatehealth[data_raw$issue_health == 3] <- 0.5
+data_clean$iss_pro_privatehealth[data_raw$issue_health == 4] <- 0.75
+data_clean$iss_pro_privatehealth[data_raw$issue_health == 5] <- 1
+table(data_clean$iss_pro_privatehealth)
 
 ## issue_unions ----------------------------------------------------------
-
-
-
+table(data_raw$issue_unions)
+attributes(data_raw$issue_unions)
+data_clean$iss_pro_unions <- NA
+data_clean$iss_pro_unions[data_raw$issue_unions == 1] <- 0
+data_clean$iss_pro_unions[data_raw$issue_unions == 2] <- 0.25
+data_clean$iss_pro_unions[data_raw$issue_unions == 3] <- 0.5
+data_clean$iss_pro_unions[data_raw$issue_unions == 4] <- 0.75
+data_clean$iss_pro_unions[data_raw$issue_unions == 5] <- 1
+table(data_clean$iss_pro_unions)
 
 ## issue_quebec -----------------------------------------------------------
-
-
-
+table(data_raw$issue_quebec)
+attributes(data_raw$issue_quebec)
+data_clean$iss_pro_qc_independance <- NA
+data_clean$iss_pro_qc_independance[data_raw$issue_quebec == 1] <- 0
+data_clean$iss_pro_qc_independance[data_raw$issue_quebec == 2] <- 0.33
+data_clean$iss_pro_qc_independance[data_raw$issue_quebec == 3] <- 0.66
+data_clean$iss_pro_qc_independance[data_raw$issue_quebec == 4] <- 1
+table(data_clean$iss_pro_qc_independance)
 
 ## issue_french ----------------------------------------------------------
 table(data_raw$issue_french)

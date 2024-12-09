@@ -2,21 +2,23 @@
 
 ## exercise --------------------------------------------------------------
 
+attributes(data_raw$exercise)
 table(data_raw$exercise)
-data_clean$exercise_clean <- NA
-data_clean$exercise_clean[data_raw$exercise == 1] <- 1
-data_clean$exercise_clean[data_raw$exercise == 2] <- 2
-data_clean$exercise_clean[data_raw$exercise == 3] <- 3
-data_clean$exercise_clean[data_raw$exercise == 4] <- 4
-data_clean$exercise_clean[data_raw$exercise == 5] <- 5
-data_clean$exercise_clean[data_raw$exercise == 6] <- 6
-data_clean$exercise_clean[data_raw$exercise == 7] <- 7
-data_clean$exercise_clean[data_raw$exercise == 8] <- 8
-table(data_clean$exercise_clean)
+data_clean$lifestyle_exercise <- NA
+data_clean$lifestyle_exercise[data_raw$exercise == 1] <- 1
+data_clean$lifestyle_exercise[data_raw$exercise == 2] <- 2
+data_clean$lifestyle_exercise[data_raw$exercise == 3] <- 3
+data_clean$lifestyle_exercise[data_raw$exercise == 4] <- 4
+data_clean$lifestyle_exercise[data_raw$exercise == 5] <- 5
+data_clean$lifestyle_exercise[data_raw$exercise == 6] <- 6
+data_clean$lifestyle_exercise[data_raw$exercise == 7] <- 7
+data_clean$lifestyle_exercise[data_raw$exercise == 8] <- 8
+table(data_clean$lifestyle_exercise)
 
 
 ## activity_1 ------------------------------------------------------------
 
+attributes(data_raw$activity_1)
 table(data_raw$activity_1) 
 data_clean$lifestyle_fishing_freq <- NA
 data_raw$activity_1 <- as.numeric(data_raw$activity_1)
@@ -587,13 +589,9 @@ data_clean$lifestyle_gaming_bin[data_raw$activity_13  %in% c(2, 3, 4, 5)] <- 1
 table(data_clean$lifestyle_gaming_bin)
 
 
-## activity_14 -----------------------------------------------------------
-
-
-
-
 ## type_transport --------------------------------------------------------
 
+attributes(data_raw$type_transport)
 table(data_raw$type_transport) 
 data_clean$lifestyle_type_transport_clean <- NA
 data_raw$type_transport <- as.numeric(data_raw$type_transport)
@@ -656,6 +654,7 @@ table(data_clean$lifestyle_car_sharing_bin)
 
 ## choice_transport ------------------------------------------------------
 
+attributes(data_raw$choice_transport)
 table(data_raw$choice_transport) 
 data_clean$lifestyle_choice_transport_clean <- NA
 data_raw$type_transport <- as.numeric(data_raw$type_transport)
@@ -716,6 +715,7 @@ table(data_clean$lifestyle_field_occ)
 
 ## type_occupation -------------------------------------------------------
 
+attributes(data_raw$type_occupation)
 table(data_raw$type_occupation)
 data_clean$lifestyle_type_occ <- NA
 data_clean$lifestyle_type_occ[data_raw$type_occupation == 1] <- "labour_job"
@@ -738,6 +738,7 @@ table(data_clean$lifestyle_type_occ)
 
 ## clothes_consumption ---------------------------------------------------
 
+attributes(data_raw$clothes_consumption)
 table(data_raw$clothes_consumption)
 data_clean$lifestyle_clothes_cons <- NA
 data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 1] <- "department_store"
@@ -760,6 +761,7 @@ table(data_clean$lifestyle_clothes_cons)
 
 ## mode_attitude_1 ---------------------------------------------------------
 
+attributes(data_raw$mode_attitude_1)
 table(data_raw$mode_attitude_1)
 data_clean$lifestyle_mode_att <- NA
 data_clean$lifestyle_mode_att <- data_raw$mode_attitude_1 / 10
@@ -768,6 +770,7 @@ table(data_clean$lifestyle_mode_att)
 
 ## meat_consumption ------------------------------------------------------
 
+attributes(data_raw$meat_consumption)
 table(data_raw$meat_consumption)
 data_clean$lifestyle_meat_cons <- NA
 data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 1] <- 1
@@ -782,9 +785,13 @@ table(data_clean$lifestyle_meat_cons)
 ## meal_time -------------------------------------------------------------
 
 ## Sais pas trop comment cleaner ça ##
+## On va devoir attendre les vrais répondants pour pouvoir le cleaner ##
+attributes(data_raw$meal_time_6)
+table(data_raw$meal_time_6)
 
 ## fridge_1 ----------------------------------------------------------------
 
+attributes(data_raw$fridge_1)
 table(data_raw$fridge_1)
 data_clean$lifestyle_fridge_milk <- NA
 data_clean$lifestyle_fridge_milk[data_raw$fridge_1 == 1] <- 1
@@ -793,6 +800,7 @@ table(data_clean$lifestyle_fridge_milk)
 
 ### fridge_2 -------------------------------------------------------------
 
+attributes(data_raw$fridge_2)
 table(data_raw$fridge_2)
 data_clean$lifestyle_fridge_tofu_tempeh <- NA
 data_clean$lifestyle_fridge_tofu_tempeh[data_raw$fridge_2 == 1] <- 1
@@ -817,6 +825,7 @@ table(data_clean$lifestyle_fridge_pizza)
 
 ### fridge_5 -------------------------------------------------------------
 
+attributes(data_raw$fridge_5)
 table(data_raw$fridge_5)
 data_clean$lifestyle_fridge_butter_tarts <- NA
 data_clean$lifestyle_fridge_butter_tarts[data_raw$fridge_5 == 1] <- 1
@@ -919,7 +928,10 @@ data_clean$lifestyle_coffee_mac <- factor(data_clean$lifestyle_coffee_mac,
 table(data_clean$lifestyle_coffee_mac)
 
 ## cons_pet --------------------------------------------------------------
-data_clean$plifestyle_pet_ownership <- NA
+
+attributes(data_raw$cons_pets)
+table(data_raw$cons_pets)
+data_clean$lifestyle_pet_ownership <- NA
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "Chat(s)"
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "Chien(s)"
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
@@ -935,6 +947,8 @@ table(data_clean$lifestyle_pet_ownership)
 
 
 ## smoking ---------------------------------------------------------------
+
+attributes(data_raw$smoking)
 table(data_raw$smoking)
 data_clean$lifestyle_smoke_freq <- NA
 data_clean$lifestyle_smoke_freq[data_raw$smoking == 1] <- 0
@@ -1018,6 +1032,8 @@ data_clean$lifestyle_medsociaux_plus_frequent <- factor(data_clean$lifestyle_med
 table(data_clean$lifestyle_medsociaux_plus_frequent)
 
 ## social_media_time -----------------------------------------------------
+
+attributes(data_raw$social_media_time)
 data_clean$lifestyle_tempsparjour_medsociaux <- NA
 data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 1] <- 0
 data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 2] <- 0.2
@@ -1062,9 +1078,14 @@ attributes(data_raw$number_tattoos)
 table(data_raw$number_tattoos)
 
 data_clean$lifestyle_number_tattoos <- NA
-data_clean$lifestyle_number_tattoos <- data_raw$number_tattoos
-data_clean$lifestyle_number_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos)
-table(data_clean$lifestyle_number_tattoos)
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 9] <- 0  # "0 tatouage"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 10] <- 1 # "1 tatouage"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 11] <- 2 # "2 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 4] <- 3  # "3 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 5] <- 4  # "4 tatouages"
+data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 6] <- 5  # "5+ tatouages" traité comme 5
+
+table(data_clean$lifestyle_number_tattoos, useNA = "ifany")
 
 # Créer la variable binaire 'has_tattoos'
 data_clean$lifestyle_has_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos > 0)
@@ -1078,6 +1099,7 @@ table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
 attributes(data_raw$chronotype)
 table(data_raw$chronotype)
 
+<<<<<<< HEAD
 data_clean$lifestyle_chronotype <- NA
 data_clean$lifestyle_chronotype[data_raw$chronotype == 1] <- 0
 data_clean$lifestyle_chronotype[data_raw$chronotype == 2] <- 0.25
@@ -1085,6 +1107,19 @@ data_clean$lifestyle_chronotype[data_raw$chronotype == 3] <- 0.5
 data_clean$lifestyle_chronotype[data_raw$chronotype == 4] <- 0.75
 data_clean$lifestyle_chronotype[data_raw$chronotype == 5] <- 1
 table(data_clean$lifestyle_chronotype)
+=======
+data_clean$lifestyle_morning_to_evening <- NA
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 1] <- 0
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 2] <- 0.25
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 3] <- 0.5
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 4] <- 0.75
+data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 5] <- 1
+table(data_clean$lifestyle_morning_to_evening)
+  
+
+
+
+>>>>>>> 638304310c12636b173cf78a782075c5f14aa5c9
 
 ## trip ------------------------------------------------------------------
 
