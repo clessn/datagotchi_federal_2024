@@ -593,10 +593,10 @@ table(data_clean$lifestyle_gaming_bin)
 
 attributes(data_raw$type_transport)
 table(data_raw$type_transport) 
-data_clean$lifestyle_type_transport_clean <- NA
+data_clean$lifestyle_transport_clean <- NA
 data_raw$type_transport <- as.numeric(data_raw$type_transport)
-data_clean$lifestyle_transport_occ[data_raw$type_transport == 1] <- 1
-data_clean$lifestyle_transport_occ[data_raw$type_transport == 2] <- 2
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 1] <- "car"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 2] <- "car"
 data_clean$lifestyle_transport_occ[data_raw$type_transport == 3] <- 3
 data_clean$lifestyle_transport_occ[data_raw$type_transport == 4] <- 4
 data_clean$lifestyle_transport_occ[data_raw$type_transport == 5] <- 5
