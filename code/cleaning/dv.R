@@ -16,12 +16,27 @@ data_clean$dv_vote_choice[data_raw$vote_choice == 2] <- "cpc"
 data_clean$dv_vote_choice[data_raw$vote_choice == 3] <- "ndp"
 data_clean$dv_vote_choice[data_raw$vote_choice == 4] <- "bq"
 data_clean$dv_vote_choice[data_raw$vote_choice == 5] <- "gpc"
-data_clean$dv_vote_choice[data_raw$vote_choice == 6] <- "ppc"
+data_clean$dv_vote_choice[data_raw$vote_choice == 6] <- "other"
 data_clean$dv_vote_choice[data_raw$vote_choice == 7] <- "other"
-data_clean$dv_vote_choice[data_raw$vote_choice == 8] <- "would_not_vote"
-data_clean$dv_vote_choice[data_raw$vote_choice == 9] <- "would_spoil_ballot"
-data_clean$dv_vote_choice[data_raw$vote_choice == 10] <- "dk"
+data_clean$dv_vote_choice[data_raw$vote_choice == 8] <- "other"
+data_clean$dv_vote_choice[data_raw$vote_choice == 9] <- "other"
+data_clean$dv_vote_choice[data_raw$vote_choice == 10] <- "other"
 table(data_clean$dv_vote_choice)
+
+## vote_choice_raw -------------------------------------------------------
+
+data_clean$dv_vote_choice_raw <- NA
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 1] <- "lpc"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 2] <- "cpc"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 3] <- "ndp"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 4] <- "bq"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 5] <- "gpc"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 6] <- "ppc"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 7] <- "other"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 8] <- "would_not_vote"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 9] <- "would_spoil_ballot"
+data_clean$dv_vote_choice_raw[data_raw$vote_choice == 10] <- "dk"
+table(data_clean$dv_vote_choice_raw)
 
 ## vote_certainty --------------------------------------------------------
 
@@ -131,7 +146,7 @@ table(data_clean$dv_attitude_leftvsright)
 
 attributes(data_raw$attitude_party)
 table(data_raw$attitude_party)
-data_clean$dv_attitude_party <- NA
-data_clean$dv_attitude_party <- data_raw$attitude_party / 10
-table(data_clean$dv_attitude_party)
+data_clean$dv_party_id <- NA
+data_clean$dv_party_id <- data_raw$attitude_party / 10
+table(data_clean$dv_party_id)
 
