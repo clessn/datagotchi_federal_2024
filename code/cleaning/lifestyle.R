@@ -1006,15 +1006,15 @@ table(data_clean$lifestyle_mari_freq)
 ## social_media_use ------------------------------------------------------
 data_clean$lifestyle_medsociaux_plus_frequent <- NA
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 1] <- "Facebook"
-data_clean$lifestyle_fmedsociaux_plus_frequent[data_raw$social_media_use == 2] <- "Twitter / X"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 2] <- "Twitter / X"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 3] <- "Instagram"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 4] <- "Snapchat"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use== 5] <- "TikTok"
+data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 5] <- "TikTok"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 6] <- "Pinterest"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 7] <- "LinkedIn"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 8] <- "Youtube"
 data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 9] <- "Autre (veuillez préciser)"
-data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_avourite_alcool)
+data_clean$lifestyle_medsociaux_plus_frequent <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
 table(data_clean$lifestyle_medsociaux_plus_frequent)
 
 ## social_media_time -----------------------------------------------------
@@ -1073,9 +1073,6 @@ data_clean$lifestyle_has_tattoos[is.na(data_clean$lifestyle_number_tattoos)] <- 
 
 table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
 
-
-
-
 ## chronotype ------------------------------------------------------------
 
 attributes(data_raw$chronotype)
@@ -1088,10 +1085,6 @@ data_clean$lifestyle_chronotype[data_raw$chronotype == 3] <- 0.5
 data_clean$lifestyle_chronotype[data_raw$chronotype == 4] <- 0.75
 data_clean$lifestyle_chronotype[data_raw$chronotype == 5] <- 1
 table(data_clean$lifestyle_chronotype)
-  
-
-
-
 
 ## trip ------------------------------------------------------------------
 
@@ -1105,7 +1098,3 @@ data_clean$lifestyle_trip[data_raw$trip == 3] <- "historic"
 data_clean$lifestyle_trip[data_raw$trip == 4] <- "mountains"
 data_clean$lifestyle_trip <- factor(data_clean$lifestyle_trip)
 table(data_clean$lifestyle_trip)
-
-
-
-

@@ -176,6 +176,15 @@ data_clean$ses_religion <- factor(data_clean$ses_religion, levels = c("agnostic"
                                                                       "other"))
 table(data_clean$ses_religion)
 
+data_clean$ses_religion_big_five <- NA
+data_clean$ses_religion_big_five[data_raw$ses_religion %in% c(4, 5, 9, 11)] <- "christian"
+data_clean$ses_religion_big_five[data_raw$ses_religion == 7] <- "muslim"
+data_clean$ses_religion_big_five[data_raw$ses_religion == 8] <- "jew"
+data_clean$ses_religion_big_five[data_raw$ses_religion == 6] <- "hindu"
+data_clean$ses_religion_big_five[data_raw$ses_religion == 3] <- "buddhist"
+data_clean$ses_religion_big_five <- factor(data_clean$ses_religion_big_five)
+table(data_clean$ses_religion_big_five)
+
 ## religiosity -------------------------------------------------------------
 
 table(data_raw$ses_religiosity_1)
