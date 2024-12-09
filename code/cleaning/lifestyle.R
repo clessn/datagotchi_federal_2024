@@ -5,14 +5,14 @@
 attributes(data_raw$exercise)
 table(data_raw$exercise)
 data_clean$lifestyle_exercise <- NA
-data_clean$lifestyle_exercise[data_raw$exercise == 1] <- 1
-data_clean$lifestyle_exercise[data_raw$exercise == 2] <- 2
-data_clean$lifestyle_exercise[data_raw$exercise == 3] <- 3
-data_clean$lifestyle_exercise[data_raw$exercise == 4] <- 4
-data_clean$lifestyle_exercise[data_raw$exercise == 5] <- 5
-data_clean$lifestyle_exercise[data_raw$exercise == 6] <- 6
-data_clean$lifestyle_exercise[data_raw$exercise == 7] <- 7
-data_clean$lifestyle_exercise[data_raw$exercise == 8] <- 8
+data_clean$lifestyle_exercise[data_raw$exercise == 1] <- "gym"
+data_clean$lifestyle_exercise[data_raw$exercise == 2] <- "play_a_team_sport"
+data_clean$lifestyle_exercise[data_raw$exercise == 3] <- "walk"
+data_clean$lifestyle_exercise[data_raw$exercise == 4] <- "run"
+data_clean$lifestyle_exercise[data_raw$exercise == 5] <- "yoga"
+data_clean$lifestyle_exercise[data_raw$exercise == 6] <- "swimming"
+data_clean$lifestyle_exercise[data_raw$exercise == 7] <- "other"
+data_clean$lifestyle_exercise[data_raw$exercise == 8] <- "i_do_not_exercise"
 table(data_clean$lifestyle_exercise)
 
 
