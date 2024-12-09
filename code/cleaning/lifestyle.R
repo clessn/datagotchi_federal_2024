@@ -597,10 +597,13 @@ data_clean$lifestyle_transport_clean <- NA
 data_raw$type_transport <- as.numeric(data_raw$type_transport)
 data_clean$lifestyle_transport_clean[data_raw$type_transport == 1] <- "car"
 data_clean$lifestyle_transport_clean[data_raw$type_transport == 2] <- "car"
-data_clean$lifestyle_transport_occ[data_raw$type_transport == 3] <- 3
-data_clean$lifestyle_transport_occ[data_raw$type_transport == 4] <- 4
-data_clean$lifestyle_transport_occ[data_raw$type_transport == 5] <- 5
-table(data_clean$lifestyle_type_transport_clean)
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 3] <- "car"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 4] <- "active_transport"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 5] <- "active_transport"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 6] <- "shared_transport"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 7] <- "shared_transport"
+data_clean$lifestyle_transport_clean[data_raw$type_transport == 8] <- "shared_transport"
+table(data_clean$lifestyle_transport_clean)
 
 ## factor
 
@@ -612,57 +615,14 @@ table(data_clean$lifestyle_type_transport_clean)
 
 ## bin
 
-data_clean$lifestyle_car_bin <- NA
-data_clean$lifestyle_car_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_car_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_car_bin)
-
-data_clean$lifestyle_SUV_bin <- NA
-data_clean$lifestyle_SUV_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_SUV_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_SUV_bin)
-
-data_clean$lifestyle_motorcycle_bin <- NA
-data_clean$lifestyle_motorcycle_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_motorcycle_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_motorcycle_bin)
-
-data_clean$lifestyle_walking_bin <- NA
-data_clean$lifestyle_walking_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_walking_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_walking_bin)
-
-data_clean$lifestyle_bicycle_bin <- NA
-data_clean$lifestyle_bicycle_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_bicycle_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_bicycle_bin)
-
-data_clean$lifestyle_public_transport_bin <- NA
-data_clean$lifestyle_public_transport_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_public_transport_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_public_transport_bin)
-
-data_clean$lifestyle_carpooling_bin <- NA
-data_clean$lifestyle_carpooling_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_carpooling_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_carpooling_bin)
-
-data_clean$lifestyle_car_sharing_bin <- NA
-data_clean$lifestyle_car_sharing_bin[data_raw$type_transport  == 1] <- 0
-data_clean$lifestyle_car_sharing_bin[data_raw$type_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_car_sharing_bin)
-
 ## choice_transport ------------------------------------------------------
 
 attributes(data_raw$choice_transport)
 table(data_raw$choice_transport) 
 data_clean$lifestyle_choice_transport_clean <- NA
-data_raw$type_transport <- as.numeric(data_raw$type_transport)
-data_clean$lifestyle_transport_occ[data_raw$choice_transport == 1] <- 1
-data_clean$lifestyle_transport_occ[data_raw$choice_transport == 2] <- 2
-data_clean$lifestyle_transport_occ[data_raw$choice_transport == 3] <- 3
-data_clean$lifestyle_transport_occ[data_raw$choice_transport == 4] <- 4
-data_clean$lifestyle_transport_occ[data_raw$choice_transport == 5] <- 5
+data_raw$choice_transport <- as.numeric(data_raw$choice_transport)
+data_clean$lifestyle_choice_transport_clean[data_raw$choice_transport == 1] <- "part_of_who_i_am"
+data_clean$lifestyle_choice_transport_clean[data_raw$choice_transport == 2] <- "point_a_to_point_b"
 table(data_clean$lifestyle_choice_transport_clean)
 
 ## factor
