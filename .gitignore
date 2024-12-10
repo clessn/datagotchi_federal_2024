@@ -196,3 +196,4 @@ _privatefolder*
 
 venv/
 .vscode/
+.DS_Store

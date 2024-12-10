@@ -10,8 +10,9 @@ table(data_raw$values_1)
 
 #### bin
 data_clean$values_conformity_vs_freethinking <- NA
-data_clean$values_conformity_vs_freethinking[data_raw$values_1 == 1] <- 0
-data_clean$values_conformity_vs_freethinking[data_raw$values_1 == 2] <- 1
+data_clean$values_conformity_vs_freethinking[data_raw$values_1 == 1] <- "conformity"
+data_clean$values_conformity_vs_freethinking[data_raw$values_1 == 2] <- "freethink"
+data_clean$values_conformity_vs_freethinking <- factor(data_clean$values_conformity_vs_freethinking)
 table(data_clean$values_conformity_vs_freethinking)
 
 
@@ -22,8 +23,9 @@ attributes(data_raw$values_2)
 table(data_raw$values_2)
 #### bin
 data_clean$values_curiosity_vs_goodmanners <- NA
-data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 1] <- 0 
-data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 2] <- 1
+data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 1] <- "curiosity" 
+data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 2] <- "goodmanners"
+data_clean$values_curiosity_vs_goodmanners <- factor(data_clean$values_curiosity_vs_goodmanners)
 table(data_clean$values_curiosity_vs_goodmanners) 
 
 
@@ -35,8 +37,9 @@ table(data_raw$values_3)
 
 #### bin
 data_clean$values_selfreliance_vs_obedience <- NA
-data_clean$values_selfreliance_vs_obedience[data_raw$values_3 == 1] <- 0 
-data_clean$values_selfreliance_vs_obedience[data_raw$values_3 == 2] <- 1
+data_clean$values_selfreliance_vs_obedience[data_raw$values_3 == 1] <- "selfreliance" 
+data_clean$values_selfreliance_vs_obedience[data_raw$values_3 == 2] <- "obedience"
+data_clean$values_selfreliance_vs_obedience <- factor(data_clean$values_selfreliance_vs_obedience)
 table(data_clean$values_selfreliance_vs_obedience) 
 
 ### values_4 -------------------------------------------------------------
@@ -46,8 +49,9 @@ table(data_raw$values_4)
 
 #### bin
 data_clean$values_considerate_vs_wellbehaved <- NA
-data_clean$values_considerate_vs_wellbehaved[data_raw$values_4 == 1] <- 0 
-data_clean$values_considerate_vs_wellbehaved[data_raw$values_4 == 2] <- 1
+data_clean$values_considerate_vs_wellbehaved[data_raw$values_4 == 1] <- "considerate" 
+data_clean$values_considerate_vs_wellbehaved[data_raw$values_4 == 2] <- "wellbehaved"
+data_clean$values_considerate_vs_wellbehaved <- factor(data_clean$values_considerate_vs_wellbehaved)
 table(data_clean$values_considerate_vs_wellbehaved) 
 
 

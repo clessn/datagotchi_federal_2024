@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Cluster Datagotchi</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="clustering_datagotchi_files/libs/clipboard/clipboard.min.js"></script>
+<script src="clustering_datagotchi_files/libs/quarto-html/quarto.js"></script>
+<script src="clustering_datagotchi_files/libs/quarto-html/popper.min.js"></script>
+<script src="clustering_datagotchi_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="clustering_datagotchi_files/libs/quarto-html/anchor.min.js"></script>
+<link href="clustering_datagotchi_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="clustering_datagotchi_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="clustering_datagotchi_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="clustering_datagotchi_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="clustering_datagotchi_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Autres formats</h2><ul><li><a href="../clustering_datagotchi.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Cluster Datagotchi</h1>
+<p class="subtitle lead">Données du pilot1-2021</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="définir-le-nombre-de-clusters" class="level1">
+<h1>Définir le nombre de clusters</h1>
+<section id="pca-et-sélection-des-variables" class="level2">
+<h2 class="anchored" data-anchor-id="pca-et-sélection-des-variables">PCA et sélection des variables</h2>
+<p>Pour déterminer quelles variables sont les moins pertinentes à conserver à partir des résultats de l’analyse en composantes principales (PCA), nous pouvons examiner leurs coefficients dans les premiers axes principaux (PC1 à PC4). Les variables ayant des coefficients proches de zéro pour ces axes peuvent être considérées comme faiblement contributives à la variance des données globales. En général, on garde les variables ayant des coefficients élevés (en valeur absolue) sur au moins un des premiers axes, car cela signifie qu’elles expliquent une part significative de la variance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Visualisation des contributions des variables pour les premiers axes principaux fviz_pca_ind(pca_result0, geom.ind = “point”, col.ind = “cos2”, palette = “jco”, addEllipses = TRUE)</p>
+<p>Les résultats de l’analyse en composantes principales montrent la variance expliquée par chaque axe. Dans ce cas, nous choisissons de retenir les quatre premiers axes, qui expliquent la majorité de la variance dans les données.</p>
+<p>Les variables ayant des coefficients élevés sur ces axes sont les plus importantes pour expliquer la variance des données. Par exemple, les variables qui ont une forte contribution dans le premier ou deuxième axe doivent être retenues, tandis que celles avec une faible contribution sur les premiers axes peuvent être considérées comme moins pertinentes.</p>
+<section id="contribution-des-variables" class="level3">
+<h3 class="anchored" data-anchor-id="contribution-des-variables">Contribution des variables</h3>
+<p>La contribution des variables est calculée</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="clustering_datagotchi_files/figure-html/pca-graph3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sélection-variables-activité" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-activité">Sélection variables activité</h3>
+<p><strong>act_VisitsMuseumsGaleries</strong>, <strong>act_Volunteering</strong>, <strong>act_Yoga</strong>, <strong>act_Run</strong>, <strong>act_Gym</strong> ont des contributions intéressantes à au moins 1 des 4 dimensions et ne sont pas corrélées entre-elles.</p>
+<p><strong>act_MotorizedOutdoorActivities</strong>, <strong>act_Fishing</strong>, et <strong>act_Hunting</strong> ont de très bonnes contributions mais sont corrélées entre-elles. <strong>act_MotorizedOutdoorActivities</strong> est conservée car elle a la plus grande contribution pondérée.</p>
+</section>
+<section id="sélection-variables-apparence" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-apparence">Sélection variables apparence</h3>
+<p><strong>app_noTattoo</strong>, <strong>app_swag_Casual</strong> et <strong>app_swag_VintageHippBoheme</strong></p>
+</section>
+<section id="sélection-variables-cons_alcool" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-cons_alcool">Sélection variables cons_alcool</h3>
+<p><strong>cons_regBeers</strong>, <strong>cons_cocktailsDrink</strong>, <strong>cons_microBeers</strong>, <strong>cons_redWineDrink</strong>, <strong>cons_noDrink</strong></p>
+</section>
+<section id="sélection-variables-cons_brand" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-cons_brand">Sélection variables cons_brand</h3>
+<p><strong>cons_brand_ChainesB</strong>, <strong>cons_brand_GSurf</strong>, <strong>cons_brand_MaR</strong>, <strong>cons_brand_Frip</strong></p>
+</section>
+<section id="sélection-variables-cons_coffee" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-cons_coffee">Sélection variables cons_coffee</h3>
+<p><strong>cons_coffee_Starbucks</strong> est sélectionnée</p>
+<p><strong>cons_coffee_place_noCoffee</strong> et <strong>cons_coffee_TimH</strong> sont corrélées.</p>
+<p><strong>cons_coffee_place_noCoffee</strong> est sélectionnée car plus grande contribution pondérée.</p>
+</section>
+<section id="sélection-variables-cons_food" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-cons_food">Sélection variables cons_food</h3>
+<p>Les trois variables sont corrélées mais <strong>cons_Meat</strong> a la plus grande contribution.</p>
+</section>
+<section id="sélection-variables-cons_tabac" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-cons_tabac">Sélection variables cons_tabac</h3>
+<p><strong>cons_SmokeNever</strong> est sélectionnée, était corrélée avec <strong>cons_SmokeStopped</strong> <strong>cons_Smoke</strong> aussi sélectionnée car pas corrélée?</p>
+</section>
+<section id="sélection-variables-demographie" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-demographie">Sélection variables demographie</h3>
+<p><strong>immigrant</strong> et <strong>educUniv</strong> sont sélectionnées</p>
+<p><strong>age34m</strong> et <strong>age55p</strong> sont corrélées, <strong>age55p</strong> est sélectionnée</p>
+<p><strong>male</strong> et <strong>female</strong> sont parfaitement corrélées, <strong>male</strong> a une contribution légèrement suppérieure</p>
+<p><strong>ses_hetero</strong>, <strong>ses_gai</strong>, <strong>ses_bisex</strong> sont corrélées, <strong>ses_hetero</strong> est sélectionnée</p>
+<p><strong>langFr</strong> et <strong>ses_languageOther</strong> sont corrélées, <strong>langFr</strong> est sélectionnée</p>
+<p><strong>incomeLow</strong> et <strong>incomeHigh</strong> sont corrélées, <strong>incomeHigh</strong> est sélectionnée</p>
+</section>
+<section id="sélection-variables-habitat" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-habitat">Sélection variables habitat</h3>
+<p><strong>ses_dwelling_condo</strong> est sélectionnée</p>
+<p><strong>ses_dwelling_app</strong> et <strong>ses_dwelling_detachedHouse</strong> sont corrélées, <strong>ses_dwelling_detachedHouse</strong> est sélectionnée</p>
+</section>
+<section id="sélection-variables-transport" class="level3">
+<h3 class="anchored" data-anchor-id="sélection-variables-transport">Sélection variables transport</h3>
+<p><strong>act_transport_PublicTransportation</strong> est sélectionnée</p>
+<p><strong>act_transport_Walk</strong> et <strong>act_transport_Car</strong> sont corrélées, <strong>act_transport_Car</strong> est sélectionnée</p>
+</section>
+</section>
+<section id="méthode-du-coude" class="level2">
+<h2 class="anchored" data-anchor-id="méthode-du-coude">Méthode du coude</h2>
+<p>Décris la méthode du coude ici et insère des visualisations si nécessaire.</p>
+</section>
+<section id="silouhette" class="level2">
+<h2 class="anchored" data-anchor-id="silouhette">Silouhette</h2>
+<p>Décrire la méthode</p>
+</section>
+<section id="nombre-de-cluster" class="level2">
+<h2 class="anchored" data-anchor-id="nombre-de-cluster">Nombre de cluster</h2>
+<p>10 clusters</p>
+</section>
+</section>
+<section id="description-des-clusters" class="level1">
+<h1>Description des Clusters</h1>
+<section id="cluster-1-adultes-urbains-éduqués-amateurs-de-culture-et-de-mode-de-vie-modéré" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-1-adultes-urbains-éduqués-amateurs-de-culture-et-de-mode-de-vie-modéré">Cluster 1 : Adultes urbains éduqués, amateurs de culture et de mode de vie modéré</h2>
+<section id="profil-sociodémographique-et-apparence" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 45,7 %, Moyenne globale = 36,6 %, Score z = +0,187<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 23,6 %, Moyenne globale = 16,5 %, Score z = +0,193<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 68,9 %, Moyenne globale = 74,3 %, Score z = -0,124<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 54,3 %, Moyenne globale = 48 %, Score z = +0,126<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 83,5 %, Moyenne globale = 77,3 %, Score z = +0,146<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 37,8 %, Moyenne globale = 36,2 %, Score z = +0,0329<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 69,3 %, Moyenne globale = 68,2 %, Score z = +0,0245<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 83,9 %, Moyenne globale = 75,9 %, Score z = +0,187</li>
+</ul>
+</section>
+<section id="transport-et-habitation" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+100 % des membres résident en condos (Moyenne globale = 10,1 %, Score z = +2,99).<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Aucun membre ne réside dans des maisons détachées (0 %, Moyenne globale = 51,5 %, Score z = -1,03).<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 61,4 %, Moyenne globale = 61,6 %, Score z = -0,00354.<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun usage des transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,280).</li>
+</ul>
+</section>
+<section id="consommation" class="level3">
+<h3 class="anchored" data-anchor-id="consommation">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 94,9 %, Moyenne globale = 95,7 %, Score z = -0,0401<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 6,69 %, Moyenne globale = 9,36 %, Score z = -0,0916<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 49,2 %, Moyenne globale = 55,8 %, Score z = -0,133<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 28,7 %, Moyenne globale = 28,2 %, Score z = +0,0112<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 1,97 %, Moyenne globale = 9,30 %, Score z = -0,252<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 15 %, Moyenne globale = 21,9 %, Score z = -0,169<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 30,7 %, Moyenne globale = 20,9 %, Score z = +0,241<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 9,06 %, Moyenne globale = 11,3 %, Score z = -0,0723<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 16,9 %, Moyenne globale = 12,7 %, Score z = +0,127<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 34,6 %, Moyenne globale = 37,2 %, Score z = -0,0530<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Moyenne du cluster = 6,30 %, Moyenne globale = 9,63 %, Score z = -0,113<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 17,7 %, Moyenne globale = 19,4 %, Score z = -0,0437<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 26,8 %, Moyenne globale = 18,1 %, Score z = +0,225<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Moyenne du cluster = 9,45 %, Moyenne globale = 13,0 %, Score z = -0,106</li>
+</ul>
+</section>
+<section id="activités" class="level3">
+<h3 class="anchored" data-anchor-id="activités">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 22,4 %, Moyenne globale = 18,7 %, Score z = +0,0953<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 13,8 %, Moyenne globale = 16,2 %, Score z = -0,0978<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 15,4 %, Moyenne globale = 13,8 %, Score z = +0,0436<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 38,7 %, Moyenne globale = 32,9 %, Score z = +0,237<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 34,3 %, Moyenne globale = 32,5 %, Score z = +0,0588<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 11,4 %, Moyenne globale = 11,3 %, Score z = +0,00312</li>
+</ul>
+</section>
+<section id="résumé" class="level3">
+<h3 class="anchored" data-anchor-id="résumé">Résumé</h3>
+<p>Ce cluster est composé d’adultes urbains éduqués, principalement francophones, avec un niveau élevé d’éducation et une surreprésentation des activités culturelles comme les visites de musées. Les membres résident exclusivement en condos et n’utilisent pas les transports publics. La consommation de friperies est faible, mais le vin rouge et les marques de vêtements “MaR” sont plus consommés que dans la population générale.</p>
+</section>
+</section>
+<section id="cluster-2-jeunes-hommes-éduqués-amateurs-de-bières-artisanales-et-de-mode-de-vie-actif" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-2-jeunes-hommes-éduqués-amateurs-de-bières-artisanales-et-de-mode-de-vie-actif">Cluster 2 : Jeunes hommes éduqués, amateurs de bières artisanales et de mode de vie actif</h2>
+<section id="profil-sociodémographique-et-apparence-1" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-1">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 26,5 %, Moyenne globale = 36,6 %, Score z = -0,211<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 14 %, Moyenne globale = 16,5 %, Score z = -0,0663<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 78,2 %, Moyenne globale = 74,3 %, Score z = +0,089<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 76,7 %, Moyenne globale = 48 %, Score z = +0,573<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 86 %, Moyenne globale = 77,3 %, Score z = +0,207<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 56 %, Moyenne globale = 36,2 %, Score z = +0,412<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 69,3 %, Moyenne globale = 68,2 %, Score z = +0,0238<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 70 %, Moyenne globale = 75,9 %, Score z = -0,136</li>
+</ul>
+</section>
+<section id="transport-et-habitation-1" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-1">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 3,11 %, Moyenne globale = 10,1 %, Score z = -0,231<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 61,1 %, Moyenne globale = 51,5 %, Score z = +0,191<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 68,5 %, Moyenne globale = 61,6 %, Score z = +0,142<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Moyenne du cluster = 1,56 %, Moyenne globale = 7,28 %, Score z = -0,220</li>
+</ul>
+</section>
+<section id="consommation-1" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-1">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 98,1 %, Moyenne globale = 95,7 %, Score z = +0,116<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 5,06 %, Moyenne globale = 9,36 %, Score z = -0,148<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 63,8 %, Moyenne globale = 55,8 %, Score z = +0,161<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 30,4 %, Moyenne globale = 28,2 %, Score z = +0,047<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 0,389 %, Moyenne globale = 9,30 %, Score z = -0,307<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 24,5 %, Moyenne globale = 21,9 %, Score z = +0,0621<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 21 %, Moyenne globale = 20,9 %, Score z = +0,00297<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 11,3 %, Score z = -0,358<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 13,2 %, Moyenne globale = 12,7 %, Score z = +0,0158<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 35,4 %, Moyenne globale = 37,2 %, Score z = -0,0372<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Tous les membres consomment des bières artisanales (100 %, Moyenne globale = 9,63 %, Score z = +3,06).<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Aucun membre n’est abstinent d’alcool (0 %, Moyenne globale = 19,4 %, Score z = -0,491).<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Aucun membre ne consomme de vin rouge (0 %, Moyenne globale = 18,1 %, Score z = -0,470).<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Aucun membre ne consomme de bières régulières (0 %, Moyenne globale = 13 %, Score z = -0,387).</li>
+</ul>
+</section>
+<section id="activités-1" class="level3">
+<h3 class="anchored" data-anchor-id="activités-1">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 18,7 %, Moyenne globale = 18,7 %, Score z = -0,00119<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 16,7 %, Moyenne globale = 16,2 %, Score z = +0,0221<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 23 %, Moyenne globale = 13,8 %, Score z = +0,264<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 37,4 %, Moyenne globale = 32,9 %, Score z = +0,183<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 34,1 %, Moyenne globale = 32,5 %, Score z = +0,0551<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 10,5 %, Moyenne globale = 11,3 %, Score z = -0,0256</li>
+</ul>
+</section>
+<section id="résumé-1" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-1">Résumé</h3>
+<p>Le Cluster 2 est marqué par de jeunes hommes francophones très éduqués (86 % universitaires) et à revenus élevés (56 %). Tous les membres consomment des bières artisanales, évitent complètement le vin rouge, les cocktails et les bières régulières. Ils sont très actifs, avec une forte pratique de la course et des activités culturelles (musées). Ils utilisent principalement la voiture pour leurs déplacements et préfèrent les maisons détachées aux condos.</p>
+</section>
+</section>
+<section id="cluster-3-individus-sobres-peu-diplômés-et-enclins-à-un-style-de-vie-simple" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-3-individus-sobres-peu-diplômés-et-enclins-à-un-style-de-vie-simple">Cluster 3 : Individus sobres, peu diplômés, et enclins à un style de vie simple</h2>
+<section id="profil-sociodémographique-et-apparence-2" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-2">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 32,4 %, Moyenne globale = 36,6 %, Score z = -0,0875<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 17,8 %, Moyenne globale = 16,5 %, Score z = +0,0362<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 70,1 %, Moyenne globale = 74,3 %, Score z = -0,0968<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 43,6 %, Moyenne globale = 48 %, Score z = -0,0888<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 71 %, Moyenne globale = 77,3 %, Score z = -0,151<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 26,7 %, Moyenne globale = 36,2 %, Score z = -0,198<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 74,4 %, Moyenne globale = 68,2 %, Score z = +0,135<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 81,1 %, Moyenne globale = 75,9 %, Score z = +0,121</li>
+</ul>
+</section>
+<section id="transport-et-habitation-2" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-2">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Aucun membre ne réside en condos (0 %, Moyenne globale = 10,1 %, Score z = -0,334).<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 51,1 %, Moyenne globale = 51,5 %, Score z = -0,00788<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 67,4 %, Moyenne globale = 61,6 %, Score z = +0,118<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun usage des transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,280).</li>
+</ul>
+</section>
+<section id="consommation-2" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-2">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 96,3 %, Moyenne globale = 95,7 %, Score z = +0,0321<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 8,68 %, Moyenne globale = 9,36 %, Score z = -0,0235<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 64,6 %, Moyenne globale = 55,8 %, Score z = +0,177<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 27,4 %, Moyenne globale = 28,2 %, Score z = -0,0186<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Aucun membre ne fréquente les friperies (0 %, Moyenne globale = 9,30 %, Score z = -0,320).<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 31,5 %, Moyenne globale = 21,9 %, Score z = +0,231<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 18,5 %, Moyenne globale = 20,9 %, Score z = -0,0590<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Aucun membre ne consomme de cocktails (0 %, Moyenne globale = 11,3 %, Score z = -0,358).<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 7,31 %, Moyenne globale = 12,7 %, Score z = -0,162<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 51,6 %, Moyenne globale = 37,2 %, Score z = +0,298<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326).<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Tous les membres du cluster sont abstinents d’alcool (100 %, Moyenne globale = 19,4 %, Score z = +2,03).<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Aucun membre ne consomme de vin rouge (0 %, Moyenne globale = 18,1 %, Score z = -0,470).<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Aucun membre ne consomme de bières régulières (0 %, Moyenne globale = 13 %, Score z = -0,387).</li>
+</ul>
+</section>
+<section id="activités-2" class="level3">
+<h3 class="anchored" data-anchor-id="activités-2">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 13,5 %, Moyenne globale = 18,7 %, Score z = -0,135<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 12,6 %, Moyenne globale = 16,2 %, Score z = -0,145<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 9,13 %, Moyenne globale = 13,8 %, Score z = -0,136<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 24,8 %, Moyenne globale = 32,9 %, Score z = -0,329<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 24,4 %, Moyenne globale = 32,5 %, Score z = -0,277<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 4,79 %, Moyenne globale = 11,3 %, Score z = -0,206</li>
+</ul>
+</section>
+<section id="résumé-2" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-2">Résumé</h3>
+<p>Ce cluster est composé d’individus sobres et modestes, tous abstinents d’alcool, sans consommation de vin rouge, de bières artisanales, ni régulières. Les membres affichent une faible participation aux activités culturelles et bénévoles. Aucun membre ne fréquente les friperies ni ne réside en condos. Le groupe se caractérise par une surreprésentation du style casual et une forte proportion de non-consommateurs de café. Ils se déplacent majoritairement en voiture et privilégient un mode de vie simple.</p>
+</section>
+</section>
+<section id="cluster-4-jeunes-femmes-au-style-vintage-actives-culturellement-et-modérées-dans-leur-consommation-de-viande" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-4-jeunes-femmes-au-style-vintage-actives-culturellement-et-modérées-dans-leur-consommation-de-viande">Cluster 4 : Jeunes femmes au style vintage, actives culturellement et modérées dans leur consommation de viande</h2>
+<section id="profil-sociodémographique-et-apparence-3" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-3">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 23,1 %, Moyenne globale = 36,6 %, Score z = -0,280<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 15,7 %, Moyenne globale = 16,5 %, Score z = -0,0196<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 69,4 %, Moyenne globale = 74,3 %, Score z = -0,112<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 35,2 %, Moyenne globale = 48 %, Score z = -0,257<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 74,1 %, Moyenne globale = 77,3 %, Score z = -0,0778<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 23,1 %, Moyenne globale = 36,2 %, Score z = -0,272<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Tous les membres adoptent ce style (100 %, Moyenne globale = 3,25 %, Score z = +5,45).<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Aucun membre ne suit ce style (0 %, Moyenne globale = 68,2 %, Score z = -1,46).<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 63,9 %, Moyenne globale = 75,9 %, Score z = -0,280</li>
+</ul>
+</section>
+<section id="transport-et-habitation-3" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-3">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 12 %, Moyenne globale = 10,1 %, Score z = +0,0659<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 43,5 %, Moyenne globale = 51,5 %, Score z = -0,160<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 54,6 %, Moyenne globale = 61,6 %, Score z = -0,143<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Moyenne du cluster = 7,41 %, Moyenne globale = 7,28 %, Score z = +0,00472</li>
+</ul>
+</section>
+<section id="consommation-3" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-3">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 85,2 %, Moyenne globale = 95,7 %, Score z = -0,518<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 16,7 %, Moyenne globale = 9,36 %, Score z = +0,251<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 48,1 %, Moyenne globale = 55,8 %, Score z = -0,154<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 15,7 %, Moyenne globale = 28,2 %, Score z = -0,278<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 28,7 %, Moyenne globale = 9,30 %, Score z = +0,668<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 12 %, Moyenne globale = 21,9 %, Score z = -0,239<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 18,5 %, Moyenne globale = 20,9 %, Score z = -0,0584<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 17,6 %, Moyenne globale = 11,3 %, Score z = +0,197<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 10,2 %, Moyenne globale = 12,7 %, Score z = -0,0756<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 25,9 %, Moyenne globale = 37,2 %, Score z = -0,233<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Moyenne du cluster = 9,26 %, Moyenne globale = 9,63 %, Score z = -0,0127<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 19,4 %, Moyenne globale = 19,4 %, Score z = -0,0000422<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 13,9 %, Moyenne globale = 18,1 %, Score z = -0,110<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Moyenne du cluster = 17,6 %, Moyenne globale = 13 %, Score z = +0,136</li>
+</ul>
+</section>
+<section id="activités-3" class="level3">
+<h3 class="anchored" data-anchor-id="activités-3">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 20,4 %, Moyenne globale = 18,7 %, Score z = +0,0422<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 22,2 %, Moyenne globale = 16,2 %, Score z = +0,245<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 25,9 %, Moyenne globale = 13,8 %, Score z = +0,350<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 43,5 %, Moyenne globale = 32,9 %, Score z = +0,435<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 35,4 %, Moyenne globale = 32,5 %, Score z = +0,0987<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 26,9 %, Moyenne globale = 11,3 %, Score z = +0,490</li>
+</ul>
+</section>
+<section id="résumé-3" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-3">Résumé</h3>
+<p>Le Cluster 4 est composé principalement de jeunes femmes francophones au style vintage, hippie ou bohème (100 %). Elles sont très actives physiquement et culturellement, avec une forte participation au yoga, à la course, et aux visites de musées. Elles consomment moins de viande et privilégient les friperies, mais évitent les marques surf et les chaînes B. Leurs revenus et niveau d’éducation sont légèrement inférieurs à la moyenne. Les transports publics et les condos sont légèrement présents, mais la voiture reste majoritaire.</p>
+</section>
+</section>
+<section id="cluster-5-seniors-traditionnels-et-consommateurs-de-vin-rouge" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-5-seniors-traditionnels-et-consommateurs-de-vin-rouge">Cluster 5 : Seniors traditionnels et consommateurs de vin rouge</h2>
+<section id="profil-sociodémographique-et-apparence-4" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-4">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 64,4 %, Moyenne globale = 36,6 %, Score z = +0,576<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 11,1 %, Moyenne globale = 16,5 %, Score z = -0,146<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 78 %, Moyenne globale = 74,3 %, Score z = +0,0847<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 47,5 %, Moyenne globale = 48 %, Score z = -0,0116<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 72,6 %, Moyenne globale = 77,3 %, Score z = -0,114<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 32,9 %, Moyenne globale = 36,2 %, Score z = -0,0689<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 77,8 %, Moyenne globale = 68,2 %, Score z = +0,206<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 86 %, Moyenne globale = 75,9 %, Score z = +0,236</li>
+</ul>
+</section>
+<section id="transport-et-habitation-4" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-4">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Aucun membre ne réside en condos (0 %, Moyenne globale = 10,1 %, Score z = -0,334).<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 64,6 %, Moyenne globale = 51,5 %, Score z = +0,262<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 65,5 %, Moyenne globale = 61,6 %, Score z = +0,0812<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun usage des transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,280).</li>
+</ul>
+</section>
+<section id="consommation-4" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-4">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 98,7 %, Moyenne globale = 95,7 %, Score z = +0,148<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 6,50 %, Moyenne globale = 9,36 %, Score z = -0,0982<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 52,4 %, Moyenne globale = 55,8 %, Score z = -0,0685<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 17,4 %, Moyenne globale = 28,2 %, Score z = -0,240<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Aucun membre ne fréquente les friperies (0 %, Moyenne globale = 9,30 %, Score z = -0,320).<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 28,6 %, Moyenne globale = 21,9 %, Score z = +0,161<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 31,3 %, Moyenne globale = 20,9 %, Score z = +0,257<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Aucun membre ne consomme de cocktails (0 %, Moyenne globale = 11,3 %, Score z = -0,358).<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 3,12 %, Moyenne globale = 12,7 %, Score z = -0,288<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 49,7 %, Moyenne globale = 37,2 %, Score z = +0,258<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326).<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Aucun membre n’est abstinent d’alcool (0 %, Moyenne globale = 19,4 %, Score z = -0,491).<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 44,1 %, Moyenne globale = 18,1 %, Score z = +0,674<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Aucun membre ne consomme de bières régulières (0 %, Moyenne globale = 13 %, Score z = -0,387).</li>
+</ul>
+</section>
+<section id="activités-4" class="level3">
+<h3 class="anchored" data-anchor-id="activités-4">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 8,06 %, Moyenne globale = 18,7 %, Score z = -0,273<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 9,95 %, Moyenne globale = 16,2 %, Score z = -0,253<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 3,38 %, Moyenne globale = 13,8 %, Score z = -0,303<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 30,6 %, Moyenne globale = 32,9 %, Score z = -0,0932<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 32,3 %, Moyenne globale = 32,5 %, Score z = -0,00748<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 3,77 %, Moyenne globale = 11,3 %, Score z = -0,238</li>
+</ul>
+</section>
+<section id="résumé-4" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-4">Résumé</h3>
+<p>Le Cluster 5 est dominé par des individus âgés de 55 ans et plus, majoritairement francophones, avec un style vestimentaire casual et une forte consommation de viande et de vin rouge. Ils sont peu engagés dans les activités culturelles, physiques et bénévoles. Les membres n’ont pas d’intérêt pour les cocktails, les bières artisanales ou les friperies, mais consomment des marques de vêtements “MaR”. La voiture est leur principal mode de transport et ils résident dans des maisons détachées plutôt que dans des condos.</p>
+</section>
+</section>
+<section id="cluster-6-hommes-francophones-amateurs-de-bière-régulière" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-6-hommes-francophones-amateurs-de-bière-régulière">Cluster 6 : Hommes francophones amateurs de bière régulière</h2>
+<section id="profil-sociodémographique-et-apparence-5" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-5">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 43,2 %, Moyenne globale = 36,6 %, Score z = +0,137<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 11,7 %, Moyenne globale = 16,5 %, Score z = -0,129<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 75,7 %, Moyenne globale = 74,3 %, Score z = +0,0317<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 82 %, Moyenne globale = 48 %, Score z = +0,680<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 70,3 %, Moyenne globale = 77,3 %, Score z = -0,167<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 32,2 %, Moyenne globale = 36,2 %, Score z = -0,0840<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 76,3 %, Moyenne globale = 68,2 %, Score z = +0,176<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 77,9 %, Moyenne globale = 75,9 %, Score z = +0,0481</li>
+</ul>
+</section>
+<section id="transport-et-habitation-5" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-5">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 0,95 %, Moyenne globale = 10,1 %, Score z = -0,303<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 55,8 %, Moyenne globale = 51,5 %, Score z = +0,0860<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 65,3 %, Moyenne globale = 61,6 %, Score z = +0,0763<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun usage des transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,280).</li>
+</ul>
+</section>
+<section id="consommation-5" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-5">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 98,4 %, Moyenne globale = 95,7 %, Score z = +0,134<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 14,5 %, Moyenne globale = 9,36 %, Score z = +0,177<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 40,7 %, Moyenne globale = 55,8 %, Score z = -0,304<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 23 %, Moyenne globale = 28,2 %, Score z = -0,116<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Aucun membre ne fréquente les friperies (0 %, Moyenne globale = 9,30 %, Score z = -0,320).<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 37,2 %, Moyenne globale = 21,9 %, Score z = +0,369<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 22,4 %, Moyenne globale = 20,9 %, Score z = +0,0371<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Aucun membre ne consomme de cocktails (0 %, Moyenne globale = 11,3 %, Score z = -0,358).<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 6,62 %, Moyenne globale = 12,7 %, Score z = -0,183<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 32,8 %, Moyenne globale = 37,2 %, Score z = -0,0910<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326).<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Aucun membre n’est abstinent d’alcool (0 %, Moyenne globale = 19,4 %, Score z = -0,491).<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Aucun membre ne consomme de vin rouge (0 %, Moyenne globale = 18,1 %, Score z = -0,470).<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Tous les membres consomment des bières régulières (100 %, Moyenne globale = 13 %, Score z = +2,59).</li>
+</ul>
+</section>
+<section id="activités-5" class="level3">
+<h3 class="anchored" data-anchor-id="activités-5">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 18 %, Moyenne globale = 18,7 %, Score z = -0,0190<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 18,5 %, Moyenne globale = 16,2 %, Score z = +0,0952<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 10,1 %, Moyenne globale = 13,8 %, Score z = -0,109<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 24,1 %, Moyenne globale = 32,9 %, Score z = -0,360<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 26 %, Moyenne globale = 32,5 %, Score z = -0,223<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 3,15 %, Moyenne globale = 11,3 %, Score z = -0,258</li>
+</ul>
+</section>
+<section id="résumé-5" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-5">Résumé</h3>
+<p>Le Cluster 6 est dominé par des hommes francophones avec un fort intérêt pour les bières régulières. Ils sont modérément engagés dans les activités physiques et culturelles, mais évitent les bières artisanales, les cocktails, et les friperies. Leurs habitudes de consommation de viande et de vin rouge sont plus élevées que la moyenne, tandis qu’ils consomment très peu de Starbucks et de bières artisanales. La voiture est leur principal moyen de transport, et ils vivent principalement dans des maisons détachées plutôt qu’en condos.</p>
+</section>
+</section>
+<section id="cluster-7-jeunes-urbains-adeptes-des-transports-publics" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-7-jeunes-urbains-adeptes-des-transports-publics">Cluster 7 : Jeunes urbains adeptes des transports publics</h2>
+<section id="profil-sociodémographique-et-apparence-6" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-6">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 21,4 %, Moyenne globale = 36,6 %, Score z = -0,316<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 29,7 %, Moyenne globale = 16,5 %, Score z = +0,357<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 65,9 %, Moyenne globale = 74,3 %, Score z = -0,192<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 49,8 %, Moyenne globale = 48 %, Score z = +0,0348<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 77,3 %, Moyenne globale = 77,3 %, Score z = -0,000964<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 19,7 %, Moyenne globale = 36,2 %, Score z = -0,345<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 64,6 %, Moyenne globale = 68,2 %, Score z = -0,0756<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 75,1 %, Moyenne globale = 75,9 %, Score z = -0,0175</li>
+</ul>
+</section>
+<section id="transport-et-habitation-6" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-6">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 18,3 %, Moyenne globale = 10,1 %, Score z = +0,276<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 19,7 %, Moyenne globale = 51,5 %, Score z = -0,638<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Aucun membre ne consomme de la voiture (0 %, Moyenne globale = 61,6 %, Score z = -1,27)<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Tous les membres utilisent les transports publics (100 %, Moyenne globale = 7,28 %, Score z = +3,57).</li>
+</ul>
+</section>
+<section id="consommation-6" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-6">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 94,3 %, Moyenne globale = 95,7 %, Score z = -0,0676<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 13,1 %, Moyenne globale = 9,36 %, Score z = +0,128<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 62,4 %, Moyenne globale = 55,8 %, Score z = +0,134<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 35,4 %, Moyenne globale = 28,2 %, Score z = +0,158<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 11,8 %, Moyenne globale = 9,30 %, Score z = +0,0857<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 17,5 %, Moyenne globale = 21,9 %, Score z = -0,108<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 18,3 %, Moyenne globale = 20,9 %, Score z = -0,0627<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 15,7 %, Moyenne globale = 11,3 %, Score z = +0,138<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 11,8 %, Moyenne globale = 12,7 %, Score z = -0,0274<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 37,6 %, Moyenne globale = 37,2 %, Score z = +0,00720<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Moyenne du cluster = 7,86 %, Moyenne globale = 9,63 %, Score z = -0,0601<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 26,2 %, Moyenne globale = 19,4 %, Score z = +0,171<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 13,5 %, Moyenne globale = 18,1 %, Score z = -0,119<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Moyenne du cluster = 16,2 %, Moyenne globale = 13 %, Score z = +0,0937</li>
+</ul>
+</section>
+<section id="activités-6" class="level3">
+<h3 class="anchored" data-anchor-id="activités-6">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 24,9 %, Moyenne globale = 18,7 %, Score z = +0,158<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 13 %, Moyenne globale = 16,2 %, Score z = -0,130<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 19,2 %, Moyenne globale = 13,8 %, Score z = +0,155<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 37,1 %, Moyenne globale = 32,9 %, Score z = +0,174<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 33,5 %, Moyenne globale = 32,5 %, Score z = +0,0336<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 15,3 %, Moyenne globale = 11,3 %, Score z = +0,125</li>
+</ul>
+</section>
+<section id="résumé-6" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-6">Résumé</h3>
+<p>Le Cluster 7 est un groupe de jeunes urbains, principalement des utilisateurs de transports publics, et avec une faible utilisation de la voiture (absence totale d’utilisation de la voiture). Ils sont plutôt actifs dans des activités physiques, mais la participation aux activités culturelles et bénévoles reste modérée. Leur consommation de viande est élevée, tandis que la consommation d’alcool est plus faible. Ils ont une forte proportion d’immigrants et une proportion relativement faible de revenus élevés. Ils sont aussi plus enclins à utiliser des marques de chaînes B et consomment un peu plus de friperies.</p>
+</section>
+</section>
+<section id="cluster-8-femmes-francophones-éduquées-et-consommatrices-de-cocktails" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-8-femmes-francophones-éduquées-et-consommatrices-de-cocktails">Cluster 8 : Femmes francophones, éduquées et consommatrices de cocktails</h2>
+<section id="profil-sociodémographique-et-apparence-7" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-7">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 20,1 %, Moyenne globale = 36,6 %, Score z = -0,344<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 13,5 %, Moyenne globale = 16,5 %, Score z = -0,0799<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 78,8 %, Moyenne globale = 74,3 %, Score z = +0,103<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 24,1 %, Moyenne globale = 48 %, Score z = -0,479<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 79,2 %, Moyenne globale = 77,3 %, Score z = +0,0445<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 47,1 %, Moyenne globale = 36,2 %, Score z = +0,226<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 73,4 %, Moyenne globale = 68,2 %, Score z = +0,112<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 66,1 %, Moyenne globale = 75,9 %, Score z = -0,229</li>
+</ul>
+</section>
+<section id="transport-et-habitation-7" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-7">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 1,82 %, Moyenne globale = 10,1 %, Score z = -0,274<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 59,5 %, Moyenne globale = 51,5 %, Score z = +0,159<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 73,4 %, Moyenne globale = 61,6 %, Score z = +0,242<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Tous les membres utilisent les transports publics (100 %, Moyenne globale = 7,28 %, Score z = -0,280).</li>
+</ul>
+</section>
+<section id="consommation-7" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-7">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 95,3 %, Moyenne globale = 95,7 %, Score z = -0,0217<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 6,93 %, Moyenne globale = 9,36 %, Score z = -0,0833<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 68,6 %, Moyenne globale = 55,8 %, Score z = +0,258<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 43,8 %, Moyenne globale = 28,2 %, Score z = +0,346<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 0,37 %, Moyenne globale = 9,30 %, Score z = -0,308<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 19,3 %, Moyenne globale = 21,9 %, Score z = -0,0628<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 19 %, Moyenne globale = 20,9 %, Score z = -0,0470<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Tous les membres consomment des cocktails (100 %, Moyenne globale = 11,3 %, Score z = +2,79)<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 20,1 %, Moyenne globale = 12,7 %, Score z = +0,221<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 30,3 %, Moyenne globale = 37,2 %, Score z = -0,143<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326)<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 19,4 %, Moyenne globale = 19,4 %, Score z = -0,0000422<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Aucun membre ne consomme de vin rouge (0 %, Moyenne globale = 18,1 %, Score z = -0,470)<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Aucun membre ne consomme de bières régulières (0 %, Moyenne globale = 13 %, Score z = -0,387)</li>
+</ul>
+</section>
+<section id="activités-7" class="level3">
+<h3 class="anchored" data-anchor-id="activités-7">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 20,4 %, Moyenne globale = 18,7 %, Score z = +0,0439<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 18,2 %, Moyenne globale = 16,2 %, Score z = +0,0837<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 14,6 %, Moyenne globale = 13,8 %, Score z = +0,0218<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 27,6 %, Moyenne globale = 32,9 %, Score z = -0,214<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 33,6 %, Moyenne globale = 32,5 %, Score z = +0,0357<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 10,9 %, Moyenne globale = 11,3 %, Score z = -0,0117</li>
+</ul>
+</section>
+<section id="résumé-7" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-7">Résumé</h3>
+<p>Le Cluster 8 se caractérise par un groupe de femmes francophones, éduquées, et consommatrices régulières de cocktails. Elles sont plutôt actives physiquement (avec une forte participation au gym et au yoga), mais leur consommation d’alcool se distingue par la préférence pour les cocktails plutôt que pour les bières artisanales ou le vin rouge. Leur utilisation des transports publics est marquée (100 %), tandis que leur consommation de viande et de produits de chaînes B est élevée. Elles vivent principalement dans des maisons détachées, et leur style est casual, avec peu de présence de vintage ou de bohème.</p>
+</section>
+</section>
+<section id="cluster-9-jeunes-urbains-actifs-et-amateurs-de-café-starbucks" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-9-jeunes-urbains-actifs-et-amateurs-de-café-starbucks">Cluster 9 : Jeunes urbains actifs et amateurs de café Starbucks</h2>
+<section id="profil-sociodémographique-et-apparence-8" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-8">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 7,83 %, Moyenne globale = 36,6 %, Score z = -0,598<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 22,8 %, Moyenne globale = 16,5 %, Score z = +0,171<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 73 %, Moyenne globale = 74,3 %, Score z = -0,0293<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 35 %, Moyenne globale = 48 %, Score z = -0,261<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 91,5 %, Moyenne globale = 77,3 %, Score z = +0,338<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 51,6 %, Moyenne globale = 36,2 %, Score z = +0,320<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 50,9 %, Moyenne globale = 68,2 %, Score z = -0,370<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 61,8 %, Moyenne globale = 75,9 %, Score z = -0,330</li>
+</ul>
+</section>
+<section id="transport-et-habitation-8" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-8">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 0,46 %, Moyenne globale = 10,1 %, Score z = -0,319<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 60,1 %, Moyenne globale = 51,5 %, Score z = +0,172<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 67,7 %, Moyenne globale = 61,6 %, Score z = +0,126<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun membre n’utilise les transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,280)</li>
+</ul>
+</section>
+<section id="consommation-8" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-8">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 93,1 %, Moyenne globale = 95,7 %, Score z = -0,128<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 12,7 %, Moyenne globale = 9,36 %, Score z = +0,114<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 56,9 %, Moyenne globale = 55,8 %, Score z = +0,0222<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Moyenne du cluster = 55,8 %, Moyenne globale = 28,2 %, Score z = +0,611<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Moyenne du cluster = 0,46 %, Moyenne globale = 9,30 %, Score z = -0,304<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 10,6 %, Moyenne globale = 21,9 %, Score z = -0,274<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 12,7 %, Moyenne globale = 20,9 %, Score z = -0,202<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 1,15 %, Moyenne globale = 11,3 %, Score z = -0,321<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 35,5 %, Moyenne globale = 12,7 %, Score z = +0,684<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 9,45 %, Moyenne globale = 37,2 %, Score z = -0,574<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326)<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 4,84 %, Moyenne globale = 19,4 %, Score z = -0,369<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 27,2 %, Moyenne globale = 18,1 %, Score z = +0,235<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Moyenne du cluster = 2,3 %, Moyenne globale = 13 %, Score z = -0,318</li>
+</ul>
+</section>
+<section id="activités-8" class="level3">
+<h3 class="anchored" data-anchor-id="activités-8">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 39,4 %, Moyenne globale = 18,7 %, Score z = +0,530<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 28 %, Moyenne globale = 16,2 %, Score z = +0,479<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 29,5 %, Moyenne globale = 13,8 %, Score z = +0,453<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 43 %, Moyenne globale = 32,9 %, Score z = +0,415<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 40,6 %, Moyenne globale = 32,5 %, Score z = +0,275<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 31,1 %, Moyenne globale = 11,3 %, Score z = +0,624</li>
+</ul>
+</section>
+<section id="résumé-8" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-8">Résumé</h3>
+<p>Le Cluster 9 est composé principalement de jeunes urbains actifs, avec une forte consommation de produits Starbucks et un engagement notable dans des activités physiques comme le gym, la course et le yoga. Ils ont une participation importante aux visites culturelles et au volontariat. Leur consommation de viande est élevée, tandis que leur consommation d’alcool est plus faible, avec une préférence pour le vin rouge plutôt que les cocktails. Ils sont très éduqués, avec un revenu élevé, et une proportion significative de francophones.</p>
+</section>
+</section>
+<section id="cluster-10-femmes-francophones-adeptes-des-friperies" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-10-femmes-francophones-adeptes-des-friperies">Cluster 10 : Femmes francophones adeptes des friperies</h2>
+<section id="profil-sociodémographique-et-apparence-9" class="level3">
+<h3 class="anchored" data-anchor-id="profil-sociodémographique-et-apparence-9">Profil sociodémographique et apparence</h3>
+<ul>
+<li><strong>55 ans ou plus</strong> :<br>
+Moyenne du cluster = 39,7 %, Moyenne globale = 36,6 %, Score z = +0,0630<br>
+</li>
+<li><strong>Immigrants</strong> :<br>
+Moyenne du cluster = 12,4 %, Moyenne globale = 16,5 %, Score z = -0,110<br>
+</li>
+<li><strong>Francophones</strong> :<br>
+Moyenne du cluster = 77,3 %, Moyenne globale = 74,3 %, Score z = +0,0675<br>
+</li>
+<li><strong>Hommes</strong> :<br>
+Moyenne du cluster = 31 %, Moyenne globale = 48 %, Score z = -0,341<br>
+</li>
+<li><strong>Université</strong> :<br>
+Moyenne du cluster = 71,5 %, Moyenne globale = 77,3 %, Score z = -0,140<br>
+</li>
+<li><strong>Revenus élevés</strong> :<br>
+Moyenne du cluster = 28,1 %, Moyenne globale = 36,2 %, Score z = -0,169<br>
+</li>
+<li><strong>Style vintage/hippie/bohème</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 3,25 %, Score z = -0,183<br>
+</li>
+<li><strong>Style casual</strong> :<br>
+Moyenne du cluster = 71,9 %, Moyenne globale = 68,2 %, Score z = +0,0805<br>
+</li>
+<li><strong>Pas de tatouages</strong> :<br>
+Moyenne du cluster = 71,9 %, Moyenne globale = 75,9 %, Score z = -0,0925</li>
+</ul>
+</section>
+<section id="transport-et-habitation-9" class="level3">
+<h3 class="anchored" data-anchor-id="transport-et-habitation-9">Transport et habitation</h3>
+<ul>
+<li><strong>Condos</strong> :<br>
+Moyenne du cluster = 2,89 %, Moyenne globale = 10,1 %, Score z = -0,238<br>
+</li>
+<li><strong>Maisons détachées</strong> :<br>
+Moyenne du cluster = 58,3 %, Moyenne globale = 51,5 %, Score z = +0,135<br>
+</li>
+<li><strong>Voiture</strong> :<br>
+Moyenne du cluster = 63,6 %, Moyenne globale = 61,6 %, Score z = +0,0421<br>
+</li>
+<li><strong>Transports publics</strong> :<br>
+Aucun membre n’utilise les transports publics (0 %, Moyenne globale = 7,28 %, Score z = -0,264)</li>
+</ul>
+</section>
+<section id="consommation-9" class="level3">
+<h3 class="anchored" data-anchor-id="consommation-9">Consommation</h3>
+<ul>
+<li><strong>Viande</strong> :<br>
+Moyenne du cluster = 90,9 %, Moyenne globale = 95,7 %, Score z = -0,236<br>
+</li>
+<li><strong>Tabac</strong> :<br>
+Moyenne du cluster = 6,50 %, Moyenne globale = 9,36 %, Score z = -0,0982<br>
+</li>
+<li><strong>Jamais fumé</strong> :<br>
+Moyenne du cluster = 52,4 %, Moyenne globale = 55,8 %, Score z = -0,0685<br>
+</li>
+<li><strong>Marques “Chaines B”</strong> :<br>
+Aucun membre ne consomme de marques “Chaines B” (0 %, Moyenne globale = 28,2 %, Score z = -0,627)<br>
+</li>
+<li><strong>Friperies</strong> :<br>
+Tous les membres consomment des friperies (100 %, Moyenne globale = 9,30 %, Score z = +3,12)<br>
+</li>
+<li><strong>Marques surf</strong> :<br>
+Moyenne du cluster = 28,6 %, Moyenne globale = 21,9 %, Score z = +0,161<br>
+</li>
+<li><strong>Marques “MaR”</strong> :<br>
+Moyenne du cluster = 31,3 %, Moyenne globale = 20,9 %, Score z = +0,257<br>
+</li>
+<li><strong>Cocktails</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 11,3 %, Score z = -0,358<br>
+</li>
+<li><strong>Starbucks</strong> :<br>
+Moyenne du cluster = 3,12 %, Moyenne globale = 12,7 %, Score z = -0,288<br>
+</li>
+<li><strong>Non-consommateurs de café</strong> :<br>
+Moyenne du cluster = 49,7 %, Moyenne globale = 37,2 %, Score z = +0,258<br>
+</li>
+<li><strong>Bières artisanales</strong> :<br>
+Aucun membre ne consomme de bières artisanales (0 %, Moyenne globale = 9,63 %, Score z = -0,326)<br>
+</li>
+<li><strong>Non-consommateurs d’alcool</strong> :<br>
+Moyenne du cluster = 0 %, Moyenne globale = 19,4 %, Score z = -0,491<br>
+</li>
+<li><strong>Vin rouge</strong> :<br>
+Moyenne du cluster = 44,1 %, Moyenne globale = 18,1 %, Score z = +0,674<br>
+</li>
+<li><strong>Bières régulières</strong> :<br>
+Aucun membre ne consomme de bières régulières (0 %, Moyenne globale = 13 %, Score z = -0,387)</li>
+</ul>
+</section>
+<section id="activités-9" class="level3">
+<h3 class="anchored" data-anchor-id="activités-9">Activités</h3>
+<ul>
+<li><strong>Gym</strong> :<br>
+Moyenne du cluster = 8,06 %, Moyenne globale = 18,7 %, Score z = -0,273<br>
+</li>
+<li><strong>Activités motorisées de plein air</strong> :<br>
+Moyenne du cluster = 9,95 %, Moyenne globale = 16,2 %, Score z = -0,253<br>
+</li>
+<li><strong>Courir</strong> :<br>
+Moyenne du cluster = 3,38 %, Moyenne globale = 13,8 %, Score z = -0,303<br>
+</li>
+<li><strong>Visites de musées et galeries</strong> :<br>
+Moyenne du cluster = 30,6 %, Moyenne globale = 32,9 %, Score z = -0,0932<br>
+</li>
+<li><strong>Volontariat</strong> :<br>
+Moyenne du cluster = 32,3 %, Moyenne globale = 32,5 %, Score z = -0,00748<br>
+</li>
+<li><strong>Yoga</strong> :<br>
+Moyenne du cluster = 3,77 %, Moyenne globale = 11,3 %, Score z = -0,238</li>
+</ul>
+</section>
+<section id="résumé-9" class="level3">
+<h3 class="anchored" data-anchor-id="résumé-9">Résumé</h3>
+<p>Le Cluster 10 est principalement composé de personnes qui ont une forte propension à consommer des friperies. Ce groupe est constitué en grande majorité de personnes âgées de 55 ans et plus, avec une forte tendance à éviter l’alcool. Ils privilégient les maisons détachées et la voiture pour leurs déplacements. Ils consomment peu de bières, de cocktails ou de Starbucks, mais ont une consommation notable de viande et de vin rouge. L’éducation universitaire est présente, bien que leur revenu soit légèrement inférieur à la moyenne. Ils sont également caractérisés par un faible niveau de participation aux activités physiques.</p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copié");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copié");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
