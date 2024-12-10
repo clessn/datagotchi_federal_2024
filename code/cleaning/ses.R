@@ -15,6 +15,13 @@ data_clean$ses_gender_factor[data_raw$ses_gender == 7] <- "agender"
 data_clean$ses_gender_factor <- factor(data_clean$ses_gender_factor)
 table(data_clean$ses_gender_factor)
 
+# gender_female ----------------------------------------------------------------
+
+data_clean$ses_gender_female <- NA
+data_clean$ses_gender_female[data_raw$ses_gender == 2] <- 1
+data_clean$ses_gender_female[data_raw$ses_gender != 2] <- 0
+table(data_clean$ses_gender_female)
+
 ## age--------------------------------------------------------------------------
 
 attributes(data_raw$ses_age)
@@ -108,6 +115,8 @@ data_clean$ses_province <- factor(data_clean$ses_province, levels = c("AB",
                                                                       "YT"))
 table(data_clean$ses_province)
 
+# region ----------------------------------------------------------------------
+
 data_clean$ses_region <- NA
 data_clean$ses_region[data_raw$ses_region == 1 |
                         data_raw$ses_region == 3 |
@@ -122,6 +131,15 @@ data_clean$ses_region[data_raw$ses_region == 6 |
                         data_raw$ses_region == 8 |
                         data_raw$ses_region == 13] <- "territories"
 table(data_clean$ses_region)
+
+# region qc -------------------------------------------------------------------
+
+table(data_raw$ses_region)
+data_clean$ses_region_qc <- NA
+data_clean$ses_region_qc[data_raw$ses_region == 11] <- 1
+data_clean$ses_region_qc[data_raw$ses_region != 11] <- 0
+table(data_clean$ses_region_qc)
+
 
 ## postal_code -----------------------------------------------------------------
 
@@ -175,7 +193,6 @@ data_clean$ses_religion <- factor(data_clean$ses_religion, levels = c("agnostic"
                                                                       "evangelical",
                                                                       "other"))
 table(data_clean$ses_religion)
-
 data_clean$ses_religion_big_five <- NA
 data_clean$ses_religion_big_five[data_raw$ses_religion %in% c(4, 5, 9, 11)] <- "christian"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 7] <- "muslim"
