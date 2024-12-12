@@ -47,3 +47,4 @@ ggplot(rep_vote, aes(x = reorder(vote_intent, -pct), y = pct, fill = vote_intent
   clessnize::theme_clean_light() +
     theme(legend.position = "none")
 
+
