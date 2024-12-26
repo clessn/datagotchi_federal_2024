@@ -899,18 +899,26 @@ data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "Diverses sortes 
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "Animaux de ferme"
 data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
-data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership)
+data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
+                                             levels = c("chat",
+                                                        "chien",
+                                                        "chat et chien",
+                                                        "diverses sortes d'animaux",
+                                                        "autres animaux domestiques",
+                                                        "animaux de ferme",
+                                                        "je n'ai pas d'animal de compagnie"),
+                                             ordered = TRUE)
 table(data_clean$lifestyle_pet_ownership)
 
-data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("Chat", 
-                                                                      "Chien", 
-                                                                      "Chat et chien", 
-                                                                      "Diverses sortes d'animaux", 
-                                                                      "Autres animaux domestiques", 
-                                                                      "Animaux de ferme", 
+data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("chat", 
+                                                                      "chien", 
+                                                                      "chat et chien", 
+                                                                      "diverses sortes d'animaux", 
+                                                                      "autres animaux domestiques", 
+                                                                      "animaux de ferme", 
                                                                       )
 
-data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "Je n'ai pas d'animal de compagnie"
+data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "je n'ai pas d'animal de compagnie"
 
 
 
