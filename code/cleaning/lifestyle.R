@@ -892,13 +892,13 @@ table(data_clean$lifestyle_coffee_mac)
 attributes(data_raw$cons_pets)
 table(data_raw$cons_pets)
 data_clean$lifestyle_pet_ownership <- NA
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "Chat"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "Chien"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "Chat et chien"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "Animaux de ferme"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "chat"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "chat et chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "diverses sortes d'animaux"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "autres animaux domestiques"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "animaux de ferme"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
 data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
                                              levels = c("chat",
                                                         "chien",
