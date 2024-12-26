@@ -908,7 +908,7 @@ data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("Chat",
                                                                       "Diverses sortes d'animaux", 
                                                                       "Autres animaux domestiques", 
                                                                       "Animaux de ferme", 
-                                                                      "Je n'ai pas d'animal de compagnie")
+                                                                      )
 
 data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "Je n'ai pas d'animal de compagnie"
 
