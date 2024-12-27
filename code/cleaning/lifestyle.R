@@ -892,17 +892,33 @@ table(data_clean$lifestyle_coffee_mac)
 attributes(data_raw$cons_pets)
 table(data_raw$cons_pets)
 data_clean$lifestyle_pet_ownership <- NA
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "Chat(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "Chien(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "Animaux de ferme"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
-data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership)
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "chat"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "chat et chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "diverses sortes d'animaux"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "autres animaux domestiques"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "animaux de ferme"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
+data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
+                                             levels = c("chat",
+                                                        "chien",
+                                                        "chat et chien",
+                                                        "diverses sortes d'animaux",
+                                                        "autres animaux domestiques",
+                                                        "animaux de ferme",
+                                                        "je n'ai pas d'animal de compagnie"),
+                                             ordered = TRUE)
 table(data_clean$lifestyle_pet_ownership)
 
+data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("chat", 
+                                                                      "chien", 
+                                                                      "chat et chien", 
+                                                                      "diverses sortes d'animaux", 
+                                                                      "autres animaux domestiques", 
+                                                                      "animaux de ferme", 
+                                                                      )
 
+data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "je n'ai pas d'animal de compagnie"
 
 
 
@@ -921,20 +937,19 @@ data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
 table(data_clean$lifestyle_smoke_freq)
 
 ## alcool_type -----------------------------------------------------------
-attributes(data_raw$alcool_type)
-table(data_raw$alcool_type, useNA = "ifany")
-data_clean$lifestyle_favourite_alcool <- NA
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- "red_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- "white_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- "rose_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "sparkling_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 5] <- "reg_beer"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 6] <- "micro_beer"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "spirits"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "cocktail"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "dont_drink"
-data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_favourite_alcool)
-table(data_clean$lifestyle_favourite_alcool, useNA = "ifany")
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- c("red_wine", 
+                                                                           "white_wine", 
+                                                                           "rose_wine", 
+                                                                           "sparkling_wine")
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- c("reg_beer", 
+                                                                           "micro_beer")
+
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- c("spirits", 
+                                                                      "cocktail")
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "dont_drink"
 
 
 ## alcool_frequency ------------------------------------------------------
@@ -978,30 +993,30 @@ table(data_clean$lifestyle_mari_freq)
 
 
 ## social_media_use ------------------------------------------------------
-data_clean$lifestyle_medsociaux_plus_frequent <- NA
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 1] <- "Facebook"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 2] <- "Twitter / X"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 3] <- "Instagram"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 4] <- "Snapchat"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 5] <- "TikTok"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 6] <- "Pinterest"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 7] <- "LinkedIn"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 8] <- "Youtube"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 9] <- "Autre (veuillez préciser)"
-data_clean$lifestyle_medsociaux_plus_frequent <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
-table(data_clean$lifestyle_medsociaux_plus_frequent)
+data_clean$lifestyle_most_freq_social_media <- NA
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 1] <- "Facebook"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 2] <- "Twitter / X"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 3] <- "Instagram"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 4] <- "Snapchat"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 5] <- "TikTok"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 6] <- "Pinterest"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 7] <- "LinkedIn"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 8] <- "Youtube"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 9] <- "Autre"
+data_clean$lifestyle_most_freq_social_media <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
+table(data_clean$lifestyle_most_freq_social_media)
 
 ## social_media_time -----------------------------------------------------
 
-attributes(data_raw$social_media_time)
-data_clean$lifestyle_tempsparjour_medsociaux <- NA
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 1] <- 0
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 2] <- 0.2
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 3] <- 0.4
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 4] <- 0.6
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 5] <- 0.8
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 6] <- 1
-table(data_clean$lifestyle_tempsparjour_medsociaux)
+attributes(data_raw$social_media_time_day)
+data_clean$lifestyle_social_media_time_day <- NA
+data_clean$lifestyle_social_media_time_day[data_raw$social_media_time == 1] <- 0
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 2] <- 0.2
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 3] <- 0.4
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 4] <- 0.6
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 5] <- 0.8
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 6] <- 1
+table(data_clean$ifestyle_social_media_time_day)
 
 
 

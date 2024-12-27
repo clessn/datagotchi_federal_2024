@@ -393,7 +393,15 @@ data_clean$ses_occupation <- factor(data_clean$ses_occupation, levels = c("paid_
                                                                           "other"))
 table(data_clean$ses_occupation)
 
-
+data_clean$ses_occupation_grouped <- NA
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 1 | data_raw$ses_occupation == 2] <- "employed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 5 | data_raw$ses_occupation == 6 | data_raw$ses_occupation == 4] <- "unemployed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 3] <- "student"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 7] <- "other"
+data_clean$ses_occupation_grouped <- factor(data_clean$ses_occupation, levels = c("employed",
+                                                                                  "unemployed",
+                                                                                  "student",
+                                                                                  "other"))
 
 ## SES (enfant) -------------------------------------------------------------------
 
@@ -401,18 +409,18 @@ attributes(data_raw$ses_children)
 table(data_raw$ses_children)
 data_raw$ses_children <- as.numeric(data_raw$ses_children)
 data_clean$ses_children <- NA
-data_clean$ses_children[data_raw$ses_children == 0] <- "0"
-data_clean$ses_children[data_raw$ses_children == 2] <- "1"
-data_clean$ses_children[data_raw$ses_children == 3] <- "2"
-data_clean$ses_children[data_raw$ses_children == 4] <- "3"
-data_clean$ses_children[data_raw$ses_children == 5] <- "4"
-data_clean$ses_children[data_raw$ses_children >= 6] <- "5+"
-data_clean$ses_children <- factor(data_clean$ses_children, levels = c("0",
-                                                                      "1",
-                                                                      "2",
-                                                                      "3",
-                                                                      "4",
-                                                                      "5+"),
+data_clean$ses_children[data_raw$ses_children == 0] <- 0
+data_clean$ses_children[data_raw$ses_children == 1] <- 1
+data_clean$ses_children[data_raw$ses_children == 2] <- 2
+data_clean$ses_children[data_raw$ses_children == 3] <- 3
+data_clean$ses_children[data_raw$ses_children == 4] <- 4
+data_clean$ses_children[data_raw$ses_children >= 5] <- 5
+data_clean$ses_children <- factor(data_clean$ses_children, levels = c(0,
+                                                                      1,
+                                                                      2,
+                                                                      3,
+                                                                      4,
+                                                                      5),
                                   ordered = TRUE)
 table(data_clean$ses_children)
 
@@ -531,3 +539,14 @@ data_clean$ses_dwelling <- factor(data_clean$ses_dwelling, levels = c("apartment
                                                                               "other"))
 table(data_clean$ses_dwelling)
 
+data_clean$ses_dwelling_grouped <- NA
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 1 | data_raw$ses_dwelling == 2 | data_raw$ses_dwelling == 4] <- "appartment"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 3] <- "condominium"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 5 | data_raw$ses_dwelling == 6 | data_raw$ses_dwelling == 7 | data_raw$ses_dwelling == 10] <- "house"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 8 | data_raw$ses_dwelling == 9] <- "cooperative or social housing"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 11] <- "other"
+data_clean$ses_dwelling_grouped <- factor(data_clean$ses_dwelling, levels = c("appartment",
+                                                                      "condominium",
+                                                                      "house",
+                                                                      "cooperative or social housing",
+                                                                      "other"))
