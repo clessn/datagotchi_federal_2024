@@ -22,7 +22,7 @@ variables_int <- c(
    "female",
    "ses_genderOther",
    "age34m",
-  # "age3554",
+   "age3554",
    "age55p",
    "langEn",
    "langFr",
@@ -34,25 +34,25 @@ variables_int <- c(
    "act_Yoga",
   # "act_Swimming",
   # "act_Other",
-  # "act_None",
+   "act_None",
   # "answers.sport",
    "act_Fishing",
    "act_Hunting",
    "act_VisitsMuseumsGaleries",
    "act_MotorizedOutdoorActivities",
-  # "act_Volunteering",
+   "act_Volunteering",
    "animal_cat",
    "animal_dog",
   # "animal_domestic",
   # "animal_farm",
   # "animal_noPet",
   # "answers.pets",
-  # "cons_brand_MaR",
+   "cons_brand_MaR",
   # "cons_brand_BInd",
   # "cons_brand_ChainesB",
   # "cons_brand_GSurf",
   # "cons_brand_OnlineOnly",
-  # "cons_brand_Frip",
+   "cons_brand_Frip",
   # "cons_brand_Other",
   # "answers.shopping",
    "educBHS",
@@ -189,8 +189,8 @@ variables_int <- c(
   # "ses_ethn_Other",
    "ses_hetero",
    "ses_gai",
-   "ses_bisex",
-   "ses_sexOri_other"#,
+   "ses_bisex"#,
+  # "ses_sexOri_other"#,
  )
 
 # Préparer les données
@@ -300,7 +300,7 @@ plot(2:40, sil_sum, type = "b")
 
 ### loop pour cluster
 
-for (i in c(2, 3, 5, 6, 7, 13, 15, 19)){
+for (i in c(2, 3, 5, 6, 7, 11, 15, 19)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
