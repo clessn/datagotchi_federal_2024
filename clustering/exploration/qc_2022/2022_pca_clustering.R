@@ -250,7 +250,7 @@ data_scaled <- scale(data_filtered)
 
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 7, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 11, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -300,7 +300,7 @@ plot(2:40, sil_sum, type = "b")
 
 ### loop pour cluster
 
-for (i in c(2, 3, 5, 6, 7, 11, 15, 19)){
+for (i in c(2, 3, 5, 6, 8, 11, 15, 16)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
@@ -308,30 +308,37 @@ for (i in c(2, 3, 5, 6, 7, 11, 15, 19)){
   data_filtered[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-kmeans_result4 <- kmeans(data_scaled, centers = 8, nstart = 25)
-saveRDS(kmeans_result4, file = "kmeans_results8.rds")
+kmeans_result11 <- kmeans(data_scaled, centers = 11, nstart = 25)
+saveRDS(kmeans_result11, file = "kmeans_results2022.rds")
 
 
-table(data_filtered$cluster_5)
+table(data_filtered$cluster_2)
+#  1   2    
+# 367 1133 
+table(data_filtered$cluster_3)
 #  1   2   3 
-# 129 739 632
-table(data_filtered$cluster_10)
-#  1   2   3   4 
-# 126 585 557 232 
-table(data_filtered$cluster_14)
-# 1   2   3   4   5 
-# 123 513 220 153 491
+# 616 132 752  
+table(data_filtered$cluster_5)
+#  1   2   3   4   5 
+# 122 563 174 515 126 
+table(data_filtered$cluster_6)
+#  1   2   3   4   5   6 
+# 166 111  73 468 174 508
+table(data_filtered$cluster_8)
+#  1   2   3   4   5   6   7   8 
+# 125 463  53 350 223  74 187  25 
+
+table(data_filtered$cluster_11)
+#  1   2   3   4   5   6   7   8   9  10  11 
+# 73 114 148  46 275   9  25 399 208 135  68
 table(data_filtered$cluster_15)
-#   1   2   3   4   5   6 
-# 149 119  55 478 203 496 
-table(data_filtered$cluster_18)
-table(data_filtered$cluster_20)
-# 1   2   3   4   5   6   7 
-# 470 122 142 484 111 162 9 
-table(data_filtered$cluster_24)
-table(data_filtered$cluster_30)
-table(data_filtered$cluster_37)
-table(data_filtered$cluster_40)
+#  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
+# 43  25 202 145 111  68 126  71  64 137  45 125   9 145 184 
+
+table(data_filtered$cluster_16)
+#  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16 
+# 76 134  35 181  25  43   9 120 178  68  79  45 106  40 223 138 
+
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
 
 # Calcul de la distance (ici, distance euclidienne)
@@ -359,3 +366,64 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   facet_wrap(~n_clusters) +
   stat_ellipse()
 
+# -------------------------------------------------------------------------
+#  Visualisation 3D des clusters K=8 et K=11
+# -------------------------------------------------------------------------
+
+# (1) Installer/charger plotly si ce n'est pas déjà fait
+# install.packages("plotly")
+library(plotly)
+
+# (2) Recalculer ou récupérer la matrice de distances
+#     (si vous l'avez déjà calculée auparavant, vous pouvez la réutiliser)
+distance_matrix <- dist(data_scaled)
+
+# (3) Calculer le MDS en 3 dimensions
+mds_result_3d <- cmdscale(distance_matrix, k = 3)
+data_filtered$MDS3_1 <- mds_result_3d[, 1]
+data_filtered$MDS3_2 <- mds_result_3d[, 2]
+data_filtered$MDS3_3 <- mds_result_3d[, 3]
+
+# (4) Visualisation 3D pour k = 8
+p1 <- plot_ly(
+  data_filtered,
+  x = ~MDS3_1,
+  y = ~MDS3_2,
+  z = ~MDS3_3,
+  color = ~factor(cluster_8),              # On colore selon le cluster_8
+  colors = RColorBrewer::brewer.pal(8, "Set1"),
+  marker = list(size = 3)
+) %>%
+  add_markers() %>%
+  layout(
+    scene = list(
+      xaxis = list(title = "MDS1"),
+      yaxis = list(title = "MDS2"),
+      zaxis = list(title = "MDS3")
+    ),
+    title = "Visualisation 3D - K=8"
+  )
+
+# (5) Visualisation 3D pour k = 11
+p2 <- plot_ly(
+  data_filtered,
+  x = ~MDS3_1,
+  y = ~MDS3_2,
+  z = ~MDS3_3,
+  color = ~factor(cluster_11),             # On colore selon le cluster_11
+  colors = RColorBrewer::brewer.pal(11, "Spectral"), 
+  marker = list(size = 3)
+) %>%
+  add_markers() %>%
+  layout(
+    scene = list(
+      xaxis = list(title = "MDS1"),
+      yaxis = list(title = "MDS2"),
+      zaxis = list(title = "MDS3")
+    ),
+    title = "Visualisation 3D - K=11"
+  )
+
+# (6) Affichage
+p1
+p2
