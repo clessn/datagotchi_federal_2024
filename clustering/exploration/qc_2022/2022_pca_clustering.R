@@ -300,7 +300,7 @@ plot(2:40, sil_sum, type = "b")
 
 ### loop pour cluster
 
-for (i in c(2, 3, 5, 6, 8, 11, 15, 16)){
+for (i in c(2, 3, 5, 6, 7, 8, 9, 10, 11, 15, 16)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
@@ -327,7 +327,12 @@ table(data_filtered$cluster_6)
 table(data_filtered$cluster_8)
 #  1   2   3   4   5   6   7   8 
 # 125 463  53 350 223  74 187  25 
-
+table(data_filtered$cluster_9)
+#  1   2   3   4   5   6   7   8   9 
+# 101 324 444 122  43 153 189  72  52 
+table(data_filtered$cluster_10)
+#  1   2   3   4   5   6   7   8   9  10 
+# 50 328 193 445 121  73  25  43 152  70 
 table(data_filtered$cluster_11)
 #  1   2   3   4   5   6   7   8   9  10  11 
 # 73 114 148  46 275   9  25 399 208 135  68
