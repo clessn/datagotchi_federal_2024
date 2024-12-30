@@ -126,7 +126,7 @@ library(forcats)
 df_mean_by_cluster <- describe_clusters(
   data_filtered,
   variables_to_describe = variables_to_describe,
-  cluster_var = "cluster_9"
+  cluster_var = "cluster_11"
 )
 
 # Limiter les scores z entre -2 et 2 (optionnel)
@@ -240,3 +240,59 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   output_file <- file.path(output_dir, paste0("2022_9cluster_", cluster_id, ".png"))
   ggsave(filename = output_file, plot = graph, width = 8, height = 6)
 }
+
+generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0.30) {
+  # Filtrage des données pour le cluster spécifié
+  df_cluster <- df_all_clusters %>%
+    filter(cluster_var == cluster_id)
+  
+  # Extraction des variables positives et négatives par rapport au seuil
+  variables_positive <- df_cluster %>%
+    filter(z_score > z_threshold) %>%
+    pull(variable)
+  
+  variables_negative <- df_cluster %>%
+    filter(z_score < -z_threshold) %>%
+    pull(variable)
+  
+  # Construction du prompt
+  prompt <- paste0(
+    "\nPour le persona ", cluster_id, " :\n",
+    "\nLes caractéristiques suivantes définissent ce cluster par leur distinction marquée :\n\n",
+    "Variables supérieures (valeurs élevées) :\n",
+    if (length(variables_positive) > 0) {
+      paste(variables_positive, collapse = "\n")
+    } else {
+      "Aucune variable supérieure ne se distingue fortement."
+    },
+    "\n\nVariables inférieures (valeurs faibles) :\n",
+    if (length(variables_negative) > 0) {
+      paste(variables_negative, collapse = "\n")
+    } else {
+      "Aucune variable inférieure ne se distingue fortement."
+    },
+    "\n\nSuggérez un nom qui reflète bien ces caractéristiques.\n",
+    "Tu peux donner un prénom significatif suivi par un deux-points (:) et un nom descriptif.\n",
+    "Finalement, décris la persona en 2-3 phrases, en tenant compte des scores z des variables pour ce cluster.\n\n"
+  )
+  
+  return(prompt)
+}
+
+# Exemple d'utilisation avec df_cluster (remplacer par votre dataframe réel)
+prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 5)
+cat(prompt_persona)
+
+# Cluster par categories
+data_filtered$cluster_labels <- NA
+data_filtered$cluster_labels[data_filtered$cluster_11 == 1] <- "1. Jin - Universitaire Immigrant"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 2] <- "2. Steve - L'Homme de Plein Air"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 3] <- "3. James - Patriarche Anglophone"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 4] <- "4. Zoé - Écolo Avant-gardiste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 5] <- "5. "
+data_filtered$cluster_labels[data_filtered$cluster_11 == 6] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 7] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 8] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 9] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 10] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 11] <- "6. Michel - Senior Traditionnaliste"
