@@ -19,7 +19,7 @@ variables_int <- c(
   # "postal_code",
   # "ses_age",
    "male",
-  # "female",
+   "female",
    "ses_genderOther",
    "age34m",
    "age3554",
@@ -32,7 +32,7 @@ variables_int <- c(
   # "act_Walk",
    "act_Run",
    "act_Yoga",
-   "act_Swimming",
+  # "act_Swimming",
   # "act_Other",
    "act_None",
   # "answers.sport",
@@ -45,12 +45,12 @@ variables_int <- c(
    "animal_dog",
   # "animal_domestic",
   # "animal_farm",
-   "animal_noPet",
+  # "animal_noPet",
   # "answers.pets",
-  # "cons_brand_MaR",
+   "cons_brand_MaR",
   # "cons_brand_BInd",
   # "cons_brand_ChainesB",
-   "cons_brand_GSurf",
+  # "cons_brand_GSurf",
   # "cons_brand_OnlineOnly",
    "cons_brand_Frip",
   # "cons_brand_Other",
@@ -95,12 +95,12 @@ variables_int <- c(
   # "ses_dwelling_mobile",
   # "ses_dwelling_other",
   # "answers.dwelling",
-   "cons_Smoke_never",
+  # "cons_Smoke_never",
   # "cons_Smoke_few_times_year",
   # "cons_Smoke_month",
   # "cons_Smoke_once_week",
   # "cons_Smoke_few_times_week",
-   "cons_Smoke_once_day",
+  # "cons_Smoke_once_day",
   # "cons_Smoke_few_times_day",
   # "answers.smoke",
    "act_transport_Car",
@@ -184,8 +184,8 @@ variables_int <- c(
    "ses_ethn_Black",
   # "ses_ethn_Aboriginals",
    "ses_ethn_Asiatique",
-   "ses_ethn_Hispanique",
-   "ses_ethn_Arabe",
+  # "ses_ethn_Hispanique",
+  # "ses_ethn_Arabe",
   # "ses_ethn_Other",
    "ses_hetero",
    "ses_gai",
@@ -250,7 +250,7 @@ data_scaled <- scale(data_filtered)
 
 
 ## Checker rapidement la % de variance expliquée par les 2 dimensions
-km_res <- kmeans(data_scaled, centers = 10, nstart = 25)
+km_res <- kmeans(data_scaled, centers = 11, nstart = 25)
 fviz_cluster(
   km_res, data = data_scaled,
   geom = "point",
@@ -261,26 +261,26 @@ fviz_cluster(
 #Trouver le nombre de clusters idéal ------------------------------------------
 
 ### Coude
-wss <- sapply(2:15, function(k){
+wss <- sapply(2:40, function(k){
   kmeans(data_scaled, centers = k, nstart = 25)$tot.withinss
 })
 
 # Tracer la courbe du coude
-plot(2:15, wss, type = "b", pch = 19, frame = FALSE, 
+plot(2:40, wss, type = "b", pch = 19, frame = FALSE, 
      xlab = "Nombre de clusters K",
      ylab = "Somme des carrés intra-cluster (withinss)",
      main = "Méthode du coude pour déterminer K")
 
 
 # Calculer l'indice de silhouette pour différents k
-sil_width <- sapply(2:15, function(k){
+sil_width <- sapply(2:40, function(k){
   km.res <- kmeans(data_scaled, centers = k, nstart = 25)
   ss <- cluster::silhouette(km.res$cluster, dist(data_scaled))
   mean(ss[, 3])
 })
 
 # Tracer la courbe de l'indice de silhouette
-plot(2:15, sil_width, type = "b", pch = 19, frame = FALSE,
+plot(2:40, sil_width, type = "b", pch = 19, frame = FALSE,
      xlab = "Nombre de clusters K",
      ylab = "Largeur moyenne de la silhouette",
      main = "Indice de silhouette pour déterminer K")
@@ -291,7 +291,7 @@ sil_width_scaled <- (sil_width - min(sil_width)) / (max(sil_width) - min(sil_wid
 wss_scaled_rev <- rev(wss_scaled)
 sil_sum <- wss_scaled_rev + sil_width_scaled
 
-plot(2:15, sil_sum, type = "b")
+plot(2:40, sil_sum, type = "b")
 
 #K = 4 est un compromis raisonnable entre les deux méthodes.
 #La méthode elbow pointe vers ce nombre comme un coude clair,
@@ -300,7 +300,7 @@ plot(2:15, sil_sum, type = "b")
 
 ### loop pour cluster
 
-for (i in c(3, 4, 5, 6, 7, 9, 10, 14)){
+for (i in c(2, 3, 5, 6, 7, 8, 9, 10, 11, 15, 16)){
   # Appliquer k-means avec un nombre de clusters k (à définir, ici k = 3)
   set.seed(123)  # Pour rendre les résultats reproductibles
   kmeans_result <- kmeans(data_scaled, centers = i, nstart = 25)
@@ -308,28 +308,41 @@ for (i in c(3, 4, 5, 6, 7, 9, 10, 14)){
   data_filtered[[paste0("cluster_", i)]] <- kmeans_result$cluster
 }
 
-kmeans_result4 <- kmeans(data_scaled, centers = 8, nstart = 25)
-saveRDS(kmeans_result4, file = "kmeans_results8.rds")
+kmeans_result11 <- kmeans(data_scaled, centers = 11, nstart = 25)
+saveRDS(kmeans_result11, file = "kmeans_results2022.rds")
 
 
+table(data_filtered$cluster_2)
+#  1   2    
+# 367 1133 
 table(data_filtered$cluster_3)
 #  1   2   3 
-# 129 739 632
-table(data_filtered$cluster_4)
-#  1   2   3   4 
-# 126 585 557 232 
+# 616 132 752  
 table(data_filtered$cluster_5)
-# 1   2   3   4   5 
-# 123 513 220 153 491
+#  1   2   3   4   5 
+# 122 563 174 515 126 
 table(data_filtered$cluster_6)
-#   1   2   3   4   5   6 
-# 149 119  55 478 203 496 
-table(data_filtered$cluster_7)
-# 1   2   3   4   5   6   7 
-# 470 122 142 484 111 162 9 
+#  1   2   3   4   5   6 
+# 166 111  73 468 174 508
+table(data_filtered$cluster_8)
+#  1   2   3   4   5   6   7   8 
+# 125 463  53 350 223  74 187  25 
 table(data_filtered$cluster_9)
+#  1   2   3   4   5   6   7   8   9 
+# 101 324 444 122  43 153 189  72  52 
 table(data_filtered$cluster_10)
-table(data_filtered$cluster_14)
+#  1   2   3   4   5   6   7   8   9  10 
+# 50 328 193 445 121  73  25  43 152  70 
+table(data_filtered$cluster_11)
+#  1   2   3   4   5   6   7   8   9  10  11 
+# 73 114 148  46 275   9  25 399 208 135  68
+table(data_filtered$cluster_15)
+#  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
+# 43  25 202 145 111  68 126  71  64 137  45 125   9 145 184 
+
+table(data_filtered$cluster_16)
+#  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16 
+# 76 134  35 181  25  43   9 120 178  68  79  45 106  40 223 138 
 
 # Visualisation des clusters sur 2 dimensions ------------------------------------------------
 
@@ -340,10 +353,10 @@ distance_matrix <- dist(data_scaled)
 mds_result <- cmdscale(distance_matrix, k = 2)
 
 # Ajouter les coordonnées MDS aux données
-data_select$MDS1 <- mds_result[,1]
-data_select$MDS2 <- mds_result[,2]
+data_filtered$MDS1 <- mds_result[,1]
+data_filtered$MDS2 <- mds_result[,2]
 
-plot_data <- data_select |> 
+plot_data <- data_filtered |> 
   tidyr::pivot_longer(
     cols = starts_with("cluster_"),
     names_to = "n_clusters",
@@ -358,3 +371,64 @@ ggplot(plot_data, aes(x = MDS1, y = MDS2, color = factor(cluster))) +
   facet_wrap(~n_clusters) +
   stat_ellipse()
 
+# -------------------------------------------------------------------------
+#  Visualisation 3D des clusters K=8 et K=11
+# -------------------------------------------------------------------------
+
+# (1) Installer/charger plotly si ce n'est pas déjà fait
+# install.packages("plotly")
+library(plotly)
+
+# (2) Recalculer ou récupérer la matrice de distances
+#     (si vous l'avez déjà calculée auparavant, vous pouvez la réutiliser)
+distance_matrix <- dist(data_scaled)
+
+# (3) Calculer le MDS en 3 dimensions
+mds_result_3d <- cmdscale(distance_matrix, k = 3)
+data_filtered$MDS3_1 <- mds_result_3d[, 1]
+data_filtered$MDS3_2 <- mds_result_3d[, 2]
+data_filtered$MDS3_3 <- mds_result_3d[, 3]
+
+# (4) Visualisation 3D pour k = 8
+p1 <- plot_ly(
+  data_filtered,
+  x = ~MDS3_1,
+  y = ~MDS3_2,
+  z = ~MDS3_3,
+  color = ~factor(cluster_8),              # On colore selon le cluster_8
+  colors = RColorBrewer::brewer.pal(8, "Set1"),
+  marker = list(size = 3)
+) %>%
+  add_markers() %>%
+  layout(
+    scene = list(
+      xaxis = list(title = "MDS1"),
+      yaxis = list(title = "MDS2"),
+      zaxis = list(title = "MDS3")
+    ),
+    title = "Visualisation 3D - K=8"
+  )
+
+# (5) Visualisation 3D pour k = 11
+p2 <- plot_ly(
+  data_filtered,
+  x = ~MDS3_1,
+  y = ~MDS3_2,
+  z = ~MDS3_3,
+  color = ~factor(cluster_11),             # On colore selon le cluster_11
+  colors = RColorBrewer::brewer.pal(11, "Spectral"), 
+  marker = list(size = 3)
+) %>%
+  add_markers() %>%
+  layout(
+    scene = list(
+      xaxis = list(title = "MDS1"),
+      yaxis = list(title = "MDS2"),
+      zaxis = list(title = "MDS3")
+    ),
+    title = "Visualisation 3D - K=11"
+  )
+
+# (6) Affichage
+p1
+p2

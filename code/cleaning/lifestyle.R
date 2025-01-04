@@ -648,30 +648,24 @@ table(data_clean$lifestyle_efficiency_bin)
 ## field_occupation ------------------------------------------------------
 
 table(data_raw$field_occupation)
-data_clean$lifestyle_field_occ <- NA
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 1] <- "management"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 2] <- "business"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 3] <- "natural_sciences"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 4] <- "health"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 5] <- "education_law_politics"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 6] <- "culture_sports"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 7] <- "sales"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 8] <- "trades"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 9] <- "agriculture"
-data_clean$lifestyle_field_occ[data_raw$field_occupation == 10] <- "manufacturing"
-data_clean$lifestyle_field_occ <- factor(data_clean$lifestyle_field_occ,
-                                                   levels = c("management",
-                                                              "business",
+data_clean$lifestyle_work_field <- NA
+data_clean$lifestyle_work_field[data_raw$field_occupation == 1 | data_raw$field_occupation == 2 | data_raw$field_occupation == 7 | data_raw$field_occupation == 8] <- "economics"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 3] <- "natural_sciences"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 4] <- "health"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 5] <- "education_law_politics"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 6] <- "culture_sports"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 9] <- "agriculture"
+data_clean$lifestyle_work_field[data_raw$field_occupation == 10] <- "manufacturing"
+data_clean$lifestyle_work_field <- factor(data_clean$lifestyle_work_field,
+                                                   levels = c("economics",
                                                               "natural_sciences",
                                                               "health",
                                                               "education_law_politics",
                                                               "culture_sports",
-                                                              "sales",
-                                                              "trades",
                                                               "agriculture",
                                                               "manufacturing"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_field_occ)
+table(data_clean$lifestyle_work_field)
 
 ## type_occupation -------------------------------------------------------
 
@@ -701,20 +695,14 @@ table(data_clean$lifestyle_type_occ)
 attributes(data_raw$clothes_consumption)
 table(data_raw$clothes_consumption)
 data_clean$lifestyle_clothes_cons <- NA
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 1] <- "department_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 2] <- "independent_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 3] <- "chain_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 4] <- "superstore"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 1 | data_raw$clothes_consumption == 3 | data_raw$clothes_consumption == 4] <- "large_retailers"
+data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 2 | data_raw$clothes_consumption == 6] <- "small_local_store"
 data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 5] <- "online_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 6] <- "second_hand_store"
 data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 7] <- "other"
 data_clean$lifestyle_clothes_cons <- factor(data_clean$lifestyle_clothes_cons,
-                                         levels = c("department_store",
-                                                    "independent_store",
-                                                    "chain_store",
-                                                    "superstore",
+                                         levels = c("large_retailers",
+                                                    "small_local_store",
                                                     "online_store",
-                                                    "second_hand_store",
                                                     "other"),
                                          ordered = TRUE)
 table(data_clean$lifestyle_clothes_cons)
@@ -723,9 +711,9 @@ table(data_clean$lifestyle_clothes_cons)
 
 attributes(data_raw$mode_attitude_1)
 table(data_raw$mode_attitude_1)
-data_clean$lifestyle_mode_att <- NA
-data_clean$lifestyle_mode_att <- data_raw$mode_attitude_1 / 10
-table(data_clean$lifestyle_mode_att)
+data_clean$lifestyle_mode_awareness <- NA
+data_clean$lifestyle_mode_awareness <- data_raw$mode_attitude_1 / 10
+table(data_clean$lifestyle_mode_awareness)
 
 
 ## meat_consumption ------------------------------------------------------
@@ -733,13 +721,13 @@ table(data_clean$lifestyle_mode_att)
 attributes(data_raw$meat_consumption)
 table(data_raw$meat_consumption)
 data_clean$lifestyle_meat_cons <- NA
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 1] <- 1
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 2] <- 0.83
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 3] <- 0.67
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 1] <- 0
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 2] <- 0.17
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 3] <- 0.33
 data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 4] <- 0.5
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 5] <- 0.33
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 6] <- 0.17
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 7] <- 0
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 5] <- 0.67
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 6] <- 0.83
+data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 7] <- 1
 table(data_clean$lifestyle_meat_cons)
 
 ## meal_time -------------------------------------------------------------
@@ -753,10 +741,10 @@ table(data_raw$meal_time_6)
 
 attributes(data_raw$fridge_1)
 table(data_raw$fridge_1)
-data_clean$lifestyle_fridge_milk <- NA
-data_clean$lifestyle_fridge_milk[data_raw$fridge_1 == 1] <- 1
-data_clean$lifestyle_fridge_milk[data_raw$fridge_1 == 2] <- 0
-table(data_clean$lifestyle_fridge_milk)
+data_clean$lifestyle_fridge_vegetal_milk <- NA
+data_clean$lifestyle_fridge_vegetal_milk[data_raw$fridge_1 == 1] <- 1
+data_clean$lifestyle_fridge_vegetal_milk[data_raw$fridge_1 == 2] <- 0
+table(data_clean$lifestyle_fridge_vegetal_milk)
 
 ### fridge_2 -------------------------------------------------------------
 
@@ -892,17 +880,33 @@ table(data_clean$lifestyle_coffee_mac)
 attributes(data_raw$cons_pets)
 table(data_raw$cons_pets)
 data_clean$lifestyle_pet_ownership <- NA
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "Chat(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "Chien(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "Chat(s) et chien(s)"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "Diverses sortes d'animaux"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "Autres animaux domestiques"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "Animaux de ferme"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "Je n'ai pas d'animal de compagnie"
-data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership)
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "chat"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "chat et chien"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "diverses sortes d'animaux"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "autres animaux domestiques"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "animaux de ferme"
+data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
+data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
+                                             levels = c("chat",
+                                                        "chien",
+                                                        "chat et chien",
+                                                        "diverses sortes d'animaux",
+                                                        "autres animaux domestiques",
+                                                        "animaux de ferme",
+                                                        "je n'ai pas d'animal de compagnie"),
+                                             ordered = TRUE)
 table(data_clean$lifestyle_pet_ownership)
 
+data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("chat", 
+                                                                      "chien", 
+                                                                      "chat et chien", 
+                                                                      "diverses sortes d'animaux", 
+                                                                      "autres animaux domestiques", 
+                                                                      "animaux de ferme", 
+                                                                      )
 
+data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "je n'ai pas d'animal de compagnie"
 
 
 
@@ -921,20 +925,19 @@ data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
 table(data_clean$lifestyle_smoke_freq)
 
 ## alcool_type -----------------------------------------------------------
-attributes(data_raw$alcool_type)
-table(data_raw$alcool_type, useNA = "ifany")
-data_clean$lifestyle_favourite_alcool <- NA
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- "red_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- "white_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- "rose_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "sparkling_wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 5] <- "reg_beer"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 6] <- "micro_beer"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "spirits"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "cocktail"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "dont_drink"
-data_clean$lifestyle_favourite_alcool <- factor(data_clean$lifestyle_favourite_alcool)
-table(data_clean$lifestyle_favourite_alcool, useNA = "ifany")
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- c("red_wine", 
+                                                                           "white_wine", 
+                                                                           "rose_wine", 
+                                                                           "sparkling_wine")
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- c("reg_beer", 
+                                                                           "micro_beer")
+
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- c("spirits", 
+                                                                      "cocktail")
+
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "dont_drink"
 
 
 ## alcool_frequency ------------------------------------------------------
@@ -978,30 +981,30 @@ table(data_clean$lifestyle_mari_freq)
 
 
 ## social_media_use ------------------------------------------------------
-data_clean$lifestyle_medsociaux_plus_frequent <- NA
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 1] <- "Facebook"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 2] <- "Twitter / X"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 3] <- "Instagram"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 4] <- "Snapchat"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 5] <- "TikTok"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 6] <- "Pinterest"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 7] <- "LinkedIn"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 8] <- "Youtube"
-data_clean$lifestyle_medsociaux_plus_frequent[data_raw$social_media_use == 9] <- "Autre (veuillez préciser)"
-data_clean$lifestyle_medsociaux_plus_frequent <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
-table(data_clean$lifestyle_medsociaux_plus_frequent)
+data_clean$lifestyle_most_freq_social_media <- NA
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 1] <- "Facebook"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 2] <- "Twitter / X"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 3] <- "Instagram"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 4] <- "Snapchat"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 5] <- "TikTok"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 6] <- "Pinterest"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 7] <- "LinkedIn"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 8] <- "Youtube"
+data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 9] <- "Autre"
+data_clean$lifestyle_most_freq_social_media <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
+table(data_clean$lifestyle_most_freq_social_media)
 
 ## social_media_time -----------------------------------------------------
 
-attributes(data_raw$social_media_time)
-data_clean$lifestyle_tempsparjour_medsociaux <- NA
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 1] <- 0
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 2] <- 0.2
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 3] <- 0.4
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 4] <- 0.6
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 5] <- 0.8
-data_clean$lifestyle_tempsparjour_medsociaux[data_raw$social_media_time == 6] <- 1
-table(data_clean$lifestyle_tempsparjour_medsociaux)
+attributes(data_raw$social_media_time_day)
+data_clean$lifestyle_social_media_time_day <- NA
+data_clean$lifestyle_social_media_time_day[data_raw$social_media_time == 1] <- 0
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 2] <- 0.2
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 3] <- 0.4
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 4] <- 0.6
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 5] <- 0.8
+data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 6] <- 1
+table(data_clean$ifestyle_social_media_time_day)
 
 
 
