@@ -1,11 +1,4 @@
-# Packages ---------------------------------------------------------------
-library(dplyr)
-library(ggplot2)
-library(cluster)
-library(factoextra)
-library(tidyr)
-library(ggcorrplot)
-
+library(forcats)
 # Description des clusters -----------------------------------------------
 #### Function
 describe_clusters <- function(data, variables_to_describe, cluster_var){
@@ -112,18 +105,8 @@ variables_to_describe <- c(
 # Chemin du dossier où enregistrer les graphiques
 output_dir <- "/home/alexab/Dropbox/Ulaval/CLESSN/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/clustering/graph/2022/réduit/description"
 
-# S'assurer que le dossier existe
-if(!dir.exists(output_dir)){
-  dir.create(output_dir, recursive = TRUE)
-}
-
-# Charger les bibliothèques nécessaires
-library(dplyr)
-library(ggplot2)
-library(forcats)
-
 # Description des clusters
-df_mean_by_cluster <- describe_clusters(
+df_mean_by_cluster <- opubliqr::describe_clusters(
   data_filtered,
   variables_to_describe = variables_to_describe,
   cluster_var = "cluster_11"
@@ -133,7 +116,11 @@ df_mean_by_cluster <- describe_clusters(
 df_mean_by_cluster <- df_mean_by_cluster %>%
   mutate(z_score_limited = ifelse(z_score > 2, 2, ifelse(z_score < -2, -2, z_score)))
 
-df_mean_by_cluster <- df_mean_by_cluster %>%
+# Filtrer les données pour le cluster 1
+df_cluster <- df_mean_by_cluster %>%
+  filter(cluster_var == 3)
+
+df_cluster <- df_cluster %>%
   mutate(
     variable = case_when(
       variable == "male" ~ "Homme",
@@ -194,26 +181,16 @@ df_mean_by_cluster <- df_mean_by_cluster %>%
     )
   )
 
-# Obtenir la liste des clusters uniques
-clusters <- unique(df_mean_by_cluster$cluster_var)
+# Réordonner les variables par score z absolu
+df_cluster <- df_cluster %>%
+  mutate(variable = fct_reorder(variable, abs(z_score), .desc = TRUE))
 
-# Boucle sur chaque cluster
-for(cluster_id in clusters){
-  # Filtrer les données pour le cluster actuel
-  df_cluster <- df_mean_by_cluster %>%
-    filter(cluster_var == cluster_id)
-  
-  # Réordonner les variables par score z absolu
-  df_cluster <- df_cluster %>%
-    mutate(variable = fct_reorder(variable, abs(z_score), .desc = TRUE))
-  
-  # Inverser l'ordre des niveaux pour que les variables avec le score z absolu le plus élevé soient en haut
-  df_cluster$variable <- fct_rev(df_cluster$variable)
-  
+# Inverser l'ordre des niveaux pour que les variables avec le score z absolu le plus élevé soient en haut
+df_cluster$variable <- fct_rev(df_cluster$variable)
+
 # Ajouter une colonne pour la couleur en fonction du signe du z_score
 df_cluster <- df_cluster %>%
   mutate(color = ifelse(z_score_limited >= 0, "#26aec6", "#eb1616"))
-
 
 # Créer le graphique avec une ligne entre 0 et le point
 graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
@@ -234,65 +211,8 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ylab(NULL) +
   # Utilisation des couleurs pour les points
   scale_color_identity() +
-    ggtitle(paste("Scores z des variables pour le cluster", cluster_id))
+    ggtitle("Description du cluster 3. James - Patriarche Anglophone (n=148)")
   
   # Enregistrer le graphique
-  output_file <- file.path(output_dir, paste0("2022_9cluster_", cluster_id, ".png"))
-  ggsave(filename = output_file, plot = graph, width = 8, height = 6)
-}
-
-generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0.40) {
-  # Filtrage des données pour le cluster spécifié
-  df_cluster <- df_all_clusters %>%
-    filter(cluster_var == cluster_id)
-  
-  # Extraction des variables positives et négatives par rapport au seuil
-  variables_positive <- df_cluster %>%
-    filter(z_score > z_threshold) %>%
-    pull(variable)
-  
-  variables_negative <- df_cluster %>%
-    filter(z_score < -z_threshold) %>%
-    pull(variable)
-  
-  # Construction du prompt
-  prompt <- paste0(
-    "\nPour le persona ", cluster_id, " :\n",
-    "\nLes caractéristiques suivantes définissent ce cluster par leur distinction marquée :\n\n",
-    "Variables supérieures (valeurs élevées) :\n",
-    if (length(variables_positive) > 0) {
-      paste(variables_positive, collapse = "\n")
-    } else {
-      "Aucune variable supérieure ne se distingue fortement."
-    },
-    "\n\nVariables inférieures (valeurs faibles) :\n",
-    if (length(variables_negative) > 0) {
-      paste(variables_negative, collapse = "\n")
-    } else {
-      "Aucune variable inférieure ne se distingue fortement."
-    },
-    "\n\nSuggérez un nom qui reflète bien ces caractéristiques.\n",
-    "Tu peux donner un prénom significatif suivi par un deux-points (:) et un nom descriptif.\n",
-    "Finalement, décris la persona en 2-3 phrases, en tenant compte des scores z des variables pour ce cluster.\n\n"
-  )
-  
-  return(prompt)
-}
-
-# Exemple d'utilisation avec df_cluster (remplacer par votre dataframe réel)
-prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 7)
-cat(prompt_persona)
-
-# Cluster par categories
-data_filtered$cluster_labels <- NA
-data_filtered$cluster_labels[data_filtered$cluster_11 == 1] <- "1. Jin - Universitaire Immigrant"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 2] <- "2. Steve - L'Homme de Plein Air"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 3] <- "3. James - Patriarche Anglophone"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 4] <- "4. Zoé - Écolo Avant-gardiste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 5] <- "5. Isabelle - moderne"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 6] <- "6. Charlie - Urbain.e Queer"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 7] <- "7. Jayden - Sportif Altruiste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 8] <- "8. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 9] <- "9. Geneviève et Philippe - Propriétaire Aisée"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 10] <- "10. Denise - Modeste Sans-voiture"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 11] <- "11. Gabriel - Urbain Raffiné"
+  output_file <- file.path(output_dir, paste0("2022_3. James - Patriarche Anglophone.png"))
+  ggsave(filename = output_file, plot = graph, width = 12, height = 8)
