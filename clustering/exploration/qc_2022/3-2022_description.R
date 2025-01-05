@@ -241,7 +241,7 @@ graph <- ggplot(df_cluster, aes(x = z_score_limited, y = variable)) +
   ggsave(filename = output_file, plot = graph, width = 8, height = 6)
 }
 
-generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0.30) {
+generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0.40) {
   # Filtrage des données pour le cluster spécifié
   df_cluster <- df_all_clusters %>%
     filter(cluster_var == cluster_id)
@@ -280,7 +280,7 @@ generate_persona_prompt <- function(df_all_clusters, cluster_id, z_threshold = 0
 }
 
 # Exemple d'utilisation avec df_cluster (remplacer par votre dataframe réel)
-prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 5)
+prompt_persona <- generate_persona_prompt(df_mean_by_cluster, cluster_id = 7)
 cat(prompt_persona)
 
 # Cluster par categories
@@ -289,10 +289,10 @@ data_filtered$cluster_labels[data_filtered$cluster_11 == 1] <- "1. Jin - Univers
 data_filtered$cluster_labels[data_filtered$cluster_11 == 2] <- "2. Steve - L'Homme de Plein Air"
 data_filtered$cluster_labels[data_filtered$cluster_11 == 3] <- "3. James - Patriarche Anglophone"
 data_filtered$cluster_labels[data_filtered$cluster_11 == 4] <- "4. Zoé - Écolo Avant-gardiste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 5] <- "5. "
-data_filtered$cluster_labels[data_filtered$cluster_11 == 6] <- "6. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 7] <- "6. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 8] <- "6. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 9] <- "6. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 10] <- "6. Michel - Senior Traditionnaliste"
-data_filtered$cluster_labels[data_filtered$cluster_11 == 11] <- "6. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 5] <- "5. Isabelle - moderne"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 6] <- "6. Charlie - Urbain.e Queer"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 7] <- "7.  - Sportif Altruiste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 8] <- "8. Michel - Senior Traditionnaliste"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 9] <- "9. Geneviève/Philippe - Propriétaire Aisée"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 10] <- "10. Denise - Modeste Sans-voiture"
+data_filtered$cluster_labels[data_filtered$cluster_11 == 11] <- "11. Gabriel - Urbain Raffiné"
