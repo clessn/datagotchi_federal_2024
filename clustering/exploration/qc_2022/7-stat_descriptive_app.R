@@ -39,7 +39,7 @@ rep_vote <- app_data %>%
 ggplot(rep_vote, aes(x = reorder(vote_intent, -pct), y = pct, fill = vote_intent)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Répartition des répondants par intention de vote (App Datagotchi 2021)",
+    title = "Répartition des répondants par intention de vote (App Datagotchi QC-2022)",
     x = "Intention de vote",
     y = "Pourcentage"
   ) +

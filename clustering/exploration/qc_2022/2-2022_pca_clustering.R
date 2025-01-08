@@ -311,6 +311,11 @@ for (i in c(2, 3, 5, 6, 7, 8, 9, 10, 11, 15, 16)){
 kmeans_result11 <- kmeans(data_scaled, centers = 11, nstart = 25)
 saveRDS(kmeans_result11, file = "kmeans_results2022.rds")
 
+# Extract & save the center/scale
+orig_center <- attr(data_scaled, "scaled:center")
+orig_scale  <- attr(data_scaled, "scaled:scale")
+saveRDS(orig_center, file = "kmeans_orig_center.rds")
+saveRDS(orig_scale,  file = "kmeans_orig_scale.rds")
 
 table(data_filtered$cluster_2)
 #  1   2    
