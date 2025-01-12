@@ -539,14 +539,45 @@ data_clean$ses_dwelling <- factor(data_clean$ses_dwelling, levels = c("apartment
                                                                               "other"))
 table(data_clean$ses_dwelling)
 
+attributes(data_raw$ses_dwelling)
+table(data_raw$ses_dwelling)
+
+# Initialisation
 data_clean$ses_dwelling_grouped <- NA
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 1 | data_raw$ses_dwelling == 2 | data_raw$ses_dwelling == 4] <- "appartment"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 3] <- "condominium"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 5 | data_raw$ses_dwelling == 6 | data_raw$ses_dwelling == 7 | data_raw$ses_dwelling == 10] <- "house"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 8 | data_raw$ses_dwelling == 9] <- "cooperative or social housing"
+
+# Regroupement des codes existants
+# 1,2,3,8,9,11 -> "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 1] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 2] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 3] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 8] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 9] <- "apartment_complex"
 data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 11] <- "other"
-data_clean$ses_dwelling_grouped <- factor(data_clean$ses_dwelling, levels = c("appartment",
-                                                                      "condominium",
-                                                                      "house",
-                                                                      "cooperative or social housing",
-                                                                      "other"))
+
+# 4 -> "high_rise_apartment"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 4] <- "high_rise_apartment"
+
+# 5 -> "stand_alone_house"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 5] <- "stand_alone_house"
+
+# 6 -> "townhouse"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 6] <- "townhouse"
+
+# 7 -> "duplex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 7] <- "duplex"
+
+# 10 -> "mobile_home"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 10] <- "mobile_home"
+
+# On définit l'ordre final des facteurs
+data_clean$ses_dwelling_grouped <- factor(
+  data_clean$ses_dwelling_grouped,
+  levels = c("stand_alone_house",
+             "townhouse",
+             "duplex",
+             "apartment_complex",
+             "high_rise_apartment",
+             "mobile_home",
+            "other")
+)
+table(data_clean$ses_dwelling_grouped)
