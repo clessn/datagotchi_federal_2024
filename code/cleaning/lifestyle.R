@@ -1069,7 +1069,7 @@ data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 3] <- 0.5
 data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 4] <- 0.75
 data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 5] <- 1
 table(data_clean$lifestyle_morning_to_evening)
-  
+
 ## trip ------------------------------------------------------------------
 
 attributes(data_raw$trip)

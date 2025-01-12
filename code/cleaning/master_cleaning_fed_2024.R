@@ -37,3 +37,5 @@ source("code/cleaning/attitudes.R")
 
 # Save -------------------------------------------------------------------------
 saveRDS(data_clean, "_SharedFolder_datagotchi_federal_2024/data/data_clean.rds")
+
+
