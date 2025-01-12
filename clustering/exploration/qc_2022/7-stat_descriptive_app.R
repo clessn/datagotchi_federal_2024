@@ -11,7 +11,6 @@ nb_par_jour <- app_data %>%
 
 ggplot(nb_par_jour, aes(x = date, y = count)) +
   geom_line() +
-  geom_vline(xintercept = as.Date("2021-09-20"), linetype = "dashed", color = "red") +
   geom_point() +
   labs(
     title = "Nombre de répondants par jour",
@@ -23,11 +22,13 @@ ggplot(nb_par_jour, aes(x = date, y = count)) +
 # PAr party --------------------------------------------------------------
 # Couleurs spécifiques pour les partis
 party_colors <- c(
-  "Liberal" = "#d71920",
-  "Bloc" = "#1bb5a4",
-  "Conservative" = "#003f72",
-  "Green" = "#74b946",
-  "NDP" = "#ff993f"
+  "CAQ" = "#05d2e0",
+  "PQ" = "#0043FE",
+  "PLQ" = "#FF2806",
+  "QS" = "#f88808",
+  "PCQ" = "#311c68",
+  "Autre" = "#73F986",
+  "NoVote" = "#707373"
 )
 
 rep_vote <- app_data %>%
@@ -38,7 +39,7 @@ rep_vote <- app_data %>%
 ggplot(rep_vote, aes(x = reorder(vote_intent, -pct), y = pct, fill = vote_intent)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Répartition des répondants par intention de vote (App Datagotchi 2021)",
+    title = "Répartition des répondants par intention de vote (App Datagotchi QC-2022)",
     x = "Intention de vote",
     y = "Pourcentage"
   ) +
@@ -46,5 +47,7 @@ ggplot(rep_vote, aes(x = reorder(vote_intent, -pct), y = pct, fill = vote_intent
   scale_fill_manual(values = party_colors) +
   clessnize::theme_clean_light() +
     theme(legend.position = "none")
+
+
 
 
