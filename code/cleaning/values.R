@@ -135,3 +135,4 @@ data_clean$values_polarization_people_party <- NA
 data_clean$values_polarization_people_party <- data_raw$polarization_aff_6 / 10
 table(data_clean$values_polarization_people_party)
 
+

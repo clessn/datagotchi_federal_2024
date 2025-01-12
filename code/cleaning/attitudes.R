@@ -299,3 +299,4 @@ data_clean$iss_gouv_nomoretax[data_raw$issue_tax == 2] <- 0.33
 data_clean$iss_gouv_nomoretax[data_raw$issue_tax == 3] <- 0.66
 data_clean$iss_gouv_nomoretax[data_raw$issue_tax == 4] <- 1
 table(data_clean$iss_gouv_nomoretax)
+

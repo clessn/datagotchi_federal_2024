@@ -150,3 +150,4 @@ data_clean$dv_party_id <- NA
 data_clean$dv_party_id <- data_raw$attitude_party / 10
 table(data_clean$dv_party_id)
 
+

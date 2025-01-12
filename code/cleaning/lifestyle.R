@@ -1062,7 +1062,6 @@ table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
 attributes(data_raw$chronotype)
 table(data_raw$chronotype)
 
-
 data_clean$lifestyle_morning_to_evening <- NA
 data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 1] <- 0
 data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 2] <- 0.25
@@ -1071,11 +1070,6 @@ data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 4] <- 0.75
 data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 5] <- 1
 table(data_clean$lifestyle_morning_to_evening)
   
-
-
-
-
-
 ## trip ------------------------------------------------------------------
 
 attributes(data_raw$trip)
@@ -1088,3 +1082,4 @@ data_clean$lifestyle_trip[data_raw$trip == 3] <- "historic"
 data_clean$lifestyle_trip[data_raw$trip == 4] <- "mountains"
 data_clean$lifestyle_trip <- factor(data_clean$lifestyle_trip)
 table(data_clean$lifestyle_trip)
+
