@@ -898,17 +898,10 @@ data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
                                              ordered = TRUE)
 table(data_clean$lifestyle_pet_ownership)
 
-data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets == 1] <-  c("chat", 
-                                                                      "chien", 
-                                                                      "chat et chien", 
-                                                                      "diverses sortes d'animaux", 
-                                                                      "autres animaux domestiques", 
-                                                                      "animaux de ferme", 
-                                                                      )
-
-data_clean$lifestyle_pet_ownership_no[data_raw$cons_pets == 0] <- "je n'ai pas d'animal de compagnie"
-
-
+data_clean$lifestyle_pet_ownership_yes <- NA
+data_clean$lifestyle_pet_ownership_yes <- 0 
+data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets %in% c(1:6)] <- 1
+table(data_clean$lifestyle_pet_ownership_yes)
 
 ## smoking ---------------------------------------------------------------
 
@@ -926,19 +919,15 @@ table(data_clean$lifestyle_smoke_freq)
 
 ## alcool_type -----------------------------------------------------------
 
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 1] <- c("red_wine", 
-                                                                           "white_wine", 
-                                                                           "rose_wine", 
-                                                                           "sparkling_wine")
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 2] <- c("reg_beer", 
-                                                                           "micro_beer")
-
-
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 3] <- c("spirits", 
-                                                                      "cocktail")
-
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 4] <- "dont_drink"
-
+attributes(data_raw$alcool_type)
+table(data_raw$alcool_type) 
+data_clean$lifestyle_favourite_alcool <- NA
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type %in% c(1:4)] <- "wine"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type %in% c(5:6)] <- "beer"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "spirits"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "cocktail"
+data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "dont_drink"
+table(data_clean$lifestyle_favourite_alcool)
 
 ## alcool_frequency ------------------------------------------------------
 data_clean$lifestyle_alcool_freq <- NA
@@ -981,6 +970,10 @@ table(data_clean$lifestyle_mari_freq)
 
 
 ## social_media_use ------------------------------------------------------
+
+attributes(data_raw$social_media_use)
+table(data_raw$social_media_use)
+
 data_clean$lifestyle_most_freq_social_media <- NA
 data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 1] <- "Facebook"
 data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 2] <- "Twitter / X"
@@ -991,12 +984,12 @@ data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 6] <- "
 data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 7] <- "LinkedIn"
 data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 8] <- "Youtube"
 data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 9] <- "Autre"
-data_clean$lifestyle_most_freq_social_media <- factor(data_clean$lifestyle_medsociaux_plus_frequent)
+data_clean$lifestyle_most_freq_social_media <- factor(data_clean$lifestyle_most_freq_social_media)
 table(data_clean$lifestyle_most_freq_social_media)
 
 ## social_media_time -----------------------------------------------------
 
-attributes(data_raw$social_media_time_day)
+attributes(data_raw$social_media_time)
 data_clean$lifestyle_social_media_time_day <- NA
 data_clean$lifestyle_social_media_time_day[data_raw$social_media_time == 1] <- 0
 data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 2] <- 0.2
@@ -1005,8 +998,6 @@ data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 4] <- 0.
 data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 5] <- 0.8
 data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 6] <- 1
 table(data_clean$ifestyle_social_media_time_day)
-
-
 
 ## clothing_style --------------------------------------------------------
 
