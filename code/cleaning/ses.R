@@ -286,8 +286,7 @@ data_clean$ses_income_census <- factor(data_clean$ses_income_census, levels = c(
                                                                   "60001_to_90000",
                                                                   "90001_to_110000",
                                                                   "110001_to_150000",
-                                                                  "150001_to_200000",
-                                                                  "more_than_200000"))
+                                                                  "more_than_150000"))
 table(data_clean$ses_income_census)
 
 ## bilingualism-------------------------------------------------------------
