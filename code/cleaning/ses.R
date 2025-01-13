@@ -269,6 +269,27 @@ data_clean$ses_income <- factor(data_clean$ses_income, levels = c("no_income",
                                                                   "more_than_200000"))
 table(data_clean$ses_income)
 
+attributes(data_raw$ses_income)
+table(data_raw$ses_income)
+data_clean$ses_income_census <- NA
+data_clean$ses_income_census[data_raw$ses_income == 1] <- "no_income"
+data_clean$ses_income_census[data_raw$ses_income == 2] <- "1_to_30000"
+data_clean$ses_income_census[data_raw$ses_income == 3] <- "30001_to_60000"
+data_clean$ses_income_census[data_raw$ses_income == 4] <- "60001_to_90000"
+data_clean$ses_income_census[data_raw$ses_income == 5] <- "90001_to_110000"
+data_clean$ses_income_census[data_raw$ses_income == 6] <- "110001_to_150000"
+data_clean$ses_income_census[data_raw$ses_income %in% c(7, 8)] <- "more_than_150000"
+
+data_clean$ses_income_census <- factor(data_clean$ses_income_census, levels = c("no_income",
+                                                                  "1_to_30000",
+                                                                  "30001_to_60000",
+                                                                  "60001_to_90000",
+                                                                  "90001_to_110000",
+                                                                  "110001_to_150000",
+                                                                  "150001_to_200000",
+                                                                  "more_than_200000"))
+table(data_clean$ses_income_census)
+
 ## bilingualism-------------------------------------------------------------
 
 attributes(data_raw$ses_bilingual_2)
