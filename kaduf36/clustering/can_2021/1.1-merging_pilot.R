@@ -23,4 +23,4 @@ df_pilot_2021_merged_qc <- df_pilot_2021_merged %>%
 # Enregistrer le jeux de donnees merged
 
 # Enregistrer le jeu de données fusionné sous forme de CSV
-write.csv(df_pilot_2021_merged_qc, "data/extrant/pilot2021_merged_qc.csv")
+write.csv(df_pilot_2021_merged_qc, "data/extrant/pilot2021_merged_qconly.csv")

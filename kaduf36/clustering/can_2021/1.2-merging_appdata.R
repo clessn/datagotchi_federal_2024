@@ -118,24 +118,29 @@ prediction_value_cols <- c('prediction.1.value', 'prediction.2.value', 'predicti
 datagotchi_2021_merged[prediction_value_cols] <- lapply(datagotchi_2021_merged[prediction_value_cols], function(x) as.numeric(as.character(x)))
 
 # Étape 3.2 : Trouver les indices des lignes où correction est -1
+##### ??? Que signifie la correction à -1?
 bad_rows <- which(datagotchi_2021_merged$correction == -1)
+datagotchi_2021_merged$vote_intent_original <- datagotchi_2021_merged$vote_intent
 
 # Étape 3.3 : Boucle sur chaque ligne identifiée pour mettre à jour 'vote_intent'
+##### ??? Pourquoi vote_intent est affecté à la valeur du parti dont la prédiction
+#####     de vote est la plus haute ? (lorsqu'il n'y a pas de vote_intent)
 for (row in bad_rows) {
+
     # Extraire les valeurs de prédiction pour la ligne courante
     prediction_values <- as.numeric(datagotchi_2021_merged[row, prediction_value_cols])
     
-    # Trouver l'indice de la valeur maximale
+    # Trouver l'indice de la valeur maximale de prédiction
     max_index <- which.max(prediction_values)
     
-    # Construire le nom de la colonne 'prediction.x.name' correspondante
+    # Construire le nom de la colonne 'prediction.x.name' correspondante à la valeur maximale
     prediction_name_col <- paste0('prediction.', max_index, '.name')
     
-    # Obtenir le nom du parti correspondant
-    party <- as.character(datagotchi_merged[row, prediction_name_col])
+    # Obtenir le nom du parti correspondant 
+    party <- as.character(datagotchi_2021_merged[row, prediction_name_col])
     
     # Assigner le nom du parti à 'vote_intent'
-    datagotchi_merged$vote_intent[row] <- party
+    datagotchi_2021_merged$vote_intent[row] <- party
 }
 
 # Étape 3.4 : Remplacer les codes numériques dans 'vote_intent' par les noms des partis
@@ -143,15 +148,15 @@ for (row in bad_rows) {
 party_mapping <- c("1" = "bloc", "2" = "pcc", "3" = "vert", "4" = "plc", "5" = "npd")
 
 # Convertir 'vote_intent' en caractère si nécessaire
-datagotchi_merged$vote_intent <- as.character(datagotchi_merged$vote_intent)
+datagotchi_2021_merged$vote_intent <- as.character(datagotchi_2021_merged$vote_intent)
 
 # Remplacer les codes numériques par les noms des partis
-datagotchi_merged$vote_intent <- ifelse(datagotchi_merged$vote_intent %in% names(party_mapping),
-                                 party_mapping[datagotchi_merged$vote_intent],
-                                 datagotchi_merged$vote_intent)
+datagotchi_2021_merged$vote_intent <- ifelse(datagotchi_2021_merged$vote_intent %in% names(party_mapping),
+                                 party_mapping[datagotchi_2021_merged$vote_intent],
+                                 datagotchi_2021_merged$vote_intent)
 
-app_datagotchi_clean <- datagotchi_merged |>
-  select(created, vote_intent,
+app_datagotchi_clean <- datagotchi_2021_merged |>
+  select(created, vote_intent, vote_intent_original,
     act_VisitsMuseumsGaleries,
     act_Yoga, act_Run, act_Gym, act_TeamSport, act_None,
     act_MotorizedOutdoorActivities, act_Fishing, act_Hunting, 
@@ -177,4 +182,4 @@ app_datagotchi_clean <- datagotchi_merged |>
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
     act_transport_PublicTransportation, act_transport_Car, act_transport_Walk)
 
-saveRDS(app_datagotchi_clean, file = "data/app_datagotchi_clean.rds")
+saveRDS(app_datagotchi_clean, file = "data/extrant/app_datagotchi_clean_qconly.rds")
