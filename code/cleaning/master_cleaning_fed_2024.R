@@ -5,11 +5,7 @@ library(dplyr)
 
 ## load raw data here
 
-
-data_raw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/data_raw/datagotchi_federal_pilot_December+2,+2024_14.31.sav")
-
-
-
+data_raw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/data_raw/datagotchi_federal_pilot_January+10,+2025_15.22.sav")
 
 # Clean variables ---------------------------------------------------------
 
@@ -40,4 +36,5 @@ source("code/cleaning/attitudes.R")
 
 # Save -------------------------------------------------------------------------
 saveRDS(data_clean, "_SharedFolder_datagotchi_federal_2024/data/data_clean.rds")
+
 

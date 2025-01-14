@@ -1,6 +1,5 @@
 # values & perceptions
 
-
 ## values ----------------------------------------------------------------
 
 ### values_1 -------------------------------------------------------------
@@ -15,8 +14,6 @@ data_clean$values_conformity_vs_freethinking[data_raw$values_1 == 2] <- "freethi
 data_clean$values_conformity_vs_freethinking <- factor(data_clean$values_conformity_vs_freethinking)
 table(data_clean$values_conformity_vs_freethinking)
 
-
-
 ### values_2 -------------------------------------------------------------
 
 attributes(data_raw$values_2)
@@ -27,8 +24,6 @@ data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 1] <- "curiosity
 data_clean$values_curiosity_vs_goodmanners[data_raw$values_2 == 2] <- "goodmanners"
 data_clean$values_curiosity_vs_goodmanners <- factor(data_clean$values_curiosity_vs_goodmanners)
 table(data_clean$values_curiosity_vs_goodmanners) 
-
-
 
 ### values_3 -------------------------------------------------------------
 
@@ -54,8 +49,6 @@ data_clean$values_considerate_vs_wellbehaved[data_raw$values_4 == 2] <- "wellbeh
 data_clean$values_considerate_vs_wellbehaved <- factor(data_clean$values_considerate_vs_wellbehaved)
 table(data_clean$values_considerate_vs_wellbehaved) 
 
-
-
 ## op_viewworld ----------------------------------------------------------
 
 attributes(data_raw$op_viewworld_1)
@@ -74,8 +67,6 @@ data_clean$values_isolationnisme_pol <- NA
 data_clean$values_isolationnisme_pol <- data_raw$isolationnisme_pol_1 / 10
 table(data_clean$values_isolationnisme_pol)
 
-
-
 ### Polarization - Liberals -------------------------------------------------------------
 
 attributes(data_raw$polarization_aff_1)
@@ -84,7 +75,6 @@ table(data_raw$polarization_aff_1)
 data_clean$values_polarization_liberals <- NA
 data_clean$values_polarization_liberals <- data_raw$polarization_aff_1 / 10
 table(data_clean$values_polarization_liberals)
-
 
 ### Polarization - Conservatives -------------------------------------------------------------
 
@@ -134,4 +124,5 @@ table(data_raw$polarization_aff_6)
 data_clean$values_polarization_people_party <- NA
 data_clean$values_polarization_people_party <- data_raw$polarization_aff_6 / 10
 table(data_clean$values_polarization_people_party)
+
 

@@ -199,6 +199,7 @@ data_clean$ses_religion_big_five[data_raw$ses_religion == 7] <- "muslim"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 8] <- "jew"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 6] <- "hindu"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 3] <- "buddhist"
+data_clean$ses_religion_big_five[data_raw$ses_religion %in% c(1, 2)] <- "agnostic/atheist"
 data_clean$ses_religion_big_five <- factor(data_clean$ses_religion_big_five)
 table(data_clean$ses_religion_big_five)
 
@@ -267,6 +268,26 @@ data_clean$ses_income <- factor(data_clean$ses_income, levels = c("no_income",
                                                                   "150001_to_200000",
                                                                   "more_than_200000"))
 table(data_clean$ses_income)
+
+attributes(data_raw$ses_income)
+table(data_raw$ses_income)
+data_clean$ses_income_census <- NA
+data_clean$ses_income_census[data_raw$ses_income == 1] <- "no_income"
+data_clean$ses_income_census[data_raw$ses_income == 2] <- "1_to_30000"
+data_clean$ses_income_census[data_raw$ses_income == 3] <- "30001_to_60000"
+data_clean$ses_income_census[data_raw$ses_income == 4] <- "60001_to_90000"
+data_clean$ses_income_census[data_raw$ses_income == 5] <- "90001_to_110000"
+data_clean$ses_income_census[data_raw$ses_income == 6] <- "110001_to_150000"
+data_clean$ses_income_census[data_raw$ses_income %in% c(7, 8)] <- "more_than_150000"
+
+data_clean$ses_income_census <- factor(data_clean$ses_income_census, levels = c("no_income",
+                                                                  "1_to_30000",
+                                                                  "30001_to_60000",
+                                                                  "60001_to_90000",
+                                                                  "90001_to_110000",
+                                                                  "110001_to_150000",
+                                                                  "more_than_150000"))
+table(data_clean$ses_income_census)
 
 ## bilingualism-------------------------------------------------------------
 
@@ -539,14 +560,46 @@ data_clean$ses_dwelling <- factor(data_clean$ses_dwelling, levels = c("apartment
                                                                               "other"))
 table(data_clean$ses_dwelling)
 
+attributes(data_raw$ses_dwelling)
+table(data_raw$ses_dwelling)
+
+# Initialisation
 data_clean$ses_dwelling_grouped <- NA
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 1 | data_raw$ses_dwelling == 2 | data_raw$ses_dwelling == 4] <- "appartment"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 3] <- "condominium"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 5 | data_raw$ses_dwelling == 6 | data_raw$ses_dwelling == 7 | data_raw$ses_dwelling == 10] <- "house"
-data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 8 | data_raw$ses_dwelling == 9] <- "cooperative or social housing"
+
+# Regroupement des codes existants
+# 1,2,3,8,9,11 -> "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 1] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 2] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 3] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 8] <- "apartment_complex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 9] <- "apartment_complex"
 data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 11] <- "other"
-data_clean$ses_dwelling_grouped <- factor(data_clean$ses_dwelling, levels = c("appartment",
-                                                                      "condominium",
-                                                                      "house",
-                                                                      "cooperative or social housing",
-                                                                      "other"))
+
+# 4 -> "high_rise_apartment"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 4] <- "high_rise_apartment"
+
+# 5 -> "stand_alone_house"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 5] <- "stand_alone_house"
+
+# 6 -> "townhouse"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 6] <- "townhouse"
+
+# 7 -> "duplex"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 7] <- "duplex"
+
+# 10 -> "mobile_home"
+data_clean$ses_dwelling_grouped[data_raw$ses_dwelling == 10] <- "mobile_home"
+
+# On définit l'ordre final des facteurs
+data_clean$ses_dwelling_grouped <- factor(
+  data_clean$ses_dwelling_grouped,
+  levels = c("stand_alone_house",
+             "townhouse",
+             "duplex",
+             "apartment_complex",
+             "high_rise_apartment",
+             "mobile_home",
+            "other")
+)
+table(data_clean$ses_dwelling_grouped)
+
