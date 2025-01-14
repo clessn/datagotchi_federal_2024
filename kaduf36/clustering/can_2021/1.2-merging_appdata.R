@@ -113,19 +113,38 @@ datagotchi_2021_merged <- datagotchi_2021_merged %>%
 ###----------------------------------------------------------------------------
 
 # Étape 3.1 : Convertir les colonnes de valeurs de prédiction en numériques si nécessaire
-prediction_value_cols <- c('prediction.1.value', 'prediction.2.value', 'prediction.3.value', 'prediction.4.value', 'prediction.5.value')
+prediction_value_cols <- c(
+  'prediction.1.value',
+  'prediction.2.value',
+  'prediction.3.value',
+  'prediction.4.value',
+  'prediction.5.value'
+  )
 
-datagotchi_2021_merged[prediction_value_cols] <- lapply(datagotchi_2021_merged[prediction_value_cols], function(x) as.numeric(as.character(x)))
+datagotchi_2021_merged[prediction_value_cols] <-
+  lapply(
+    datagotchi_2021_merged[prediction_value_cols],
+    function(x) as.numeric(as.character(x))
+  )
 
 # Étape 3.2 : Trouver les indices des lignes où correction est -1
-##### ??? Que signifie la correction à -1?
-bad_rows <- which(datagotchi_2021_merged$correction == -1)
+# Correction == -1 signifie que le répondant n'a pas corrigé le parti qui lui
+# a été associé par le modèle de l'application. On peut donc présumer que 
+# l'application a bien prédit le choix de vote.
+good_prediction_rows <- which(datagotchi_2021_merged$correction == -1)
 datagotchi_2021_merged$vote_intent_original <- datagotchi_2021_merged$vote_intent
 
-# Étape 3.3 : Boucle sur chaque ligne identifiée pour mettre à jour 'vote_intent'
-##### ??? Pourquoi vote_intent est affecté à la valeur du parti dont la prédiction
-#####     de vote est la plus haute ? (lorsqu'il n'y a pas de vote_intent)
-for (row in bad_rows) {
+# Étape 3.3 : Mettre à jour 'vote_intent' pour les lignes avec bonnes 
+#             prédictions
+# Lorsque la prédiction est correcte (correction == -1), le vote_intent est,
+# absent, mais est égal au parti qui a obtenu le plus haut pourcentage de
+# probabilité par le modèle
+
+# Définir la correspondance entre les noms des partis et leurs numéros
+party_mapping <- c("bloc" = "1", "pcc" = "2", "vert" = "3", "plc" = "4", "npd" = "5")
+
+# Associer la bonne intention de vote à ceux qui ont été bien prédits
+for (row in good_prediction_rows) {
 
     # Extraire les valeurs de prédiction pour la ligne courante
     prediction_values <- as.numeric(datagotchi_2021_merged[row, prediction_value_cols])
@@ -139,22 +158,15 @@ for (row in bad_rows) {
     # Obtenir le nom du parti correspondant 
     party <- as.character(datagotchi_2021_merged[row, prediction_name_col])
     
-    # Assigner le nom du parti à 'vote_intent'
-    datagotchi_2021_merged$vote_intent[row] <- party
+    # Remplacer le nom par son numéro à l'aide de party_mapping
+    party_number <- party_mapping[party]
+    
+    # Assigner le numéro correspondant à 'vote_intent'
+    datagotchi_2021_merged$vote_intent[row] <- party_number
 }
 
-# Étape 3.4 : Remplacer les codes numériques dans 'vote_intent' par les noms des partis
-# Définir la correspondance entre les codes numériques et les noms des partis
-party_mapping <- c("1" = "bloc", "2" = "pcc", "3" = "vert", "4" = "plc", "5" = "npd")
-
-# Convertir 'vote_intent' en caractère si nécessaire
-datagotchi_2021_merged$vote_intent <- as.character(datagotchi_2021_merged$vote_intent)
-
-# Remplacer les codes numériques par les noms des partis
-datagotchi_2021_merged$vote_intent <- ifelse(datagotchi_2021_merged$vote_intent %in% names(party_mapping),
-                                 party_mapping[datagotchi_2021_merged$vote_intent],
-                                 datagotchi_2021_merged$vote_intent)
-
+# Produire la table de données qui contient les données de l'application 
+# prête à être utilisées
 app_datagotchi_clean <- datagotchi_2021_merged |>
   select(created, vote_intent, vote_intent_original,
     act_VisitsMuseumsGaleries,
@@ -182,4 +194,4 @@ app_datagotchi_clean <- datagotchi_2021_merged |>
     ses_dwelling_condo, ses_dwelling_detachedHouse, ses_dwelling_app,
     act_transport_PublicTransportation, act_transport_Car, act_transport_Walk)
 
-saveRDS(app_datagotchi_clean, file = "data/extrant/app_datagotchi_clean_qconly.rds")
+saveRDS(app_datagotchi_clean, file = "data/extrant/app2021_clean_qconly.rds")
