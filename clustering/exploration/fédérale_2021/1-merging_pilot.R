@@ -182,7 +182,7 @@ df_datagotchi_2021 <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder
     act_transport_PublicTransportation, act_transport_Car, act_transport_Walk
     )
 
-df_datagotchi_raw <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_bav-2021/Data/Raw/RawData-Hub.csv") 
+df_datagotchi_2021_raw <- read.csv("/home/alexab/Dropbox/Ulaval/CLESSN/_SharedFolder_bav-2021/Data/Raw/RawData-Hub.csv") 
 
 raw_selected <- df_datagotchi_raw |> 
   filter(answers.province == "Québec") |> 
