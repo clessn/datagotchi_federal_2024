@@ -412,17 +412,26 @@ data_clean$ses_occupation <- factor(data_clean$ses_occupation, levels = c("paid_
                                                                           "looking_for_work",
                                                                           "unemployed",
                                                                           "other"))
-table(data_clean$ses_occupation)
-
+# Initialisation de la variable
 data_clean$ses_occupation_grouped <- NA
+
+# Attribution des valeurs corrigées
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 1 | data_raw$ses_occupation == 2] <- "employed"
-data_clean$ses_occupation_grouped[data_raw$ses_occupation == 5 | data_raw$ses_occupation == 6 | data_raw$ses_occupation == 4] <- "unemployed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 5 | data_raw$ses_occupation == 6] <- "unemployed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 4] <- "retired"
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 3] <- "student"
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 7] <- "other"
-data_clean$ses_occupation_grouped <- factor(data_clean$ses_occupation, levels = c("employed",
-                                                                                  "unemployed",
-                                                                                  "student",
-                                                                                  "other"))
+
+# Conversion en facteur avec les niveaux ordonnés
+data_clean$ses_occupation_grouped <- factor(data_clean$ses_occupation_grouped, 
+                                            levels = c("employed", 
+                                                       "unemployed", 
+                                                       "retired", 
+                                                       "student", 
+                                                       "other"))
+
+# Vérification des résultats
+table(data_clean$ses_occupation_grouped)
 
 ## SES (enfant) -------------------------------------------------------------------
 
