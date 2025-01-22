@@ -15,6 +15,16 @@ library(tidyverse)
 df_pilot1_2022 <- read.csv("data/qc2022/entrantes/pilote-1-quebec-prov-2022.csv")
 df_app_2022 <- readRDS("data/qc2022/entrantes/data-hub-clean-2022-10-27_clean.rds")
 
+# Correction des noms de variables associées au Drink
+# Les noms dans le pilot sont modifiés pour les noms dans l'app
+df_pilot1_2022 <- df_pilot1_2022 %>%
+  rename(
+    cons_bubbleDrink = cons_sparklingDrink,
+    cons_beerDrink = cons_regBeers,
+    cons_microDrink = cons_microBeers,
+    cons_cocktailDrink = cons_cocktailsDrink
+  )
+
 # Correction des noms de variables associées au dwelling
 df_pilot1_2022 <- df_pilot1_2022 %>%
   rename(
