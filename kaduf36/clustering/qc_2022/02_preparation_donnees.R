@@ -40,6 +40,10 @@ variables_sante_clust <- c(
   "cons_whiteWineDrink",
   "cons_roseDrink",
   "cons_spiritDrink",
+  "cons_bubbleDrink",
+  "cons_beerDrink",
+  "cons_microDrink",
+  "cons_cocktailDrink",
   "cons_noDrink",
   "cons_Smoke"
 )
