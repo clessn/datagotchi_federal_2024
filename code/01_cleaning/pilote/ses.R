@@ -324,10 +324,10 @@ table(data_clean$ses_french_skills)
 
 ## environment -------------------------------------------------------------
 
-attributes(data_raw$ses_environment)
+attributes(data_raw$ses_environment) 
 table(data_raw$ses_environment)
 
-data_clean$ses_environment <- NA
+data_clean$ses_environment <- NA # P-e changer le nom de cette variable pour quelque chose de plus parlant
 data_clean$ses_environment[data_raw$ses_environment == 1] <- "urban"
 data_clean$ses_environment[data_raw$ses_environment == 2] <- "suburban"
 data_clean$ses_environment[data_raw$ses_environment == 3] <- "rural"

@@ -1,5 +1,7 @@
 library(nnet)
 
+data_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/data_clean_simulated_23-01-2025.rds")
+
 # Modèle -----------------------------------------------------------------
 multinom_model <- multinom(vote_intent ~ ., data = data_model)
 
