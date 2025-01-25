@@ -200,6 +200,8 @@ data_clean$ses_religion_big_five[data_raw$ses_religion == 8] <- "jew"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 6] <- "hindu"
 data_clean$ses_religion_big_five[data_raw$ses_religion == 3] <- "buddhist"
 data_clean$ses_religion_big_five[data_raw$ses_religion %in% c(1, 2)] <- "agnostic/atheist"
+data_clean$ses_religion_big_five[data_raw$ses_religion == 12 | 
+                                 data_raw$ses_religion == 10] <- "other"
 data_clean$ses_religion_big_five <- factor(data_clean$ses_religion_big_five)
 table(data_clean$ses_religion_big_five)
 
