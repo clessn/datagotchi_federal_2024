@@ -271,6 +271,26 @@ data_clean$ses_income <- factor(data_clean$ses_income, levels = c("no_income",
                                                                   "more_than_200000"))
 table(data_clean$ses_income)
 
+attributes(data_raw$ses_income)
+table(data_raw$ses_income)
+data_clean$ses_income_census <- NA
+data_clean$ses_income_census[data_raw$ses_income == 1] <- "no_income"
+data_clean$ses_income_census[data_raw$ses_income == 2] <- "1_to_30000"
+data_clean$ses_income_census[data_raw$ses_income == 3] <- "30001_to_60000"
+data_clean$ses_income_census[data_raw$ses_income == 4] <- "60001_to_90000"
+data_clean$ses_income_census[data_raw$ses_income == 5] <- "90001_to_110000"
+data_clean$ses_income_census[data_raw$ses_income == 6] <- "110001_to_150000"
+data_clean$ses_income_census[data_raw$ses_income %in% c(7, 8)] <- "more_than_150000"
+
+data_clean$ses_income_census <- factor(data_clean$ses_income_census, levels = c("no_income",
+                                                                  "1_to_30000",
+                                                                  "30001_to_60000",
+                                                                  "60001_to_90000",
+                                                                  "90001_to_110000",
+                                                                  "110001_to_150000",
+                                                                  "more_than_150000"))
+table(data_clean$ses_income_census)
+
 ## bilingualism-------------------------------------------------------------
 
 attributes(data_raw$ses_bilingual_2)
@@ -306,10 +326,10 @@ table(data_clean$ses_french_skills)
 
 ## environment -------------------------------------------------------------
 
-attributes(data_raw$ses_environment)
+attributes(data_raw$ses_environment) 
 table(data_raw$ses_environment)
 
-data_clean$ses_environment <- NA
+data_clean$ses_environment <- NA # P-e changer le nom de cette variable pour quelque chose de plus parlant
 data_clean$ses_environment[data_raw$ses_environment == 1] <- "urban"
 data_clean$ses_environment[data_raw$ses_environment == 2] <- "suburban"
 data_clean$ses_environment[data_raw$ses_environment == 3] <- "rural"
@@ -394,17 +414,26 @@ data_clean$ses_occupation <- factor(data_clean$ses_occupation, levels = c("paid_
                                                                           "looking_for_work",
                                                                           "unemployed",
                                                                           "other"))
-table(data_clean$ses_occupation)
-
+# Initialisation de la variable
 data_clean$ses_occupation_grouped <- NA
+
+# Attribution des valeurs corrigées
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 1 | data_raw$ses_occupation == 2] <- "employed"
-data_clean$ses_occupation_grouped[data_raw$ses_occupation == 5 | data_raw$ses_occupation == 6 | data_raw$ses_occupation == 4] <- "unemployed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 5 | data_raw$ses_occupation == 6] <- "unemployed"
+data_clean$ses_occupation_grouped[data_raw$ses_occupation == 4] <- "retired"
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 3] <- "student"
 data_clean$ses_occupation_grouped[data_raw$ses_occupation == 7] <- "other"
-data_clean$ses_occupation_grouped <- factor(data_clean$ses_occupation, levels = c("employed",
-                                                                                  "unemployed",
-                                                                                  "student",
-                                                                                  "other"))
+
+# Conversion en facteur avec les niveaux ordonnés
+data_clean$ses_occupation_grouped <- factor(data_clean$ses_occupation_grouped, 
+                                            levels = c("employed", 
+                                                       "unemployed", 
+                                                       "retired", 
+                                                       "student", 
+                                                       "other"))
+
+# Vérification des résultats
+table(data_clean$ses_occupation_grouped)
 
 ## SES (enfant) -------------------------------------------------------------------
 
