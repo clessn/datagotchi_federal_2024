@@ -5,11 +5,11 @@ library(tidyverse)
 
 ## load raw data here
 
-data_raw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/data_raw/_previous/datagotchi_federal_pilot_simulated2.sav")
+DataRaw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/data_raw/_previous/datagotchi_federal_pilot_simulated2.sav")
 
 # Clean variables ---------------------------------------------------------
 
-data_clean <- data.frame(id = 1:nrow(data_raw))
+DataClean <- data.frame(id = 1:nrow(DataRaw))
 
 ## ses -------------------------------------------------------------------------
 
@@ -35,6 +35,6 @@ source("code/01_cleaning/pilote/dv.R")
 source("code/01_cleaning/pilote/attitudes.R")
 
 # Save -------------------------------------------------------------------------
-saveRDS(data_clean, "_SharedFolder_datagotchi_federal_2024/data/pilote/data_clean_simulated_23-01-2025.rds")
+saveRDS(Data_clean, "_SharedFolder_datagotchi_federal_2024/data/pilote/data_clean_simulated_23-01-2025.rds")
 
 
