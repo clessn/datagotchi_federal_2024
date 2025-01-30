@@ -5,7 +5,7 @@ library(tidyverse)
 
 ## load raw data here
 
-DataRaw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/data_raw/_previous/datagotchi_federal_pilot_simulated2.sav")
+DataRaw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/data_raw/datagotchiCanadaPilote_30janvier2025.sav")
 
 # Clean variables ---------------------------------------------------------
 
