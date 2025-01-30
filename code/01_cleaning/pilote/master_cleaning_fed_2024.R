@@ -35,6 +35,6 @@ source("code/01_cleaning/pilote/dv.R")
 source("code/01_cleaning/pilote/attitudes.R")
 
 # Save -------------------------------------------------------------------------
-saveRDS(Data_clean, "_SharedFolder_datagotchi_federal_2024/data/pilote/data_clean_simulated_23-01-2025.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataCleanPilot_2025Janv30.rds")
 
 
