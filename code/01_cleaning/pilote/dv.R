@@ -2,152 +2,153 @@
 
 ## turnout ---------------------------------------------------------------
 
-table(data_raw$turnout_1)
-data_clean$dv_turnout <- NA
-data_clean$dv_turnout <- data_raw$turnout_1 / 10
-table(data_clean$dv_turnout)
+table(DataRaw$turnout_1)
+DataClean$dv_turnout <- NA
+DataClean$dv_turnout <- DataRaw$turnout_1 / 10
+table(DataClean$dv_turnout)
 
 ## vote_choice -----------------------------------------------------------
 
-table(data_raw$vote_choice)
-data_clean$dv_vote_choice <- NA
-data_clean$dv_vote_choice[data_raw$vote_choice == 1] <- "lpc"
-data_clean$dv_vote_choice[data_raw$vote_choice == 2] <- "cpc"
-data_clean$dv_vote_choice[data_raw$vote_choice == 3] <- "ndp"
-data_clean$dv_vote_choice[data_raw$vote_choice == 4] <- "bq"
-data_clean$dv_vote_choice[data_raw$vote_choice == 5] <- "gpc"
-data_clean$dv_vote_choice[data_raw$vote_choice == 6] <- "other"
-data_clean$dv_vote_choice[data_raw$vote_choice == 7] <- "other"
-data_clean$dv_vote_choice[data_raw$vote_choice == 8] <- "other"
-data_clean$dv_vote_choice[data_raw$vote_choice == 9] <- "other"
-data_clean$dv_vote_choice[data_raw$vote_choice == 10] <- "other"
-table(data_clean$dv_vote_choice)
+table(DataRaw$vote_choice)
+DataClean$dv_voteChoice <- NA
+DataClean$dv_voteChoice[DataRaw$vote_choice == 1] <- "lpc"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 2] <- "cpc"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 3] <- "ndp"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 4] <- "bq"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 5] <- "gpc"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 6] <- "other"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 7] <- "other"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 8] <- "other"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 9] <- "other"
+DataClean$dv_voteChoice[DataRaw$vote_choice == 10] <- "other"
+table(DataClean$dv_voteChoice)
 
 ## vote_choice_raw -------------------------------------------------------
 
-data_clean$dv_vote_choice_raw <- NA
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 1] <- "lpc"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 2] <- "cpc"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 3] <- "ndp"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 4] <- "bq"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 5] <- "gpc"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 6] <- "ppc"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 7] <- "other"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 8] <- "would_not_vote"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 9] <- "would_spoil_ballot"
-data_clean$dv_vote_choice_raw[data_raw$vote_choice == 10] <- "dk"
-table(data_clean$dv_vote_choice_raw)
+DataClean$dv_voteChoiceAllOptions <- NA
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 1] <- "lpc"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 2] <- "cpc"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 3] <- "ndp"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 4] <- "bq"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 5] <- "gpc"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 6] <- "ppc"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 7] <- "other"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 8] <- "would_not_vote"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 9] <- "would_spoil_ballot"
+DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 10] <- "dk"
+table(DataClean$dv_voteChoiceAllOptions)
 
 ## vote_certainty --------------------------------------------------------
 
-table(data_raw$vote__certainty)
-data_clean$dv_vote_certainty <- NA
-data_clean$dv_vote_certainty[data_raw$vote__certainty == 1] <- 0
-data_clean$dv_vote_certainty[data_raw$vote__certainty == 2] <- 0.33
-data_clean$dv_vote_certainty[data_raw$vote__certainty == 3] <- 0.67
-data_clean$dv_vote_certainty[data_raw$vote__certainty == 4] <- 1
-table(data_clean$dv_vote_certainty)
+table(DataRaw$vote__certainty)
+DataClean$dv_voteCertainty <- NA
+DataClean$dv_voteCertainty[DataRaw$vote__certainty == 1] <- 0
+DataClean$dv_voteCertainty[DataRaw$vote__certainty == 2] <- 0.33
+DataClean$dv_voteCertainty[DataRaw$vote__certainty == 3] <- 0.67
+DataClean$dv_voteCertainty[DataRaw$vote__certainty == 4] <- 1
+table(DataClean$dv_voteCertainty)
 
 ## potgrowth_fed ---------------------------------------------------------
 
-table(data_raw$potgrowth_fed_1)
-data_clean$dv_potgrowth_lpc <- NA
-data_clean$dv_potgrowth_lpc <- data_raw$potgrowth_fed_1 / 10
-table(data_clean$dv_potgrowth_lpc)
+table(DataRaw$potgrowth_fed_1)
+DataClean$dv_potgrowthLPC <- NA
+DataClean$dv_potgrowthLPC <- DataRaw$potgrowth_fed_1 / 10
+table(DataClean$dv_potgrowthLPC)
 
 ## potgrowth_fed_1 -------------------------------------------------------
 
-table(data_raw$potgrowth_fed_2)
-data_clean$dv_potgrowth_cpc <- NA
-data_clean$dv_potgrowth_cpc <- data_raw$potgrowth_fed_2 / 10
-table(data_clean$dv_potgrowth_cpc)
+table(DataRaw$potgrowth_fed_2)
+DataClean$dv_potgrowthCPC <- NA
+DataClean$dv_potgrowthCPC <- DataRaw$potgrowth_fed_2 / 10
+table(DataClean$dv_potgrowthCPC)
 
 ## potgrowth_fed_2 -------------------------------------------------------
 
-table(data_raw$potgrowth_fed_3)
-data_clean$dv_potgrowth_ndp <- NA
-data_clean$dv_potgrowth_ndp <- data_raw$potgrowth_fed_3 / 10
-table(data_clean$dv_potgrowth_ndp)
+table(DataRaw$potgrowth_fed_3)
+DataClean$dv_potgrowthNDP <- NA
+DataClean$dv_potgrowthNDP <- DataRaw$potgrowth_fed_3 / 10
+table(DataClean$dv_potgrowthNDP)
 
 ## potgrowth_fed_3 -------------------------------------------------------
 
-table(data_raw$potgrowth_fed_4)
-data_clean$dv_potgrowth_bq <- NA
-data_clean$dv_potgrowth_bq <- data_raw$potgrowth_fed_4 / 10
-table(data_clean$dv_potgrowth_bq)
+table(DataRaw$potgrowth_fed_4)
+DataClean$dv_potgrowthBQ <- NA
+DataClean$dv_potgrowthBQ <- DataRaw$potgrowth_fed_4 / 10
+table(DataClean$dv_potgrowthBQ)
 
 ## potgrowth_fed_4 -------------------------------------------------------
 
-table(data_raw$potgrowth_fed_5)
-data_clean$dv_potgrowth_gpc <- NA
-data_clean$dv_potgrowth_gpc <- data_raw$potgrowth_fed_5 / 10
-table(data_clean$dv_potgrowth_gpc)
+table(DataRaw$potgrowth_fed_5)
+DataClean$dv_potgrowthGPC <- NA
+DataClean$dv_potgrowthGPC <- DataRaw$potgrowth_fed_5 / 10
+table(DataClean$dv_potgrowthGPC)
 
 ## potgrowth_fed_5 -------------------------------------------------------
 
-table(data_raw$potgrowth_fed_6)
-data_clean$dv_potgrowth_ppc <- NA
-data_clean$dv_potgrowth_ppc <- data_raw$potgrowth_fed_6 / 10
-table(data_clean$dv_potgrowth_ppc)
+table(DataRaw$potgrowth_fed_6)
+DataClean$dv_potgrowthPPC <- NA
+DataClean$dv_potgrowthPPC <- DataRaw$potgrowth_fed_6 / 10
+table(DataClean$dv_potgrowthPPC)
 
 ## turnout_2021 ---------------------------------------------------------------
 
-table(data_raw$turnout_2021)
-data_clean$dv_turnout_2021_bin <- NA
-data_clean$dv_turnout_2021_bin[data_raw$turnout_2021 == 1] <- 1
-data_clean$dv_turnout_2021_bin[data_raw$turnout_2021 == 2] <- 0
-table(data_clean$dv_turnout_2021_bin)
+table(DataRaw$turnout_2021)
+DataClean$dv_turnout2021_bin <- NA
+DataClean$dv_turnout2021_bin[DataRaw$turnout_2021 == 1] <- 1
+DataClean$dv_turnout2021_bin[DataRaw$turnout_2021 == 2] <- 0
+table(DataClean$dv_turnout2021_bin)
 
 ## potgrowth_qc ----------------------------------------------------------
 
 ### potgrowth_qc_1 -------------------------------------------------------
 
-table(data_raw$potgrowth_qc_1)
-data_clean$dv_potgrowth_qc_caq <- NA
-data_clean$dv_potgrowth_qc_caq <- data_raw$potgrowth_qc_1 / 10
-table(data_clean$dv_potgrowth_qc_caq)
+table(DataRaw$potgrowth_qc_1)
+DataClean$dv_potgrowthQcCAQ <- NA
+DataClean$dv_potgrowthQcCAQ <- DataRaw$potgrowth_qc_1 / 10
+table(DataClean$dv_potgrowthQcCAQ)
 
 ### potgrowth_qc_2 -------------------------------------------------------
 
-table(data_raw$potgrowth_qc_2)
-data_clean$dv_potgrowth_qc_plq <- NA
-data_clean$dv_potgrowth_qc_plq <- data_raw$potgrowth_qc_2 / 10
-table(data_clean$dv_potgrowth_qc_plq)
+table(DataRaw$potgrowth_qc_2)
+DataClean$dv_potgrowthQcPLQ <- NA
+DataClean$dv_potgrowthQcPLQ <- DataRaw$potgrowth_qc_2 / 10
+table(DataClean$dv_potgrowthQcPLQ)
 
 ### potgrowth_qc_3 --------------------------------------------------------
 
-table(data_raw$potgrowth_qc_3)
-data_clean$dv_potgrowth_qc_qs <- NA
-data_clean$dv_potgrowth_qc_qs <- data_raw$potgrowth_qc_3 / 10
-table(data_clean$dv_potgrowth_qc_qs)
+table(DataRaw$potgrowth_qc_3)
+DataClean$dv_potgrowthQcQS <- NA
+DataClean$dv_potgrowthQcQS <- DataRaw$potgrowth_qc_3 / 10
+table(DataClean$dv_potgrowthQcQS)
 
 ### potgrowth_qc_4 -------------------------------------------------------
 
-table(data_raw$potgrowth_qc_4)
-data_clean$dv_potgrowth_qc_pq <- NA
-data_clean$dv_potgrowth_qc_pq <- data_raw$potgrowth_qc_4 / 10
-table(data_clean$dv_potgrowth_qc_pq)
+table(DataRaw$potgrowth_qc_4)
+DataClean$dv_potgrowthQcPQ <- NA
+DataClean$dv_potgrowthQcPQ <- DataRaw$potgrowth_qc_4 / 10
+table(DataClean$dv_potgrowthQcPQ)
 
 ### potgrowth_qc_5 -------------------------------------------------------
 
-table(data_raw$potgrowth_qc_5)
-data_clean$dv_potgrowth_qc_pcq <- NA
-data_clean$dv_potgrowth_qc_pcq <- data_raw$potgrowth_qc_5 / 10
-table(data_clean$dv_potgrowth_qc_pcq)
+table(DataRaw$potgrowth_qc_5)
+DataClean$dv_potgrowthQcPCQ <- NA
+DataClean$dv_potgrowthQcPCQ <- DataRaw$potgrowth_qc_5 / 10
+table(DataClean$dv_potgrowthQcPCQ)
 
 ## attitude_leftvsright --------------------------------------------------
 
-table(data_raw$attitude_leftvsright_1)
-data_clean$dv_attitude_leftvsright <- NA
-data_clean$dv_attitude_leftvsright <- data_raw$attitude_leftvsright_1 / 10 
-table(data_clean$dv_attitude_leftvsright)
+attributes(DataRaw$attitude_leftvsright_1)
+table(DataRaw$attitude_leftvsright_1)
+DataClean$dv_attitudeLeftvsRight <- NA
+DataClean$dv_attitudeLeftvsRight <- DataRaw$attitude_leftvsright_1 / 10 
+table(DataClean$dv_attitudeLeftvsRight)
 
 ## attitude_party --------------------------------------------------------
 
-attributes(data_raw$attitude_party)
-table(data_raw$attitude_party)
-data_clean$dv_party_id <- NA
-data_clean$dv_party_id <- data_raw$attitude_party / 10
-table(data_clean$dv_party_id)
+attributes(DataRaw$attitude_party)
+table(DataRaw$attitude_party)
+DataClean$dv_partyId <- NA
+DataClean$dv_partyId <- DataRaw$attitude_party / 10
+table(DataClean$dv_partyId)
 
 

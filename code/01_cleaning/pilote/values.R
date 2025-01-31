@@ -4,125 +4,125 @@
 
 ### values_1 -------------------------------------------------------------
 
-attributes(data_raw$values_1)
-table(data_raw$values_1)
+attributes(DataRaw$values_1)
+table(DataRaw$values_1)
 
 #### bin
-data_clean$values_conformityFreethinking <- NA
-data_clean$values_conformityFreethinking[data_raw$values_1 == 1] <- "conformity"
-data_clean$values_conformityFreethinking[data_raw$values_1 == 2] <- "freethink"
-data_clean$values_conformityFreethinking <- factor(data_clean$values_conformityFreethinking)
-table(data_clean$values_conformityFreethinking)
+DataClean$values_conformityFreethinking <- NA
+DataClean$values_conformityFreethinking[DataRaw$values_1 == 1] <- "conformity"
+DataClean$values_conformityFreethinking[DataRaw$values_1 == 2] <- "freethink"
+DataClean$values_conformityFreethinking <- factor(DataClean$values_conformityFreethinking)
+table(DataClean$values_conformityFreethinking)
 
 ### values_2 -------------------------------------------------------------
 
-attributes(data_raw$values_2)
-table(data_raw$values_2)
+attributes(DataRaw$values_2)
+table(DataRaw$values_2)
 #### bin
-data_clean$values_curiosityGoodmanners <- NA
-data_clean$values_curiosityGoodmanners[data_raw$values_2 == 1] <- "curiosity" 
-data_clean$values_curiosityGoodmanners[data_raw$values_2 == 2] <- "goodmanners"
-data_clean$values_curiosityGoodmanners <- factor(data_clean$values_curiosityGoodmanners)
-table(data_clean$values_curiosityGoodmanners) 
+DataClean$values_curiosityGoodmanners <- NA
+DataClean$values_curiosityGoodmanners[DataRaw$values_2 == 1] <- "curiosity" 
+DataClean$values_curiosityGoodmanners[DataRaw$values_2 == 2] <- "goodmanners"
+DataClean$values_curiosityGoodmanners <- factor(DataClean$values_curiosityGoodmanners)
+table(DataClean$values_curiosityGoodmanners) 
 
 ### values_3 -------------------------------------------------------------
 
-attributes(data_raw$values_3)
-table(data_raw$values_3)
+attributes(DataRaw$values_3)
+table(DataRaw$values_3)
 
 #### bin
-data_clean$values_selfrelianceObedience <- NA
-data_clean$values_selfrelianceObedience[data_raw$values_3 == 1] <- "selfreliance" 
-data_clean$values_selfrelianceObedience[data_raw$values_3 == 2] <- "obedience"
-data_clean$values_selfrelianceObedience <- factor(data_clean$values_selfrelianceObedience)
-table(data_clean$values_selfrelianceObedience) 
+DataClean$values_selfrelianceObedience <- NA
+DataClean$values_selfrelianceObedience[DataRaw$values_3 == 1] <- "selfreliance" 
+DataClean$values_selfrelianceObedience[DataRaw$values_3 == 2] <- "obedience"
+DataClean$values_selfrelianceObedience <- factor(DataClean$values_selfrelianceObedience)
+table(DataClean$values_selfrelianceObedience) 
 
 ### values_4 -------------------------------------------------------------
 
-attributes(data_raw$values_4)
-table(data_raw$values_4)
+attributes(DataRaw$values_4)
+table(DataRaw$values_4)
 
 #### bin
-data_clean$values_considerateWellbehaved <- NA
-data_clean$values_considerateWellbehaved[data_raw$values_4 == 1] <- "considerate" 
-data_clean$values_considerateWellbehaved[data_raw$values_4 == 2] <- "wellbehaved"
-data_clean$values_considerateWellbehaved <- factor(data_clean$values_considerateWellbehaved)
-table(data_clean$values_considerateWellbehaved) 
+DataClean$values_considerateWellbehaved <- NA
+DataClean$values_considerateWellbehaved[DataRaw$values_4 == 1] <- "considerate" 
+DataClean$values_considerateWellbehaved[DataRaw$values_4 == 2] <- "wellbehaved"
+DataClean$values_considerateWellbehaved <- factor(DataClean$values_considerateWellbehaved)
+table(DataClean$values_considerateWellbehaved) 
 
 ## op_viewworld ----------------------------------------------------------
 
-attributes(data_raw$op_viewworld_1)
-table(data_raw$op_viewworld_1)
+attributes(DataRaw$op_viewworld_1)
+table(DataRaw$op_viewworld_1)
 
-data_clean$values_worldDangerous <- NA
-data_clean$values_worldDangerous <- data_raw$op_viewworld_1 / 10
-table(data_clean$values_worldDangerous)
+DataClean$values_worldDangerous <- NA
+DataClean$values_worldDangerous <- DataRaw$op_viewworld_1 / 10
+table(DataClean$values_worldDangerous)
 
 ## isolationnisme_pol ----------------------------------------------------
 
-attributes(data_raw$isolationnisme_pol_1)
-table(data_raw$isolationnisme_pol_1)
+attributes(DataRaw$isolationnisme_pol_1)
+table(DataRaw$isolationnisme_pol_1)
 
-data_clean$values_isolationismPol <- NA
-data_clean$values_isolationismPol <- data_raw$isolationnisme_pol_1 / 10
-table(data_clean$values_isolationismPol)
+DataClean$values_isolationismPol <- NA
+DataClean$values_isolationismPol <- DataRaw$isolationnisme_pol_1 / 10
+table(DataClean$values_isolationismPol)
 
 ### Polarization - Liberals -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_1)
-table(data_raw$polarization_aff_1)
+attributes(DataRaw$polarization_aff_1)
+table(DataRaw$polarization_aff_1)
 
-data_clean$values_polarizationLiberals <- NA
-data_clean$values_polarizationLiberals <- data_raw$polarization_aff_1 / 10
-table(data_clean$values_polarizationLiberals)
+DataClean$values_polarizationLiberals <- NA
+DataClean$values_polarizationLiberals <- DataRaw$polarization_aff_1 / 10
+table(DataClean$values_polarizationLiberals)
 
 ### Polarization - Conservatives -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_2)
-table(data_raw$polarization_aff_2)
+attributes(DataRaw$polarization_aff_2)
+table(DataRaw$polarization_aff_2)
 
-data_clean$values_polarizationConservatives <- NA
-data_clean$values_polarizationConservatives <- data_raw$polarization_aff_2 / 10
-table(data_clean$values_polarizationConservatives)
+DataClean$values_polarizationConservatives <- NA
+DataClean$values_polarizationConservatives <- DataRaw$polarization_aff_2 / 10
+table(DataClean$values_polarizationConservatives)
 
 
 ### Polarization - Neo-democrats -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_3)
-table(data_raw$polarization_aff_3)
+attributes(DataRaw$polarization_aff_3)
+table(DataRaw$polarization_aff_3)
 
-data_clean$values_polarizationNeoDem <- NA
-data_clean$values_polarizationNeoDem <- data_raw$polarization_aff_3 / 10
-table(data_clean$values_polarizationNeoDem)
+DataClean$values_polarizationNeoDem <- NA
+DataClean$values_polarizationNeoDem <- DataRaw$polarization_aff_3 / 10
+table(DataClean$values_polarizationNeoDem)
 
 
 ### Polarization - Bloc Québécois -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_4)
-table(data_raw$polarization_aff_4)
+attributes(DataRaw$polarization_aff_4)
+table(DataRaw$polarization_aff_4)
 
-data_clean$values_polarizationBloc <- NA
-data_clean$values_polarizationBloc <- data_raw$polarization_aff_4 / 10
-table(data_clean$values_polarizationBloc)
+DataClean$values_polarizationBloc <- NA
+DataClean$values_polarizationBloc <- DataRaw$polarization_aff_4 / 10
+table(DataClean$values_polarizationBloc)
 
 
 ### Polarization - Green -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_5)
-table(data_raw$polarization_aff_5)
+attributes(DataRaw$polarization_aff_5)
+table(DataRaw$polarization_aff_5)
 
-data_clean$values_polarizationGreen <- NA
-data_clean$values_polarizationGreen <- data_raw$polarization_aff_5 / 10
-table(data_clean$values_polarizationGreen)
+DataClean$values_polarizationGreen <- NA
+DataClean$values_polarizationGreen <- DataRaw$polarization_aff_5 / 10
+table(DataClean$values_polarizationGreen)
 
 
 ### Polarization - People's Party -------------------------------------------------------------
 
-attributes(data_raw$polarization_aff_6)
-table(data_raw$polarization_aff_6)
+attributes(DataRaw$polarization_aff_6)
+table(DataRaw$polarization_aff_6)
 
-data_clean$values_polarizationPeopleParty <- NA
-data_clean$values_polarizationPeopleParty <- data_raw$polarization_aff_6 / 10
-table(data_clean$values_polarizationPeopleParty)
+DataClean$values_polarizationPeopleParty <- NA
+DataClean$values_polarizationPeopleParty <- DataRaw$polarization_aff_6 / 10
+table(DataClean$values_polarizationPeopleParty)
 
 

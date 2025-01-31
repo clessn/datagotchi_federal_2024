@@ -2,607 +2,607 @@
 
 ## exercise --------------------------------------------------------------
 
-attributes(data_raw$exercise)
-table(data_raw$exercise)
-data_clean$lifestyle_exercise <- NA
-data_clean$lifestyle_exercise[data_raw$exercise == 1] <- "gym"
-data_clean$lifestyle_exercise[data_raw$exercise == 2] <- "play_a_team_sport"
-data_clean$lifestyle_exercise[data_raw$exercise == 3] <- "walk"
-data_clean$lifestyle_exercise[data_raw$exercise == 4] <- "run"
-data_clean$lifestyle_exercise[data_raw$exercise == 5] <- "yoga"
-data_clean$lifestyle_exercise[data_raw$exercise == 6] <- "swimming"
-data_clean$lifestyle_exercise[data_raw$exercise == 7] <- "other"
-data_clean$lifestyle_exercise[data_raw$exercise == 8] <- "i_do_not_exercise"
-table(data_clean$lifestyle_exercise)
+attributes(DataRaw$exercise)
+table(DataRaw$exercise)
+DataClean$lifestyle_exercise <- NA
+DataClean$lifestyle_exercise[DataRaw$exercise == 1] <- "gym"
+DataClean$lifestyle_exercise[DataRaw$exercise == 2] <- "play_a_team_sport"
+DataClean$lifestyle_exercise[DataRaw$exercise == 3] <- "walk"
+DataClean$lifestyle_exercise[DataRaw$exercise == 4] <- "run"
+DataClean$lifestyle_exercise[DataRaw$exercise == 5] <- "yoga"
+DataClean$lifestyle_exercise[DataRaw$exercise == 6] <- "swimming"
+DataClean$lifestyle_exercise[DataRaw$exercise == 7] <- "other"
+DataClean$lifestyle_exercise[DataRaw$exercise == 8] <- "i_do_not_exercise"
+table(DataClean$lifestyle_exercise)
 
 
 ## activity_1 ------------------------------------------------------------
 
-attributes(data_raw$activity_1)
-table(data_raw$activity_1) 
-data_clean$lifestyle_goFishingFreq <- NA
-data_raw$activity_1 <- as.numeric(data_raw$activity_1)
-data_clean$lifestyle_goFishingFreq[data_raw$activity_1 == 1] <- 1
-data_clean$lifestyle_goFishingFreq[data_raw$activity_1 == 2] <- 2
-data_clean$lifestyle_goFishingFreq[data_raw$activity_1 == 3] <- 3
-data_clean$lifestyle_goFishingFreq[data_raw$activity_1 == 4] <- 4
-data_clean$lifestyle_goFishingFreq[data_raw$activity_1 == 5] <- 5
-table(data_clean$lifestyle_goFishingFreq)
+attributes(DataRaw$activity_1)
+table(DataRaw$activity_1) 
+DataClean$lifestyle_goFishingFreq <- NA
+DataRaw$activity_1 <- as.numeric(DataRaw$activity_1)
+DataClean$lifestyle_goFishingFreq[DataRaw$activity_1 == 1] <- 1
+DataClean$lifestyle_goFishingFreq[DataRaw$activity_1 == 2] <- 2
+DataClean$lifestyle_goFishingFreq[DataRaw$activity_1 == 3] <- 3
+DataClean$lifestyle_goFishingFreq[DataRaw$activity_1 == 4] <- 4
+DataClean$lifestyle_goFishingFreq[DataRaw$activity_1 == 5] <- 5
+table(DataClean$lifestyle_goFishingFreq)
 
 ## factor
 
-table(data_clean$lifestyle_fishing_freq)
-data_clean$lifestyle_goFishingFreq_factor <- NA
-data_clean$lifestyle_goFishingFreq_factor[data_raw$activity_1 == 1] <- "never"
-data_clean$lifestyle_goFishingFreq_factor[data_raw$activity_1 == 2] <- "almost_never"
-data_clean$lifestyle_goFishingFreq_factor[data_raw$activity_1 == 3] <- "sometimes"
-data_clean$lifestyle_goFishingFreq_factor[data_raw$activity_1 == 4] <- "often"
-data_clean$lifestyle_goFishingFreq_factor[data_raw$activity_1 == 5] <- "very_often"
-data_clean$lifestyle_goFishingFreq_factor <- factor(data_clean$lifestyle_goFishingFreq_factor,
+table(DataClean$lifestyle_fishing_freq)
+DataClean$lifestyle_goFishingFreq_factor <- NA
+DataClean$lifestyle_goFishingFreq_factor[DataRaw$activity_1 == 1] <- "never"
+DataClean$lifestyle_goFishingFreq_factor[DataRaw$activity_1 == 2] <- "almost_never"
+DataClean$lifestyle_goFishingFreq_factor[DataRaw$activity_1 == 3] <- "sometimes"
+DataClean$lifestyle_goFishingFreq_factor[DataRaw$activity_1 == 4] <- "often"
+DataClean$lifestyle_goFishingFreq_factor[DataRaw$activity_1 == 5] <- "very_often"
+DataClean$lifestyle_goFishingFreq_factor <- factor(DataClean$lifestyle_goFishingFreq_factor,
                                                    levels = c("never",
                                                               "almost_never",
                                                               "sometimes",
                                                               "often",
                                                               "very_often"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_goFishingFreq_factor)
+table(DataClean$lifestyle_goFishingFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_goFishingFreq_numeric <- NA 
-data_clean$lifestyle_goFishingFreq_numeric <- (data_raw$activity_1 - 1) / 4
-table(data_clean$lifestyle_goFishingFreq_numeric)
+DataClean$lifestyle_goFishingFreq_numeric <- NA 
+DataClean$lifestyle_goFishingFreq_numeric <- (DataRaw$activity_1 - 1) / 4
+table(DataClean$lifestyle_goFishingFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_goFishingFreq_bin <- NA
-data_clean$lifestyle_goFishingFreq_bin[data_raw$activity_1  == 1] <- 0
-data_clean$lifestyle_goFishingFreq_bin[data_raw$activity_1  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_goFishingFreq_bin) 
+DataClean$lifestyle_goFishingFreq_bin <- NA
+DataClean$lifestyle_goFishingFreq_bin[DataRaw$activity_1  == 1] <- 0
+DataClean$lifestyle_goFishingFreq_bin[DataRaw$activity_1  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_goFishingFreq_bin) 
 
 ## activity_2 ------------------------------------------------------------
 
-table(data_raw$activity_2) 
-data_clean$lifestyle_goHuntingFreq <- NA
-data_raw$activity_2 <- as.numeric(data_raw$activity_2)
-data_clean$lifestyle_goHuntingFreq[data_raw$activity_2 == 1] <- 1
-data_clean$lifestyle_goHuntingFreq[data_raw$activity_2 == 2] <- 2
-data_clean$lifestyle_goHuntingFreq[data_raw$activity_2 == 3] <- 3
-data_clean$lifestyle_goHuntingFreq[data_raw$activity_2 == 4] <- 4
-data_clean$lifestyle_goHuntingFreq[data_raw$activity_2 == 5] <- 5
-table(data_clean$lifestyle_goHuntingFreq)
+table(DataRaw$activity_2) 
+DataClean$lifestyle_goHuntingFreq <- NA
+DataRaw$activity_2 <- as.numeric(DataRaw$activity_2)
+DataClean$lifestyle_goHuntingFreq[DataRaw$activity_2 == 1] <- 1
+DataClean$lifestyle_goHuntingFreq[DataRaw$activity_2 == 2] <- 2
+DataClean$lifestyle_goHuntingFreq[DataRaw$activity_2 == 3] <- 3
+DataClean$lifestyle_goHuntingFreq[DataRaw$activity_2 == 4] <- 4
+DataClean$lifestyle_goHuntingFreq[DataRaw$activity_2 == 5] <- 5
+table(DataClean$lifestyle_goHuntingFreq)
 
 ## factor
 
-table(data_clean$lifestyle_goHuntingFreq)
-data_clean$lifestyle_goHuntingFreq_factor <- NA
-data_clean$lifestyle_goHuntingFreq_factor[data_raw$activity_2 == 1] <- "never"
-data_clean$lifestyle_goHuntingFreq_factor[data_raw$activity_2 == 2] <- "almost_never"
-data_clean$lifestyle_goHuntingFreq_factor[data_raw$activity_2 == 3] <- "sometimes"
-data_clean$lifestyle_goHuntingFreq_factor[data_raw$activity_2 == 4] <- "often"
-data_clean$lifestyle_goHuntingFreq_factor[data_raw$activity_2 == 5] <- "very_often"
-data_clean$lifestyle_goHuntingFreq_factor <- factor(data_clean$lifestyle_goHuntingFreq_factor,
+table(DataClean$lifestyle_goHuntingFreq)
+DataClean$lifestyle_goHuntingFreq_factor <- NA
+DataClean$lifestyle_goHuntingFreq_factor[DataRaw$activity_2 == 1] <- "never"
+DataClean$lifestyle_goHuntingFreq_factor[DataRaw$activity_2 == 2] <- "almost_never"
+DataClean$lifestyle_goHuntingFreq_factor[DataRaw$activity_2 == 3] <- "sometimes"
+DataClean$lifestyle_goHuntingFreq_factor[DataRaw$activity_2 == 4] <- "often"
+DataClean$lifestyle_goHuntingFreq_factor[DataRaw$activity_2 == 5] <- "very_often"
+DataClean$lifestyle_goHuntingFreq_factor <- factor(DataClean$lifestyle_goHuntingFreq_factor,
                                                    levels = c("never",
                                                               "almost_never",
                                                               "sometimes",
                                                               "often",
                                                               "very_often"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_goHuntingFreq_factor)
+table(DataClean$lifestyle_goHuntingFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_goHuntingFreq_numeric <- NA 
-data_clean$lifestyle_goHuntingFreq_numeric <- (data_raw$activity_2 - 1) / 4
-table(data_clean$lifestyle_goHuntingFreq_numeric)
+DataClean$lifestyle_goHuntingFreq_numeric <- NA 
+DataClean$lifestyle_goHuntingFreq_numeric <- (DataRaw$activity_2 - 1) / 4
+table(DataClean$lifestyle_goHuntingFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_goHuntingFreq_bin <- NA
-data_clean$lifestyle_goHuntingFreq_bin[data_raw$activity_2  == 1] <- 0
-data_clean$lifestyle_goHuntingFreq_bin[data_raw$activity_2  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_goHuntingFreq_bin) 
+DataClean$lifestyle_goHuntingFreq_bin <- NA
+DataClean$lifestyle_goHuntingFreq_bin[DataRaw$activity_2  == 1] <- 0
+DataClean$lifestyle_goHuntingFreq_bin[DataRaw$activity_2  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_goHuntingFreq_bin) 
 
 
 ## activity_3 ------------------------------------------------------------
 
-table(data_raw$activity_3) 
-data_clean$lifestyle_snowSportsFreq <- NA
-data_raw$activity_3 <- as.numeric(data_raw$activity_3)
-data_clean$lifestyle_snowSportsFreq[data_raw$activity_3 == 1] <- 1
-data_clean$lifestyle_snowSportsFreq[data_raw$activity_3 == 2] <- 2
-data_clean$lifestyle_snowSportsFreq[data_raw$activity_3 == 3] <- 3
-data_clean$lifestyle_snowSportsFreq[data_raw$activity_3 == 4] <- 4
-data_clean$lifestyle_snowSportsFreq[data_raw$activity_3 == 5] <- 5
-table(data_clean$lifestyle_snowSportsFreq)
+table(DataRaw$activity_3) 
+DataClean$lifestyle_snowSportsFreq <- NA
+DataRaw$activity_3 <- as.numeric(DataRaw$activity_3)
+DataClean$lifestyle_snowSportsFreq[DataRaw$activity_3 == 1] <- 1
+DataClean$lifestyle_snowSportsFreq[DataRaw$activity_3 == 2] <- 2
+DataClean$lifestyle_snowSportsFreq[DataRaw$activity_3 == 3] <- 3
+DataClean$lifestyle_snowSportsFreq[DataRaw$activity_3 == 4] <- 4
+DataClean$lifestyle_snowSportsFreq[DataRaw$activity_3 == 5] <- 5
+table(DataClean$lifestyle_snowSportsFreq)
 
 ## factor
 
-table(data_clean$lifestyle_snowSportsFreq)
-data_clean$lifestyle_snowSportsFreq_factor <- NA
-data_clean$lifestyle_snowSportsFreq_factor[data_raw$activity_3 == 1] <- "never"
-data_clean$lifestyle_snowSportsFreq_factor[data_raw$activity_3 == 2] <- "almost_never"
-data_clean$lifestyle_snowSportsFreq_factor[data_raw$activity_3 == 3] <- "sometimes"
-data_clean$lifestyle_snowSportsFreq_factor[data_raw$activity_3 == 4] <- "often"
-data_clean$lifestyle_snowSportsFreq_factor[data_raw$activity_3 == 5] <- "very_often"
-data_clean$lifestyle_snowSportsFreq_factor <- factor(data_clean$lifestyle_snowSportsFreq_factor,
+table(DataClean$lifestyle_snowSportsFreq)
+DataClean$lifestyle_snowSportsFreq_factor <- NA
+DataClean$lifestyle_snowSportsFreq_factor[DataRaw$activity_3 == 1] <- "never"
+DataClean$lifestyle_snowSportsFreq_factor[DataRaw$activity_3 == 2] <- "almost_never"
+DataClean$lifestyle_snowSportsFreq_factor[DataRaw$activity_3 == 3] <- "sometimes"
+DataClean$lifestyle_snowSportsFreq_factor[DataRaw$activity_3 == 4] <- "often"
+DataClean$lifestyle_snowSportsFreq_factor[DataRaw$activity_3 == 5] <- "very_often"
+DataClean$lifestyle_snowSportsFreq_factor <- factor(DataClean$lifestyle_snowSportsFreq_factor,
                                                    levels = c("never",
                                                               "almost_never",
                                                               "sometimes",
                                                               "often",
                                                               "very_often"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_snowSportsFreq_factor)
+table(DataClean$lifestyle_snowSportsFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_snowSportsFreq_numeric <- NA 
-data_clean$lifestyle_snowSportsFreq_numeric <- (data_raw$activity_3 - 1) / 4
-table(data_clean$ifestyle_snowSportsFreq_numeric)
+DataClean$lifestyle_snowSportsFreq_numeric <- NA 
+DataClean$lifestyle_snowSportsFreq_numeric <- (DataRaw$activity_3 - 1) / 4
+table(DataClean$ifestyle_snowSportsFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_snowSportsFreq_bin <- NA
-data_clean$lifestyle_snowSportsFreq_bin[data_raw$activity_3  == 1] <- 0
-data_clean$lifestyle_snowSportsFreq_bin[data_raw$activity_3  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_snowSportsFreq_bin) 
+DataClean$lifestyle_snowSportsFreq_bin <- NA
+DataClean$lifestyle_snowSportsFreq_bin[DataRaw$activity_3  == 1] <- 0
+DataClean$lifestyle_snowSportsFreq_bin[DataRaw$activity_3  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_snowSportsFreq_bin) 
 
 
 ## activity_4 -----------------------------------------------------------
 
-table(data_raw$activity_4) 
-data_clean$lifestyle_teamSportsFreq <- NA
-data_raw$activity_4 <- as.numeric(data_raw$activity_4)
-data_clean$lifestyle_teamSportsFreq[data_raw$activity_4 == 1] <- 1
-data_clean$lifestyle_teamSportsFreq[data_raw$activity_4 == 2] <- 2
-data_clean$lifestyle_teamSportsFreq[data_raw$activity_4 == 3] <- 3
-data_clean$lifestyle_teamSportsFreq[data_raw$activity_4 == 4] <- 4
-data_clean$lifestyle_teamSportsFreq[data_raw$activity_4 == 5] <- 5
-table(data_clean$lifestyle_teamSportsFreq)
+table(DataRaw$activity_4) 
+DataClean$lifestyle_teamSportsFreq <- NA
+DataRaw$activity_4 <- as.numeric(DataRaw$activity_4)
+DataClean$lifestyle_teamSportsFreq[DataRaw$activity_4 == 1] <- 1
+DataClean$lifestyle_teamSportsFreq[DataRaw$activity_4 == 2] <- 2
+DataClean$lifestyle_teamSportsFreq[DataRaw$activity_4 == 3] <- 3
+DataClean$lifestyle_teamSportsFreq[DataRaw$activity_4 == 4] <- 4
+DataClean$lifestyle_teamSportsFreq[DataRaw$activity_4 == 5] <- 5
+table(DataClean$lifestyle_teamSportsFreq)
 
 ## factor
 
-table(data_clean$lifestyle_teamSportsFreq)
-data_clean$lifestyle_teamSportsFreq_factor <- NA
-data_clean$lifestyle_teamSportsFreq_factor[data_raw$activity_4 == 1] <- "never"
-data_clean$lifestyle_teamSportsFreq_factor[data_raw$activity_4 == 2] <- "almost_never"
-data_clean$lifestyle_teamSportsFreq_factor[data_raw$activity_4 == 3] <- "sometimes"
-data_clean$lifestyle_teamSportsFreq_factor[data_raw$activity_4 == 4] <- "often"
-data_clean$lifestyle_teamSportsFreq_factor[data_raw$activity_4 == 5] <- "very_often"
-data_clean$lifestyle_teamSportsFreq_factor <- factor(data_clean$lifestyle_teamSportsFreq_factor,
+table(DataClean$lifestyle_teamSportsFreq)
+DataClean$lifestyle_teamSportsFreq_factor <- NA
+DataClean$lifestyle_teamSportsFreq_factor[DataRaw$activity_4 == 1] <- "never"
+DataClean$lifestyle_teamSportsFreq_factor[DataRaw$activity_4 == 2] <- "almost_never"
+DataClean$lifestyle_teamSportsFreq_factor[DataRaw$activity_4 == 3] <- "sometimes"
+DataClean$lifestyle_teamSportsFreq_factor[DataRaw$activity_4 == 4] <- "often"
+DataClean$lifestyle_teamSportsFreq_factor[DataRaw$activity_4 == 5] <- "very_often"
+DataClean$lifestyle_teamSportsFreq_factor <- factor(DataClean$lifestyle_teamSportsFreq_factor,
                                                        levels = c("never",
                                                                   "almost_never",
                                                                   "sometimes",
                                                                   "often",
                                                                   "very_often"),
                                                        ordered = TRUE)
-table(data_clean$lifestyle_teamSportsFreq_factor)
+table(DataClean$lifestyle_teamSportsFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_teamSportsFreq_numeric <- (data_raw$activity_4 - 1) / 4
-data_clean$lifestyle_teamSportsFreq_numeric <- NA 
-table(data_clean$lifestyle_teamSportsFreq_numeric)
+DataClean$lifestyle_teamSportsFreq_numeric <- NA 
+DataClean$lifestyle_teamSportsFreq_numeric <- (DataRaw$activity_4 - 1) / 4
+table(DataClean$lifestyle_teamSportsFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_teamSportsFreq_bin <- NA
-data_clean$lifestyle_teamSportsFreq_bin[data_raw$activity_4  == 1] <- 0
-data_clean$lifestyle_teamSportsFreq_bin[data_raw$activity_4  %in% c(2, 3, 4, 5)] <- 1
-table(data_cleanlifestyle_teamSportsFreq_bin)
+DataClean$lifestyle_teamSportsFreq_bin <- NA
+DataClean$lifestyle_teamSportsFreq_bin[DataRaw$activity_4  == 1] <- 0
+DataClean$lifestyle_teamSportsFreq_bin[DataRaw$activity_4  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_teamSportsFreq_bin)
 
 
 ## activity_5 ------------------------------------------------------------
 
-table(data_raw$activity_5) 
-data_clean$lifestyle_goMuseumsFreq <- NA
-data_raw$activity_5 <- as.numeric(data_raw$activity_5)
-data_clean$lifestyle_goMuseumsFreq[data_raw$activity_5 == 1] <- 1
-data_clean$lifestyle_goMuseumsFreq[data_raw$activity_5 == 2] <- 2
-data_clean$lifestyle_goMuseumsFreq[data_raw$activity_5 == 3] <- 3
-data_clean$lifestyle_goMuseumsFreq[data_raw$activity_5 == 4] <- 4
-data_clean$lifestyle_goMuseumsFreq[data_raw$activity_5 == 5] <- 5
-table(data_clean$lifestyle_goMuseumsFreq)
+table(DataRaw$activity_5) 
+DataClean$lifestyle_goMuseumsFreq <- NA
+DataRaw$activity_5 <- as.numeric(DataRaw$activity_5)
+DataClean$lifestyle_goMuseumsFreq[DataRaw$activity_5 == 1] <- 1
+DataClean$lifestyle_goMuseumsFreq[DataRaw$activity_5 == 2] <- 2
+DataClean$lifestyle_goMuseumsFreq[DataRaw$activity_5 == 3] <- 3
+DataClean$lifestyle_goMuseumsFreq[DataRaw$activity_5 == 4] <- 4
+DataClean$lifestyle_goMuseumsFreq[DataRaw$activity_5 == 5] <- 5
+table(DataClean$lifestyle_goMuseumsFreq)
 
 ## factor
 
-table(data_clean$lifestyle_goMuseumsFreq)
-data_clean$lifestyle_goMuseumsFreq_factor <- NA
-data_clean$lifestyle_goMuseumsFreq_factor[data_raw$activity_5 == 1] <- "never"
-data_clean$lifestyle_goMuseumsFreq_factor[data_raw$activity_5 == 2] <- "almost_never"
-data_clean$lifestyle_goMuseumsFreq_factor[data_raw$activity_5 == 3] <- "sometimes"
-data_clean$lifestyle_goMuseumsFreq_factor[data_raw$activity_5 == 4] <- "often"
-data_clean$lifestyle_goMuseumsFreq_factor[data_raw$activity_5 == 5] <- "very_often"
-data_clean$lifestyle_goMuseumsFreq_factor <- factor(data_clean$lifestyle_goMuseumsFreq_factor,
+table(DataClean$lifestyle_goMuseumsFreq)
+DataClean$lifestyle_goMuseumsFreq_factor <- NA
+DataClean$lifestyle_goMuseumsFreq_factor[DataRaw$activity_5 == 1] <- "never"
+DataClean$lifestyle_goMuseumsFreq_factor[DataRaw$activity_5 == 2] <- "almost_never"
+DataClean$lifestyle_goMuseumsFreq_factor[DataRaw$activity_5 == 3] <- "sometimes"
+DataClean$lifestyle_goMuseumsFreq_factor[DataRaw$activity_5 == 4] <- "often"
+DataClean$lifestyle_goMuseumsFreq_factor[DataRaw$activity_5 == 5] <- "very_often"
+DataClean$lifestyle_goMuseumsFreq_factor <- factor(DataClean$lifestyle_goMuseumsFreq_factor,
                                                        levels = c("never",
                                                                   "almost_never",
                                                                   "sometimes",
                                                                   "often",
                                                                   "very_often"),
                                                        ordered = TRUE)
-table(data_clean$lifestyle_goMuseumsFreq_factor)
+table(DataClean$lifestyle_goMuseumsFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_goMuseumsFreq_numeric <- NA 
-data_clean$lifestyle_goMuseumsFreq_numeric <- (data_raw$activity_5 - 1) / 4
-table(data_clean$lifestyle_goMuseumsFreq_numeric)
+DataClean$lifestyle_goMuseumsFreq_numeric <- NA 
+DataClean$lifestyle_goMuseumsFreq_numeric <- (DataRaw$activity_5 - 1) / 4
+table(DataClean$lifestyle_goMuseumsFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_goMuseumsFreq_bin <- NA
-data_clean$lifestyle_goMuseumsFreq_bin[data_raw$activity_5  == 1] <- 0
-data_clean$lifestyle_goMuseumsFreq_bin[data_raw$activity_5  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_goMuseumsFreq_bin)
+DataClean$lifestyle_goMuseumsFreq_bin <- NA
+DataClean$lifestyle_goMuseumsFreq_bin[DataRaw$activity_5  == 1] <- 0
+DataClean$lifestyle_goMuseumsFreq_bin[DataRaw$activity_5  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_goMuseumsFreq_bin)
 
 
 ## activity_6 ------------------------------------------------------------
 
-table(data_raw$activity_6) 
-data_clean$lifestyle_performingArtsFreq <- NA
-data_raw$activity_6 <- as.numeric(data_raw$activity_6)
-data_clean$lifestyle_performingArtsFreq[data_raw$activity_6 == 1] <- 1
-data_clean$lifestyle_performingArtsFreq[data_raw$activity_6 == 2] <- 2
-data_clean$lifestyle_performingArtsFreq[data_raw$activity_6 == 3] <- 3
-data_clean$lifestyle_performingArtsFreq[data_raw$activity_6 == 4] <- 4
-data_clean$lifestyle_performingArtsFreq[data_raw$activity_6 == 5] <- 5
-table(data_clean$lifestyle_performingArtsFreq)
+table(DataRaw$activity_6) 
+DataClean$lifestyle_performingArtsFreq <- NA
+DataRaw$activity_6 <- as.numeric(DataRaw$activity_6)
+DataClean$lifestyle_performingArtsFreq[DataRaw$activity_6 == 1] <- 1
+DataClean$lifestyle_performingArtsFreq[DataRaw$activity_6 == 2] <- 2
+DataClean$lifestyle_performingArtsFreq[DataRaw$activity_6 == 3] <- 3
+DataClean$lifestyle_performingArtsFreq[DataRaw$activity_6 == 4] <- 4
+DataClean$lifestyle_performingArtsFreq[DataRaw$activity_6 == 5] <- 5
+table(DataClean$lifestyle_performingArtsFreq)
 
 ## factor
 
-table(data_clean$lifestyle_performingArtsFreq)
-data_clean$lifestyle_performingArtsFreq_factor <- NA
-data_clean$lifestyle_performingArtsFreq_factor[data_raw$activity_6 == 1] <- "never"
-data_clean$lifestyle_performingArtsFreq_factor[data_raw$activity_6 == 2] <- "almost_never"
-data_clean$lifestyle_performingArtsFreq_factor[data_raw$activity_6 == 3] <- "sometimes"
-data_clean$lifestyle_performingArtsFreq_factor[data_raw$activity_6 == 4] <- "often"
-data_clean$lifestyle_performingArtsFreq_factor[data_raw$activity_6 == 5] <- "very_often"
-data_clean$lifestyle_performingArtsFreq_factor <- factor(data_clean$lifestyle_performingArtsFreq_factor,
+table(DataClean$lifestyle_performingArtsFreq)
+DataClean$lifestyle_performingArtsFreq_factor <- NA
+DataClean$lifestyle_performingArtsFreq_factor[DataRaw$activity_6 == 1] <- "never"
+DataClean$lifestyle_performingArtsFreq_factor[DataRaw$activity_6 == 2] <- "almost_never"
+DataClean$lifestyle_performingArtsFreq_factor[DataRaw$activity_6 == 3] <- "sometimes"
+DataClean$lifestyle_performingArtsFreq_factor[DataRaw$activity_6 == 4] <- "often"
+DataClean$lifestyle_performingArtsFreq_factor[DataRaw$activity_6 == 5] <- "very_often"
+DataClean$lifestyle_performingArtsFreq_factor <- factor(DataClean$lifestyle_performingArtsFreq_factor,
                                                    levels = c("never",
                                                               "almost_never",
                                                               "sometimes",
                                                               "often",
                                                               "very_often"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_performingArtsFreq_factor)
+table(DataClean$lifestyle_performingArtsFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_performingArtsFreq_numeric <- NA 
-data_clean$lifestyle_performingArtsFreq_numeric <- (data_raw$activity_6 - 1) / 4
-table(data_clean$lifestyle_performingArtsFreq_numeric)
+DataClean$lifestyle_performingArtsFreq_numeric <- NA 
+DataClean$lifestyle_performingArtsFreq_numeric <- (DataRaw$activity_6 - 1) / 4
+table(DataClean$lifestyle_performingArtsFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_performingArtsFreq_bin <- NA
-data_clean$lifestyle_performingArtsFreq_bin[data_raw$activity_6  == 1] <- 0
-data_clean$lifestyle_performingArtsFreq_bin[data_raw$activity_6  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_performingArtsFreq_bin)
+DataClean$lifestyle_performingArtsFreq_bin <- NA
+DataClean$lifestyle_performingArtsFreq_bin[DataRaw$activity_6  == 1] <- 0
+DataClean$lifestyle_performingArtsFreq_bin[DataRaw$activity_6  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_performingArtsFreq_bin)
 
 
 ## activity_7 ------------------------------------------------------------
 
-table(data_raw$activity_7) 
-data_clean$lifestyle_manualTaskFreq <- NA
-data_raw$activity_7 <- as.numeric(data_raw$activity_7)
-data_clean$lifestyle_manualTaskFreq[data_raw$activity_7 == 1] <- 1
-data_clean$lifestyle_manualTaskFreq[data_raw$activity_7 == 2] <- 2
-data_clean$lifestyle_manualTaskFreq[data_raw$activity_7 == 3] <- 3
-data_clean$lifestyle_manualTaskFreq[data_raw$activity_7 == 4] <- 4
-data_clean$lifestyle_manualTaskFreq[data_raw$activity_7 == 5] <- 5
-table(data_clean$lifestyle_manualTaskFreq)
+table(DataRaw$activity_7) 
+DataClean$lifestyle_manualTaskFreq <- NA
+DataRaw$activity_7 <- as.numeric(DataRaw$activity_7)
+DataClean$lifestyle_manualTaskFreq[DataRaw$activity_7 == 1] <- 1
+DataClean$lifestyle_manualTaskFreq[DataRaw$activity_7 == 2] <- 2
+DataClean$lifestyle_manualTaskFreq[DataRaw$activity_7 == 3] <- 3
+DataClean$lifestyle_manualTaskFreq[DataRaw$activity_7 == 4] <- 4
+DataClean$lifestyle_manualTaskFreq[DataRaw$activity_7 == 5] <- 5
+table(DataClean$lifestyle_manualTaskFreq)
 
 ## factor
 
-table(data_clean$lifestyle_manualTaskFreq)
-data_clean$lifestyle_manualTaskFreq_factor <- NA
-data_clean$lifestyle_manualTaskFreq_factor[data_raw$activity_7 == 1] <- "never"
-data_clean$lifestyle_manualTaskFreq_factor[data_raw$activity_7 == 2] <- "almost_never"
-data_clean$lifestyle_manualTaskFreq_factor[data_raw$activity_7 == 3] <- "sometimes"
-data_clean$lifestyle_manualTaskFreq_factor[data_raw$activity_7 == 4] <- "often"
-data_clean$lifestyle_manualTaskFreq_factor[data_raw$activity_7 == 5] <- "very_often"
-data_clean$lifestyle_manualTaskFreq_factor <- factor(data_clean$lifestyle_manualTaskFreq_factor,
+table(DataClean$lifestyle_manualTaskFreq)
+DataClean$lifestyle_manualTaskFreq_factor <- NA
+DataClean$lifestyle_manualTaskFreq_factor[DataRaw$activity_7 == 1] <- "never"
+DataClean$lifestyle_manualTaskFreq_factor[DataRaw$activity_7 == 2] <- "almost_never"
+DataClean$lifestyle_manualTaskFreq_factor[DataRaw$activity_7 == 3] <- "sometimes"
+DataClean$lifestyle_manualTaskFreq_factor[DataRaw$activity_7 == 4] <- "often"
+DataClean$lifestyle_manualTaskFreq_factor[DataRaw$activity_7 == 5] <- "very_often"
+DataClean$lifestyle_manualTaskFreq_factor <- factor(DataClean$lifestyle_manualTaskFreq_factor,
                                                            levels = c("never",
                                                                       "almost_never",
                                                                       "sometimes",
                                                                       "often",
                                                                       "very_often"),
                                                            ordered = TRUE)
-table(data_clean$lifestyle_manualTaskFreq_factor)
+table(DataClean$lifestyle_manualTaskFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_manualTaskFreq_numeric <- NA 
-data_clean$lifestyle_manualTaskFreq_numeric <- (data_raw$activity_7 - 1) / 4
-table(data_clean$lifestyle_manualTaskFreq_numeric)
+DataClean$lifestyle_manualTaskFreq_numeric <- NA 
+DataClean$lifestyle_manualTaskFreq_numeric <- (DataRaw$activity_7 - 1) / 4
+table(DataClean$lifestyle_manualTaskFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_manualTaskFreq_bin <- NA
-data_clean$lifestyle_manualTaskFreq_bin[data_raw$activity_7  == 1] <- 0
-data_clean$lifestyle_manualTaskFreq_bin[data_raw$activity_7  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_manualTaskFreq_bin)
+DataClean$lifestyle_manualTaskFreq_bin <- NA
+DataClean$lifestyle_manualTaskFreq_bin[DataRaw$activity_7  == 1] <- 0
+DataClean$lifestyle_manualTaskFreq_bin[DataRaw$activity_7  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_manualTaskFreq_bin)
 
 
 ## activity_8 ------------------------------------------------------------
 
-table(data_raw$activity_8) 
-data_clean$lifestyle_motorizedActFreq <- NA
-data_raw$activity_8 <- as.numeric(data_raw$activity_8)
-data_clean$lifestyle_motorizedActFreq[data_raw$activity_8 == 1] <- 1
-data_clean$lifestyle_motorizedActFreq[data_raw$activity_8 == 2] <- 2
-data_clean$lifestyle_motorizedActFreq[data_raw$activity_8 == 3] <- 3
-data_clean$lifestyle_motorizedActFreq[data_raw$activity_8 == 4] <- 4
-data_clean$lifestyle_motorizedActFreq[data_raw$activity_8 == 5] <- 5
-table(data_clean$lifestyle_motorizedActFreq)
+table(DataRaw$activity_8) 
+DataClean$lifestyle_motorizedActFreq <- NA
+DataRaw$activity_8 <- as.numeric(DataRaw$activity_8)
+DataClean$lifestyle_motorizedActFreq[DataRaw$activity_8 == 1] <- 1
+DataClean$lifestyle_motorizedActFreq[DataRaw$activity_8 == 2] <- 2
+DataClean$lifestyle_motorizedActFreq[DataRaw$activity_8 == 3] <- 3
+DataClean$lifestyle_motorizedActFreq[DataRaw$activity_8 == 4] <- 4
+DataClean$lifestyle_motorizedActFreq[DataRaw$activity_8 == 5] <- 5
+table(DataClean$lifestyle_motorizedActFreq)
 
 ## factor
 
-table(data_clean$lifestyle_motorizedActFreq)
-data_clean$lifestyle_motorizedActFreq_factor <- NA
-data_clean$lifestyle_motorizedActFreq_factor[data_raw$activity_8 == 1] <- "never"
-data_clean$lifestyle_motorizedActFreq_factor[data_raw$activity_8 == 2] <- "almost_never"
-data_clean$lifestyle_motorizedActFreq_factor[data_raw$activity_8 == 3] <- "sometimes"
-data_clean$lifestyle_motorizedActFreq_factor[data_raw$activity_8 == 4] <- "often"
-data_clean$lifestyle_motorizedActFreq_factor[data_raw$activity_8 == 5] <- "very_often"
-data_clean$lifestyle_motorizedActFreq_factor <- factor(data_clean$lifestyle_motorizedActFreq_factor,
+table(DataClean$lifestyle_motorizedActFreq)
+DataClean$lifestyle_motorizedActFreq_factor <- NA
+DataClean$lifestyle_motorizedActFreq_factor[DataRaw$activity_8 == 1] <- "never"
+DataClean$lifestyle_motorizedActFreq_factor[DataRaw$activity_8 == 2] <- "almost_never"
+DataClean$lifestyle_motorizedActFreq_factor[DataRaw$activity_8 == 3] <- "sometimes"
+DataClean$lifestyle_motorizedActFreq_factor[DataRaw$activity_8 == 4] <- "often"
+DataClean$lifestyle_motorizedActFreq_factor[DataRaw$activity_8 == 5] <- "very_often"
+DataClean$lifestyle_motorizedActFreq_factor <- factor(DataClean$lifestyle_motorizedActFreq_factor,
                                                        levels = c("never",
                                                                   "almost_never",
                                                                   "sometimes",
                                                                   "often",
                                                                   "very_often"),
                                                        ordered = TRUE)
-table(data_clean$lifestyle_motorizedActFreq_factor)
+table(DataClean$lifestyle_motorizedActFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_motorizedActFreq_numeric <- NA 
-data_clean$lifestyle_motorizedActFreq_numeric <- (data_raw$activity_8 - 1) / 4
-table(data_clean$lifestyle_motorizedActFreq_numeric)
+DataClean$lifestyle_motorizedActFreq_numeric <- NA 
+DataClean$lifestyle_motorizedActFreq_numeric <- (DataRaw$activity_8 - 1) / 4
+table(DataClean$lifestyle_motorizedActFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_motorizedActFreq_bin <- NA
-data_clean$lifestyle_motorizedActFreq_bin[data_raw$activity_8  == 1] <- 0
-data_clean$lifestyle_motorizedActFreq_bin[data_raw$activity_8  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_motorizedActFreq_bin)
+DataClean$lifestyle_motorizedActFreq_bin <- NA
+DataClean$lifestyle_motorizedActFreq_bin[DataRaw$activity_8  == 1] <- 0
+DataClean$lifestyle_motorizedActFreq_bin[DataRaw$activity_8  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_motorizedActFreq_bin)
 
 
 ## activity_9 ------------------------------------------------------------
 
-table(data_raw$activity_9) 
-data_clean$lifestyle_unmotorizedActFreq <- NA
-data_raw$activity_9 <- as.numeric(data_raw$activity_9)
-data_clean$lifestyle_unmotorized_activities_freq[data_raw$activity_9 == 2] <- 2
-data_clean$lifestyle_unmotorizedActFreq[data_raw$activity_9 == 1] <- 1
-data_clean$lifestyle_unmotorizedActFreq[data_raw$activity_9 == 3] <- 3
-data_clean$lifestyle_unmotorizedActFreq[data_raw$activity_9 == 4] <- 4
-data_clean$lifestyle_unmotorizedActFreq[data_raw$activity_9 == 5] <- 5
-table(data_clean$lifestyle_unmotorizedActFreq)
+table(DataRaw$activity_9) 
+DataClean$lifestyle_unmotorizedActFreq <- NA
+DataRaw$activity_9 <- as.numeric(DataRaw$activity_9)
+DataClean$lifestyle_unmotorizedActFreq[DataRaw$activity_9 == 2] <- 2
+DataClean$lifestyle_unmotorizedActFreq[DataRaw$activity_9 == 1] <- 1
+DataClean$lifestyle_unmotorizedActFreq[DataRaw$activity_9 == 3] <- 3
+DataClean$lifestyle_unmotorizedActFreq[DataRaw$activity_9 == 4] <- 4
+DataClean$lifestyle_unmotorizedActFreq[DataRaw$activity_9 == 5] <- 5
+table(DataClean$lifestyle_unmotorizedActFreq)
 
 ## factor
 
-table(data_clean$lifestyle_unmotorizedActFreq)
-data_clean$lifestyle_unmotorizedActFreq_factor <- NA
-data_clean$lifestyle_unmotorizedActFreq_factor[data_raw$activity_9 == 1] <- "never"
-data_clean$lifestyle_unmotorizedActFreq_factor[data_raw$activity_9 == 2] <- "almost_never"
-data_clean$lifestyle_unmotorizedActFreq_factor[data_raw$activity_9 == 3] <- "sometimes"
-data_clean$lifestyle_unmotorizedActFreq_factor[data_raw$activity_9 == 4] <- "often"
-data_clean$lifestyle_unmotorizedActFreq_factor[data_raw$activity_9 == 5] <- "very_often"
-data_clean$lifestyle_unmotorizedActFreq_factor <- factor(data_clean$lifestyle_unmotorizedActFreq_factor,
+table(DataClean$lifestyle_unmotorizedActFreq)
+DataClean$lifestyle_unmotorizedActFreq_factor <- NA
+DataClean$lifestyle_unmotorizedActFreq_factor[DataRaw$activity_9 == 1] <- "never"
+DataClean$lifestyle_unmotorizedActFreq_factor[DataRaw$activity_9 == 2] <- "almost_never"
+DataClean$lifestyle_unmotorizedActFreq_factor[DataRaw$activity_9 == 3] <- "sometimes"
+DataClean$lifestyle_unmotorizedActFreq_factor[DataRaw$activity_9 == 4] <- "often"
+DataClean$lifestyle_unmotorizedActFreq_factor[DataRaw$activity_9 == 5] <- "very_often"
+DataClean$lifestyle_unmotorizedActFreq_factor <- factor(DataClean$lifestyle_unmotorizedActFreq_factor,
                                                                 levels = c("never",
                                                                            "almost_never",
                                                                            "sometimes",
                                                                            "often",
                                                                            "very_often"),
                                                                 ordered = TRUE)
-table(data_clean$lifestyle_unmotorizedActFreq_factor)
+table(DataClean$lifestyle_unmotorizedActFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_unmotorizedActFreq_numeric <- NA 
-data_clean$lifestyle_unmotorizedActFreq_numeric <- (data_raw$activity_9 - 1) / 4
-table(data_clean$lifestyle_unmotorizedActFreq_numeric)
+DataClean$lifestyle_unmotorizedActFreq_numeric <- NA 
+DataClean$lifestyle_unmotorizedActFreq_numeric <- (DataRaw$activity_9 - 1) / 4
+table(DataClean$lifestyle_unmotorizedActFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_unmotorizedActFreq_bin <- NA
-data_clean$lifestyle_unmotorizedActFreq_bin[data_raw$activity_9  == 1] <- 0
-data_clean$lifestyle_unmotorizedActFreq_bin[data_raw$activity_9  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_unmotorizedActFreq_bin)
+DataClean$lifestyle_unmotorizedActFreq_bin <- NA
+DataClean$lifestyle_unmotorizedActFreq_bin[DataRaw$activity_9  == 1] <- 0
+DataClean$lifestyle_unmotorizedActFreq_bin[DataRaw$activity_9  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_unmotorizedActFreq_bin)
 
 
 ## activity_10 -----------------------------------------------------------
 
-table(data_raw$activity_10) 
-data_clean$lifestyle_volunteeringFreq <- NA
-data_raw$activity_10 <- as.numeric(data_raw$activity_10)
-data_clean$lifestyle_volunteeringFreq[data_raw$activity_10 == 1] <- 1
-data_clean$lifestyle_volunteeringFreq[data_raw$activity_10 == 2] <- 2
-data_clean$lifestyle_volunteeringFreq[data_raw$activity_10 == 3] <- 3
-data_clean$lifestyle_volunteeringFreq[data_raw$activity_10 == 4] <- 4
-data_clean$lifestyle_volunteeringFreq[data_raw$activity_10 == 5] <- 5
-table(data_clean$lifestyle_volunteeringFreq)
+table(DataRaw$activity_10) 
+DataClean$lifestyle_volunteeringFreq <- NA
+DataRaw$activity_10 <- as.numeric(DataRaw$activity_10)
+DataClean$lifestyle_volunteeringFreq[DataRaw$activity_10 == 1] <- 1
+DataClean$lifestyle_volunteeringFreq[DataRaw$activity_10 == 2] <- 2
+DataClean$lifestyle_volunteeringFreq[DataRaw$activity_10 == 3] <- 3
+DataClean$lifestyle_volunteeringFreq[DataRaw$activity_10 == 4] <- 4
+DataClean$lifestyle_volunteeringFreq[DataRaw$activity_10 == 5] <- 5
+table(DataClean$lifestyle_volunteeringFreq)
 
 ## factor
 
-table(data_clean$lifestyle_volunteeringFreq)
-data_clean$lifestyle_volunteeringFreq_factor <- NA
-data_clean$lifestyle_volunteeringFreq_factor[data_raw$activity_10 == 1] <- "never"
-data_clean$lifestyle_volunteeringFreq_factor[data_raw$activity_10 == 2] <- "almost_never"
-data_clean$lifestyle_volunteeringFreq_factor[data_raw$activity_10 == 3] <- "sometimes"
-data_clean$lifestyle_volunteeringFreq_factor[data_raw$activity_10 == 4] <- "often"
-data_clean$lifestyle_volunteeringFreq_factor[data_raw$activity_10 == 5] <- "very_often"
-data_clean$lifestyle_volunteeringFreq_factor <- factor(data_clean$lifestyle_volunteeringFreq_factor,
+table(DataClean$lifestyle_volunteeringFreq)
+DataClean$lifestyle_volunteeringFreq_factor <- NA
+DataClean$lifestyle_volunteeringFreq_factor[DataRaw$activity_10 == 1] <- "never"
+DataClean$lifestyle_volunteeringFreq_factor[DataRaw$activity_10 == 2] <- "almost_never"
+DataClean$lifestyle_volunteeringFreq_factor[DataRaw$activity_10 == 3] <- "sometimes"
+DataClean$lifestyle_volunteeringFreq_factor[DataRaw$activity_10 == 4] <- "often"
+DataClean$lifestyle_volunteeringFreq_factor[DataRaw$activity_10 == 5] <- "very_often"
+DataClean$lifestyle_volunteeringFreq_factor <- factor(DataClean$lifestyle_volunteeringFreq_factor,
                                                                   levels = c("never",
                                                                              "almost_never",
                                                                              "sometimes",
                                                                              "often",
                                                                              "very_often"),
                                                                   ordered = TRUE)
-table(data_clean$lifestyle_volunteeringFreq_factor)
+table(DataClean$lifestyle_volunteeringFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_volunteeringFreq_numeric <- NA 
-data_clean$lifestyle_volunteeringFreq_numeric <- (data_raw$activity_10 - 1) / 4
-table(data_clean$lifestyle_volunteeringFreq_numeric)
+DataClean$lifestyle_volunteeringFreq_numeric <- NA 
+DataClean$lifestyle_volunteeringFreq_numeric <- (DataRaw$activity_10 - 1) / 4
+table(DataClean$lifestyle_volunteeringFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_volunteeringFreq_bin <- NA
-data_clean$lifestyle_volunteeringFreq_bin[data_raw$activity_10  == 1] <- 0
-data_clean$lifestyle_volunteeringFreq_bin[data_raw$activity_10  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_volunteeringFreq_bin)
+DataClean$lifestyle_volunteeringFreq_bin <- NA
+DataClean$lifestyle_volunteeringFreq_bin[DataRaw$activity_10  == 1] <- 0
+DataClean$lifestyle_volunteeringFreq_bin[DataRaw$activity_10  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_volunteeringFreq_bin)
 
 
 ## activity_11 -----------------------------------------------------------
 
-table(data_raw$activity_11) 
-data_clean$lifestyle_makeArtFreq <- NA
-data_raw$activity_11 <- as.numeric(data_raw$activity_11)
-data_clean$lifestyle_makeArtFreq[data_raw$activity_11 == 1] <- 1
-data_clean$lifestyle_makeArtFreq[data_raw$activity_11 == 2] <- 2
-data_clean$lifestyle_makeArtFreq[data_raw$activity_11 == 3] <- 3
-data_clean$lifestyle_makeArtFreq[data_raw$activity_11 == 4] <- 4
-data_clean$lifestyle_makeArtFreq[data_raw$activity_11 == 5] <- 5
-table(data_clean$lifestyle_makeArtFreq)
+table(DataRaw$activity_11) 
+DataClean$lifestyle_makeArtFreq <- NA
+DataRaw$activity_11 <- as.numeric(DataRaw$activity_11)
+DataClean$lifestyle_makeArtFreq[DataRaw$activity_11 == 1] <- 1
+DataClean$lifestyle_makeArtFreq[DataRaw$activity_11 == 2] <- 2
+DataClean$lifestyle_makeArtFreq[DataRaw$activity_11 == 3] <- 3
+DataClean$lifestyle_makeArtFreq[DataRaw$activity_11 == 4] <- 4
+DataClean$lifestyle_makeArtFreq[DataRaw$activity_11 == 5] <- 5
+table(DataClean$lifestyle_makeArtFreq)
 
 ## factor
 
-table(data_clean$lifestyle_makeArtFreq)
-data_clean$lifestyle_makeArtFreq_factor <- NA
-data_clean$lifestyle_makeArtFreq_factor[data_raw$activity_11 == 1] <- "never"
-data_clean$lifestyle_makeArtFreq_factor[data_raw$activity_11 == 2] <- "almost_never"
-data_clean$lifestyle_makeArtFreq_factor[data_raw$activity_11 == 3] <- "sometimes"
-data_clean$lifestyle_makeArtFreq_factor[data_raw$activity_11 == 4] <- "often"
-data_clean$lifestyle_makeArtFreq_factor[data_raw$activity_11 == 5] <- "very_often"
-data_clean$lifestyle_makeArtFreq_factor <- factor(data_clean$lifestyle_makeArtFreq_factor,
+table(DataClean$lifestyle_makeArtFreq)
+DataClean$lifestyle_makeArtFreq_factor <- NA
+DataClean$lifestyle_makeArtFreq_factor[DataRaw$activity_11 == 1] <- "never"
+DataClean$lifestyle_makeArtFreq_factor[DataRaw$activity_11 == 2] <- "almost_never"
+DataClean$lifestyle_makeArtFreq_factor[DataRaw$activity_11 == 3] <- "sometimes"
+DataClean$lifestyle_makeArtFreq_factor[DataRaw$activity_11 == 4] <- "often"
+DataClean$lifestyle_makeArtFreq_factor[DataRaw$activity_11 == 5] <- "very_often"
+DataClean$lifestyle_makeArtFreq_factor <- factor(DataClean$lifestyle_makeArtFreq_factor,
                                                         levels = c("never",
                                                                    "almost_never",
                                                                    "sometimes",
                                                                    "often",
                                                                    "very_often"),
                                                         ordered = TRUE)
-table(data_clean$lifestyle_makeArtFreq_factor)
+table(DataClean$lifestyle_makeArtFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_makeArtFreq_numeric <- NA 
-data_clean$lifestyle_makeArtFreq_numeric <- (data_raw$activity_11 - 1) / 4
-table(data_clean$lifestyle_makeArtFreq_numeric)
+DataClean$lifestyle_makeArtFreq_numeric <- NA 
+DataClean$lifestyle_makeArtFreq_numeric <- (DataRaw$activity_11 - 1) / 4
+table(DataClean$lifestyle_makeArtFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_makeArtFreq_bin <- NA
-data_clean$lifestyle_makeArtFreq_bin[data_raw$activity_11  == 1] <- 0
-data_clean$lifestyle_makeArtFreq_bin[data_raw$activity_11  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$llifestyle_makeArtFreq_bin)
+DataClean$lifestyle_makeArtFreq_bin <- NA
+DataClean$lifestyle_makeArtFreq_bin[DataRaw$activity_11  == 1] <- 0
+DataClean$lifestyle_makeArtFreq_bin[DataRaw$activity_11  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_makeArtFreq_bin)
 
 
 ## activity_12 -----------------------------------------------------------
 
-table(data_raw$activity_12) 
-data_clean$lifestyle_travelFreq <- NA
-data_raw$activity_12 <- as.numeric(data_raw$activity_12)
-data_clean$lifestyle_travelFreq[data_raw$activity_12 == 1] <- 1
-data_clean$lifestyle_travelFreq[data_raw$activity_12 == 2] <- 2
-data_clean$lifestyle_travelFreq[data_raw$activity_12 == 3] <- 3
-data_clean$lifestyle_travelFreq[data_raw$activity_12 == 4] <- 4
-data_clean$lifestyle_travelFreq[data_raw$activity_12 == 5] <- 5
-table(data_clean$lifestyle_travelFreq)
+table(DataRaw$activity_12) 
+DataClean$lifestyle_travelFreq <- NA
+DataRaw$activity_12 <- as.numeric(DataRaw$activity_12)
+DataClean$lifestyle_travelFreq[DataRaw$activity_12 == 1] <- 1
+DataClean$lifestyle_travelFreq[DataRaw$activity_12 == 2] <- 2
+DataClean$lifestyle_travelFreq[DataRaw$activity_12 == 3] <- 3
+DataClean$lifestyle_travelFreq[DataRaw$activity_12 == 4] <- 4
+DataClean$lifestyle_travelFreq[DataRaw$activity_12 == 5] <- 5
+table(DataClean$lifestyle_travelFreq)
 
 ## factor
 
-table(data_clean$lifestyle_travelFreq)
-data_clean$lifestyle_travelFreq_factor <- NA
-data_clean$lifestyle_travelFreq_factor[data_raw$activity_12 == 1] <- "never"
-data_clean$lifestyle_travelFreq_factor[data_raw$activity_12 == 2] <- "almost_never"
-data_clean$lifestyle_travelFreq_factor[data_raw$activity_12 == 3] <- "sometimes"
-data_clean$lifestyle_travelFreq_factor[data_raw$activity_12 == 4] <- "often"
-data_clean$lifestyle_travelFreq_factor[data_raw$activity_12 == 5] <- "very_often"
-data_clean$lifestyle_travelFreq_factor <- factor(data_clean$lifestyle_travelFreq_factor,
+table(DataClean$lifestyle_travelFreq)
+DataClean$lifestyle_travelFreq_factor <- NA
+DataClean$lifestyle_travelFreq_factor[DataRaw$activity_12 == 1] <- "never"
+DataClean$lifestyle_travelFreq_factor[DataRaw$activity_12 == 2] <- "almost_never"
+DataClean$lifestyle_travelFreq_factor[DataRaw$activity_12 == 3] <- "sometimes"
+DataClean$lifestyle_travelFreq_factor[DataRaw$activity_12 == 4] <- "often"
+DataClean$lifestyle_travelFreq_factor[DataRaw$activity_12 == 5] <- "very_often"
+DataClean$lifestyle_travelFreq_factor <- factor(DataClean$lifestyle_travelFreq_factor,
                                                           levels = c("never",
                                                                      "almost_never",
                                                                      "sometimes",
                                                                      "often",
                                                                      "very_often"),
                                                           ordered = TRUE)
-table(data_clean$lifestyle_travelFreq_factor)
+table(DataClean$lifestyle_travelFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_travelFreq_numeric <- NA 
-data_clean$lifestyle_travelFreq_numeric <- (data_raw$activity_12 - 1) / 4
-table(data_clean$lifestyle_travelFreq_numeric)
+DataClean$lifestyle_travelFreq_numeric <- NA 
+DataClean$lifestyle_travelFreq_numeric <- (DataRaw$activity_12 - 1) / 4
+table(DataClean$lifestyle_travelFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_travelFreq_bin <- NA
-data_clean$lifestyle_travelFreq_bin[data_raw$activity_12  == 1] <- 0
-data_clean$lifestyle_travelFreq_bin[data_raw$activity_12  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_travelFreq_bin)
+DataClean$lifestyle_travelFreq_bin <- NA
+DataClean$lifestyle_travelFreq_bin[DataRaw$activity_12  == 1] <- 0
+DataClean$lifestyle_travelFreq_bin[DataRaw$activity_12  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_travelFreq_bin)
 
 
 ## activity_13 -----------------------------------------------------------
 
-table(data_raw$activity_13) 
-data_clean$lifestyle_gamingFreq <- NA
-data_raw$activity_13 <- as.numeric(data_raw$activity_13)
-data_clean$lifestyle_gamingFreq[data_raw$activity_13 == 1] <- 1
-data_clean$lifestyle_gamingFreq[data_raw$activity_13 == 2] <- 2
-data_clean$lifestyle_gamingFreq[data_raw$activity_13 == 3] <- 3
-data_clean$lifestyle_gamingFreq[data_raw$activity_13 == 4] <- 4
-data_clean$lifestyle_gamingFreq[data_raw$activity_13 == 5] <- 5
-table(data_clean$lifestyle_gamingFreq)
+table(DataRaw$activity_13) 
+DataClean$lifestyle_gamingFreq <- NA
+DataRaw$activity_13 <- as.numeric(DataRaw$activity_13)
+DataClean$lifestyle_gamingFreq[DataRaw$activity_13 == 1] <- 1
+DataClean$lifestyle_gamingFreq[DataRaw$activity_13 == 2] <- 2
+DataClean$lifestyle_gamingFreq[DataRaw$activity_13 == 3] <- 3
+DataClean$lifestyle_gamingFreq[DataRaw$activity_13 == 4] <- 4
+DataClean$lifestyle_gamingFreq[DataRaw$activity_13 == 5] <- 5
+table(DataClean$lifestyle_gamingFreq)
 
 ## factor
 
-table(data_clean$lifestyle_gamingFreq)
-data_clean$lifestyle_gamingFreq_factor <- NA
-data_clean$lifestyle_gamingFreq_factor[data_raw$activity_13 == 1] <- "never"
-data_clean$lifestyle_gamingFreq_factor[data_raw$activity_13 == 2] <- "almost_never"
-data_clean$lifestyle_gamingFreq_factor[data_raw$activity_13 == 3] <- "sometimes"
-data_clean$lifestyle_gamingFreq_factor[data_raw$activity_13 == 4] <- "often"
-data_clean$lifestyle_gamingFreq_factor[data_raw$activity_13 == 5] <- "very_often"
-data_clean$lifestyle_gamingFreq_factor <- factor(data_clean$lifestyle_gamingFreq_factor,
+table(DataClean$lifestyle_gamingFreq)
+DataClean$lifestyle_gamingFreq_factor <- NA
+DataClean$lifestyle_gamingFreq_factor[DataRaw$activity_13 == 1] <- "never"
+DataClean$lifestyle_gamingFreq_factor[DataRaw$activity_13 == 2] <- "almost_never"
+DataClean$lifestyle_gamingFreq_factor[DataRaw$activity_13 == 3] <- "sometimes"
+DataClean$lifestyle_gamingFreq_factor[DataRaw$activity_13 == 4] <- "often"
+DataClean$lifestyle_gamingFreq_factor[DataRaw$activity_13 == 5] <- "very_often"
+DataClean$lifestyle_gamingFreq_factor <- factor(DataClean$lifestyle_gamingFreq_factor,
                                                      levels = c("never",
                                                                 "almost_never",
                                                                 "sometimes",
                                                                 "often",
                                                                 "very_often"),
                                                      ordered = TRUE)
-table(data_clean$lifestyle_gamingFreq_factor)
+table(DataClean$lifestyle_gamingFreq_factor)
 
 ## numeric
 
-data_clean$lifestyle_gamingFreq_numeric <- NA 
-data_clean$lifestyle_gamingFreq_numeric <- (data_raw$activity_13 - 1) / 4
-table(data_clean$lifestyle_gamingFreq_numeric)
+DataClean$lifestyle_gamingFreq_numeric <- NA 
+DataClean$lifestyle_gamingFreq_numeric <- (DataRaw$activity_13 - 1) / 4
+table(DataClean$lifestyle_gamingFreq_numeric)
 
 ## bin
 
-data_clean$lifestyle_gamingFreq_bin <- NA
-data_clean$lifestyle_gamingFreq_bin[data_raw$activity_13  == 1] <- 0
-data_clean$lifestyle_gamingFreq_bin[data_raw$activity_13  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$llifestyle_gamingFreq_bin)
+DataClean$lifestyle_gamingFreq_bin <- NA
+DataClean$lifestyle_gamingFreq_bin[DataRaw$activity_13  == 1] <- 0
+DataClean$lifestyle_gamingFreq_bin[DataRaw$activity_13  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_gamingFreq_bin)
 
 
 ## type_transport --------------------------------------------------------
 
-attributes(data_raw$type_transport)
-table(data_raw$type_transport) 
-data_clean$lifestyle_transport_clean <- NA
-data_raw$type_transport <- as.numeric(data_raw$type_transport)
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 1] <- "car"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 2] <- "car"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 3] <- "car"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 4] <- "active_transport"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 5] <- "active_transport"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 6] <- "shared_transport"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 7] <- "shared_transport"
-data_clean$lifestyle_transport_clean[data_raw$type_transport == 8] <- "shared_transport"
-table(data_clean$lifestyle_transport_clean)
+attributes(DataRaw$type_transport)
+table(DataRaw$type_transport) 
+DataClean$lifestyle_typeTransport <- NA
+DataRaw$type_transport <- as.numeric(DataRaw$type_transport)
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 1] <- "car"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 2] <- "car"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 3] <- "car"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 4] <- "active_transport"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 5] <- "active_transport"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 6] <- "shared_transport"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 7] <- "shared_transport"
+DataClean$lifestyle_typeTransport[DataRaw$type_transport == 8] <- "shared_transport"
+table(DataClean$lifestyle_typeTransport)
 
 ## factor
 
@@ -616,13 +616,13 @@ table(data_clean$lifestyle_transport_clean)
 
 ## choice_transport ------------------------------------------------------
 
-attributes(data_raw$choice_transport)
-table(data_raw$choice_transport) 
-data_clean$lifestyle_choice_transport_clean <- NA
-data_raw$choice_transport <- as.numeric(data_raw$choice_transport)
-data_clean$lifestyle_choice_transport_clean[data_raw$choice_transport == 1] <- "part_of_who_i_am"
-data_clean$lifestyle_choice_transport_clean[data_raw$choice_transport == 2] <- "point_a_to_point_b"
-table(data_clean$lifestyle_choice_transport_clean)
+attributes(DataRaw$choice_transport)
+table(DataRaw$choice_transport) 
+DataClean$lifestyle_choiceTransport <- NA
+DataRaw$choice_transport <- as.numeric(DataRaw$choice_transport)
+DataClean$lifestyle_choiceTransport[DataRaw$choice_transport == 1] <- "part_of_who_i_am"
+DataClean$lifestyle_choiceTransport[DataRaw$choice_transport == 2] <- "point_a_to_point_b"
+table(DataClean$lifestyle_choiceTransport)
 
 ## factor
 
@@ -634,28 +634,29 @@ table(data_clean$lifestyle_choice_transport_clean)
 
 ## bin
 
-data_clean$lifestyle_identity_bin <- NA
-data_clean$lifestyle_identity_bin[data_raw$choice_transport  == 1] <- 0
-data_clean$lifestyle_identity_bin[data_raw$choice_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_identity_bin)
+DataClean$lifestyle_transportIdentity_bin <- NA
+DataClean$lifestyle_transportIdentity_bin[DataRaw$choice_transport  == 1] <- 0
+DataClean$lifestyle_transportIdentity_bin[DataRaw$choice_transport  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_transportIdentity_bin)
 
-data_clean$lifestyle_efficiency_bin <- NA
-data_clean$lifestyle_efficiency_bin[data_raw$choice_transport  == 1] <- 0
-data_clean$lifestyle_efficiency_bin[data_raw$choice_transport  %in% c(2, 3, 4, 5)] <- 1
-table(data_clean$lifestyle_efficiency_bin)
+DataClean$lifestyle_transportEfficiency_bin <- NA
+DataClean$lifestyle_transportEfficiency_bin[DataRaw$choice_transport  == 1] <- 0
+DataClean$lifestyle_transportEfficiency_bin[DataRaw$choice_transport  %in% c(2, 3, 4, 5)] <- 1
+table(DataClean$lifestyle_transportEfficiency_bin)
 
 ## field_occupation ------------------------------------------------------
 
-table(data_raw$field_occupation)
-data_clean$lifestyle_work_field <- NA
-data_clean$lifestyle_work_field[data_raw$field_occupation == 1 | data_raw$field_occupation == 2 | data_raw$field_occupation == 7 | data_raw$field_occupation == 8] <- "economics"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 3] <- "natural_sciences"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 4] <- "health"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 5] <- "education_law_politics"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 6] <- "culture_sports"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 9] <- "agriculture"
-data_clean$lifestyle_work_field[data_raw$field_occupation == 10] <- "manufacturing"
-data_clean$lifestyle_work_field <- factor(data_clean$lifestyle_work_field,
+attributes(DataRaw$field_occupation)
+table(DataRaw$field_occupation)
+DataClean$lifestyle_workField <- NA
+DataClean$lifestyle_workField[DataRaw$field_occupation == 1 | DataRaw$field_occupation == 2 | DataRaw$field_occupation == 7 | DataRaw$field_occupation == 8] <- "economics"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 3] <- "natural_sciences"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 4] <- "health"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 5] <- "education_law_politics"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 6] <- "culture_sports"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 9] <- "agriculture"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 10] <- "manufacturing"
+DataClean$lifestyle_workField <- factor(DataClean$lifestyle_workField,
                                                    levels = c("economics",
                                                               "natural_sciences",
                                                               "health",
@@ -664,21 +665,21 @@ data_clean$lifestyle_work_field <- factor(data_clean$lifestyle_work_field,
                                                               "agriculture",
                                                               "manufacturing"),
                                                    ordered = TRUE)
-table(data_clean$lifestyle_work_field)
+table(DataClean$lifestyle_workField)
 
 ## type_occupation -------------------------------------------------------
 
-attributes(data_raw$type_occupation)
-table(data_raw$type_occupation)
-data_clean$lifestyle_type_occ <- NA
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 1] <- "labour_job"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 2] <- "intermediate_job"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 3] <- "technical_job"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 4] <- "professional_job"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 5] <- "management_job"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 6] <- "other"
-data_clean$lifestyle_type_occ[data_raw$type_occupation == 7] <- "no_job"
-data_clean$lifestyle_type_occ <- factor(data_clean$lifestyle_type_occ,
+attributes(DataRaw$type_occupation)
+table(DataRaw$type_occupation)
+DataClean$lifestyle_workType <- NA
+DataClean$lifestyle_workType[DataRaw$type_occupation == 1] <- "labour_job"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 2] <- "intermediate_job"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 3] <- "technical_job"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 4] <- "professional_job"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 5] <- "management_job"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 6] <- "other"
+DataClean$lifestyle_workType[DataRaw$type_occupation == 7] <- "no_job"
+DataClean$lifestyle_workType <- factor(DataClean$lifestyle_workType,
                                          levels = c("labour_job",
                                                     "intermediate_job",
                                                     "technical_job",
@@ -687,159 +688,159 @@ data_clean$lifestyle_type_occ <- factor(data_clean$lifestyle_type_occ,
                                                     "other",
                                                     "no_job"),
                                          ordered = TRUE)
-table(data_clean$lifestyle_type_occ)
+table(DataClean$lifestyle_workType)
 
 ## clothes_consumption ---------------------------------------------------
 
-attributes(data_raw$clothes_consumption)
-table(data_raw$clothes_consumption)
-data_clean$lifestyle_clothes_cons <- NA
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 1 | data_raw$clothes_consumption == 3 | data_raw$clothes_consumption == 4] <- "large_retailers"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 2 | data_raw$clothes_consumption == 6] <- "small_local_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 5] <- "online_store"
-data_clean$lifestyle_clothes_cons[data_raw$clothes_consumption == 7] <- "other"
-data_clean$lifestyle_clothes_cons <- factor(data_clean$lifestyle_clothes_cons,
+attributes(DataRaw$clothes_consumption)
+table(DataRaw$clothes_consumption)
+DataClean$lifestyle_consClothes <- NA
+DataClean$lifestyle_consClothes[DataRaw$clothes_consumption == 1 | DataRaw$clothes_consumption == 3 | DataRaw$clothes_consumption == 4] <- "large_retailers"
+DataClean$lifestyle_consClothes[DataRaw$clothes_consumption == 2 | DataRaw$clothes_consumption == 6] <- "small_local_store"
+DataClean$lifestyle_consClothes[DataRaw$clothes_consumption == 5] <- "online_store"
+DataClean$lifestyle_consClothes[DataRaw$clothes_consumption == 7] <- "other"
+DataClean$lifestyle_consClothes <- factor(DataClean$lifestyle_consClothes,
                                          levels = c("large_retailers",
                                                     "small_local_store",
                                                     "online_store",
                                                     "other"),
                                          ordered = TRUE)
-table(data_clean$lifestyle_clothes_cons)
+table(DataClean$lifestyle_consClothes)
 
 ## mode_attitude_1 ---------------------------------------------------------
 
-attributes(data_raw$mode_attitude_1)
-table(data_raw$mode_attitude_1)
-data_clean$lifestyle_mode_awareness <- NA
-data_clean$lifestyle_mode_awareness <- data_raw$mode_attitude_1 / 10
-table(data_clean$lifestyle_mode_awareness)
+attributes(DataRaw$mode_attitude_1)
+table(DataRaw$mode_attitude_1)
+DataClean$lifestyle_followFashion <- NA
+DataClean$lifestyle_followFashion <- DataRaw$mode_attitude_1 / 10
+table(DataClean$lifestyle_followFashion)
 
 
 ## meat_consumption ------------------------------------------------------
 
-attributes(data_raw$meat_consumption)
-table(data_raw$meat_consumption)
-data_clean$lifestyle_meat_cons <- NA
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 1] <- 0
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 2] <- 0.17
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 3] <- 0.33
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 4] <- 0.5
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 5] <- 0.67
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 6] <- 0.83
-data_clean$lifestyle_meat_cons[data_raw$meat_consumption == 7] <- 1
-table(data_clean$lifestyle_meat_cons)
+attributes(DataRaw$meat_consumption)
+table(DataRaw$meat_consumption)
+DataClean$lifestyle_eatMeatFreq <- NA
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 1] <- 0
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 2] <- 0.17
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 3] <- 0.33
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 4] <- 0.5
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 5] <- 0.67
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 6] <- 0.83
+DataClean$lifestyle_eatMeatFreq[DataRaw$meat_consumption == 7] <- 1
+table(DataClean$lifestyle_eatMeatFreq)
 
 ## meal_time -------------------------------------------------------------
 
 ## Sais pas trop comment cleaner ça ##
 ## On va devoir attendre les vrais répondants pour pouvoir le cleaner ##
-attributes(data_raw$meal_time_6)
-table(data_raw$meal_time_6)
+attributes(DataRaw$meal_time_6)
+table(DataRaw$meal_time_6)
 
 ## fridge_1 ----------------------------------------------------------------
 
-attributes(data_raw$fridge_1)
-table(data_raw$fridge_1)
-data_clean$lifestyle_fridge_vegetal_milk <- NA
-data_clean$lifestyle_fridge_vegetal_milk[data_raw$fridge_1 == 1] <- 1
-data_clean$lifestyle_fridge_vegetal_milk[data_raw$fridge_1 == 2] <- 0
-table(data_clean$lifestyle_fridge_vegetal_milk)
+attributes(DataRaw$fridge_1)
+table(DataRaw$fridge_1)
+DataClean$lifestyle_fridgeVegetalMilk <- NA
+DataClean$lifestyle_fridgeVegetalMilk[DataRaw$fridge_1 == 1] <- 1
+DataClean$lifestyle_fridgeVegetalMilk[DataRaw$fridge_1 == 2] <- 0
+table(DataClean$lifestyle_fridgeVegetalMilk)
 
 ### fridge_2 -------------------------------------------------------------
 
-attributes(data_raw$fridge_2)
-table(data_raw$fridge_2)
-data_clean$lifestyle_fridge_tofu_tempeh <- NA
-data_clean$lifestyle_fridge_tofu_tempeh[data_raw$fridge_2 == 1] <- 1
-data_clean$lifestyle_fridge_tofu_tempeh[data_raw$fridge_2 == 2] <- 0
-table(data_clean$lifestyle_fridge_tofu_tempeh)
+attributes(DataRaw$fridge_2)
+table(DataRaw$fridge_2)
+DataClean$lifestyle_fridgeTofuTempeh <- NA
+DataClean$lifestyle_fridgeTofuTempeh[DataRaw$fridge_2 == 1] <- 1
+DataClean$lifestyle_fridgeTofuTempeh[DataRaw$fridge_2 == 2] <- 0
+table(DataClean$lifestyle_fridgeTofuTempeh)
 
 ### fridge_3 -------------------------------------------------------------
 
-table(data_raw$fridge_3)
-data_clean$lifestyle_fridge_enerdrink <- NA
-data_clean$lifestyle_fridge_enerdrink[data_raw$fridge_3 == 1] <- 1
-data_clean$lifestyle_fridge_enerdrink[data_raw$fridge_3 == 2] <- 0
-table(data_clean$lifestyle_fridge_enerdrink)
+table(DataRaw$fridge_3)
+DataClean$lifestyle_fridgeEnergyDrink <- NA
+DataClean$lifestyle_fridgeEnergyDrink[DataRaw$fridge_3 == 1] <- 1
+DataClean$lifestyle_fridgeEnergyDrink[DataRaw$fridge_3 == 2] <- 0
+table(DataClean$lifestyle_fridgeEnergyDrink)
 
 ### fridge_4 -------------------------------------------------------------
 
-table(data_raw$fridge_4)
-data_clean$lifestyle_fridge_pizza <- NA
-data_clean$lifestyle_fridge_pizza[data_raw$fridge_4 == 1] <- 1
-data_clean$lifestyle_fridge_pizza[data_raw$fridge_4 == 2] <- 0
-table(data_clean$lifestyle_fridge_pizza)
+table(DataRaw$fridge_4)
+DataClean$lifestyle_fridgePizza <- NA
+DataClean$lifestyle_fridgePizza[DataRaw$fridge_4 == 1] <- 1
+DataClean$lifestyle_fridgePizza[DataRaw$fridge_4 == 2] <- 0
+table(DataClean$lifestyle_fridgePizza)
 
 ### fridge_5 -------------------------------------------------------------
 
-attributes(data_raw$fridge_5)
-table(data_raw$fridge_5)
-data_clean$lifestyle_fridge_butter_tarts <- NA
-data_clean$lifestyle_fridge_butter_tarts[data_raw$fridge_5 == 1] <- 1
-data_clean$lifestyle_fridge_butter_tarts[data_raw$fridge_5 == 2] <- 0
-table(data_clean$lifestyle_fridge_butter_tarts)
+attributes(DataRaw$fridge_5)
+table(DataRaw$fridge_5)
+DataClean$lifestyle_fridgeButterTarts <- NA
+DataClean$lifestyle_fridgeButterTarts[DataRaw$fridge_5 == 1] <- 1
+DataClean$lifestyle_fridgeButterTarts[DataRaw$fridge_5 == 2] <- 0
+table(DataClean$lifestyle_fridgeButterTarts)
 
 ### fridge_6 -------------------------------------------------------------
 
-table(data_raw$fridge_6)
-data_clean$lifestyle_fridge_bacon <- NA
-data_clean$lifestyle_fridge_bacon[data_raw$fridge_6 == 1] <- 1
-data_clean$lifestyle_fridge_bacon[data_raw$fridge_6 == 2] <- 0
-table(data_clean$lifestyle_fridge_bacon)
+table(DataRaw$fridge_6)
+DataClean$lifestyle_fridgeBacon <- NA
+DataClean$lifestyle_fridgeBacon[DataRaw$fridge_6 == 1] <- 1
+DataClean$lifestyle_fridgeBacon[DataRaw$fridge_6 == 2] <- 0
+table(DataClean$lifestyle_fridgeBacon)
 
 ### fridge_7 -------------------------------------------------------------
 
-table(data_raw$fridge_7)
-data_clean$lifestyle_fridge_ceasar_dressing <- NA
-data_clean$lifestyle_fridge_ceasar_dressing[data_raw$fridge_7 == 1] <- 1
-data_clean$lifestyle_fridge_ceasar_dressing[data_raw$fridge_7 == 2] <- 0
-table(data_clean$lifestyle_fridge_ceasar_dressing)
+table(DataRaw$fridge_7)
+DataClean$lifestyle_fridgeCeasarDressing <- NA
+DataClean$lifestyle_fridgeCeasarDressing[DataRaw$fridge_7 == 1] <- 1
+DataClean$lifestyle_fridgeCeasarDressing[DataRaw$fridge_7 == 2] <- 0
+table(DataClean$lifestyle_fridgeCeasarDressing)
 
 ### fridge_8 -------------------------------------------------------------
 
-table(data_raw$fridge_8)
-data_clean$lifestyle_fridge_org_veggies <- NA
-data_clean$lifestyle_fridge_org_veggies[data_raw$fridge_8 == 1] <- 1
-data_clean$lifestyle_fridge_org_veggies[data_raw$fridge_8 == 2] <- 0
-table(data_clean$lifestyle_fridge_org_veggies)
+table(DataRaw$fridge_8)
+DataClean$lifestyle_fridgeOrganicVeggies <- NA
+DataClean$lifestyle_fridgeOrganicVeggies[DataRaw$fridge_8 == 1] <- 1
+DataClean$lifestyle_fridgeOrganicVeggies[DataRaw$fridge_8 == 2] <- 0
+table(DataClean$lifestyle_fridgeOrganicVeggies)
 
 ### fridge_9 -------------------------------------------------------------
 
-table(data_raw$fridge_9)
-data_clean$lifestyle_fridge_hot_sauce <- NA
-data_clean$lifestyle_fridge_hot_sauce[data_raw$fridge_9 == 1] <- 1
-data_clean$lifestyle_fridge_hot_sauce[data_raw$fridge_9 == 2] <- 0
-table(data_clean$lifestyle_fridge_hot_sauce)
+table(DataRaw$fridge_9)
+DataClean$lifestyle_fridgeHotSauce <- NA
+DataClean$lifestyle_fridgeHotSauce[DataRaw$fridge_9 == 1] <- 1
+DataClean$lifestyle_fridgeHotSauce[DataRaw$fridge_9 == 2] <- 0
+table(DataClean$lifestyle_fridgeHotSauce)
 
 ### fridge_10 -------------------------------------------------------------
 
-table(data_raw$fridge_10)
-data_clean$lifestyle_fridge_soft_drinks <- NA
-data_clean$lifestyle_fridge_soft_drinks[data_raw$fridge_10 == 1] <- 1
-data_clean$lifestyle_fridge_soft_drinks[data_raw$fridge_10 == 2] <- 0
-table(data_clean$lifestyle_fridge_soft_drink)
+table(DataRaw$fridge_10)
+DataClean$lifestyle_fridgeSoftDrinks <- NA
+DataClean$lifestyle_fridgeSoftDrinks[DataRaw$fridge_10 == 1] <- 1
+DataClean$lifestyle_fridgeSoftDrinks[DataRaw$fridge_10 == 2] <- 0
+table(DataClean$lifestyle_fridgeSoftDrinks)
 
 ### fridge_11 ------------------------------------------------------------
 
-table(data_raw$fridge_11)
-data_clean$lifestyle_fridge_ground_beef <- NA
-data_clean$lifestyle_fridge_ground_beef[data_raw$fridge_11 == 1] <- 1
-data_clean$lifestyle_fridge_ground_beef[data_raw$fridge_11 == 2] <- 0
-table(data_clean$lifestyle_fridge_ground_beef)
+table(DataRaw$fridge_11)
+DataClean$lifestyle_fridgeGroundBeef <- NA
+DataClean$lifestyle_fridgeGroundBeef[DataRaw$fridge_11 == 1] <- 1
+DataClean$lifestyle_fridgeGroundBeef[DataRaw$fridge_11 == 2] <- 0
+table(DataClean$lifestyle_fridgeGroundBeef)
 
 
 ## coffee_consumption ---------------------------------------------------
 
-table(data_raw$coffee_consumption)
-data_clean$lifestyle_coffee_cons <- NA
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 1] <- "tim_hortons"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 2] <- "starbucks"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 3] <- "second_cup"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 4] <- "mcdonalds"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 5] <- "other"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 6] <- "independent"
-data_clean$lifestyle_coffee_cons[data_raw$coffee_consumption == 7] <- "no_coffee"
-data_clean$lifestyle_coffee_cons <- factor(data_clean$lifestyle_coffee_cons,
+table(DataRaw$coffee_consumption)
+DataClean$lifestyle_consCoffee <- NA
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 1] <- "tim_hortons"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 2] <- "starbucks"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 3] <- "second_cup"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 4] <- "mcdonalds"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 5] <- "other"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 6] <- "independent"
+DataClean$lifestyle_consCoffee[DataRaw$coffee_consumption == 7] <- "no_coffee"
+DataClean$lifestyle_consCoffee <- factor(DataClean$lifestyle_consCoffee,
                                          levels = c("tim_hortons",
                                                     "starbucks",
                                                     "second_cup",
@@ -848,21 +849,21 @@ data_clean$lifestyle_coffee_cons <- factor(data_clean$lifestyle_coffee_cons,
                                                     "independent",
                                                     "no_coffee"),
                                          ordered = TRUE)
-table(data_clean$lifestyle_coffee_cons)
+table(DataClean$lifestyle_consCoffee)
 
 ## coffee_machine --------------------------------------------------------
 
-table(data_raw$coffee_machine)
-data_clean$lifestyle_coffee_mac <- NA
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 1] <- "filter_coffee_maker"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 2] <- "automatic_manual_machine"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 3] <- "percolator"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 4] <- "french_press"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 5] <- "single_cup_coffee"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 6] <- "instant_coffee"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 7] <- "italian_coffee_maker"
-data_clean$lifestyle_coffee_mac[data_raw$coffee_machine == 8] <- "no_coffee"
-data_clean$lifestyle_coffee_mac <- factor(data_clean$lifestyle_coffee_mac,
+table(DataRaw$coffee_machine)
+DataClean$lifestyle_makeCoffee <- NA
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 1] <- "filter_coffee_maker"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 2] <- "automatic_manual_machine"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 3] <- "percolator"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 4] <- "french_press"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 5] <- "single_cup_coffee"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 6] <- "instant_coffee"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 7] <- "italian_coffee_maker"
+DataClean$lifestyle_makeCoffee[DataRaw$coffee_machine == 8] <- "no_coffee"
+DataClean$lifestyle_makeCoffee <- factor(DataClean$lifestyle_makeCoffee,
                                          levels = c("filter_coffee_maker",
                                                     "automatic_manual_machine",
                                                     "percolator",
@@ -872,21 +873,21 @@ data_clean$lifestyle_coffee_mac <- factor(data_clean$lifestyle_coffee_mac,
                                                     "italian_coffee_maker",
                                                     "no_coffee"),
                                          ordered = TRUE)
-table(data_clean$lifestyle_coffee_mac)
+table(DataClean$lifestyle_makeCoffee)
 
 ## cons_pet --------------------------------------------------------------
 
-attributes(data_raw$cons_pets)
-table(data_raw$cons_pets)
-data_clean$lifestyle_pet_ownership <- NA
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 1] <- "chat"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 2] <- "chien"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 3] <- "chat et chien"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 4] <- "diverses sortes d'animaux"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 5] <- "autres animaux domestiques"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 6] <- "animaux de ferme"
-data_clean$lifestyle_pet_ownership[data_raw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
-data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
+attributes(DataRaw$cons_pets)
+table(DataRaw$cons_pets)
+DataClean$lifestyle_ownPet <- NA
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 1] <- "chat"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 2] <- "chien"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 3] <- "chat et chien"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 4] <- "diverses sortes d'animaux"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 5] <- "autres animaux domestiques"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 6] <- "animaux de ferme"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
+DataClean$lifestyle_ownPet <- factor(DataClean$lifestyle_ownPet,
                                              levels = c("chat",
                                                         "chien",
                                                         "chat et chien",
@@ -895,61 +896,61 @@ data_clean$lifestyle_pet_ownership <- factor(data_clean$lifestyle_pet_ownership,
                                                         "animaux de ferme",
                                                         "je n'ai pas d'animal de compagnie"),
                                              ordered = TRUE)
-table(data_clean$lifestyle_pet_ownership)
+table(DataClean$lifestyle_ownPet)
 
-data_clean$lifestyle_pet_ownership_yes <- NA
-data_clean$lifestyle_pet_ownership_yes <- 0 
-data_clean$lifestyle_pet_ownership_yes[data_raw$cons_pets %in% c(1:6)] <- 1
-table(data_clean$lifestyle_pet_ownership_yes)
+DataClean$lifestyle_ownPet_bin <- NA
+DataClean$lifestyle_ownPet_bin[DataRaw$cons_pets == 7] <- 0 
+DataClean$lifestyle_ownPet_bin[DataRaw$cons_pets %in% c(1:6)] <- 1
+table(DataClean$lifestyle_ownPet_bin)
 
 ## smoking ---------------------------------------------------------------
 
-attributes(data_raw$smoking)
-table(data_raw$smoking)
-data_clean$lifestyle_smoke_freq <- NA
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 1] <- 0
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 2] <- 0.1667
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 3] <- 0.3333
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 4] <- 0.5
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 5] <- 0.6667
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 6] <- 0.8333
-data_clean$lifestyle_smoke_freq[data_raw$smoking == 7] <- 1
-table(data_clean$lifestyle_smoke_freq)
+attributes(DataRaw$smoking)
+table(DataRaw$smoking)
+DataClean$lifestyle_smokeFreq <- NA
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 1] <- 0
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 2] <- 0.1667
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 3] <- 0.3333
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 4] <- 0.5
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 5] <- 0.6667
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 6] <- 0.8333
+DataClean$lifestyle_smokeFreq[DataRaw$smoking == 7] <- 1
+table(DataClean$lifestyle_smokeFreq)
 
 ## alcool_type -----------------------------------------------------------
 
-attributes(data_raw$alcool_type)
-table(data_raw$alcool_type) 
-data_clean$lifestyle_favourite_alcool <- NA
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type %in% c(1:4)] <- "wine"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type %in% c(5:6)] <- "beer"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 7] <- "spirits"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 8] <- "cocktail"
-data_clean$lifestyle_favourite_alcool[data_raw$alcool_type == 9] <- "dont_drink"
-table(data_clean$lifestyle_favourite_alcool)
+attributes(DataRaw$alcool_type)
+table(DataRaw$alcool_type) 
+DataClean$lifestyle_favAlcool <- NA
+DataClean$lifestyle_favAlcool[DataRaw$alcool_type %in% c(1:4)] <- "wine"
+DataClean$lifestyle_favAlcool[DataRaw$alcool_type %in% c(5:6)] <- "beer"
+DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 7] <- "spirits"
+DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 8] <- "cocktail"
+DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 9] <- "dont_drink"
+table(DataClean$lifestyle_favAlcool)
 
 ## alcool_frequency ------------------------------------------------------
-data_clean$lifestyle_alcool_freq <- NA
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 1] <- 0
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 2] <- 0.1667
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 3] <- 0.3333
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 4] <- 0.5
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 5] <- 0.6667
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 6] <- 0.8333
-data_clean$lifestyle_alcool_freq[data_raw$alcool_frequency == 7] <- 1
-table(data_clean$lifestyle_alcool_freq)
+DataClean$lifestyle_alcoolFreq <- NA
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 1] <- 0
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 2] <- 0.1667
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 3] <- 0.3333
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 4] <- 0.5
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 5] <- 0.6667
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 6] <- 0.8333
+DataClean$lifestyle_alcoolFreq[DataRaw$alcool_frequency == 7] <- 1
+table(DataClean$lifestyle_alcoolFreq)
 
 
 ## marijuana_frequency ---------------------------------------------------
-data_clean$lifestyle_mari_freq <- NA
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 1] <- 0
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 2] <- 0.1667
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 3] <- 0.3333
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 4] <- 0.5
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 5] <- 0.6667
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 6] <- 0.8333
-data_clean$lifestyle_mari_freq[data_raw$marijuana_frequency == 7] <- 1
-table(data_clean$lifestyle_mari_freq)
+DataClean$lifestyle_weedFreq <- NA
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 1] <- 0
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 2] <- 0.1667
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 3] <- 0.3333
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 4] <- 0.5
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 5] <- 0.6667
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 6] <- 0.8333
+DataClean$lifestyle_weedFreq[DataRaw$marijuana_frequency == 7] <- 1
+table(DataClean$lifestyle_weedFreq)
 
 
 
@@ -970,106 +971,106 @@ table(data_clean$lifestyle_mari_freq)
 
 ## social_media_use ------------------------------------------------------
 
-attributes(data_raw$social_media_use)
-table(data_raw$social_media_use)
+attributes(DataRaw$social_media_use)
+table(DataRaw$social_media_use)
 
-data_clean$lifestyle_most_freq_social_media <- NA
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 1] <- "Facebook"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 2] <- "Twitter / X"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 3] <- "Instagram"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 4] <- "Snapchat"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 5] <- "TikTok"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 6] <- "Pinterest"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 7] <- "LinkedIn"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 8] <- "Youtube"
-data_clean$lifestyle_most_freq_social_media[data_raw$social_media_use == 9] <- "Autre"
-data_clean$lifestyle_most_freq_social_media <- factor(data_clean$lifestyle_most_freq_social_media)
-table(data_clean$lifestyle_most_freq_social_media)
+DataClean$lifestyle_mostFreqSocialMedia <- NA
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 1] <- "Facebook"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 2] <- "Twitter / X"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 3] <- "Instagram"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 4] <- "Snapchat"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 5] <- "TikTok"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 6] <- "Pinterest"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 7] <- "LinkedIn"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 8] <- "Youtube"
+DataClean$lifestyle_mostFreqSocialMedia[DataRaw$social_media_use == 9] <- "Autre"
+DataClean$lifestyle_mostFreqSocialMedia <- factor(DataClean$lifestyle_mostFreqSocialMedia)
+table(DataClean$lifestyle_mostFreqSocialMedia)
 
 ## social_media_time -----------------------------------------------------
 
-attributes(data_raw$social_media_time)
-data_clean$lifestyle_social_media_time_day <- NA
-data_clean$lifestyle_social_media_time_day[data_raw$social_media_time == 1] <- 0
-data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 2] <- 0.2
-data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 3] <- 0.4
-data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 4] <- 0.6
-data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 5] <- 0.8
-data_clean$ifestyle_social_media_time_day[data_raw$social_media_time == 6] <- 1
-table(data_clean$ifestyle_social_media_time_day)
+attributes(DataRaw$social_media_time)
+DataClean$lifestyle_socialMediaTime <- NA
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 1] <- 0
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 2] <- 0.2
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 3] <- 0.4
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 4] <- 0.6
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 5] <- 0.8
+DataClean$lifestyle_socialMediaTime[DataRaw$social_media_time == 6] <- 1
+table(DataClean$lifestyle_socialMediaTime)
 
 ## clothing_style --------------------------------------------------------
 
-attributes(data_raw$clothing_style)
-table(data_raw$clothing_style)
+attributes(DataRaw$clothing_style)
+table(DataRaw$clothing_style)
 
 ## disaggregated
-data_clean$lifestyle_clothing_style <- NA
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 1] <- "formal"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 2] <- "classic"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 3] <- "casual"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 4] <- "sport"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 5] <- "elegant"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 6] <- "hippie"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 7] <- "punk"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 8] <- "rock"
-data_clean$lifestyle_clothing_style[data_raw$clothing_style == 9] <- "other"
-data_clean$lifestyle_clothing_style <- factor(data_clean$lifestyle_clothing_style)
-table(data_clean$lifestyle_clothing_style)
+DataClean$lifestyle_clothingStyle <- NA
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 1] <- "formal"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 2] <- "classic"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 3] <- "casual"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 4] <- "sport"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 5] <- "elegant"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 6] <- "hippie"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 7] <- "punk"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 8] <- "rock"
+DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 9] <- "other"
+DataClean$lifestyle_clothingStyle <- factor(DataClean$lifestyle_clothingStyle)
+table(DataClean$lifestyle_clothingStyle)
 
 ## grouped
-data_clean$lifestyle_clothing_style_grouped <- NA
-data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(1, 5)] <- "formal"
-data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(2, 3, 4)] <- "easygoing"
-data_clean$lifestyle_clothing_style_grouped[data_raw$clothing_style %in% c(6, 7, 8)] <- "edgy"
-data_clean$lifestyle_clothing_style_grouped <- factor(data_clean$lifestyle_clothing_style_grouped)
-table(data_clean$lifestyle_clothing_style_grouped)
+DataClean$lifestyle_clothingStyleGroups <- NA
+DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(1, 5)] <- "formal"
+DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(2, 3, 4)] <- "easygoing"
+DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(6, 7, 8)] <- "edgy"
+DataClean$lifestyle_clothingStyleGroups <- factor(DataClean$lifestyle_clothingStyleGroups)
+table(DataClean$lifestyle_clothingStyleGroups)
 
 ## number_tattoos --------------------------------------------------------
 
-attributes(data_raw$number_tattoos)
-table(data_raw$number_tattoos)
+attributes(DataRaw$number_tattoos)
+table(DataRaw$number_tattoos)
 
-data_clean$lifestyle_number_tattoos <- NA
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 9] <- 0  # "0 tatouage"
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 10] <- 1 # "1 tatouage"
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 11] <- 2 # "2 tatouages"
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 4] <- 3  # "3 tatouages"
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 5] <- 4  # "4 tatouages"
-data_clean$lifestyle_number_tattoos[data_raw$number_tattoos == 6] <- 5  # "5+ tatouages" traité comme 5
+DataClean$lifestyle_numberTattoos <- NA
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 9] <- 0  # "0 tatouage"
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 10] <- 1 # "1 tatouage"
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 11] <- 2 # "2 tatouages"
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 4] <- 3  # "3 tatouages"
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 5] <- 4  # "4 tatouages"
+DataClean$lifestyle_numberTattoos[DataRaw$number_tattoos == 6] <- 5  # "5+ tatouages" traité comme 5
 
-table(data_clean$lifestyle_number_tattoos, useNA = "ifany")
+table(DataClean$lifestyle_numberTattoos, useNA = "ifany")
 
 # Créer la variable binaire 'has_tattoos'
-data_clean$lifestyle_has_tattoos <- as.numeric(data_clean$lifestyle_number_tattoos > 0)
-data_clean$lifestyle_has_tattoos[is.na(data_clean$lifestyle_number_tattoos)] <- NA
+DataClean$lifestyle_hasTattoos <- as.numeric(DataClean$lifestyle_numberTattoos > 0)
+DataClean$lifestyle_hasTattoos[is.na(DataClean$lifestyle_numberTattoos)] <- NA
 
 
-table(data_clean$lifestyle_has_tattoos, useNA = "ifany")
+table(DataClean$lifestyle_hasTattoos, useNA = "ifany")
 
 ## chronotype ------------------------------------------------------------
 
-attributes(data_raw$chronotype)
-table(data_raw$chronotype)
+attributes(DataRaw$chronotype)
+table(DataRaw$chronotype)
 
-data_clean$lifestyle_morning_to_evening <- NA
-data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 1] <- 0
-data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 2] <- 0.25
-data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 3] <- 0.5
-data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 4] <- 0.75
-data_clean$lifestyle_morning_to_evening[data_raw$chronotype == 5] <- 1
-table(data_clean$lifestyle_morning_to_evening)
+DataClean$lifestyle_typeMorningToEvening <- NA
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 1] <- 0
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 2] <- 0.25
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 3] <- 0.5
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 4] <- 0.75
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 5] <- 1
+table(DataClean$lifestyle_typeMorningToEvening)
 
 ## trip ------------------------------------------------------------------
 
-attributes(data_raw$trip)
-table(data_raw$trip)
+attributes(DataRaw$trip)
+table(DataRaw$trip)
 
-data_clean$lifestyle_trip <- NA
-data_clean$lifestyle_trip[data_raw$trip == 1] <- "beach"
-data_clean$lifestyle_trip[data_raw$trip == 2] <- "jungle"
-data_clean$lifestyle_trip[data_raw$trip == 3] <- "historic"
-data_clean$lifestyle_trip[data_raw$trip == 4] <- "mountains"
-data_clean$lifestyle_trip <- factor(data_clean$lifestyle_trip)
-table(data_clean$lifestyle_trip)
+DataClean$lifestyle_typeTravel <- NA
+DataClean$lifestyle_typeTravel[DataRaw$trip == 1] <- "beach"
+DataClean$lifestyle_typeTravel[DataRaw$trip == 2] <- "jungle"
+DataClean$lifestyle_typeTravel[DataRaw$trip == 3] <- "historic"
+DataClean$lifestyle_typeTravel[DataRaw$trip == 4] <- "mountains"
+DataClean$lifestyle_typeTravel <- factor(DataClean$lifestyle_typeTravel)
+table(DataClean$lifestyle_typeTravel)
 

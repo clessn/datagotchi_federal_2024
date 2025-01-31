@@ -117,12 +117,12 @@ variables_communes_clust <- Reduce(union, list(
 
 # Assemblage des fichiers
 
-df_pilot1_2022_act <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_act.rds")
-df_pilot1_2022_style <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_style.rds")
-df_pilot1_2022_sante <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_sante.rds")
-df_pilot1_2022_mode_de_vie <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_mode_de_vie.rds")
-df_pilot1_2022_commerce <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_commerce.rds")
-df_pilot1_2022_ses <- readRDS(file = "data/qc2022/preparation_donnees/02_pilot1_2022_ses.rds")
+df_pilot1_2022_act <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_act.rds")
+df_pilot1_2022_style <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_style.rds")
+df_pilot1_2022_sante <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_sante.rds")
+df_pilot1_2022_mode_de_vie <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_mode_de_vie.rds")
+df_pilot1_2022_commerce <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_commerce.rds")
+df_pilot1_2022_ses <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_ses.rds")
 
 df_pilot1_2022_clust <- df_pilot1_2022_act %>%
   left_join(df_pilot1_2022_style, by = "id") %>%
@@ -131,4 +131,4 @@ df_pilot1_2022_clust <- df_pilot1_2022_act %>%
   left_join(df_pilot1_2022_commerce, by = "id") %>%
   left_join(df_pilot1_2022_ses, by = "id")
 
-saveRDS(df_pilot1_2022_clust, file = "data/qc2022/preparation_donnees/02_pilot1_2022.rds")
+saveRDS(df_pilot1_2022_clust, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022.rds")
