@@ -22,7 +22,7 @@ DataModel <- DataModel |>
   select(
     id, 
     ses_immigrant,
-    ses_province,
+    ses_region,
     ses_age, ses_age_4Cat, ses_ageGroup5Years, 
     lifestyle_hasTattoos, lifestyle_numberTattoos, 
     ses_dwelling, ses_dwelling_cat, 
@@ -84,7 +84,7 @@ variable_options <- list(
 
 # Variables qu'on prend toujours
 other_variables <- c(
-  "ses_province",
+  "ses_region",
   "ses_immigrant",
   "lifestyle_typeTransport",
   "lifestyle_consClothes",
@@ -239,7 +239,7 @@ all_iterations <- pblapply(seq_len(M), function(i) {
 # On assemble tous les résultats dans un data.frame
 results_train <- bind_rows(all_iterations)
 
-saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV2_31janvier2025.rds")
+saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV3_31janvier2025.rds")
 
 # ------------------------------------------------------------------------
 # 8) Synthèse des résultats sur la CV du train
@@ -304,7 +304,7 @@ final_model <- multinom(
   MaxNWts = 100000
 )
 
-saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV1.rds")
+print(final_model)
 
 # ------------------------------------------------------------------------
 # 11) Évaluation sur le jeu de test (jamais vu jusqu'ici)
@@ -351,6 +351,6 @@ print(table_test)
 # ------------------------------------------------------------------------
 # 12) Sauvegarder le modèle final
 # ------------------------------------------------------------------------
-saveRDS(final_model, file = "_SharedFolder_datagotchi_federal_2024/clustering/data/multinom_model_2022.rds")
+saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV3.rds")
 
 cat("Modèle sauvegardé avec succès.\n")
