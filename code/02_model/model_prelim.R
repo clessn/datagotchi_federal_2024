@@ -84,8 +84,7 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
   }
   
   # b) Préparer X_train et y_train (en excluant id et la cible)
-  X_train <- DfTrain[, selected_vars, drop = FALSE] %>%
-    select(-id)  # enlever "id" si présent
+  X_train <- DfTrain[, selected_vars, drop = FALSE]
   
   y_train <- DfTrain$dv_voteChoice
   
@@ -95,7 +94,12 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
     as.data.frame()
   
   # d) Entraîner le modèle multinomial
-  model <- multinom(y_train ~ ., data = X_train_dummy, trace = FALSE)
+  model <- multinom(
+    y_train ~ ., 
+    data = X_train_dummy, 
+    trace = FALSE,
+    MaxNWts = 100000
+  )
   
   # e) Évaluer la performance sur le train (ou CV si besoin)
   pred_train <- predict(model, newdata = X_train_dummy)
@@ -134,25 +138,50 @@ all_iterations <- lapply(seq_len(M), function(i) {
 
 results_train <- bind_rows(all_iterations)
 
-# Modèle -----------------------------------------------------------------
-multinom_model <- multinom(dv_voteChoice ~ ., data = DataModel)
+# ------------------------------------------------------
+summary_train <- results_train %>%
+  group_by(variable, coding) %>%
+  summarise(
+    mean_score = mean(score_train),
+    sd_score = sd(score_train),
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(mean_score))
 
-summary <- summary(multinom_model)
+print(summary_train)
 
-# Interprétation des coefficients -----------------------------------------
-# Les coefficients peuvent être transformés en probabilités relatives
-exp(coef(multinom_model))
+# ------------------------------------------------------
+best_iterations <- results_train %>%
+  group_by(model_id) %>%
+  summarise(score_iter = first(score_train), .groups = "drop") %>%
+  arrange(desc(score_iter))
 
-summary$coefficients
-summary$standard.errors
+best_id <- best_iterations$model_id[1]
+best_config <- results_train %>%
+  filter(model_id == best_id)
 
-# Prédictions ------------------------------------------------------------
-# Prédiction sur les données utilisées pour l'entraînement
-DataModel$predictions <- predict(multinom_model, newdata = DataModel)
+# ------------------------------------------------------
+final_vars <- best_config$variable
 
-# Évaluation de la performance --------------------------------------------
-# Matrice de confusion
-table(DataModel$vote_intent, DataModel$predictions)
+X_train_final <- df_train[, final_vars, drop = FALSE]
+y_train_final <- df_train$target
+
+dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
+X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
+
+final_model <- multinom(y_train_final ~ ., data = X_train_dummy, trace = FALSE)
+
+# ------------------------------------------------------
+X_test_final <- df_test[, final_vars, drop = FALSE]
+y_test_final <- df_test$target
+
+X_test_dummy <- predict(dummies_final, newdata = X_test_final) %>% as.data.frame()
+
+pred_test_final <- predict(final_model, newdata = X_test_dummy)
+acc_test_final <- mean(pred_test_final == y_test_final)
+cat("Accuracy (test) :", acc_test_final, "\n")
+
 
 # Sauvegarder en RDS -----------------------------------------------------
 
