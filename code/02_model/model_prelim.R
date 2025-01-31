@@ -47,6 +47,8 @@ DataModel <- DataModel |>
 
 # La cible en facteur
 DataModel$dv_voteChoice <- factor(DataModel$dv_voteChoice)
+DataModel$lifestyle_consCoffee <- factor(DataModel$lifestyle_consCoffee, ordered = FALSE)
+DataModel$lifestyle_consClothes <- factor(DataModel$lifestyle_consClothes, ordered = FALSE)
 
 # ------------------------------------------------------------------------
 # 3) Séparation Train/Test
@@ -239,7 +241,7 @@ all_iterations <- pblapply(seq_len(M), function(i) {
 # On assemble tous les résultats dans un data.frame
 results_train <- bind_rows(all_iterations)
 
-saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV3_31janvier2025.rds")
+saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
 
 # ------------------------------------------------------------------------
 # 8) Synthèse des résultats sur la CV du train
@@ -351,6 +353,6 @@ print(table_test)
 # ------------------------------------------------------------------------
 # 12) Sauvegarder le modèle final
 # ------------------------------------------------------------------------
-saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV3.rds")
+saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV4.rds")
 
 cat("Modèle sauvegardé avec succès.\n")
