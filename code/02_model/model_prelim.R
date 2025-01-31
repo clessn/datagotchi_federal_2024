@@ -21,7 +21,8 @@ DataModel <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/DataClea
 DataModel <- DataModel |> 
   select(
     id, 
-    ses_postalCode, 
+    ses_immigrant,
+    ses_province,
     ses_age, ses_age_4Cat, ses_ageGroup5Years, 
     lifestyle_hasTattoos, lifestyle_numberTattoos, 
     ses_dwelling, ses_dwelling_cat, 
@@ -83,7 +84,8 @@ variable_options <- list(
 
 # Variables qu'on prend toujours
 other_variables <- c(
-  "ses_postalCode",
+  "ses_province",
+  "ses_immigrant",
   "lifestyle_typeTransport",
   "lifestyle_consClothes",
   "lifestyle_exercise",
@@ -220,7 +222,7 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
 # ------------------------------------------------------------------------
 # 7) Boucle sur M itérations (avec barre de progression)
 # ------------------------------------------------------------------------
-M <- 30
+M <- 90
 set.seed(2023)
 
 # pbapply::pblapply() affiche une barre de progression
@@ -236,6 +238,8 @@ all_iterations <- pblapply(seq_len(M), function(i) {
 
 # On assemble tous les résultats dans un data.frame
 results_train <- bind_rows(all_iterations)
+
+saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV2_31janvier2025.rds")
 
 # ------------------------------------------------------------------------
 # 8) Synthèse des résultats sur la CV du train
@@ -299,6 +303,8 @@ final_model <- multinom(
   trace   = FALSE,
   MaxNWts = 100000
 )
+
+saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV1.rds")
 
 # ------------------------------------------------------------------------
 # 11) Évaluation sur le jeu de test (jamais vu jusqu'ici)
