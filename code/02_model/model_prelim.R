@@ -164,8 +164,8 @@ best_config <- results_train %>%
 # ------------------------------------------------------
 final_vars <- best_config$variable
 
-X_train_final <- df_train[, final_vars, drop = FALSE]
-y_train_final <- df_train$target
+X_train_final <- DfTrain[, final_vars, drop = FALSE]
+y_train_final <- DfTrain$dv_voteChoice
 
 dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
 X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
@@ -173,8 +173,8 @@ X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.fra
 final_model <- multinom(y_train_final ~ ., data = X_train_dummy, trace = FALSE)
 
 # ------------------------------------------------------
-X_test_final <- df_test[, final_vars, drop = FALSE]
-y_test_final <- df_test$target
+X_test_final <- DfTest[, final_vars, drop = FALSE]
+y_test_final <- DfTest$dv_voteChoice
 
 X_test_dummy <- predict(dummies_final, newdata = X_test_final) %>% as.data.frame()
 
