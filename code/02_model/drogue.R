@@ -192,7 +192,7 @@ top_50 <- head(all_results, 50)
 print(top_50)
 
 # 8. Save detailed results
-write.csv(all_results, "combined_predictors_leaderboard.csv", row.names = FALSE)
+write.csv(all_results, "data/models/combined_predictors_leaderboard.csv", row.names = FALSE)
 
 # 9. Create a clean leaderboard for viewing
 leaderboard <- data.frame(
