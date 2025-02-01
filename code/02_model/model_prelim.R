@@ -14,7 +14,7 @@ library(pbapply)    # pour une barre de progression (optionnel)
 # 1) Chargement des données
 # ------------------------------------------------------------------------
 DataModel <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/DataCleanPilot_2025Janv30.rds")
-
+candidate_interactions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/combined_predictors_leaderboard.csv")
 # ------------------------------------------------------------------------
 # 2) Sélection des variables
 # ------------------------------------------------------------------------
@@ -43,7 +43,8 @@ DataModel <- DataModel |>
     lifestyle_motorizedActFreq, lifestyle_motorizedActFreq_bin, lifestyle_motorizedActFreq_factor, lifestyle_motorizedActFreq_numeric,
     dv_voteChoice
   ) %>%
-  drop_na()
+  drop_na() %>%
+  filter(dv_voteChoice != "other")
 
 # La cible en facteur
 DataModel$dv_voteChoice <- factor(DataModel$dv_voteChoice)
@@ -103,14 +104,6 @@ other_variables <- c(
 # ------------------------------------------------------------------------
 # Cette fonction sera appelée par caret pour chaque CV-fold.
 multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
-  # 'data' : data.frame avec colonnes:
-  #   - obs = vraie classe
-  #   - pred = classe prédite (au label)
-  #   - pXYZ = probabilité prédite pour chaque classe 'XYZ'
-  # 'lev' : vecteur des classes
-  # 'model' : info sur le modèle
-
-  # On va calculer : accuracy, kappa, et logLoss
   # 1) Accuracy
   acc <- yardstick::accuracy_vec(data$obs, data$pred)
   
@@ -121,104 +114,134 @@ multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
   eps <- 1e-15
   n   <- nrow(data)
   ll  <- 0
-  # Pour calculer la logLoss, on regarde pour chaque observation
-  # la prob prédites pour la classe réelle:
   for (i in seq_len(n)) {
     obs_class <- as.character(data$obs[i])
-    prob_col  <- paste0("prob.", obs_class)  # caret nomme les proba "prob.ClassName"
-    p         <- data[[prob_col]][i]
-    p         <- max(p, eps)  # éviter log(0)
-    ll        <- ll - log(p)
+    prob_col  <- paste0("prob.", obs_class)
+    p <- data[[prob_col]][i]
+    p <- max(p, eps)
+    ll <- ll - log(p)
   }
-  ll <- ll / n  # on normalise
+  ll <- ll / n
   
-  out <- c(accuracy = acc, kappa = kap, logLoss = ll)
+  # 4) Calcul d'une pénalité personnalisée pour les erreurs critiques
+  # On reconstruit une matrice de confusion à partir des prédictions et observations
+  conf <- table(data$pred, data$obs)
+  penalty <- 0
+  penalty_value <- 5  # Coefficient de pénalité (à ajuster)
+  
+  # Vérifier que les labels concernés existent dans le vecteur lev
+  if ("npd" %in% lev && "cpc" %in% lev) {
+    # Pénaliser : observation "npd" mais prédiction "cpc"
+    if ("cpc" %in% rownames(conf) && "npd" %in% colnames(conf)) {
+      penalty <- penalty + penalty_value * conf["cpc", "npd"]
+    }
+  }
+  if ("gpc" %in% lev && "cpc" %in% lev) {
+    # Pénaliser : observation "gpc" mais prédiction "cpc"
+    if ("cpc" %in% rownames(conf) && "gpc" %in% colnames(conf)) {
+      penalty <- penalty + penalty_value * conf["cpc", "gpc"]
+    }
+  }
+  
+  # Vous pouvez ensuite décider comment intégrer cette pénalité dans votre score global.
+  # Par exemple, définir un score composite qui soustrait la pénalité de l'accuracy.
+  composite_score <- acc - (penalty / n)  # L'idée ici est d'avoir une "accuracy ajustée"
+  
+  out <- c(accuracy = acc,
+           kappa = kap,
+           logLoss = ll,
+           penalty = penalty,
+           composite_score = composite_score)
   return(out)
 }
-
 # ------------------------------------------------------------------------
 # 6) Fonction d'une itération de modèle
 # ------------------------------------------------------------------------
-one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
-  
-  # a) Sélection aléatoire des codifications
-  selected_vars <- other_vars
-  var_codings_used <- list()  # pour stocker la correspondance variable -> groupe
-  
-  for (var_group in names(var_options)) {
-    codings <- var_options[[var_group]]
-    chosen_coding <- sample(codings, 1)   # on pioche 1 codage au hasard
-    selected_vars <- c(selected_vars, chosen_coding)
-    var_codings_used[[chosen_coding]] <- var_group
-  }
-  
-  # b) Préparer X_train et y_train
-  X_train <- DfTrain[, selected_vars, drop = FALSE]
-  y_train <- DfTrain$dv_voteChoice
-  
-  # c) Transformer en dummies
-  #    On crée un dummyVars puis on applique à X_train
-  #    pour avoir un data.frame de variables numériques
-  dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE)
-  X_train_dummy <- predict(dummies, newdata = X_train) %>%
-    as.data.frame()
-  
-  # d) Préparer un data.frame complet pour caret::train (incluant la cible)
-  df_for_caret <- cbind(y_train, X_train_dummy)
-  colnames(df_for_caret)[1] <- "dv_voteChoice"  # on renomme la première colonne
-  
-  # e) Définir la validation croisée (k=5, par ex.) + summaryFunction
-  train_control <- trainControl(
-    method = "cv",
-    number = 5,               # 5-fold CV
-    summaryFunction = multiClassSummary2,
-    classProbs = TRUE,        # indispensable pour logLoss
-    savePredictions = "final" # pour qu'on puisse inspecter p.ex. df_for_caret
-  )
-  
-  # f) Entraîner le modèle multinomial via caret
-  #    (on force le paramètre MaxNWts pour éviter l'erreur si trop de variables)
-  cv_model <- train(
-    dv_voteChoice ~ .,
-    data       = df_for_caret,
-    method     = "multinom",
-    trControl  = train_control,
-    metric     = "accuracy",    # on cherche à maximiser l'accuracy
-    # (on pourrait mettre "kappa" si on préfère, ou logLoss avec "maximize=FALSE")
-    MaxNWts    = 100000,
-    trace      = FALSE
-  )
-  
-  # g) Récupérer la performance sur la CV
-  #    model$results contient typically 1 ligne (pas de tuning),
-  #    on y trouve Accuracy, Kappa, logLoss, etc.
-  results_cv <- cv_model$results
-  accuracy_cv <- results_cv$accuracy[1]
-  kappa_cv    <- results_cv$kappa[1]
-  logloss_cv  <- results_cv$logLoss[1]
-  
-  # Pour "sélectionner" un score, on peut en prendre un principal,
-  # par exemple accuracy_cv
-  # (ou on garde tout si on veut plus tard analyser)
-  
-  # h) construire le tableau de résultats
-  iteration_results <- data.frame(
-    model_id  = model_id,
-    variable  = selected_vars,
-    coding    = sapply(selected_vars, function(x) {
-      if (x %in% names(var_codings_used)) {
-        return(var_codings_used[[x]])
-      } else {
-        return("fixed")
-      }
-    }),
-    accuracy_cv = accuracy_cv,
-    kappa_cv    = kappa_cv,
-    logloss_cv  = logloss_cv,
-    stringsAsFactors = FALSE
-  )
-  
-  return(iteration_results)
+one_iteration <- function(model_id, DfTrain, var_options, other_vars, 
+  candidate_interactions = NULL, n_interactions = 3) {
+
+# a) Sélection aléatoire des codifications pour chaque groupe de variables
+selected_vars <- other_vars
+var_codings_used <- list()  # pour stocker la correspondance variable -> groupe
+
+for (var_group in names(var_options)) {
+codings <- var_options[[var_group]]
+chosen_coding <- sample(codings, 1)   # on pioche 1 codage au hasard
+selected_vars <- c(selected_vars, chosen_coding)
+var_codings_used[[chosen_coding]] <- var_group
+}
+
+# b) Sélectionner les interactions parmi les candidates
+interactions_to_include <- c()
+if (!is.null(candidate_interactions)) {
+for (i in seq_len(nrow(candidate_interactions))) {
+# On ne considère que les lignes de type "interaction"
+if (candidate_interactions$predictor_type[i] == "interaction") {
+var1 <- candidate_interactions$var1[i]
+var2 <- candidate_interactions$var2[i]
+# On ajoute l'interaction si ET seulement si les 2 variables sont sélectionnées
+if (var1 %in% selected_vars && var2 %in% selected_vars) {
+interactions_to_include <- c(interactions_to_include, paste0(var1, ":", var2))
+if (length(interactions_to_include) >= n_interactions) break
+}
+}
+}
+}
+
+# c) Construction de la formule
+main_effects <- paste(selected_vars, collapse = " + ")
+if (length(interactions_to_include) > 0) {
+interactions_str <- paste(interactions_to_include, collapse = " + ")
+formula_str <- paste("dv_voteChoice ~", main_effects, "+", interactions_str)
+} else {
+formula_str <- paste("dv_voteChoice ~", main_effects)
+}
+fmla <- as.formula(formula_str)
+
+# Optionnel : afficher la formule pour vérification
+cat("Itération", model_id, ":\n")
+cat("  Formule utilisée:", deparse(fmla), "\n")
+
+# d) Définir la validation croisée (ici 5-fold CV) et la fonction de résumé
+train_control <- trainControl(
+method = "cv",
+number = 5,
+summaryFunction = multiClassSummary2,
+classProbs = TRUE,
+savePredictions = "final"
+)
+
+# e) Entraîner le modèle multinomial via caret avec la formule construite
+cv_model <- train(
+  fmla,
+  data      = DfTrain,
+  method    = "multinom",
+  trControl = train_control,
+  metric    = "composite_score",    # on cherche à maximiser ce score
+  maximize  = TRUE,
+  MaxNWts   = 100000,
+  trace     = FALSE
+)
+
+
+# f) Récupérer la performance sur la CV
+results_cv <- cv_model$results
+accuracy_cv <- results_cv$accuracy[1]
+kappa_cv    <- results_cv$kappa[1]
+logloss_cv  <- results_cv$logLoss[1]
+
+# g) Stocker la configuration utilisée : variables principales et interactions
+config_used <- data.frame(
+model_id  = model_id,
+variable  = I(list(selected_vars)),
+interaction = I(list(interactions_to_include)),
+accuracy_cv = accuracy_cv,
+kappa_cv    = kappa_cv,
+logloss_cv  = logloss_cv,
+stringsAsFactors = FALSE
+)
+
+return(config_used)
 }
 
 # ------------------------------------------------------------------------
@@ -227,27 +250,36 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
 M <- 90
 set.seed(2023)
 
-# pbapply::pblapply() affiche une barre de progression
 all_iterations <- pblapply(seq_len(M), function(i) {
   cat("Itération n°", i, "sur", M, "\n")
   one_iteration(
     model_id    = i,
     DfTrain     = DfTrain,
     var_options = variable_options,
-    other_vars  = other_variables
+    other_vars  = other_variables,
+    candidate_interactions = candidate_interactions,  # passage du data.frame
+    n_interactions = 3  # par exemple, on essaie d'ajouter jusqu'à 3 interactions
   )
 })
 
-# On assemble tous les résultats dans un data.frame
 results_train <- bind_rows(all_iterations)
+saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainAvecInteractionsV2.rds")
 
-saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
+
 
 # ------------------------------------------------------------------------
 # 8) Synthèse des résultats sur la CV du train
 # ------------------------------------------------------------------------
+# Pour grouper par la configuration utilisée, nous allons transformer
+# les colonnes 'variable' et 'interaction' (qui sont des listes) en chaînes de caractères.
+results_train <- results_train %>%
+  mutate(
+    variables_str = sapply(variable, function(x) paste(x, collapse = ", ")),
+    interactions_str = sapply(interaction, function(x) if(length(x) > 0) paste(x, collapse = ", ") else "None")
+  )
+
 summary_train <- results_train %>%
-  group_by(variable, coding) %>%
+  group_by(variables_str, interactions_str) %>%
   summarise(
     mean_accuracy = mean(accuracy_cv),
     sd_accuracy   = sd(accuracy_cv),
@@ -258,15 +290,13 @@ summary_train <- results_train %>%
     n = n(),
     .groups = "drop"
   ) %>%
-  arrange(desc(mean_accuracy)) # ou tri par Kappa / logLoss
+  arrange(desc(mean_accuracy)) # ou trier par une autre métrique
 
 print(summary_train)
 
 # ------------------------------------------------------------------------
-# 9) Identification du meilleur modèle (selon accuracy_cv ou kappa_cv, etc.)
+# 9) Identification du meilleur modèle (selon accuracy_cv, par exemple)
 # ------------------------------------------------------------------------
-#   À chaque itération, toutes les lignes ont la même accuracy_cv
-#   => on peut prendre la première ou la moyenne
 best_iterations <- results_train %>%
   group_by(model_id) %>%
   summarise(
@@ -274,10 +304,9 @@ best_iterations <- results_train %>%
     score_iter_kappa    = first(kappa_cv),
     score_iter_logloss  = first(logloss_cv),
     .groups = "drop"
-  )
+  ) %>%
+  arrange(desc(score_iter_accuracy))
 
-# Par exemple, on sélectionne le meilleur en accuracy
-best_iterations <- best_iterations %>% arrange(desc(score_iter_accuracy))
 best_id <- best_iterations$model_id[1]
 
 cat("Meilleur modèle trouvé (ID) =", best_id, "\n")
@@ -288,71 +317,128 @@ best_config <- results_train %>%
 # ------------------------------------------------------------------------
 # 10) Construction du modèle final sur TOUT le training set (avec la config retenue)
 # ------------------------------------------------------------------------
-final_vars <- best_config$variable
+# Extraction des variables principales et interactions depuis la configuration du meilleur modèle
+final_vars <- unlist(best_config$variable)           # conversion de la liste en vecteur de noms
+final_interactions <- unlist(best_config$interaction)
 
-X_train_final <- DfTrain[, final_vars, drop = FALSE]
-y_train_final <- DfTrain$dv_voteChoice
+# Construction de la formule finale
+main_effects <- paste(final_vars, collapse = " + ")
+if(length(final_interactions) > 0){
+  interactions_str <- paste(final_interactions, collapse = " + ")
+  formula_str <- paste("dv_voteChoice ~", main_effects, "+", interactions_str)
+} else {
+  formula_str <- paste("dv_voteChoice ~", main_effects)
+}
+final_formula <- as.formula(formula_str)
 
-# On recrée les dummies
-dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
-X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>%
-  as.data.frame()
+cat("Formule finale :", deparse(final_formula), "\n")
 
-# On entraîne le "vrai" modèle final (hors CV, en entier)
-final_model <- multinom(
-  y_train_final ~ ., 
-  data    = X_train_dummy, 
-  trace   = FALSE,
-  MaxNWts = 100000
-)
-
+# Entraîner le modèle final sur le training set complet
+# Ici, nous utilisons directement la formule finale.
+final_model <- multinom(final_formula, data = DfTrain, trace = FALSE, MaxNWts = 100000)
 print(final_model)
 
 # ------------------------------------------------------------------------
 # 11) Évaluation sur le jeu de test (jamais vu jusqu'ici)
 # ------------------------------------------------------------------------
-X_test_final <- DfTest[, final_vars, drop = FALSE]
-y_test_final <- DfTest$dv_voteChoice
+# Pour évaluer le modèle final, nous utilisons à nouveau la formule finale.
+# Notez que si votre modèle a été construit avec la formule, la transformation des
+# variables (dummy encoding, etc.) se fait automatiquement par la fonction multinom.
 
-X_test_dummy <- predict(dummies_final, newdata = X_test_final) %>% 
-  as.data.frame()
-
-pred_test_final_class <- predict(final_model, newdata = X_test_dummy)
-acc_test_final <- mean(pred_test_final_class == y_test_final)
-
+pred_test_final_class <- predict(final_model, newdata = DfTest)
+acc_test_final <- mean(pred_test_final_class == DfTest$dv_voteChoice)
 cat("Accuracy (test) :", acc_test_final, "\n")
 
-# Pour un critère plus nuancé, on peut prédire les probabilités, puis calculer
-# logLoss ou Kappa sur le test :
-pred_test_final_prob <- predict(final_model, newdata = X_test_dummy, type = "probs")
-
-# Par exemple, calculer la logLoss manuellement
-# On doit faire correspondre prob à la classe observée:
-levelz <- levels(y_test_final)
+# Calcul manuel de la logLoss sur le jeu de test
+pred_test_final_prob <- predict(final_model, newdata = DfTest, type = "probs")
+levelz <- levels(DfTest$dv_voteChoice)
 logloss_test <- 0
-n_test       <- length(y_test_final)
+n_test <- nrow(DfTest)
 for (i in seq_len(n_test)) {
-  obs_class <- y_test_final[i]
-  # index de la classe dans 'levelz'
+  obs_class <- DfTest$dv_voteChoice[i]
   class_idx <- which(levelz == obs_class)
-  p         <- pred_test_final_prob[i, class_idx]
-  p         <- max(p, 1e-15)
+  p <- pred_test_final_prob[i, class_idx]
+  p <- max(p, 1e-15)  # éviter log(0)
   logloss_test <- logloss_test - log(p)
 }
 logloss_test <- logloss_test / n_test
-
 cat("LogLoss (test) :", logloss_test, "\n")
 
-# On peut aussi faire un tableau de confusion
+# Tableau de confusion
 table_test <- table(
   predicted = pred_test_final_class,
-  actual    = y_test_final
+  actual    = DfTest$dv_voteChoice
 )
 print(table_test)
+
+
+# Nombre d'itérations pour l'évaluation
+n_iter <- 10
+
+# Initialiser un data.frame pour stocker les résultats
+results_eval <- data.frame(
+  iteration = integer(),
+  accuracy = numeric(),
+  logloss = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (i in 1:n_iter) {
+  
+  # Pour varier le sous-échantillon à chaque itération, on fixe un seed différent
+  set.seed(2025 + i)  # modifiez le seed pour obtenir des tirages différents
+  
+  # Ici, on sélectionne par exemple 80% des observations du jeu de test
+  sample_indices <- sample(1:nrow(DfTest), size = floor(0.8 * nrow(DfTest)))
+  test_sample <- DfTest[sample_indices, ]
+  
+  ## Prédictions du modèle final sur le sous-échantillon
+  
+  # Prédictions de la classe
+  pred_test_class <- predict(final_model, newdata = test_sample)
+  
+  # Calcul de l'accuracy
+  acc_test <- mean(pred_test_class == test_sample$dv_voteChoice)
+  
+  # Prédictions des probabilités
+  pred_test_prob <- predict(final_model, newdata = test_sample, type = "probs")
+  
+  # Calcul manuel de la logLoss
+  levelz <- levels(test_sample$dv_voteChoice)
+  logloss_test <- 0
+  n_test <- nrow(test_sample)
+  
+  for (j in seq_len(n_test)) {
+    obs_class <- test_sample$dv_voteChoice[j]
+    # Identifier l'indice de la classe observée
+    class_idx <- which(levelz == obs_class)
+    # Récupérer la probabilité prédite pour la classe observée
+    p <- pred_test_prob[j, class_idx]
+    p <- max(p, 1e-15)  # pour éviter log(0)
+    logloss_test <- logloss_test - log(p)
+  }
+  logloss_test <- logloss_test / n_test
+  
+  # Stocker les métriques dans le data.frame
+  results_eval <- rbind(
+    results_eval,
+    data.frame(iteration = i, accuracy = acc_test, logloss = logloss_test)
+  )
+  
+  # Affichage des résultats et de la matrice de confusion pour l'itération courante
+  cat("Itération", i, ":\n")
+  cat("  Accuracy :", acc_test, "\n")
+  cat("  LogLoss  :", logloss_test, "\n")
+  cat("  Matrice de confusion :\n")
+  print(table(predicted = pred_test_class, actual = test_sample$dv_voteChoice))
+  cat("------------------------------------------------\n")
+}
+
+# Afficher le résumé de toutes les itérations
+print(results_eval)
 
 # ------------------------------------------------------------------------
 # 12) Sauvegarder le modèle final
 # ------------------------------------------------------------------------
-saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV4.rds")
-
+saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV5.rds")
 cat("Modèle sauvegardé avec succès.\n")
