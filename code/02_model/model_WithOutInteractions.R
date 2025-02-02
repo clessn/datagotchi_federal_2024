@@ -49,6 +49,9 @@ DataModel$lifestyle_ownPet <- factor(DataModel$lifestyle_ownPet, ordered = FALSE
 
 # Conversion de quelques variables en facteur
 DataModel$dv_voteChoice <- factor(DataModel$dv_voteChoice)
+# Appliquer un contraste somme à dv_voteChoice afin d'obtenir un coefficient pour chaque niveau
+contrasts(DataModel$dv_voteChoice) <- contr.sum(nlevels(DataModel$dv_voteChoice))
+
 DataModel$lifestyle_consCoffee <- factor(DataModel$lifestyle_consCoffee, ordered = FALSE)
 DataModel$lifestyle_consClothes <- factor(DataModel$lifestyle_consClothes, ordered = FALSE)
 
@@ -134,30 +137,22 @@ multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
     if (precision + recall == 0) 0 else 2 * precision * recall / (precision + recall)
   })
   f1_macro <- mean(f1s)
-
-    # 4) Calcul d'une pénalité personnalisée pour les erreurs critiques
-  # On reconstruit une matrice de confusion à partir des prédictions et observations
+  
+  # 5) Calcul d'une pénalité personnalisée pour les erreurs critiques
   conf <- table(data$pred, data$obs)
   penalty <- 0
   penalty_value <- 5  # Coefficient de pénalité (à ajuster)
-  
-  # Vérifier que les labels concernés existent dans le vecteur lev
   if ("npd" %in% lev && "cpc" %in% lev) {
-    # Pénaliser : observation "npd" mais prédiction "cpc"
     if ("cpc" %in% rownames(conf) && "npd" %in% colnames(conf)) {
       penalty <- penalty + penalty_value * conf["cpc", "npd"]
     }
   }
   if ("gpc" %in% lev && "cpc" %in% lev) {
-    # Pénaliser : observation "gpc" mais prédiction "cpc"
     if ("cpc" %in% rownames(conf) && "gpc" %in% colnames(conf)) {
       penalty <- penalty + penalty_value * conf["cpc", "gpc"]
     }
   }
-  
-  # Vous pouvez ensuite décider comment intégrer cette pénalité dans votre score global.
-  # Par exemple, définir un score composite qui soustrait la pénalité de l'accuracy.
-  composite_score <- acc - (penalty / n)  # L'idée ici est d'avoir une "accuracy ajustée"
+  composite_score <- acc - (penalty / n)
   
   out <- c(accuracy = acc, kappa = kap, logLoss = ll, f1 = f1_macro, composite_score = composite_score)
   return(out)
@@ -167,7 +162,6 @@ multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
 # 6) Fonction d'une itération de modèle
 # ------------------------------------------------------------------------
 one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
-  # a) Sélection aléatoire des codifications
   selected_vars <- other_vars
   var_codings_used <- list()
   
@@ -178,18 +172,15 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
     var_codings_used[[chosen_coding]] <- var_group
   }
   
-  # b) Préparer X_train et y_train
   X_train <- DfTrain[, selected_vars, drop = FALSE]
   y_train <- DfTrain$dv_voteChoice
   
-  # c) Transformation en dummies
   dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE)
   X_train_dummy <- predict(dummies, newdata = X_train) %>% as.data.frame()
   
   df_for_caret <- cbind(y_train, X_train_dummy)
   colnames(df_for_caret)[1] <- "dv_voteChoice"
   
-  # d) Définir la validation croisée avec notre fonction de résumé
   train_control <- trainControl(
     method = "cv",
     number = 5,
@@ -198,7 +189,6 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
     savePredictions = "final"
   )
   
-  # e) Entraîner le modèle multinomial via caret
   cv_model <- train(
     dv_voteChoice ~ .,
     data = df_for_caret,
@@ -209,14 +199,12 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
     trace = FALSE
   )
   
-  # f) Récupérer les performances en CV
   results_cv <- cv_model$results
   accuracy_cv <- results_cv$accuracy[1]
   kappa_cv    <- results_cv$kappa[1]
   logloss_cv  <- results_cv$logLoss[1]
   f1_cv       <- results_cv$f1[1]
   
-  # g) Construire le tableau de résultats pour cette itération
   iteration_results <- data.frame(
     model_id   = model_id,
     variable   = selected_vars,
@@ -255,6 +243,7 @@ all_iterations <- pblapply(seq_len(M), function(i) {
 
 results_train <- bind_rows(all_iterations)
 saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
+results_train <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
 
 # ------------------------------------------------------------------------
 # 8) Synthèse des résultats sur la CV du train
@@ -300,7 +289,6 @@ final_vars <- best_config$variable
 X_train_final <- DfTrain[, final_vars, drop = FALSE]
 y_train_final <- DfTrain$dv_voteChoice
 
-# Recréer les dummies (ici, la variable lifestyle_ownPet est déjà non ordonnée)
 dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
 X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
 
@@ -311,6 +299,43 @@ final_model <- multinom(
   MaxNWts = 100000
 )
 print(final_model)
+
+# --- Post-traitement Option 1 : recalcul des coefficients symétriques ---
+
+# Extraire la matrice des coefficients du modèle final
+orig_coef <- coef(final_model)
+# Par exemple, orig_coef a pour rownames : "cpc", "gpc", "lpc", "ndp"
+# et le niveau de référence (ici "bq") n'est pas présent.
+
+# Récupérer tous les niveaux de la variable réponse
+all_levels <- levels(y_train_final)  # Exemple : c("bq", "cpc", "gpc", "lpc", "ndp")
+
+# Créer une matrice complète pour les coefficients
+full_coef <- matrix(0, nrow = length(all_levels), ncol = ncol(orig_coef))
+rownames(full_coef) <- all_levels
+colnames(full_coef) <- colnames(orig_coef)
+
+# Remplir full_coef pour les niveaux non de référence
+for (lvl in rownames(orig_coef)) {
+  full_coef[lvl, ] <- orig_coef[lvl, ]
+}
+
+# Vérifier : full_coef devrait maintenant avoir une ligne "bq" remplie de 0
+cat("Matrice complète des coefficients (avant symétrisation) :\n")
+print(full_coef)
+
+# Pour chaque prédicteur, calculer la moyenne des coefficients sur tous les niveaux
+m <- colMeans(full_coef)
+
+# Reparamétrer de manière symétrique : 
+# Pour chaque coefficient, soustraire la moyenne (pour que la somme sur tous les niveaux soit nulle)
+sym_coef <- full_coef - matrix(rep(m, each = length(all_levels)), nrow = length(all_levels))
+
+cat("Matrice des coefficients symétriques (somme nulle pour chaque prédicteur) :\n")
+print(sym_coef)
+
+# Ajouter la matrice symétrique au modèle final pour l'enregistrement
+final_model$sym_coef <- sym_coef
 
 # ------------------------------------------------------------------------
 # 11) Évaluation sur le jeu de test
@@ -344,81 +369,8 @@ table_test <- table(
   actual = y_test_final
 )
 print(table_test)
-
-
-# Nombre d'itérations pour l'évaluation
-n_iter <- 10
-
-# Initialiser un data.frame pour stocker les résultats
-results_eval <- data.frame(
-  iteration = integer(),
-  accuracy = numeric(),
-  logloss = numeric(),
-  stringsAsFactors = FALSE
-)
-
-for (i in 1:n_iter) {
-  
-  # Pour varier le sous-échantillon à chaque itération, on fixe un seed différent
-  set.seed(2025 + i)  # modifiez le seed pour obtenir des tirages différents
-  
-  # Ici, on sélectionne par exemple 80% des observations du jeu de test
-  sample_indices <- sample(1:nrow(DfTest), size = floor(0.8 * nrow(DfTest)))
-  test_sample <- DfTest[sample_indices, ]
-  
-  ## Transformation du sous-échantillon en dummies
-  # On ne garde que les variables utilisées dans le modèle final (final_vars)
-  X_test_sample <- test_sample[, final_vars, drop = FALSE]
-  # Transformation avec le même objet dummies_final utilisé lors de l'entraînement
-  X_test_dummy <- predict(dummies_final, newdata = X_test_sample) %>% as.data.frame()
-  
-  ## Prédictions du modèle final sur le sous-échantillon
-  
-  # Prédictions de la classe
-  pred_test_class <- predict(final_model, newdata = X_test_dummy)
-  
-  # Calcul de l'accuracy
-  acc_test <- mean(pred_test_class == test_sample$dv_voteChoice)
-  
-  # Prédictions des probabilités
-  pred_test_prob <- predict(final_model, newdata = X_test_dummy, type = "probs")
-  
-  # Calcul manuel de la logLoss
-  levelz <- levels(test_sample$dv_voteChoice)
-  logloss_test <- 0
-  n_test <- nrow(test_sample)
-  
-  for (j in seq_len(n_test)) {
-    obs_class <- test_sample$dv_voteChoice[j]
-    # Identifier l'indice de la classe observée
-    class_idx <- which(levelz == obs_class)
-    # Récupérer la probabilité prédite pour la classe observée
-    p <- pred_test_prob[j, class_idx]
-    p <- max(p, 1e-15)  # pour éviter log(0)
-    logloss_test <- logloss_test - log(p)
-  }
-  logloss_test <- logloss_test / n_test
-  
-  # Stocker les métriques dans le data.frame
-  results_eval <- rbind(
-    results_eval,
-    data.frame(iteration = i, accuracy = acc_test, logloss = logloss_test)
-  )
-  
-  # Affichage des résultats et de la matrice de confusion pour l'itération courante
-  cat("Itération", i, ":\n")
-  cat("  Accuracy :", acc_test, "\n")
-  cat("  LogLoss  :", logloss_test, "\n")
-  cat("  Matrice de confusion :\n")
-  print(table(predicted = pred_test_class, actual = test_sample$dv_voteChoice))
-  cat("------------------------------------------------\n")
-}
-
-# Afficher le résumé de toutes les itérations
-print(results_eval)
-
-
-
+print(final_model)
+print(final_model$sym_coef)
 # ------------------------------------------------------------------------
 # 12) Sauvegarde du modèle final
 # ------------------------------------------------------------------------

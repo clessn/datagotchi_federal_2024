@@ -2,41 +2,29 @@
 library(nnet)
 library(tidyverse)
 library(openxlsx)
+library(tibble)  # Pour rownames_to_column()
 
 # Charger le modèle (remplacez le chemin par celui de votre modèle sauvegardé)
-
 final_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
 
-# Extraire les coefficients sous forme de matrice
-coef_matrix <- coef(final_model)
+# EXTRACTION DES COEFFICIENTS
+# Ici, final_model$sym_coef est déjà une matrice des coefficients symétriques.
+coef_matrix <- final_model$sym_coef
 
-# Convertir la matrice en data.frame
-coef_df <- as.data.frame(coef_matrix)
+# Convertir la matrice en data.frame et ajouter les noms des lignes comme première colonne
+coef_df <- as.data.frame(coef_matrix) %>% 
+  rownames_to_column(var = "Parti")
 
-# Ajouter les noms des coefficients comme première colonne
-coef_df <- coef_df %>%
-  rownames_to_column(var = "coefficient")
-
-# Réorganiser les colonnes pour correspondre à l'ordre de votre image
-coef_df <- coef_df %>%
-  select(coefficient, everything())  # "everything()" garde toutes les autres colonnes
-
-# 1. Transposer le data.frame sans la colonne 'coefficient'
-coef_transposed <- t(coef_df[,-1])  # on retire la première colonne
-
-# 2. Convertir le résultat en data.frame
+# Optionnel : si vous préférez avoir un data.frame transposé 
+# (chaque prédicteur en ligne et chaque parti en colonne), vous pouvez faire :
+coef_transposed <- t(coef_df[,-1])            # Transposer en retirant la colonne "Parti"
 coef_transposed <- as.data.frame(coef_transposed)
-
-# 3. Donner comme noms de colonnes les valeurs initialement présentes dans la colonne 'coefficient'
-names(coef_transposed) <- coef_df$coefficient
-
-# 4. Ajouter les anciens noms de colonnes (ceux issus de coef_df[,-1]) en tant que colonne 'coefficient'
-library(tibble)  # pour utiliser rownames_to_column()
-coef_transposed <- coef_transposed %>% rownames_to_column(var = "coefficient")
+names(coef_transposed) <- coef_df$Parti        # Les colonnes portent désormais les noms des partis
+coef_transposed <- coef_transposed %>% rownames_to_column(var = "Predictor")
 
 # Visualiser le résultat
 print(coef_transposed)
-# Exporter en fichier Excel formaté
-write.xlsx(coef_transposed, "_SharedFolder_datagotchi_federal_2024/data/modele/coefficients_withoutinteractions.xlsx")
 
-cat("Exportation réussie : coefficients enregistrés dans 'coefficients_final_model.xlsx'.\n")
+# Exporter en fichier Excel
+write.xlsx(coef_transposed, "_SharedFolder_datagotchi_federal_2024/data/modele/coefficients_withoutinteractions.xlsx")
+cat("Exportation réussie : coefficients enregistrés dans 'coefficients_withoutinteractions.xlsx'.\n")
