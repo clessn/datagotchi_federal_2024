@@ -1,0 +1,51 @@
+"Rank","Type","Predictor","Cramers_V","P_value","Categories"
+1,"Single Variable","ses_language",0.38719988374142,6.51228354756658e-65,3
+2,"Interaction","ses_age_4Cat * ses_language",0.288415389382975,6.76848675914892e-65,12
+3,"Interaction","ses_language * ses_income",0.280955991834458,1.20687540647905e-38,24
+4,"Interaction","ses_region * ses_sexOrientationHetero",0.277574204451564,1.94111043008025e-58,12
+5,"Interaction","lifestyle_favAlcool * ses_language",0.277311771892206,5.62211048918984e-52,15
+6,"Interaction","ses_language * ses_educ_5Cat",0.273891314215596,4.35713708008292e-50,15
+7,"Interaction","lifestyle_exercise * ses_language",0.273270506683302,6.62135726395815e-35,24
+8,"Interaction","ses_language * ses_incomeCensus",0.271363754003327,2.20310436561382e-38,21
+9,"Interaction","ses_sexOrientationHetero * ses_language",0.269941195875009,1.81532711189064e-69,6
+10,"Interaction","ses_language * lifestyle_goMuseumsFreq",0.269489093813611,1.05427189237672e-47,15
+11,"Interaction","ses_language * lifestyle_goMuseumsFreq_factor",0.269489093813611,1.05427189237672e-47,15
+12,"Interaction","ses_language * lifestyle_goMuseumsFreq_numeric",0.269489093813611,1.05427189237672e-47,15
+13,"Interaction","lifestyle_clothingStyleGroups * ses_language",0.268463378618001,2.8548165734391e-60,9
+14,"Interaction","ses_region * lifestyle_hasTattoos",0.267322887083093,1.27075581120928e-52,12
+15,"Interaction","ses_region * lifestyle_ownPet_bin",0.26523345846405,1.7974880833538e-51,12
+16,"Interaction","ses_immigrant * ses_region",0.265055884129529,2.24857267684698e-51,12
+17,"Interaction","lifestyle_hasTattoos * ses_language",0.265011408281336,1.69173149130884e-66,6
+18,"Single Variable","ses_age",0.264511347918725,0.0458959042253414,69
+19,"Interaction","lifestyle_consClothes * ses_language",0.263179488569766,2.36703691012619e-50,12
+20,"Interaction","ses_region * ses_genderFemale",0.263120777838364,2.54705067946446e-50,12
+21,"Interaction","ses_language * lifestyle_goHuntingFreq_bin",0.261866397293902,1.23183274163279e-64,6
+22,"Interaction","lifestyle_typeTransport * ses_language",0.261336186708958,3.37164285907865e-56,9
+23,"Interaction","ses_language * lifestyle_ownPet_bin",0.26047571368991,8.05400716786612e-64,6
+24,"Interaction","ses_region * lifestyle_goFishingFreq_bin",0.259476753655059,2.30916464581896e-48,12
+25,"Interaction","ses_region * lifestyle_motorizedActFreq_bin",0.259026889037398,4.00493858479316e-48,12
+26,"Interaction","ses_language * ses_income_3Cat",0.258495716816292,1.29907361655135e-54,9
+27,"Interaction","ses_genderFemale * ses_language",0.257702357967072,3.2930006315846e-62,6
+28,"Interaction","ses_language * lifestyle_motorizedActFreq_bin",0.256345078530899,1.99151677559168e-61,6
+29,"Interaction","ses_language * ses_educ_3Cat",0.256309732016739,2.08724366688993e-53,9
+30,"Interaction","ses_language * lifestyle_goFishingFreq_bin",0.255180519829615,9.24842464479737e-61,6
+31,"Interaction","ses_region * lifestyle_volunteeringFreq_bin",0.254987643609383,5.30940048785727e-46,12
+32,"Interaction","ses_immigrant * ses_language",0.254276241077742,3.03057675313685e-60,6
+33,"Interaction","ses_ethnicityWhite * ses_language",0.252719544248193,2.31208637148079e-59,6
+34,"Interaction","ses_language * lifestyle_goMuseumsFreq_bin",0.247743493420104,1.3915883471575e-56,6
+35,"Interaction","ses_language * lifestyle_volunteeringFreq_bin",0.247022829922386,3.47396306267664e-56,6
+36,"Single Variable","ses_region",0.245503941541498,2.365239681987e-55,6
+37,"Single Variable","ses_sexOrientationHetero",0.236895004068166,5.1896694516487e-12,2
+38,"Interaction","lifestyle_eatMeatFreq * lifestyle_goMuseumsFreq",0.223098204618714,7.35429307947791e-07,35
+39,"Interaction","lifestyle_eatMeatFreq * lifestyle_goMuseumsFreq_factor",0.223098204618714,7.35429307947791e-07,35
+40,"Interaction","lifestyle_eatMeatFreq * lifestyle_goMuseumsFreq_numeric",0.223098204618714,7.35429307947791e-07,35
+41,"Interaction","lifestyle_eatMeatFreq * ses_educ_5Cat",0.222254043456811,1.1070974907138e-06,35
+42,"Interaction","lifestyle_exercise * lifestyle_volunteeringFreq",0.222234759916228,0.000226591118596004,40
+43,"Interaction","lifestyle_exercise * lifestyle_volunteeringFreq_factor",0.222234759916228,0.000226591118596004,40
+44,"Interaction","lifestyle_exercise * lifestyle_volunteeringFreq_numeric",0.222234759916228,0.000226591118596004,40
+45,"Interaction","ses_dwelling_cat * lifestyle_favAlcool",0.211824186017257,0.00010442084577285,35
+46,"Interaction","ses_sexOrientation * lifestyle_consClothes",0.211822219780066,3.2146389405499e-20,16
+47,"Interaction","ses_age_4Cat * lifestyle_eatMeatFreq",0.206159421722887,2.69822088870334e-07,28
+48,"Interaction","lifestyle_eatMeatFreq * lifestyle_volunteeringFreq",0.205723264930888,0.000961574531091683,35
+49,"Interaction","lifestyle_eatMeatFreq * lifestyle_volunteeringFreq_factor",0.205723264930888,0.000961574531091683,35
+50,"Interaction","lifestyle_eatMeatFreq * lifestyle_volunteeringFreq_numeric",0.205723264930888,0.000961574531091683,35
