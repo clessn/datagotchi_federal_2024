@@ -5,7 +5,7 @@ library(openxlsx)
 
 # Charger le modèle (remplacez le chemin par celui de votre modèle sauvegardé)
 
-final_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodelV5.rds")
+final_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
 
 # Extraire les coefficients sous forme de matrice
 coef_matrix <- coef(final_model)
@@ -37,6 +37,6 @@ coef_transposed <- coef_transposed %>% rownames_to_column(var = "coefficient")
 # Visualiser le résultat
 print(coef_transposed)
 # Exporter en fichier Excel formaté
-write.xlsx(coef_df, "_SharedFolder_datagotchi_federal_2024/data/modele/coefficients_final_model.xlsx")
+write.xlsx(coef_transposed, "_SharedFolder_datagotchi_federal_2024/data/modele/coefficients_withoutinteractions.xlsx")
 
 cat("Exportation réussie : coefficients enregistrés dans 'coefficients_final_model.xlsx'.\n")
