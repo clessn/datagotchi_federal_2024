@@ -880,21 +880,21 @@ table(DataClean$lifestyle_makeCoffee)
 attributes(DataRaw$cons_pets)
 table(DataRaw$cons_pets)
 DataClean$lifestyle_ownPet <- NA
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 1] <- "chat"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 2] <- "chien"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 3] <- "chat et chien"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 4] <- "diverses sortes d'animaux"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 5] <- "autres animaux domestiques"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 6] <- "animaux de ferme"
-DataClean$lifestyle_ownPet[DataRaw$cons_pets == 7] <- "je n'ai pas d'animal de compagnie"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 1] <- "cat"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 2] <- "dog"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 3] <- "cat_and_dog"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 4] <- "diverse_animals"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 5] <- "other"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 6] <- "farm_animals"
+DataClean$lifestyle_ownPet[DataRaw$cons_pets == 7] <- "none"
 DataClean$lifestyle_ownPet <- factor(DataClean$lifestyle_ownPet,
-                                             levels = c("chat",
-                                                        "chien",
-                                                        "chat et chien",
-                                                        "diverses sortes d'animaux",
-                                                        "autres animaux domestiques",
-                                                        "animaux de ferme",
-                                                        "je n'ai pas d'animal de compagnie"),
+                                             levels = c("cat",
+                                                        "dog",
+                                                        "cat_and_dog",
+                                                        "diverse_animals",
+                                                        "other",
+                                                        "farm_animals",
+                                                        "none"),
                                              ordered = TRUE)
 table(DataClean$lifestyle_ownPet)
 
