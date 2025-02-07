@@ -57,15 +57,3 @@ fct_06_analyze_voteintent_by_day <- function(data) {
 voteintent_by_day <- fct_06_analyze_voteintent_by_day(data)
 
 write_rds(voteintent_by_day, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/06_cluster_voteIntent.rds")
-
-
-library(ggplot2)
-
-results_by_day <- fct_analyze_voteintent_by_day(data)
-
-ggplot(results_by_day, aes(x = time, y = proportion, color = op_intent)) +
-  geom_line() +
-  facet_wrap(~ cluster) +
-  labs(title = "Évolution du vote intent par cluster",
-       x = "Date", y = "Proportion de répondants") +
-  theme_minimal()
