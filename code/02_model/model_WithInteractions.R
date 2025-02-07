@@ -1,6 +1,5 @@
 # Load packages ----------------------------------------------------------
 library(nnet)
-library(tidyverse)
 library(caret)
 library(dplyr)
 library(tidyr)

@@ -4,12 +4,8 @@
 library(nnet)
 library(tidyverse)
 library(caret)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
 library(yardstick)  # Pour calculer les métriques multiclasses
 library(pbapply)    # Pour afficher une barre de progression (optionnel)
-
 # ------------------------------------------------------------------------
 # 2) Chargement et préparation des données
 # ------------------------------------------------------------------------
