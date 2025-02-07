@@ -194,7 +194,7 @@ DataClean$ses_religion <- factor(DataClean$ses_religion, levels = c("agnostic",
                                                                       "sikh",
                                                                       "evangelical",
                                                                       "other"))
-table(DataClean$ses_religion)
+table(DataRaw$ses_religion)
 DataClean$ses_religionBigFive <- NA
 DataClean$ses_religionBigFive[DataRaw$ses_religion %in% c(4, 5, 9, 11)] <- "christian"
 DataClean$ses_religionBigFive[DataRaw$ses_religion == 7] <- "muslim"
@@ -206,6 +206,14 @@ DataClean$ses_religionBigFive[DataRaw$ses_religion == 12 |
                                  DataRaw$ses_religion == 10] <- "other"
 DataClean$ses_religionBigFive <- factor(DataClean$ses_religionBigFive)
 table(DataClean$ses_religionBigFive)
+
+
+attributes(DataRaw$ses_religion)
+table(DataRaw$ses_religion, useNA = "ifany")
+DataClean$ses_religion_bin <- NA
+DataClean$ses_religion_bin[DataRaw$ses_religion == 1 | DataRaw$ses_religion == 2] <- 0
+DataClean$ses_religion_bin[DataRaw$ses_religion != 1 & DataRaw$ses_religion != 2 & !is.na(DataRaw$ses_religion)] <- 1
+table(DataClean$ses_religion_bin)
 
 ## religiosity -------------------------------------------------------------
 
