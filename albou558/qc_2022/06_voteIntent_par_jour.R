@@ -7,37 +7,40 @@ library(lubridate)
 # Data
 app_data_cluster <- readRDS("_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/05_app_2022_clustered.rds")
 
-appData <- readRDS("_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/01_app_2022.rds")
+appData <- readRDS("_SharedFolder_datagotchi_federal_2024/data/clustering/qc_2022/data-hub-clean-2022-10-27_clean.rds")
+
+
 
 # merged appDatas
 
 dfVote <- appData |> 
-  select(id, op_intent)
+  select(id, op_intent, time)
 
 data <- app_data_cluster |> 
-left_join(dfVote, by = "id")
+left_join(dfVote, by = "id") |> 
+  drop_na()
 
 # Fonction pour analyser le voteIntent par jour
-fct_06_analyze_voteintent_by_day <- function(app_data_with_clusters) {
+fct_06_analyze_voteintent_by_day <- function(data) {
   # 1. Ajouter une colonne "day" si elle n'existe pas déjà
-  if (!"day" %in% names(app_data_with_clusters)) {
-    app_data_with_clusters$date <- as.Date(app_data_with_clusters$date)
-    unique_dates <- sort(unique(app_data_with_clusters$date))
+  if (!"day" %in% names(data)) {
+    data$time <- as.Date(data$time)
+    unique_dates <- sort(unique(data$time))
     date_to_day_number <- data.frame(
-      date = unique_dates,
+      time = unique_dates,
       day  = seq_along(unique_dates)
     )
-    app_data_with_clusters <- app_data_with_clusters %>%
-      left_join(date_to_day_number, by = "date") %>%
-      arrange(date)
+    data <- data %>%
+      left_join(date_to_day_number, by = "time") %>%
+      arrange(time)
   }
   
   # 2. Agréger les résultats par jour et par cluster
-  results_by_day <- app_data_with_clusters %>%
-    group_by(day, cluster) %>%
+  results_by_day <- data %>%
+    group_by(time, cluster) %>%
     summarise(
       total_respondents = n(),
-      mean_vote_intent = mean(vote_intent, na.rm = TRUE),
+      mean_vote_intent = mean(op_intent, na.rm = TRUE),
       .groups = "drop"
     )
   
@@ -45,4 +48,4 @@ fct_06_analyze_voteintent_by_day <- function(app_data_with_clusters) {
 }
 
 # Appliquer la fonction pour obtenir les résultats par jour
-voteintent_by_day <- fct_06_analyze_voteintent_by_day(app_data_with_clusters)
+voteintent_by_day <- fct_06_analyze_voteintent_by_day(data)
