@@ -40,7 +40,6 @@ DataModel <- DataModel %>%
   filter(dv_voteChoice != "other")
 
 # IMPORTANT : Forcer la variable "lifestyle_ownPet" à être un facteur non ordonné
-# afin d'éviter que dummyVars n'utilise des contrasts polynomiaux.
 DataModel$lifestyle_ownPet <- factor(DataModel$lifestyle_ownPet, ordered = FALSE)
 
 # Conversion de quelques variables en facteur
@@ -171,7 +170,8 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
   X_train <- DfTrain[, selected_vars, drop = FALSE]
   y_train <- DfTrain$dv_voteChoice
   
-  dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE)
+  # Utiliser sep = "_" pour avoir un nom de colonne au format questionkey_choicekey
+  dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE, sep = "_")
   X_train_dummy <- predict(dummies, newdata = X_train) %>% as.data.frame()
   
   df_for_caret <- cbind(y_train, X_train_dummy)
@@ -224,7 +224,7 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
 # ------------------------------------------------------------------------
 # 7) Boucle sur M itérations
 # ------------------------------------------------------------------------
-M <- 90
+M <- 1000
 set.seed(2023)
 
 all_iterations <- pblapply(seq_len(M), function(i) {
@@ -285,7 +285,8 @@ final_vars <- best_config$variable
 X_train_final <- DfTrain[, final_vars, drop = FALSE]
 y_train_final <- DfTrain$dv_voteChoice
 
-dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
+# Utiliser sep = "_" ici également
+dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE, sep = "_")
 X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
 
 final_model <- multinom(
@@ -300,11 +301,8 @@ print(final_model)
 
 # Extraire la matrice des coefficients du modèle final
 orig_coef <- coef(final_model)
-# Par exemple, orig_coef a pour rownames : "cpc", "gpc", "lpc", "ndp"
-# et le niveau de référence (ici "bq") n'est pas présent.
-
 # Récupérer tous les niveaux de la variable réponse
-all_levels <- levels(y_train_final)  # Exemple : c("bq", "cpc", "gpc", "lpc", "ndp")
+all_levels <- levels(y_train_final)
 
 # Créer une matrice complète pour les coefficients
 full_coef <- matrix(0, nrow = length(all_levels), ncol = ncol(orig_coef))
@@ -316,7 +314,6 @@ for (lvl in rownames(orig_coef)) {
   full_coef[lvl, ] <- orig_coef[lvl, ]
 }
 
-# Vérifier : full_coef devrait maintenant avoir une ligne "bq" remplie de 0
 cat("Matrice complète des coefficients (avant symétrisation) :\n")
 print(full_coef)
 
@@ -367,6 +364,7 @@ table_test <- table(
 print(table_test)
 print(final_model)
 print(final_model$sym_coef)
+
 # ------------------------------------------------------------------------
 # 12) Sauvegarde du modèle final
 # ------------------------------------------------------------------------
