@@ -34,7 +34,7 @@ intercept_df <- coef_matrix %>%
 write.xlsx(list(
   "Coefficients" = coef_transposed,
   "Intercepts" = intercept_df
-), "_SharedFolder_datagotchi_federal_2024/data/modele/model_cOeFfIcIeNt.xlsx")
+), "_SharedFolder_datagotchi_federal_2024/data/modele/coef_matrix.xlsx")
 
 cat("Exportation réussie :\n",
     "- Coefficients dans l'onglet 'Coefficients'\n", 

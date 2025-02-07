@@ -227,7 +227,7 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
 # ------------------------------------------------------------------------
 # 7) Boucle sur M itérations (PARALLELIZED)
 # ------------------------------------------------------------------------
-M <- 10000
+M <- 1000
 set.seed(2023)
 
 # Set up parallel cluster
@@ -398,3 +398,5 @@ print(final_model$sym_coef)
 # ------------------------------------------------------------------------
 saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
 cat("Modèle sauvegardé avec succès.\n")
+
+source("code/02_model/wrangle_coefforgooglesheet.R")
