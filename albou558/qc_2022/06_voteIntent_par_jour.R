@@ -1,8 +1,8 @@
 # Library ----------------------------------------------------------------
 library(dplyr)
 library(tidyr)
-library(ggplot2)
 library(lubridate)
+library(tidyverse)
 
 # Data
 app_data_cluster <- readRDS("_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/05_app_2022_clustered.rds")
@@ -55,6 +55,8 @@ fct_06_analyze_voteintent_by_day <- function(data) {
 
 # Appliquer la fonction pour obtenir les résultats par jour
 voteintent_by_day <- fct_06_analyze_voteintent_by_day(data)
+
+write_rds(voteintent_by_day, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/06_cluster_voteIntent.rds")
 
 
 library(ggplot2)
