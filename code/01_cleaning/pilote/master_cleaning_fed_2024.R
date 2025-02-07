@@ -19,11 +19,9 @@ source("code/01_cleaning/pilote/ses.R")
 
 source("code/01_cleaning/pilote/lifestyle.R")
 
-
 ## Values & Perceptions -------------------------------------------------------------------
 
 source("code/01_cleaning/pilote/values.R")
-
 
 ## DV --------------------------------------------------------------
 

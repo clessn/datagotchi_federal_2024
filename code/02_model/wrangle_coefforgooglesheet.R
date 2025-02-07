@@ -2,29 +2,41 @@
 library(nnet)
 library(tidyverse)
 library(openxlsx)
-library(tibble)  # Pour rownames_to_column()
+library(tibble)
 
-# Charger le modèle (remplacez le chemin par celui de votre modèle sauvegardé)
+# Charger le modèle
 final_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
 
-# EXTRACTION DES COEFFICIENTS
-# Ici, final_model$sym_coef est déjà une matrice des coefficients symétriques.
+# EXTRACTION DES COEFFICIENTS --------------------------------------------------
 coef_matrix <- final_model$sym_coef
 
-# Convertir la matrice en data.frame et ajouter les noms des lignes comme première colonne
-coef_df <- as.data.frame(coef_matrix) %>% 
-  rownames_to_column(var = "Parti")
+# 1. Fichier avec tous les coefficients (sans intercept)
+coef_transposed <- coef_matrix %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "Party") %>% 
+  {t(.[,-1])} %>%  # Transposer sans la colonne Party
+  as.data.frame() %>% 
+  set_names(coef_matrix %>% rownames()) %>% 
+  rownames_to_column(var = "Predictor") %>% 
+  select(Predictor, lpc, gpc, cpc, bq, ndp) %>% 
+  filter(Predictor != "(Intercept)")
 
-# Optionnel : si vous préférez avoir un data.frame transposé 
-# (chaque prédicteur en ligne et chaque parti en colonne), vous pouvez faire :
-coef_transposed <- t(coef_df[,-1])            # Transposer en retirant la colonne "Parti"
-coef_transposed <- as.data.frame(coef_transposed)
-names(coef_transposed) <- coef_df$Parti        # Les colonnes portent désormais les noms des partis
-coef_transposed <- coef_transposed %>% rownames_to_column(var = "Predictor")
+# 2. Fichier des intercepts seulement
+intercept_df <- coef_matrix %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "Party") %>% 
+  select(Party, Intercept = "(Intercept)") %>% 
+  filter(Party %in% c("lpc", "gpc", "cpc", "bq", "ndp")) %>% 
+  mutate(Intercept = format(Intercept, scientific = FALSE)) %>% 
+  arrange(factor(Party, levels = c("lpc", "gpc", "cpc", "bq", "ndp")))
 
-# Visualiser le résultat
-print(coef_transposed)
+# Exportation des deux fichiers
+write.xlsx(list(
+  "Coefficients" = coef_transposed,
+  "Intercepts" = intercept_df
+), "_SharedFolder_datagotchi_federal_2024/data/modele/model_cOeFfIcIeNt.xlsx")
 
-# Exporter en fichier Excel
-write.xlsx(coef_transposed, "_SharedFolder_datagotchi_federal_2024/data/modele/coefficients_withoutinteractions.xlsx")
-cat("Exportation réussie : coefficients enregistrés dans 'coefficients_withoutinteractions.xlsx'.\n")
+cat("Exportation réussie :\n",
+    "- Coefficients dans l'onglet 'Coefficients'\n", 
+    "- Intercepts dans l'onglet 'Intercepts'\n",
+    "Fichier : model_coefficients.xlsx\n")

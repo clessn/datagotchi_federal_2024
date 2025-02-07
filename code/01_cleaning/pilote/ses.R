@@ -132,6 +132,12 @@ DataClean$ses_region[DataRaw$ses_region == 11] <- "quebec"
 DataClean$ses_region[DataRaw$ses_region == 6 |
                         DataRaw$ses_region == 8 |
                         DataRaw$ses_region == 13] <- "territories"
+DataClean$ses_region <- factor(DataClean$ses_region, levels = c("prairie",
+                                                                "british_columbia",
+                                                                "atlantic",
+                                                                "ontario",
+                                                                "quebec",
+                                                                "territories"))
 table(DataClean$ses_region)
 
 # region qc -------------------------------------------------------------------
@@ -291,10 +297,11 @@ DataClean$ses_income <- factor(DataClean$ses_income, levels = c("no_income",
                                                                   "more_than_200000"))
 table(DataClean$ses_income)
 
-DataClean$ses_income_3Cat <- NA
-DataClean$ses_income_3Cat[DataRaw$ses_income == 1 | DataRaw$ses_income == 2] <- "incomeLow"
-DataClean$ses_income_3Cat[DataRaw$ses_income == 3 | DataRaw$ses_income == 4 | DataRaw$ses_income == 5 | DataRaw$ses_income == 6] <- "incomeMid"
-DataClean$ses_income_3Cat[DataRaw$ses_income == 7 | DataRaw$ses_income == 8] <- "incomeHigh"
+DataClean$ses_income3Cat <- NA
+DataClean$ses_income3Cat[DataRaw$ses_income == 1 | DataRaw$ses_income == 2] <- "Low"
+DataClean$ses_income3Cat[DataRaw$ses_income == 3 | DataRaw$ses_income == 4 | DataRaw$ses_income == 5 | DataRaw$ses_income == 6] <- "Mid"
+DataClean$ses_income3Cat[DataRaw$ses_income == 7 | DataRaw$ses_income == 8] <- "High"
+DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat)
 table(DataClean$ses_income3Cat)
 
 attributes(DataRaw$ses_income)
