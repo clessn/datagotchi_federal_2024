@@ -32,12 +32,12 @@ results_by_day <- results_by_day %>%
 # Graphique -----------------------------------------------------------------
 p <- ggplot(results_by_day, aes(x = time, y = proportion, color = op_intent)) +
   geom_line() +
-  facet_wrap(~ cluster_name) +  # utiliser les noms des clusters
+  facet_wrap(~ cluster_name) + 
   labs(title = "Évolution du vote intent par cluster",
        x = "Date",
        y = "Proportion de répondants",
        color = "Parti") +
-  scale_color_manual(values = party_colors) +  # assigner les bonnes couleurs
+  scale_color_manual(values = party_colors) + 
   clessnize::theme_clean_light()
 
 # Afficher le graphique
@@ -50,19 +50,10 @@ ggsave("_SharedFolder_datagotchi_federal_2024/graph/clustering/qc2022/07_cluster
 
 # -----------------------------------------------------------------------------
 # Graphique 2 : Facet par parti avec les courbes de clusters ------------------
-#
-# Dans ce graphique, chaque facette correspond à un parti (op_intent).
-# À l’intérieur de chaque facette, les courbes représentent l’évolution des
-# proportions pour les différents clusters (identifiés par leur nom).
-#
-# Ici, on utilise l'esthétique 'color' pour distinguer les clusters.
-# Vous pouvez, si vous le souhaitez, définir une palette personnalisée pour les clusters.
-# Par défaut, ggplot attribuera automatiquement des couleurs différentes.
-# Vous pouvez aussi différencier les clusters par des linetypes, par exemple.
 
 p2 <- ggplot(results_by_day, aes(x = time, y = proportion, color = cluster_name)) +
   geom_line() +
-  facet_wrap(~ op_intent) +  # un panneau par parti
+  facet_wrap(~ op_intent) + 
   labs(title = "Évolution du vote intent par parti et par cluster",
        x = "Date",
        y = "Proportion de répondants",
