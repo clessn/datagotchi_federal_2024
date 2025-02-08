@@ -15,16 +15,13 @@ DataClean <- data.frame(id = 1:nrow(DataRaw))
 
 source("code/01_cleaning/pilote/ses.R")
 
-
 ## lifestyle -------------------------------------------------------------------
 
 source("code/01_cleaning/pilote/lifestyle.R")
 
-
 ## Values & Perceptions -------------------------------------------------------------------
 
 source("code/01_cleaning/pilote/values.R")
-
 
 ## DV --------------------------------------------------------------
 
@@ -35,6 +32,5 @@ source("code/01_cleaning/pilote/dv.R")
 source("code/01_cleaning/pilote/attitudes.R")
 
 # Save -------------------------------------------------------------------------
+
 saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataCleanPilot_2025Janv30.rds")
-
-
