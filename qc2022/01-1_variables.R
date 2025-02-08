@@ -78,7 +78,7 @@ variables_sante <- c(
 
 variables_mode_de_vie <- c(
   "id",
-  "postal_code", # À transformer en rural, urbain, région, banlieue
+  #"postal_code", # À transformer en rural, urbain, région, banlieue
   "ses_dwelling_App",
   "ses_dwelling_Loft",
   "ses_dwelling_Condo",
