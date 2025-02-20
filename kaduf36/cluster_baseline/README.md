@@ -43,11 +43,16 @@ Finalement, le fichier `02-X_variables.R` qui est la dernière sous-étape de ce
 
 ## 03 - Clustering
 
-À l'étape 03, on construit les clusters
+À l'étape 03, on construit les clusters. Les étapes sont les suivantes
 
-03-0 : Copie du fichier `02-X_variables.R` dans lequel le nom des variables non sélectionnées pour le clustering sont en commentaires (ou supprimées)
+03-0 : Copie du fichier `02-X_variables.R` qui contient le nom des variables disponibles pour le clustering. C'est à partir de ce fichier que la sélection des variables pour le clustering s'effectue     
 
 03-1 : Utilisation d'une méthode de clustering et d'une sélection de variables pour construire des clusters
+
 03-2 : Permet de voir la distribution des répondants à travers les clusters
+
 03-3 : Permet de connaître les variables les plus distinctives entre les clusters
+
 03-4 : Créé des prompts pour demander à ChatGPT une suggestion pour le nom et la description des clusters
+
+03-5 : Affiche la distribution des clusters à travers le territoire
