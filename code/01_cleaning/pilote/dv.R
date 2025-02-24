@@ -151,4 +151,64 @@ DataClean$dv_partyId <- NA
 DataClean$dv_partyId <- DataRaw$attitude_party / 10
 table(DataClean$dv_partyId)
 
+## people pred CPC ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_1)
+table(DataRaw$people_pred_fed_1)
+DataClean$dv_peoplePredCPC <- NA
+DataClean$dv_peoplePredCPC <- DataRaw$people_pred_fed_1 / 100
+table(DataClean$dv_peoplePredCPC)
+
+## people pred LPC ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_2)
+table(DataRaw$people_pred_fed_2)
+DataClean$dv_peoplePredLPC <- NA
+DataClean$dv_peoplePredLPC <- DataRaw$people_pred_fed_2 / 100
+table(DataClean$dv_peoplePredLPC)
+
+
+## people pred NDP ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_3)
+table(DataRaw$people_pred_fed_3)
+DataClean$dv_peoplePredNDP <- NA
+DataClean$dv_peoplePredNDP <- DataRaw$people_pred_fed_3 / 100
+table(DataClean$dv_peoplePredNDP)
+
+## people pred BQ ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_4)
+table(DataRaw$people_pred_fed_4)
+DataClean$dv_peoplePredBQ <- NA
+DataClean$dv_peoplePredBQ <- DataRaw$people_pred_fed_4 / 100
+table(DataClean$dv_peoplePredBQ)
+
+## people pred GPC ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_5)
+table(DataRaw$people_pred_fed_5)
+DataClean$dv_peoplePredGPC <- NA
+DataClean$dv_peoplePredGPC <- DataRaw$people_pred_fed_5 / 100
+table(DataClean$dv_peoplePredGPC)
+
+## people pred PPC ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_fed_6)
+table(DataRaw$people_pred_fed_6)
+DataClean$dv_peoplePredPPC <- NA
+DataClean$dv_peoplePredPPC <- DataRaw$people_pred_fed_6 / 100
+table(DataClean$dv_peoplePredPPC)
+
+
+## people pred majority ----------------------------------------------------------
+
+attributes(DataRaw$people_pred_maj_1)
+table(DataRaw$people_pred_maj_1)
+DataClean$dv_peoplePredMajority <- NA
+DataClean$dv_peoplePredMajority <- DataRaw$people_pred_maj_1 / 100
+table(DataClean$dv_peoplePredMajority)
+
+
+
 
