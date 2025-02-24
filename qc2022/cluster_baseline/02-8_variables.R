@@ -2,10 +2,12 @@
 # 02 Préparation spécifique des données pour le clustering
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
+
 library(dplyr)
 
 # Déclaration des variables de clustering
-variables_act <- c(
+variables_act_clust <- c(
   "id",
   "act_Gym",
   "act_Walk",
@@ -107,28 +109,10 @@ variables_ses_clust <- c(
 )
 
 variables_communes_clust <- Reduce(union, list(
-  variables_act,
+  variables_act_clust,
   variables_style_clust,
   variables_sante_clust,
   variables_mode_de_vie_clust,
   variables_commerce_clust,
   variables_ses_clust
 ))
-
-# Assemblage des fichiers
-
-df_pilot1_2022_act <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_act.rds")
-df_pilot1_2022_style <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_style.rds")
-df_pilot1_2022_sante <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_sante.rds")
-df_pilot1_2022_mode_de_vie <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_mode_de_vie.rds")
-df_pilot1_2022_commerce <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_commerce.rds")
-df_pilot1_2022_ses <- readRDS(file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022_ses.rds")
-
-df_pilot1_2022_clust <- df_pilot1_2022_act %>%
-  left_join(df_pilot1_2022_style, by = "id") %>%
-  left_join(df_pilot1_2022_sante, by = "id") %>%
-  left_join(df_pilot1_2022_mode_de_vie, by = "id") %>%
-  left_join(df_pilot1_2022_commerce, by = "id") %>%
-  left_join(df_pilot1_2022_ses, by = "id")
-
-saveRDS(df_pilot1_2022_clust, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/02_pilot1_2022.rds")

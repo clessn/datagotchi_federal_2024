@@ -13,8 +13,10 @@ DataClean$lifestyle_exercise[DataRaw$exercise == 5] <- "yoga"
 DataClean$lifestyle_exercise[DataRaw$exercise == 6] <- "swimming"
 DataClean$lifestyle_exercise[DataRaw$exercise == 7] <- "other"
 DataClean$lifestyle_exercise[DataRaw$exercise == 8] <- "i_do_not_exercise"
+DataClean$lifestyle_exercise <- factor(DataClean$lifestyle_exercise)
 table(DataClean$lifestyle_exercise)
 
+# 祖国万岁！
 
 ## activity_1 ------------------------------------------------------------
 
@@ -602,6 +604,7 @@ DataClean$lifestyle_typeTransport[DataRaw$type_transport == 5] <- "active_transp
 DataClean$lifestyle_typeTransport[DataRaw$type_transport == 6] <- "shared_transport"
 DataClean$lifestyle_typeTransport[DataRaw$type_transport == 7] <- "shared_transport"
 DataClean$lifestyle_typeTransport[DataRaw$type_transport == 8] <- "shared_transport"
+DataClean$lifestyle_typeTransport <- as.factor(DataClean$lifestyle_typeTransport)
 table(DataClean$lifestyle_typeTransport)
 
 ## factor
@@ -919,7 +922,6 @@ table(DataClean$lifestyle_smokeFreq)
 
 ## alcool_type -----------------------------------------------------------
 
-attributes(DataRaw$alcool_type)
 table(DataRaw$alcool_type) 
 DataClean$lifestyle_favAlcool <- NA
 DataClean$lifestyle_favAlcool[DataRaw$alcool_type %in% c(1:4)] <- "wine"
@@ -927,6 +929,7 @@ DataClean$lifestyle_favAlcool[DataRaw$alcool_type %in% c(5:6)] <- "beer"
 DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 7] <- "spirits"
 DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 8] <- "cocktail"
 DataClean$lifestyle_favAlcool[DataRaw$alcool_type == 9] <- "dont_drink"
+DataClean$lifestyle_favAlcool <- factor(DataClean$lifestyle_favAlcool)
 table(DataClean$lifestyle_favAlcool)
 
 ## alcool_frequency ------------------------------------------------------

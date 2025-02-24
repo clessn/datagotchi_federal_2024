@@ -1,15 +1,12 @@
 # ------------------------------------------------------------------------
 # 1) Chargement des packages
 # ------------------------------------------------------------------------
+library(parallel)
 library(nnet)
-library(tidyverse)
 library(caret)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
+library(tidyverse)
 library(yardstick)  # Pour calculer les métriques multiclasses
 library(pbapply)    # Pour afficher une barre de progression (optionnel)
-
 # ------------------------------------------------------------------------
 # 2) Chargement et préparation des données
 # ------------------------------------------------------------------------
@@ -36,19 +33,20 @@ DataModel <- DataModel %>%
     lifestyle_goMuseumsFreq, lifestyle_goMuseumsFreq_bin, lifestyle_goMuseumsFreq_factor, lifestyle_goMuseumsFreq_numeric,
     lifestyle_volunteeringFreq, lifestyle_volunteeringFreq_bin, lifestyle_volunteeringFreq_factor, lifestyle_volunteeringFreq_numeric,
     ses_educ, ses_educ_3Cat, ses_educ_5Cat, 
-    ses_income, ses_income_3Cat, ses_incomeCensus,
+    ses_income, ses_income3Cat, ses_incomeCensus,
     lifestyle_motorizedActFreq, lifestyle_motorizedActFreq_bin, lifestyle_motorizedActFreq_factor, lifestyle_motorizedActFreq_numeric,
     dv_voteChoice
   ) %>%
   drop_na() %>%
   filter(dv_voteChoice != "other")
 
-# IMPORTANT : Forcer la variable "lifestyle_ownPet" à être un facteur non ordonné
-# afin d'éviter que dummyVars n'utilise des contrasts polynomiaux.
-DataModel$lifestyle_ownPet <- factor(DataModel$lifestyle_ownPet, ordered = FALSE)
+# Convert all ordered factors to unordered factors
+DataModel <- DataModel %>%
+  mutate(across(where(is.ordered), ~ factor(., ordered = FALSE)))
 
 # Conversion de quelques variables en facteur
 DataModel$dv_voteChoice <- factor(DataModel$dv_voteChoice)
+
 # Appliquer un contraste somme à dv_voteChoice afin d'obtenir un coefficient pour chaque niveau
 contrasts(DataModel$dv_voteChoice) <- contr.sum(nlevels(DataModel$dv_voteChoice))
 
@@ -85,7 +83,7 @@ variable_options <- list(
                        "lifestyle_motorizedActFreq_factor", "lifestyle_motorizedActFreq_numeric"),
   tattoo = c("lifestyle_hasTattoos", "lifestyle_numberTattoos"),
   educ = c("ses_educ", "ses_educ_3Cat", "ses_educ_5Cat"),
-  income = c("ses_income", "ses_income_3Cat", "ses_incomeCensus"),
+  income = c("ses_income", "ses_income3Cat", "ses_incomeCensus"),
   ownPet = c("lifestyle_ownPet", "lifestyle_ownPet_bin")
 )
 
@@ -175,7 +173,8 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
   X_train <- DfTrain[, selected_vars, drop = FALSE]
   y_train <- DfTrain$dv_voteChoice
   
-  dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE)
+  # Utiliser sep = "_" pour avoir un nom de colonne au format questionkey_choicekey
+  dummies <- dummyVars(" ~ .", data = X_train, fullRank = TRUE, sep = "_")
   X_train_dummy <- predict(dummies, newdata = X_train) %>% as.data.frame()
   
   df_for_caret <- cbind(y_train, X_train_dummy)
@@ -226,20 +225,42 @@ one_iteration <- function(model_id, DfTrain, var_options, other_vars) {
 }
 
 # ------------------------------------------------------------------------
-# 7) Boucle sur M itérations
+# 7) Boucle sur M itérations (PARALLELIZED)
 # ------------------------------------------------------------------------
-M <- 90
+M <- 1000
 set.seed(2023)
 
+# Set up parallel cluster
+cl <- makeCluster(7)
+
+# Load required packages on each worker
+clusterEvalQ(cl, {
+  library(nnet)
+  library(caret)
+  library(tidyverse)
+  library(yardstick)
+  library(pbapply)
+})
+
+# Export necessary objects to workers
+clusterExport(cl, c('DfTrain', 'variable_options', 'other_variables',
+                    'multiClassSummary2', 'one_iteration'))
+
+# Ensure reproducibility in parallel
+clusterSetRNGStream(cl, 2023)
+
+# Run iterations in parallel with progress bar
 all_iterations <- pblapply(seq_len(M), function(i) {
-  cat("Itération n°", i, "sur", M, "\n")
   one_iteration(
     model_id    = i,
     DfTrain     = DfTrain,
     var_options = variable_options,
     other_vars  = other_variables
   )
-})
+}, cl = cl)
+
+# Stop the cluster
+stopCluster(cl)
 
 results_train <- bind_rows(all_iterations)
 saveRDS(results_train, "_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
@@ -289,7 +310,8 @@ final_vars <- best_config$variable
 X_train_final <- DfTrain[, final_vars, drop = FALSE]
 y_train_final <- DfTrain$dv_voteChoice
 
-dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE)
+# Utiliser sep = "_" ici également
+dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE, sep = "_")
 X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
 
 final_model <- multinom(
@@ -300,15 +322,15 @@ final_model <- multinom(
 )
 print(final_model)
 
+coef_names <- final_model$coefnames
+# NULL
+print(coef_names)
 # --- Post-traitement Option 1 : recalcul des coefficients symétriques ---
 
 # Extraire la matrice des coefficients du modèle final
 orig_coef <- coef(final_model)
-# Par exemple, orig_coef a pour rownames : "cpc", "gpc", "lpc", "ndp"
-# et le niveau de référence (ici "bq") n'est pas présent.
-
 # Récupérer tous les niveaux de la variable réponse
-all_levels <- levels(y_train_final)  # Exemple : c("bq", "cpc", "gpc", "lpc", "ndp")
+all_levels <- levels(y_train_final)
 
 # Créer une matrice complète pour les coefficients
 full_coef <- matrix(0, nrow = length(all_levels), ncol = ncol(orig_coef))
@@ -320,7 +342,6 @@ for (lvl in rownames(orig_coef)) {
   full_coef[lvl, ] <- orig_coef[lvl, ]
 }
 
-# Vérifier : full_coef devrait maintenant avoir une ligne "bq" remplie de 0
 cat("Matrice complète des coefficients (avant symétrisation) :\n")
 print(full_coef)
 
@@ -371,8 +392,11 @@ table_test <- table(
 print(table_test)
 print(final_model)
 print(final_model$sym_coef)
+
 # ------------------------------------------------------------------------
 # 12) Sauvegarde du modèle final
 # ------------------------------------------------------------------------
 saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
 cat("Modèle sauvegardé avec succès.\n")
+
+source("code/02_model/wrangle_coefforgooglesheet.R")

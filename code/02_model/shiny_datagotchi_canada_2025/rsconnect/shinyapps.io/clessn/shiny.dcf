@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: clessn
+account: clessn
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13993769
+bundleId: 9795918
+url: https://clessn.shinyapps.io/shiny/
+version: 1
