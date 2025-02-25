@@ -1,8 +1,6 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# 02 Variables disponibles pour le clustering
+# 03 - Variables à utiliser pour le clustering
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 library(dplyr)
 
@@ -59,17 +57,15 @@ variables_mode_de_vie_clust <- c(
   "ses_dwelling_townHouse",
   "ses_dwelling_Other",
   "act_transport_Car",
-  "act_transport_SUV",
-  "act_transport_Walk",
-  "act_transport_Bicycle",
-  "act_transport_PublicTransportation",
-  "vehicule_ToutTerrain",
-  "vehicule_Van",
-  "vehicule_Voiture",
-  "vehicule_electric",
-  "vehicule_VUS",
-  "vehicule_other",
-  "vehicule_noCar"
+  "act_transport_activeTransport",
+  "act_transport_PublicTransportation"
+  # "vehicule_ToutTerrain",
+  # "vehicule_Van",
+  # "vehicule_Voiture",
+  # "vehicule_electric",
+  # "vehicule_VUS",
+  # "vehicule_other",
+  # "vehicule_noCar"
 )
 
 variables_commerce_clust <- c(
@@ -90,8 +86,8 @@ variables_commerce_clust <- c(
 
 variables_ses_clust <- c(
   "id",
-  "male",
-  "female",
+  #"male",
+  #"female",
   "age",
   "langEn",
   "langFr",
@@ -103,9 +99,7 @@ variables_ses_clust <- c(
   "ses_ethn_Black",
   "ses_ethn_Other",
   "ses_hetero",
-  "ses_gai",
-  "ses_bisex",
-  "ses_sexOri_other"
+  "ses_queer"
 )
 
 variables_clust <- Reduce(union, list(
@@ -116,3 +110,4 @@ variables_clust <- Reduce(union, list(
   variables_commerce_clust,
   variables_ses_clust
 ))
+
