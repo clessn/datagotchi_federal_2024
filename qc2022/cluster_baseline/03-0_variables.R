@@ -1,8 +1,6 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# 02 Variables disponibles pour le clustering
+# 03 - Variables à utiliser pour le clustering
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 library(dplyr)
 

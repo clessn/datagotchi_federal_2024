@@ -37,11 +37,22 @@ Le dernier notebook de cette étape sert à assembler les tables de variables pr
 
 Finalement, le fichier `02-X_variables.R` qui est la dernière sous-étape de cette étape permet de déclarer des variables contenant les nouveaux noms de variables par sous-ensemble. La préparation des variables changes parfois la nature ou le nombre de variables d'un sous-groupe et par conséquent, les sous-groupes de variables définis en 01 ne sont plus valables pour la suite.
 
+À la sortie de cette étape, on a 
+
+- `02_pilot1_2022.rds` : Un fichier contenant les données prêtes à être utilisées dans le clustering
+
 ## 03 - Clustering
 
-À l'étape 03, on construit les clusters
+À l'étape 03, on construit les clusters. Les étapes sont les suivantes
+
+03-0 : Copie du fichier `02-X_variables.R` qui contient le nom des variables disponibles pour le clustering. C'est à partir de ce fichier que la sélection des variables pour le clustering s'effectue     
 
 03-1 : Utilisation d'une méthode de clustering et d'une sélection de variables pour construire des clusters
+
 03-2 : Permet de voir la distribution des répondants à travers les clusters
+
 03-3 : Permet de connaître les variables les plus distinctives entre les clusters
+
 03-4 : Créé des prompts pour demander à ChatGPT une suggestion pour le nom et la description des clusters
+
+03-5 : Affiche la distribution des clusters à travers le territoire
