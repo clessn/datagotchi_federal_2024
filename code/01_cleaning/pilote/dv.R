@@ -9,6 +9,7 @@ table(DataClean$dv_turnout)
 
 ## vote_choice -----------------------------------------------------------
 
+attributes(DataRaw$vote_choice)
 table(DataRaw$vote_choice)
 DataClean$dv_voteChoice <- NA
 DataClean$dv_voteChoice[DataRaw$vote_choice == 1] <- "lpc"
