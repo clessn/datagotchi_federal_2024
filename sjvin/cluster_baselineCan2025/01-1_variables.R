@@ -47,7 +47,7 @@ variables_style <- c(
   "lifestyle_ownPetCat",
   "lifestyle_ownPetDog",
   "lifestyle_ownPetOther",
-  "lifestyle_ownPetCatAndDog"
+  "lifestyle_ownPetCatAndDog",
   "lifestyle_ownPetFarmAnimals",
   "lifestyle_ownPetNone"
 )
@@ -152,13 +152,12 @@ variables_ses <- c(
 
 variables_vote <- c(
   "id",
-  "op_intent",
-  "op_intent_CAQ",
-  "op_intent_PQ",
-  "op_intent_PLQ",
-  "op_intent_QS",
-  "op_intent_PCQ",
-  "op_intent_Other"
+  "dv_voteChoiceLPC",
+  "dv_voteChoiceCPC",
+  "dv_voteChoiceNDP",
+  "dv_voteChoiceBQ",
+  "dv_voteChoiceGPC",
+  "dv_voteChoiceOther"
 )
 
 variables_communes <- Reduce(union, list(

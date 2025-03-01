@@ -12,7 +12,7 @@
 library(tidyverse)
 
 # Charger les données
-DataPilot <- read.csv("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/DataCleanPilot_2025Janv30.rds")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/DataCleanPilot_2025Janv30.rds")
 DataApp <- readRDS("")
 
 # Correction des noms de variables associées au Drink
