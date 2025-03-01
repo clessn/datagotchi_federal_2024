@@ -17,6 +17,13 @@ table(DataClean$ses_gender)
 
 # gender_female ----------------------------------------------------------------
 
+DataClean$ses_genderMale <- NA
+DataClean$ses_genderMale[DataRaw$ses_gender == 1] <- 1
+DataClean$ses_genderMale[DataRaw$ses_gender != 1] <- 0
+table(DataClean$ses_genderMale)
+
+# gender_female ----------------------------------------------------------------
+
 DataClean$ses_genderFemale <- NA
 DataClean$ses_genderFemale[DataRaw$ses_gender == 2] <- 1
 DataClean$ses_genderFemale[DataRaw$ses_gender != 2] <- 0
@@ -651,4 +658,73 @@ DataClean$ses_dwelling_cat <- factor(
             "other")
 )
 table(DataClean$ses_dwelling_cat, useNA = "ifany")
+
+## bin
+
+# Pour "apartment_complex"
+DataClean$ses_dwellingApp <- NA
+DataClean$ses_dwellingApp[DataRaw$ses_dwelling == 1] <- 1
+DataClean$ses_dwellingApp[DataRaw$ses_dwelling != 1] <- 0
+table(DataClean$ses_dwellingApp)
+
+# Pour "loft"
+DataClean$ses_dwellingLoft <- NA
+DataClean$ses_dwellingLoft[DataRaw$ses_dwelling == 2] <- 1
+DataClean$ses_dwellingLoft[DataRaw$ses_dwelling != 2] <- 0
+table(DataClean$ses_dwellingLoft)
+
+# Pour "condominium"
+DataClean$ses_dwellingCondo <- NA
+DataClean$ses_dwellingCondo[DataRaw$ses_dwelling == 3] <- 1
+DataClean$ses_dwellingCondo[DataRaw$ses_dwelling != 3] <- 0
+table(DataClean$ses_dwellingCondo)
+
+# Pour "high_rise_apartment"
+DataClean$ses_dwellingTour <- NA
+DataClean$ses_dwellingTour[DataRaw$ses_dwelling == 4] <- 1
+DataClean$ses_dwellingTour[DataRaw$ses_dwelling != 4] <- 0
+table(DataClean$ses_dwellingTour)
+
+# Pour "stand_alone_house"
+DataClean$ses_dwellingDetachedHouse <- NA
+DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling == 5] <- 1
+DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling != 5] <- 0
+table(DataClean$ses_dwellingDetachedHouse)
+
+# Pour "townhouse"
+DataClean$ses_dwellingTownhouse <- NA
+DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling == 6] <- 1
+DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling != 6] <- 0
+table(DataClean$ses_dwellingTownhouse)
+
+# Pour "duplex"
+DataClean$ses_dwellingDuplex <- NA
+DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling == 7] <- 1
+DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling != 7] <- 0
+table(DataClean$ses_dwellingDuplex)
+
+# Pour "cooperative_housing"
+DataClean$ses_dwellingCoop <- NA
+DataClean$ses_dwellingCoop[DataRaw$ses_dwelling == 8] <- 1
+DataClean$ses_dwellingCoop[DataRaw$ses_dwelling != 8] <- 0
+table(DataClean$ses_dwellingCoop)
+
+# Pour "social_or_public_housing"
+DataClean$ses_dwellingHLM <- NA
+DataClean$ses_dwellingHLM[DataRaw$ses_dwelling == 9] <- 1
+DataClean$ses_dwellingHLM[DataRaw$ses_dwelling != 9] <- 0
+table(DataClean$ses_dwellingHLM)
+
+# Pour "mobile_home"
+DataClean$ses_dwellingMobile <- NA
+DataClean$ses_dwellingMobile[DataRaw$ses_dwelling == 10] <- 1
+DataClean$ses_dwellingMobile[DataRaw$ses_dwelling != 10] <- 0
+table(DataClean$ses_dwellingMobile)
+
+# Pour "other"
+DataClean$ses_dwellingOther <- NA
+DataClean$ses_dwellingOther[DataRaw$ses_dwelling == 11] <- 1
+DataClean$ses_dwellingOther[DataRaw$ses_dwelling != 11] <- 0
+table(DataClean$ses_dwellingOther)
+
 
