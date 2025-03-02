@@ -54,13 +54,7 @@ variables_style <- c(
 
 variables_sante <- c(
   "id",
-  "lifestyle_eatMeatFreq_never",
-  "lifestyle_eatMeatFreq_almost_never",
-  "lifestyle_eatMeatFreq_once_month",
-  "lifestyle_eatMeatFreq_once_week",
-  "lifestyle_eatMeatFreq_few_week",
-  "lifestyle_eatMeatFreq_daily",
-  "lifestyle_eatMeatFreq_few_daily",
+  "lifestyle_eatMeatFreq",
   "lifestyle_favAlcoolRedWine",
   "lifestyle_favAlcoolWhiteWine",
   "lifestyle_favAlcoolRoseWine",
@@ -70,13 +64,7 @@ variables_sante <- c(
   "lifestyle_favAlcoolMicroBeer",
   "lifestyle_favAlcoolCocktail",
   "lifestyle_favAlcoolDontDrink",
-  "lifestyle_smokeFreq_never",
-  "lifestyle_smokeFreq_few_times_year",
-  "lifestyle_smokeFreq_month",
-  "lifestyle_smokeFreq_once_week",
-  "lifestyle_smokeFreq_few_times_week",
-  "lifestyle_smokeFreq_once_day",
-  "lifestyle_smokeFreq_few_times_day"
+  "lifestyle_smokeFreq"
 )
 
 variables_mode_de_vie <- c(
@@ -87,18 +75,18 @@ variables_mode_de_vie <- c(
   "ses_dwellingCondo",
   "ses_dwellingTour",
   "ses_dwellingDetachedHouse",
-  "ses_dwellingTownHouse",
+  "ses_dwellingTownhouse",
   "ses_dwellingDuplex",
   "ses_dwellingCoop",
   "ses_dwellingHLM",
   "ses_dwellingMobile",
   "ses_dwellingOther",
-  "act_typeTransportCar",
-  "act_typeTransportSUV",
-  "act_typeTransportMoto",
-  "act_typeTransportWalk",
-  "act_typeTransportBicycle",
-  "act_typeTransportPublicTransit"
+  "lifestyle_typeTransportCar",
+  "lifestyle_typeTransportSUV",
+  "lifestyle_typeTransportMoto",
+  "lifestyle_typeTransportWalk",
+  "lifestyle_typeTransportBicycle",
+  "lifestyle_typeTransportPublicTransit"
 )
 
 variables_commerce <- c(
@@ -110,7 +98,7 @@ variables_commerce <- c(
   "lifestyle_consClothesDepartment",
   "lifestyle_consClothesOnline",
   "lifestyle_consClothesOther",
-  "lifestyle_consCoffeeTim",
+  "lifestyle_consCoffeeTimHortons",
   "lifestyle_consCoffeeStarbucks",
   "lifestyle_consCoffeeSecondCup",
   "lifestyle_consCoffeeMcDo",
@@ -123,31 +111,18 @@ variables_ses <- c(
   "id",
   "ses_genderMale",
   "ses_genderFemale",
-  "age34m",
-  "age3554",
-  "age55p",
-  "langEn",
-  "langFr",
-  "ses_languageOther",
-  "educBHS",
-  "educCollege",
-  "educUniv",
-  "ses_income_None",
-  "ses_income_i1to30",
-  "ses_income_i31to60",
-  "ses_income_i61to90",
-  "ses_income_i91to110",
-  "ses_income_i111to150",
-  "ses_income_i151to200",
-  "ses_income_i201toInf",
-  "immigrant",
-  "ses_ethn_White",
-  "ses_ethn_Black",
-  "ses_ethn_Other",
-  "ses_hetero",
-  "ses_gai",
-  "ses_bisex",
-  "ses_sexOri_other"
+  "ses_gender",
+  "ses_ageGroup5Years",
+  "ses_age_4Cat",
+  "ses_region",
+  "ses_language",
+  "ses_educ_3Cat",
+  "ses_income",
+  "ses_income3Cat",
+  "ses_immigrant",
+  "ses_ethnicity",
+  "ses_ethnicityWB",
+  "ses_sexOrientation"
 )
 
 variables_vote <- c(
@@ -169,3 +144,4 @@ variables_communes <- Reduce(union, list(
   variables_ses,
   variables_vote
 ))
+

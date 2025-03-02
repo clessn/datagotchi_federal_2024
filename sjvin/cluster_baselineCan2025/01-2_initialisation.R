@@ -12,12 +12,12 @@
 library(tidyverse)
 
 # Charger les données
-DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/DataCleanPilot_2025Janv30.rds")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250301.rds")
 DataApp <- readRDS("")
 
 # Correction des noms de variables associées au Drink
 # Les noms dans le pilot sont modifiés pour les noms dans l'app
-df_pilot1_2022 <- df_pilot1_2022 %>%
+DataPilot <- DataPilot %>%
   rename(
     cons_bubbleDrink = cons_sparklingDrink,
     cons_beerDrink = cons_regBeers,
@@ -26,7 +26,7 @@ df_pilot1_2022 <- df_pilot1_2022 %>%
   )
 
 # Correction des noms de variables associées au dwelling
-df_pilot1_2022 <- df_pilot1_2022 %>%
+DataPilot <- DataPilot %>%
   rename(
     ses_dwelling_App = ses_dwelling_app,
     ses_dwelling_Loft = ses_dwelling_loft,
@@ -42,7 +42,7 @@ df_pilot1_2022 <- df_pilot1_2022 %>%
     ses_dwelling_Other
   ))
 
-df_app_2022 <- df_app_2022 %>%
+DataApp <- DataApp %>%
   mutate(ses_dwelling_Other = ifelse(
     ses_dwelling_Duplex == 1, # Variable uniquement dans l'app
     1,
@@ -50,10 +50,10 @@ df_app_2022 <- df_app_2022 %>%
   ))
 
 # Sélection des variables communes
-df_pilot1_2022 <- df_pilot1_2022 %>%
+DataPilot <- DataPilot %>%
   select(all_of(variables_communes))
 
-df_app_2022 <- df_app_2022 %>%
+DataApp <- DataApp %>%
   select(all_of(variables_communes))
 
 # Sauvegarder les données
