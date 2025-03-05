@@ -32,7 +32,7 @@ source("code/01_cleaning/pilote/dv.R")
 source("code/01_cleaning/pilote/attitudes.R")
 
 ## Remove NA from quotas
-# DataClean <- DataClean |> drop_na(starts_with("ses"))
+#DataClean <- DataClean |> drop_na(starts_with("ses"))
 
 # Save -------------------------------------------------------------------------
 

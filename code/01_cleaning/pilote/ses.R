@@ -271,10 +271,10 @@ DataClean$ses_educ_5Cat <- factor(DataClean$ses_educ_5Cat, levels = c("educBHS",
 table(DataClean$ses_educ_5Cat)
 
 DataClean$ses_educ_3Cat <- NA
-DataClean$ses_educ_3Cat[DataRaw$ses_education == 1 | DataRaw$ses_education == 2 | DataRaw$ses_education == 3] <- "educBUniv"
+DataClean$ses_educ_3Cat[DataRaw$ses_education == 1 | DataRaw$ses_education == 2 | DataRaw$ses_education == 3] <- "educBHS"
 DataClean$ses_educ_3Cat[DataRaw$ses_education == 4] <- "educPostHS"
 DataClean$ses_educ_3Cat[DataRaw$ses_education == 5 | DataRaw$ses_education == 6 | DataRaw$ses_education == 7]<- "educUniv"
-DataClean$ses_educ_3Cat <- factor(DataClean$ses_educ_3Cat, levels = c("educBUniv",
+DataClean$ses_educ_3Cat <- factor(DataClean$ses_educ_3Cat, levels = c("educBHS",
                                                                         "educPostHS",
                                                                         "educUniv"))
 
