@@ -25,11 +25,11 @@ variables_act <- c(
   "lifestyle_exerciseSwim",
   "lifestyle_exerciseOther",
   "lifestyle_exerciseNone",
-  "lifestyle_goFishingFreq",
-  "lifestyle_goHuntingFreq",
-  "lifestyle_goMuseumsFreq",
-  "lifestyle_motorizedActFreq",
-  "lifestyle_volunteeringFreq"
+  "lifestyle_goFishingFreq_numeric",
+  "lifestyle_goHuntingFreq_numeric",
+  "lifestyle_goMuseumsFreq_numeric",
+  "lifestyle_motorizedActFreq_numeric",
+  "lifestyle_volunteeringFreq_numeric"
 )
 
 variables_style <- c(
@@ -66,6 +66,7 @@ variables_sante <- c(
   "lifestyle_favAlcoolDontDrink",
   "lifestyle_smokeFreq"
 )
+
 
 variables_mode_de_vie <- c(
   "id",
@@ -144,4 +145,3 @@ variables_communes <- Reduce(union, list(
   variables_ses,
   variables_vote
 ))
-
