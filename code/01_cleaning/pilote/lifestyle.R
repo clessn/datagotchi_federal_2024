@@ -1348,7 +1348,7 @@ DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 2] <- 0.25
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 3] <- 0.5
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 4] <- 0.75
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 5] <- 1
-DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 6] <- 99
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 6] <- 0.5
 table(DataClean$lifestyle_typeMorningToEvening)
 
 ## trip ------------------------------------------------------------------
