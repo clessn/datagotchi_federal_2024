@@ -68,7 +68,7 @@ table(DataClean$dv_voteChoiceGPC)
 
 DataClean$dv_voteChoiceOther <- NA
 DataClean$dv_voteChoiceOther[DataRaw$vote_choice %in% c(6,7,8,9,10)] <- 1
-DataClean$dv_voteChoiceOther[DataRaw$vote_choice %in% c(1,2,4,4,5)] <- 0
+DataClean$dv_voteChoiceOther[DataRaw$vote_choice %in% c(1,2,3,4,5)] <- 0
 table(DataClean$dv_voteChoiceOther)
 
 

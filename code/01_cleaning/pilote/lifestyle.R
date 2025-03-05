@@ -734,6 +734,7 @@ DataClean$lifestyle_workField[DataRaw$field_occupation == 5] <- "education_law_p
 DataClean$lifestyle_workField[DataRaw$field_occupation == 6] <- "culture_sports"
 DataClean$lifestyle_workField[DataRaw$field_occupation == 9] <- "agriculture"
 DataClean$lifestyle_workField[DataRaw$field_occupation == 10] <- "manufacturing"
+DataClean$lifestyle_workField[DataRaw$field_occupation == 11] <- "no_job"
 DataClean$lifestyle_workField <- factor(DataClean$lifestyle_workField,
                                                    levels = c("economics",
                                                               "natural_sciences",
@@ -741,9 +742,10 @@ DataClean$lifestyle_workField <- factor(DataClean$lifestyle_workField,
                                                               "education_law_politics",
                                                               "culture_sports",
                                                               "agriculture",
-                                                              "manufacturing"),
+                                                              "manufacturing",
+                                                              "no_job"),
                                                    ordered = TRUE)
-table(DataClean$lifestyle_workField)
+table(DataClean$lifestyle_workField, useNA = "ifany")
 
 ## type_occupation -------------------------------------------------------
 
@@ -1257,13 +1259,13 @@ DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 7] <- "punk"
 DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 8] <- "rock"
 DataClean$lifestyle_clothingStyle[DataRaw$clothing_style == 9] <- "other"
 DataClean$lifestyle_clothingStyle <- factor(DataClean$lifestyle_clothingStyle)
-table(DataClean$lifestyle_clothingStyle)
 
 ## grouped
 DataClean$lifestyle_clothingStyleGroups <- NA
 DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(1, 5)] <- "formal"
 DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(2, 3, 4)] <- "easygoing"
 DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style %in% c(6, 7, 8)] <- "edgy"
+DataClean$lifestyle_clothingStyleGroups[DataRaw$clothing_style == 9] <- "other"
 DataClean$lifestyle_clothingStyleGroups <- factor(DataClean$lifestyle_clothingStyleGroups)
 table(DataClean$lifestyle_clothingStyleGroups)
 
@@ -1346,6 +1348,7 @@ DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 2] <- 0.25
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 3] <- 0.5
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 4] <- 0.75
 DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 5] <- 1
+DataClean$lifestyle_typeMorningToEvening[DataRaw$chronotype == 6] <- 99
 table(DataClean$lifestyle_typeMorningToEvening)
 
 ## trip ------------------------------------------------------------------
