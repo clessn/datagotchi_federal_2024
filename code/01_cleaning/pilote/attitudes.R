@@ -47,10 +47,10 @@ table(DataClean$issue_proGunControl)
 table(DataRaw$issue_economy)
 attributes(DataRaw$issue_economy)
 DataClean$issue_reduceDeficit <- NA
-DataClean$issue_reduceDeficit[DataRaw$issue_immigration == 1] <- 0
-DataClean$issue_reduceDeficit[DataRaw$issue_immigration == 2] <- 0.33
-DataClean$issue_reduceDeficit[DataRaw$issue_immigration == 3] <- 0.66
-DataClean$issue_reduceDeficit[DataRaw$issue_immigration == 4] <- 1
+DataClean$issue_reduceDeficit[DataRaw$issue_economy == 1] <- 0
+DataClean$issue_reduceDeficit[DataRaw$issue_economy == 2] <- 0.33
+DataClean$issue_reduceDeficit[DataRaw$issue_economy == 3] <- 0.66
+DataClean$issue_reduceDeficit[DataRaw$issue_economy == 4] <- 1
 table(DataClean$issue_reduceDeficit)
 
 ## issue_health ----------------------------------------------------------

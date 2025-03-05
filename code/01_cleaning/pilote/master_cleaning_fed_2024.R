@@ -31,6 +31,14 @@ source("code/01_cleaning/pilote/dv.R")
 
 source("code/01_cleaning/pilote/attitudes.R")
 
+## Remove NA from quotas
+# DataClean <- DataClean |> drop_na(starts_with("ses"))
+
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataClean/datagotchi2025_canada_pilot_20250301.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataClean/datagotchi2025_canada_pilot_20250305.rds")
+
+
+# Save for clustering usage ----------------------------------------------
+
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250305.rds")
