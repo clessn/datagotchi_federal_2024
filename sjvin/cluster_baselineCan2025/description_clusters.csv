@@ -1,0 +1,117 @@
+"prompt","description"
+"Propose un prénom pour une personne habitant au Québec et donne une brève description pour le persona 1 :
+Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
+c(""ses_age"", ""ses_languageEnglish"")
+Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
+Aucune variable avec une moyenne significativement plus basse que la moyenne de la population en général.
+
+Ce cluster est composé de 
+Femmes: NA%, 
+     Immigrants: NA%
+Âge: NA ans, 
+     Revenu: 116452 k$
+Langues: 
+     En NA%, 
+     Fr NA%, 
+     Autres: 0%
+Édu: NA (0=bas, 1=élevé), 
+     Ethnie (Blanc): NA%
+Orientation (Hétéro): NA%
+","Pour une personne habitant au Québec, avec un profil tel que décrit, un prénom qui pourrait convenir est ""Chloé"". Voici une brève description du persona :
+
+**Nom :** Chloé
+
+**Âge :** Plus âgée que la moyenne générale de la population.
+
+**Situation économique :** Chloé dispose d'un revenu de 116 452 $ par an, ce qui est relativement élevé.
+
+**Langues :** Bien qu'elle vive au Québec, Chloé parle principalement l'anglais, ce qui est significativement plus fréquent que dans la population générale.
+
+**Éducation :** Son niveau d'éducation n'est pas spécifié, mais il est supposé être élevé, vu son revenu.
+
+**Origine ethnique :** Les données spécifiques ne sont pas disponibles, mais elle pourrait être perçue comme étant d'origine caucasienne.
+
+**Orientation sexuelle :** Non spécifiée.
+
+**Particularités :** Chloé se distingue par sa maîtrise de l'anglais dans un environnement majoritairement francophone, ce qui suggère qu'elle peut être impliquée dans des secteurs professionnels ou sociaux où l'anglais est prédominant.
+
+Chloé pourrait être une professionnelle accomplie, peut-être dans un domaine international ou lié aux affaires, et elle est probablement bien intégrée dans des cercles anglophones tout en vivant au Québec."
+"Propose un prénom pour une personne habitant au Québec et donne une brève description pour le persona 2 :
+Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
+c(""ses_age"", ""ses_languageFrench"")
+Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
+c(""lifestyle_goHuntingFreq_numeric"", ""lifestyle_volunteeringFreq_numeric"", ""ses_languageEnglish"")
+
+Ce cluster est composé de 
+Femmes: NA%, 
+     Immigrants: NA%
+Âge: NA ans, 
+     Revenu: 104135.7 k$
+Langues: 
+     En NA%, 
+     Fr NA%, 
+     Autres: 0.4%
+Édu: NA (0=bas, 1=élevé), 
+     Ethnie (Blanc): NA%
+Orientation (Hétéro): NA%
+","Pour une personne habitant au Québec, un prénom approprié pourrait être ""Élise.""
+
+Persona 2 : Élise
+
+Élise est une femme vivant au Québec, où elle parle principalement le français. Elle est plus âgée que la moyenne de la population générale et son revenu est élevé, à 104 135,7 k$. Élise ne parle pas souvent anglais et a une tendance nettement plus faible à participer à des activités de chasse et de bénévolat. En tant que francophone, elle est bien intégrée dans la culture québécoise, mais elle n'est pas très engagée dans les activités de plein air traditionnelles comme la chasse, ni dans le bénévolat communautaire. Sa présence dans le groupe des immigrants n'est pas précisée, mais elle s'identifie majoritairement à la culture francophone du Québec. Étant donné qu'elle est plus âgée, elle a probablement une stabilité financière et une certaine expérience de vie qui influencent son style de vie."
+"Propose un prénom pour une personne habitant au Québec et donne une brève description pour le persona 3 :
+Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
+ses_ethnicityOther
+Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
+c(""lifestyle_goFishingFreq_numeric"", ""ses_age"", ""ses_ethnicityWhite"", ""ses_immigrant"")
+
+Ce cluster est composé de 
+Femmes: NA%, 
+     Immigrants: NA%
+Âge: NA ans, 
+     Revenu: 109883.7 k$
+Langues: 
+     En NA%, 
+     Fr NA%, 
+     Autres: 24.4%
+Édu: NA (0=bas, 1=élevé), 
+     Ethnie (Blanc): NA%
+Orientation (Hétéro): NA%
+","Pour le prénom, je propose ""Kiana"". Ce prénom est à la fois unique et multiculturel, reflétant bien la diversité ethnique suggérée par les données. Voici une brève description pour le persona 3 :
+
+**Prénom : Kiana**
+
+Kiana est une personne qui se distingue par sa riche diversité culturelle. Elle a des origines ethniques variées, ce qui se reflète dans ses intérêts et son mode de vie. Résidant au Québec, elle appartient à une tranche de revenu relativement élevée, avec une valeur moyenne de 109 883,7 $. Elle parle probablement plusieurs langues, ce qui lui permet de naviguer aisément dans des environnements multiculturels, bien que le français ne soit pas sa langue maternelle.
+
+Elle n'est pas particulièrement intéressée par des activités telles que la pêche, et elle est plus jeune que la moyenne de la population générale. Contrairement à la population typique du Québec, Kiana n'est pas d'origine blanche majoritaire et n'est pas immigrante, ce qui suggère qu'elle peut être issue d'une minorité ethnique bien intégrée au Québec.
+
+Kiana est sans doute bien éduquée, ce qui pourrait expliquer son revenu élevé. Elle pourrait travailler dans un domaine qui valorise ses compétences linguistiques et sa capacité à naviguer dans des contextes culturels variés, tels que les affaires internationales, la diplomatie, ou les médias. 
+
+Sa diversité culturelle et son style de vie urbain et sophistiqué font d'elle une citoyenne du monde bien ancrée dans la culture québécoise, tout en apportant sa propre touche unique à la communauté."
+"Propose un prénom pour une personne habitant au Québec et donne une brève description pour le persona 4 :
+Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
+c(""lifestyle_clothingStyleClassic"", ""lifestyle_goFishingFreq_numeric"", ""lifestyle_goHuntingFreq_numeric"", ""lifestyle_goMuseumsFreq_numeric"", ""lifestyle_motorizedActFreq_numeric"", ""lifestyle_smokeFreq"", ""lifestyle_volunteeringFreq_numeric"")
+Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
+c(""lifestyle_clothingStyleCasual"", ""lifestyle_ownPetNone"", ""ses_age"")
+
+Ce cluster est composé de 
+Femmes: NA%, 
+     Immigrants: NA%
+Âge: NA ans, 
+     Revenu: 122103.7 k$
+Langues: 
+     En NA%, 
+     Fr NA%, 
+     Autres: 0.6%
+Édu: NA (0=bas, 1=élevé), 
+     Ethnie (Blanc): NA%
+Orientation (Hétéro): NA%
+","Pour une personne habitant au Québec, je propose le prénom ""Émilie"". Voici une brève description pour le persona correspondant au profil 4 :
+
+**Émilie** est une personne active et engagée dans sa communauté. Elle a un style vestimentaire classique et apprécie les activités de plein air, telles que la pêche et la chasse. Émilie aime aussi enrichir sa culture en visitant régulièrement des musées.
+
+Elle participe souvent à des activités motorisées, ce qui peut inclure la conduite de véhicules tout-terrain ou la navigation de plaisance. Bien qu'elle fume, elle consacre également une partie de son temps à faire du bénévolat, ce qui montre son engagement social et son désir de contribuer à la société.
+
+Émilie préfère un mode de vie accompagné d'animaux de compagnie, ce qui suggère qu'elle a au moins un animal chez elle. Elle est aussi relativement jeune par rapport à la moyenne de la population générale, ce qui pourrait expliquer son dynamisme et son goût pour les activités variées.
+
+Avec un revenu assez élevé par rapport à la moyenne, Émilie a les moyens de profiter de nombreuses expériences et de soutenir des causes qui lui tiennent à cœur."

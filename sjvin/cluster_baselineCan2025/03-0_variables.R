@@ -7,103 +7,97 @@ library(dplyr)
 # Déclaration des variables de clustering
 variables_act_clust <- c(
   "id",
-  "act_Gym",
-  "act_Walk",
-  "act_Run",
-  "act_Yoga",
-  "act_Other",
-  "act_None",
-  "act_Fishing",
-  "act_Hunting",
-  "act_VisitsMuseumsGaleries",
-  "act_MotorizedOutdoorActivities",
-  "act_Volunteering"
+  "lifestyle_exerciseGym",
+  "lifestyle_exerciseTeamSport",
+  "lifestyle_exerciseWalk",
+  "lifestyle_exerciseRun",
+  "lifestyle_exerciseYoga",
+  "lifestyle_exerciseSwim",
+  "lifestyle_exerciseOther",
+  "lifestyle_exerciseNone",
+  "lifestyle_goFishingFreq_numeric",
+  "lifestyle_goHuntingFreq_numeric",
+  "lifestyle_goMuseumsFreq_numeric",
+  "lifestyle_motorizedActFreq_numeric",
+  "lifestyle_volunteeringFreq_numeric"
 )
 
 variables_style_clust <- c(
   "id",
-  "app_swag_Classique",
-  "app_swag_Casual",
-  "app_swag_Sport",
-  "app_swag_Other",
-  "app_withTattoo",
-  "animal_cat",
-  "animal_dog",
-  "animal_other",
-  "animal_noPet"
+  "lifestyle_clothingStyleClassic",
+  "lifestyle_clothingStyleCasual",
+  "lifestyle_clothingStyleSport",
+  "lifestyle_clothingStyleOther",
+  "lifestyle_hasTattoos",
+  "lifestyle_ownPetCat",
+  "lifestyle_ownPetDog",
+  "lifestyle_ownPetOther",
+  "lifestyle_ownPetCatAndDog",
+  "lifestyle_ownPetNone"
 )
 
 variables_sante_clust <- c(
   "id",
-  "cons_Meat",
-  "cons_redWineDrink",
-  "cons_whiteWineDrink",
-  "cons_roseDrink",
-  "cons_spiritDrink",
-  "cons_bubbleDrink",
-  "cons_beerDrink",
-  "cons_microDrink",
-  "cons_cocktailDrink",
-  "cons_noDrink",
-  "cons_Smoke"
+  "lifestyle_eatMeatFreq",
+  "lifestyle_favAlcoolRedWine",
+  "lifestyle_favAlcoolWhiteWine",
+  "lifestyle_favAlcoolRoseWine",
+  "lifestyle_favAlcoolSpirits",
+  "lifestyle_favAlcoolBubbleDrink",
+  "lifestyle_favAlcoolBeer",
+  "lifestyle_favAlcoolMicroBeer",
+  "lifestyle_favAlcoolCocktail",
+  "lifestyle_favAlcoolDontDrink",
+  "lifestyle_smokeFreq"
 )
 
 variables_mode_de_vie_clust <- c(
   "id",
   #"postal_code", # À transformer en rural, urbain, région, banlieue
-  "ses_dwelling_App",
-  "ses_dwelling_Condo",
-  "ses_dwelling_detachedHouse",
-  "ses_dwelling_townHouse",
-  "ses_dwelling_Other",
-  "act_transport_Car",
-  "act_transport_SUV",
-  "act_transport_Walk",
-  "act_transport_Bicycle",
-  "act_transport_PublicTransportation",
-  "vehicule_ToutTerrain",
-  "vehicule_Van",
-  "vehicule_Voiture",
-  "vehicule_electric",
-  "vehicule_VUS",
-  "vehicule_other",
-  "vehicule_noCar"
+  "ses_dwellingApp",
+  "ses_dwellingCondo",
+  "ses_dwellingDetachedHouse",
+  "ses_dwellingTownhouse",
+  "ses_dwellingDuplex",
+  "ses_dwellingOther",
+  "lifestyle_typeTransportCar",
+  "lifestyle_typeTransportSUV",
+  "lifestyle_typeTransportActive",
+  "lifestyle_typeTransportPublicTransit"
 )
 
 variables_commerce_clust <- c(
   "id",
-  "cons_brand_MaR",
-  "cons_brand_BInd",
-  "cons_brand_ChainesB",
-  "cons_brand_GSurf",
-  "cons_brand_OnlineOnly",
-  "cons_brand_Frip",
-  "cons_brand_Other",
-  "cons_coffee_TimH",
-  "cons_coffee_Starbucks",
-  "cons_coffee_McDo",
-  "cons_coffee_Other",
-  "cons_coffee_place_ind"
+  "lifestyle_consClothesFrip",
+  "lifestyle_consClothesIndependent",
+  "lifestyle_consClothesChain",
+  "lifestyle_consClothesSuperstores",
+  "lifestyle_consClothesDepartment",
+  "lifestyle_consClothesOnline",
+  "lifestyle_consClothesOther",
+  "lifestyle_consCoffeeTimHortons",
+  "lifestyle_consCoffeeStarbucks",
+  "lifestyle_consCoffeeMcDo",
+  "lifestyle_consCoffeeOther",
+  "lifestyle_consCoffeeIndependent",
+  "lifestyle_consCoffeeNone"
 )
 
 variables_ses_clust <- c(
   "id",
-  "male",
-  "female",
-  "age",
-  "langEn",
-  "langFr",
+  "ses_genderMale",
+  "ses_age",
+  "ses_languageEnglish",
+  "ses_languageFrench",
   "ses_languageOther",
-  "educ",
+  "ses_educ",
   "ses_income",
-  "immigrant",
-  "ses_ethn_White",
-  "ses_ethn_Black",
-  "ses_ethn_Other",
-  "ses_hetero",
-  "ses_gai",
-  "ses_bisex",
-  "ses_sexOri_other"
+  "ses_immigrant",
+  "ses_ethnicityWhite",
+  "ses_ethnicityBlack",
+  "ses_ethnicityOther",
+  "ses_sexOrientationHetero",
+  "ses_sexOrientationQueer"
 )
 
 variables_clust <- Reduce(union, list(
