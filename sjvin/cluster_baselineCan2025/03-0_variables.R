@@ -61,7 +61,6 @@ variables_mode_de_vie_clust <- c(
   "ses_dwellingDuplex",
   "ses_dwellingOther",
   "lifestyle_typeTransportCar",
-  "lifestyle_typeTransportSUV",
   "lifestyle_typeTransportActive",
   "lifestyle_typeTransportPublicTransit"
 )
@@ -84,20 +83,20 @@ variables_commerce_clust <- c(
 )
 
 variables_ses_clust <- c(
-  "id",
-  "ses_genderMale",
-  "ses_age",
-  "ses_languageEnglish",
-  "ses_languageFrench",
-  "ses_languageOther",
-  "ses_educ",
-  "ses_income",
-  "ses_immigrant",
-  "ses_ethnicityWhite",
-  "ses_ethnicityBlack",
-  "ses_ethnicityOther",
-  "ses_sexOrientationHetero",
-  "ses_sexOrientationQueer"
+  #"id",
+  #"ses_genderMale",
+  #"ses_age",
+  #"ses_languageEnglish",
+  #"ses_languageFrench",
+  #"ses_languageOther",
+  #"ses_educ",
+  #"ses_income",
+  #"ses_immigrant",
+  #"ses_ethnicityWhite",
+  #"ses_ethnicityBlack",
+  #"ses_ethnicityOther",
+  #"ses_sexOrientationHetero",
+  #"ses_sexOrientationQueer"
 )
 
 variables_clust <- Reduce(union, list(

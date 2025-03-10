@@ -61,7 +61,6 @@ variables_mode_de_vie_clust <- c(
   "ses_dwellingDuplex",
   "ses_dwellingOther",
   "lifestyle_typeTransportCar",
-  "lifestyle_typeTransportSUV",
   "lifestyle_typeTransportActive",
   "lifestyle_typeTransportPublicTransit"
 )
