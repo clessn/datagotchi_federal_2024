@@ -12,7 +12,7 @@
 library(tidyverse)
 
 # Charger les données
-DataPilot <- readRDS("/Users/sarah-janevincent/Library/CloudStorage/Dropbox/clessn_capp/datagotchi/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250305.rds")
+DataPilot <- readRDS("/Users/sarah-janevincent/Library/CloudStorage/Dropbox/clessn_capp/datagotchi/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
 DataApp <- readRDS("")
 
 # Correction des noms de variables associées au Drink

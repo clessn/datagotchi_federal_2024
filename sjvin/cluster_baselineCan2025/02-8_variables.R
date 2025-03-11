@@ -89,14 +89,24 @@ variables_ses_clust <- c(
   "ses_languageEnglish",
   "ses_languageFrench",
   "ses_languageOther",
-  "ses_educ",
-  "ses_income",
+  "ses_educBHS",
+  "ses_educPostHS",
+  "ses_educUniv",
+  "ses_incomeLow",
+  "ses_incomeMid",
+  "ses_incomeHigh",
   "ses_immigrant",
   "ses_ethnicityWhite",
   "ses_ethnicityBlack",
   "ses_ethnicityOther",
   "ses_sexOrientationHetero",
-  "ses_sexOrientationQueer"
+  "ses_sexOrientationQueer",
+  "ses_regionPrairies",
+  "ses_regionBC",
+  "ses_regionAtlantic",
+  "ses_regionOntario",
+  "ses_regionQuebec",
+  "ses_regionTerritories"
 )
 
 variables_clust <- Reduce(union, list(

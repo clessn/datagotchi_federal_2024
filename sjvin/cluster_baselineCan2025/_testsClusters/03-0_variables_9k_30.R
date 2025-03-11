@@ -45,7 +45,7 @@ variables_sante_clust <- c(
   #"lifestyle_favAlcoolSpirits",
   #"lifestyle_favAlcoolBubbleDrink",
   "lifestyle_favAlcoolBeer",
-  "lifestyle_favAlcoolMicroBeer",
+  #"lifestyle_favAlcoolMicroBeer",
   #"lifestyle_favAlcoolCocktail",
   "lifestyle_favAlcoolDontDrink",
   "lifestyle_smokeFreq"
