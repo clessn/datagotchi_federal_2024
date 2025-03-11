@@ -18,7 +18,7 @@ variables_act_clust <- c(
   #"lifestyle_goFishingFreq_numeric",
   "lifestyle_goHuntingFreq_numeric"
   #"lifestyle_goMuseumsFreq_numeric"
-  #"lifestyle_motorizedActFreq_numeric"
+  #"lifestyle_motorizedActFreq_numeric",
   #"lifestyle_volunteeringFreq_numeric"
 )
 
@@ -115,3 +115,4 @@ variables_clust <- Reduce(union, list(
   variables_commerce_clust,
   variables_ses_clust
 ))
+
