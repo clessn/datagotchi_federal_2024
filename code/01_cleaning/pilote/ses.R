@@ -574,7 +574,7 @@ attributes(DataRaw$ses_parent)
 table(DataRaw$ses_parent)
 DataClean$ses_parentImmigrant <- NA
 DataClean$ses_parentImmigrant[DataRaw$ses_parent == 1] <- 1
-DataClean$ses_parentImmigrant[DataRaw$ses_parent != 1] <- 0
+DataClean$ses_parentImmigrant[DataRaw$ses_parent == 2] <- 0
 table(DataClean$ses_parentImmigrant)
 
 
@@ -583,8 +583,8 @@ table(DataClean$ses_parentImmigrant)
 attributes(DataRaw$ses_immigrant)
 table(DataRaw$ses_immigrant)
 DataClean$ses_immigrant <- NA
-DataClean$ses_immigrant[DataRaw$ses_immigrant == 1] <- 1
-DataClean$ses_immigrant[DataRaw$ses_immigrant != 1] <- 0
+DataClean$ses_immigrant[DataRaw$ses_immigrant == 1] <- 0
+DataClean$ses_immigrant[DataRaw$ses_immigrant != 1] <- 1
 table(DataClean$ses_immigrant)
 
 ## dwelling --------------------------------------------------------------
