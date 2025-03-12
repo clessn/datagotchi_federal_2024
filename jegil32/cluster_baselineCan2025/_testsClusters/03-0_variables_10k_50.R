@@ -18,7 +18,7 @@ variables_act_clust <- c(
   #"lifestyle_goFishingFreq_numeric",
   "lifestyle_goHuntingFreq_numeric"
   #"lifestyle_goMuseumsFreq_numeric"
-  #"lifestyle_motorizedActFreq_numeric"
+  #"lifestyle_motorizedActFreq_numeric",
   #"lifestyle_volunteeringFreq_numeric"
 )
 
@@ -84,7 +84,7 @@ variables_commerce_clust <- c(
 variables_ses_clust <- c(
   "id",
   #"ses_genderMale",
-  "ses_age",
+  #"ses_age",
   #"ses_languageEnglish",
   "ses_languageFrench",
   #"ses_languageOther",
@@ -93,8 +93,8 @@ variables_ses_clust <- c(
   "ses_educUniv",
   "ses_incomeLow",
   #"ses_incomeMid",
-  "ses_incomeHigh"
-  #"ses_immigrant",
+  "ses_incomeHigh",
+  "ses_immigrant",
   #"ses_ethnicityWhite",
   #"ses_ethnicityMinority",
   #"ses_sexOrientationHetero",
@@ -103,7 +103,7 @@ variables_ses_clust <- c(
   #"ses_regionBC",
   #"ses_regionAtlantic",
   #"ses_regionOntario",
-  #"ses_regionQuebec"
+  "ses_regionQuebec"
   #"ses_regionTerritories"
 )
 
