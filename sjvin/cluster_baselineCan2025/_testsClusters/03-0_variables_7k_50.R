@@ -11,7 +11,7 @@ variables_act_clust <- c(
   #"lifestyle_exerciseTeamSport",
   #"lifestyle_exerciseWalk",
   #"lifestyle_exerciseRun",
-  #"lifestyle_exerciseYoga",
+  "lifestyle_exerciseYoga",
   #"lifestyle_exerciseSwim",
   #"lifestyle_exerciseOther",
   "lifestyle_exerciseNone",
@@ -86,7 +86,7 @@ variables_ses_clust <- c(
   #"ses_genderMale",
   #"ses_age",
   #"ses_languageEnglish",
-  #ses_languageFrench",
+  "ses_languageFrench",
   #"ses_languageOther",
   "ses_educBHS",
   #"ses_educPostHS",
@@ -94,7 +94,7 @@ variables_ses_clust <- c(
   "ses_incomeLow",
   #"ses_incomeMid",
   "ses_incomeHigh",
-  "ses_immigrant",
+  "ses_immigrant"
   #"ses_ethnicityWhite",
   #"ses_ethnicityMinority",
   #"ses_sexOrientationHetero",
@@ -103,7 +103,7 @@ variables_ses_clust <- c(
   #"ses_regionBC",
   #"ses_regionAtlantic",
   #"ses_regionOntario",
-  "ses_regionQuebec"
+  #ses_regionQuebec"
   #"ses_regionTerritories"
 )
 
