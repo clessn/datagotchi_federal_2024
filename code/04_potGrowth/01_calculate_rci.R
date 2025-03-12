@@ -6,7 +6,7 @@ library(dplyr)
 # Data -------------------------------------------------------------------
 
 ## J'ai pris celles de clustering. J'imagine c'est la meilleure option
-df_pilote <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250305.rds")
+df_pilote <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
 
 # Calculate RCI ----------------------------------------------------------
 
@@ -47,4 +47,4 @@ df_pilote_with_rci <- df_pilote |>
 
 # Save it ----------------------------------------------------------------
 
-saveRDS(df_pilote_with_rci, "_SharedFolder_datagotchi_federal_2024/data/04_potGrowth/01_pilote_with_rci.rds")
+saveRDS(df_pilote_with_rci, "_SharedFolder_datagotchi_federal_2024/data/potGrowth/01_pilote_with_rci.rds")
