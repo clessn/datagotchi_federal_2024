@@ -54,12 +54,12 @@ plot_text <- ggplot() +
 
 # Définir les couleurs spécifiques par parti
 party_colors <- c(
-  "LPC" = "#FF0000",
-  "CPC" = "#0000FF",
-  "NDP" = "#FF8000",
-  "BQ"  = "#1F77B4",
-  "GPC" = "#00A550",
-  "PPC" = "#800080"
+  "LPC" = "#D71B1E",
+  "CPC" = "#142E52",
+  "NDP" = "#F58220",
+  "BQ"  = "#080236",
+  "GPC" = "#3D9B35",
+  "PPC" = "#442D7B"
 )
 
 # Créer le graphique pour ce cluster
@@ -98,3 +98,4 @@ ggsave(
   dpi = 300, 
   device = "pdf"  # Force l'enregistrement en PNG
 )
+
