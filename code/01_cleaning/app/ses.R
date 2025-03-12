@@ -2,36 +2,36 @@
  
 ## gender ----------------------------------------------------------------------
 
-DataRaw <- ECAN25_Data_20250305_20250311 
+
 attributes(DataRaw$gender)
 table(DataRaw$gender)
 
 
 #data clean
-DataClean<- data.frame(matrix(nrow = nrow(ECAN25_Data_20250305_20250311)))
+
 DataClean$ses_gender <- NA
-DataClean$ses_gender[DataRaw$gender == "Man"] <- 1
-DataClean$ses_gender[DataRaw$gender == "Woman"] <- 2
-DataClean$ses_gender[DataRaw$gender == "Trans man"] <- 3
-DataClean$ses_gender[DataRaw$gender == "Trans woman"] <- 4
-DataClean$ses_gender[DataRaw$gender == "Non-binary"] <- 5
-DataClean$ses_gender[DataRaw$gender == "Queer"] <- 6
-DataClean$ses_gender[DataRaw$gender == "Agender"] <- 7
+DataClean$ses_gender[DataRaw$gender == "Man"] <- "man"
+DataClean$ses_gender[DataRaw$gender == "Woman"] <- "woman"
+DataClean$ses_gender[DataRaw$gender == "Trans man"] <- "trans_man"
+DataClean$ses_gender[DataRaw$gender == "Trans woman"] <- "trans_woman"
+DataClean$ses_gender[DataRaw$gender == "Non-binary"] <- "non_binary"
+DataClean$ses_gender[DataRaw$gender == "Queer"] <- "queer"
+DataClean$ses_gender[DataRaw$gender == "Agender"] <- "agender"
 DataClean$ses_gender <- factor(DataClean$ses_gender)
 table(DataClean$ses_gender)
 
-# gender_female ----------------------------------------------------------------
+# gender_male ----------------------------------------------------------------
 
 DataClean$ses_genderMale <- NA
-DataClean$ses_genderMale[DataClean$ses_gender == 1] <- 1
-DataClean$ses_genderMale[DataClean$ses_gender != 1] <- 0
+DataClean$ses_genderMale[DataRaw$gender == "Woman"] <- 1
+DataClean$ses_genderMale[DataRaw$gender != "Woman"] <- 0
 table(DataClean$ses_genderMale)
 
 # gender_female ----------------------------------------------------------------
 
 DataClean$ses_genderFemale <- NA
-DataClean$ses_genderFemale[DataClean$ses_gender == 2] <- 1
-DataClean$ses_genderFemale[DataClean$ses_gender != 2] <- 0
+DataClean$ses_genderFemale[DataRaw$gender == 2] <- 1
+DataClean$ses_genderFemale[DataRaw$gender != 2] <- 0
 table(DataClean$ses_genderFemale)
 
 ## age--------------------------------------------------------------------------
@@ -97,66 +97,93 @@ table(DataClean$ses_age_4Cat)
 
 ## region ----------------------------------------------------------------------
 
-attributes(DataRaw$ses_region)
-table(DataRaw$ses_region)
-DataClean$ses_province <- NA
-DataClean$ses_province[DataRaw$ses_region == 1] <- "AB"
-DataClean$ses_province[DataRaw$ses_region == 2] <- "BC"
-DataClean$ses_province[DataRaw$ses_region == 3] <- "MB"
-DataClean$ses_province[DataRaw$ses_region == 4] <- "NB"
-DataClean$ses_province[DataRaw$ses_region == 5] <- "NL"
-DataClean$ses_province[DataRaw$ses_region == 6] <- "NT"
-DataClean$ses_province[DataRaw$ses_region == 7] <- "NS"
-DataClean$ses_province[DataRaw$ses_region == 8] <- "NU"
-DataClean$ses_province[DataRaw$ses_region == 9] <- "ON"
-DataClean$ses_province[DataRaw$ses_region == 10] <- "PE"
-DataClean$ses_province[DataRaw$ses_region == 11] <- "QC"
-DataClean$ses_province[DataRaw$ses_region == 12] <- "SK"
-DataClean$ses_province[DataRaw$ses_region == 13] <- "YT"
-DataClean$ses_province <- factor(DataClean$ses_province, levels = c("AB",
-                                                                      "BC",
-                                                                      "MB",
-                                                                      "NB",
-                                                                      "NL",
-                                                                      "NT",
-                                                                      "NS",
-                                                                      "NU",
-                                                                      "ON",
-                                                                      "PE",
-                                                                      "QC",
-                                                                      "SK",
-                                                                      "YT"))
+# Fonction pour convertir les codes postaux en provinces avec distinction NT/NU
+postal_to_province <- function(postal_codes) {
+  # S'assurer que les codes sont en majuscules et nettoyer les espaces
+  postal_codes <- toupper(trimws(postal_codes))
+  
+  # Extraire le premier caractère (lettre)
+  first_char <- substr(postal_codes, 1, 1)
+  
+  # Extraire les 3 premiers caractères pour distinguer NT et NU
+  first_three <- substr(postal_codes, 1, 3)
+  
+  # Table de correspondance première lettre -> province
+  provinces <- character(length(first_char))
+  
+  # Assigner les provinces selon la première lettre
+  provinces[first_char == "A"] <- "NL"  # Newfoundland and Labrador
+  provinces[first_char == "B"] <- "NS"  # Nova Scotia
+  provinces[first_char == "C"] <- "PE"  # Prince Edward Island
+  provinces[first_char == "E"] <- "NB"  # New Brunswick
+  provinces[first_char %in% c("G", "H", "J")] <- "QC"  # Quebec
+  provinces[first_char %in% c("K", "L", "M", "N", "P")] <- "ON"  # Ontario
+  provinces[first_char == "R"] <- "MB"  # Manitoba
+  provinces[first_char == "S"] <- "SK"  # Saskatchewan
+  provinces[first_char == "T"] <- "AB"  # Alberta
+  provinces[first_char == "V"] <- "BC"  # British Columbia
+  provinces[first_char == "Y"] <- "YT"  # Yukon
+  
+  # Distinction NT/NU basée sur les 3 premiers caractères
+  # NT: X0E, X0G, X1A (Yellowknife)
+  provinces[first_three %in% c("X0E", "X0G", "X1A")] <- "NT"
+  
+  # NU: X0A, X0B, X0C
+  provinces[first_three %in% c("X0A", "X0B", "X0C")] <- "NU"
+  
+  # Si X mais pas dans les codes connus ci-dessus, on laisse NA
+  provinces[first_char == "X" & !(first_three %in% c("X0A", "X0B", "X0C", "X0E", "X0G", "X1A"))] <- NA
+  
+  return(provinces)
+}
+
+
+table(DataRaw$postal_code)
+# 1. Appliquer la fonction aux données brutes pour obtenir les provinces
+DataClean$ses_province <- postal_to_province(DataRaw$postal_code)
+
+# 2. Convertir en facteur avec les niveaux spécifiés
+DataClean$ses_province <- factor(DataClean$ses_province, 
+                               levels = c("AB", "BC", "MB", "NB", "NL", 
+                                         "NT", "NS", "NU", "ON", "PE", 
+                                         "QC", "SK", "YT"))
+
+# 3. Vérifier la distribution
+table(DataClean$ses_province, useNA = "ifany")
 table(DataClean$ses_province)
 
 # region ----------------------------------------------------------------------
 
-DataClean$ses_region <- NA
-DataClean$ses_region[DataRaw$ses_region == 1 |
-                        DataRaw$ses_region == 3 |
-                        DataRaw$ses_region == 12] <- "prairie"
-DataClean$ses_region[DataRaw$ses_region == 2] <- "british_columbia"
-DataClean$ses_region[DataRaw$ses_region == 5 |
-                        DataRaw$ses_region == 7 |
-                        DataRaw$ses_region == 10] <- "atlantic"
-DataClean$ses_region[DataRaw$ses_region == 9] <- "ontario"
-DataClean$ses_region[DataRaw$ses_region == 11] <- "quebec"
-DataClean$ses_region[DataRaw$ses_region == 6 |
-                        DataRaw$ses_region == 8 |
-                        DataRaw$ses_region == 13] <- "territories"
-DataClean$ses_region <- factor(DataClean$ses_region, levels = c("prairie",
-                                                                "british_columbia",
-                                                                "atlantic",
-                                                                "ontario",
-                                                                "quebec",
-                                                                "territories"))
+# Définir la correspondance entre provinces et régions
+DataClean$ses_region <- NA  # Créer la nouvelle variable
+
+# Attribuer les régions correspondantes
+DataClean$ses_region[DataClean$ses_province %in% c("AB", "SK", "MB")] <- "prairie"
+DataClean$ses_region[DataClean$ses_province == "BC"] <- "british_columbia"
+DataClean$ses_region[DataClean$ses_province %in% c("NB", "NL", "NS", "PE")] <- "atlantic"
+DataClean$ses_region[DataClean$ses_province == "ON"] <- "ontario"
+DataClean$ses_region[DataClean$ses_province == "QC"] <- "quebec"
+DataClean$ses_region[DataClean$ses_province %in% c("NT", "NU", "YT")] <- "territories"
+
+# Convertir en facteur avec les niveaux spécifiés
+DataClean$ses_region <- factor(DataClean$ses_region, 
+                               levels = c("prairie", 
+                                          "british_columbia",
+                                          "atlantic",
+                                          "ontario", 
+                                          "quebec",
+                                          "territories"))
+
+# Vérifier le résultat
 table(DataClean$ses_region)
 
 # region qc -------------------------------------------------------------------
 
-table(DataRaw$ses_region)
+table(DataClean$ses_region)
+
 DataClean$ses_regionQc <- NA
-DataClean$ses_regionQc[DataRaw$ses_region == 11] <- 1
-DataClean$ses_regionQc[DataRaw$ses_region != 11] <- 0
+DataClean$ses_regionQc[DataClean$ses_region == "quebec"] <- 1
+DataClean$ses_regionQc[DataClean$ses_region != "quebec"] <- 0
 table(DataClean$ses_regionQc)
 
 
@@ -173,100 +200,56 @@ table(DataClean$ses_postalCode)
 attributes(DataRaw$language)
 table(DataRaw$language)
 DataClean$ses_language <- NA
-DataClean$ses_language[DataRaw$language == "English"] <- 1
-DataClean$ses_language[DataRaw$language == "French"] <- 2
-DataClean$ses_language[DataRaw$language == "Other"] <- 3
-DataClean$ses_language <- factor(DataClean$ses_language, levels = c(1,
-                                                                      2,
-                                                                      3))
+DataClean$ses_language[DataRaw$language == "English"] <- "english"
+DataClean$ses_language[DataRaw$language == "French"] <- "french"
+DataClean$ses_language[DataRaw$language == "Other"] <- "other"
+DataClean$ses_language <- factor(DataClean$ses_language, levels = c("english",
+                                                                      "french",
+                                                                      "other"))
 table(DataClean$ses_language)
 
 
 ## religion --------------------------------------------------------------------
 
-attributes(DataRaw$ses_religion)
-table(DataRaw$ses_religion)
-DataClean$ses_religion <- NA
-DataClean$ses_religion[DataRaw$ses_religion == 1] <- "agnostic"
-DataClean$ses_religion[DataRaw$ses_religion == 2] <- "atheist"
-DataClean$ses_religion[DataRaw$ses_religion == 3] <- "buddhist"
-DataClean$ses_religion[DataRaw$ses_religion == 4] <- "catholic"
-DataClean$ses_religion[DataRaw$ses_religion == 5] <- "orthodox_christian"
-DataClean$ses_religion[DataRaw$ses_religion == 6] <- "hindu"
-DataClean$ses_religion[DataRaw$ses_religion == 7] <- "muslim"
-DataClean$ses_religion[DataRaw$ses_religion == 8] <- "jew"
-DataClean$ses_religion[DataRaw$ses_religion == 9] <- "protestant"
-DataClean$ses_religion[DataRaw$ses_religion == 10] <- "sikh"
-DataClean$ses_religion[DataRaw$ses_religion == 11] <- "evangelical"
-DataClean$ses_religion[DataRaw$ses_religion == 12] <- "other"
-DataClean$ses_religion <- factor(DataClean$ses_religion, levels = c("agnostic",
-                                                                      "atheist",
-                                                                      "buddhist",
-                                                                      "catholic",
-                                                                      "orthodox_christian",
-                                                                      "hindu",
-                                                                      "muslim",
-                                                                      "jew",
-                                                                      "protestant",
-                                                                      "sikh",
-                                                                      "evangelical",
-                                                                      "other"))
-table(DataRaw$ses_religion)
-DataClean$ses_religionBigFive <- NA
-DataClean$ses_religionBigFive[DataRaw$ses_religion %in% c(4, 5, 9, 11)] <- "christian"
-DataClean$ses_religionBigFive[DataRaw$ses_religion == 7] <- "muslim"
-DataClean$ses_religionBigFive[DataRaw$ses_religion == 8] <- "jew"
-DataClean$ses_religionBigFive[DataRaw$ses_religion == 6] <- "hindu"
-DataClean$ses_religionBigFive[DataRaw$ses_religion == 3] <- "buddhist"
-DataClean$ses_religionBigFive[DataRaw$ses_religion %in% c(1, 2)] <- "agnostic/atheist"
-DataClean$ses_religionBigFive[DataRaw$ses_religion == 12 | 
-                                 DataRaw$ses_religion == 10] <- "other"
-DataClean$ses_religionBigFive <- factor(DataClean$ses_religionBigFive)
-table(DataClean$ses_religionBigFive)
 
-
-attributes(DataRaw$ses_religion)
-table(DataRaw$ses_religion, useNA = "ifany")
-DataClean$ses_religion_bin <- NA
-DataClean$ses_religion_bin[DataRaw$ses_religion == 1 | DataRaw$ses_religion == 2] <- 0
-DataClean$ses_religion_bin[DataRaw$ses_religion != 1 & DataRaw$ses_religion != 2 & !is.na(DataRaw$ses_religion)] <- 1
-table(DataClean$ses_religion_bin)
-
-## religiosity -------------------------------------------------------------
-
-table(DataRaw$ses_religiosity_1)
-DataClean$ses_religiosity <- NA
-DataClean$ses_religiosity <- DataRaw$ses_religiosity_1/100
-table(DataClean$ses_religiosity)
 
 
 ## education ---------------------------------------------------------------
 
 attributes(DataRaw$education)
 table(DataRaw$education)
+# Créer la nouvelle variable
 DataClean$ses_educ <- NA
-DataClean$ses_educ[DataRaw$education == "No schooling"] <- 1
-DataClean$ses_educ[DataRaw$education == "Elementary school"] <- 2
-DataClean$ses_educ[DataRaw$education == "High school"] <- 3
-DataClean$ses_educ[DataRaw$education == "Technical, community college, CEGEP or Classical college" ] <- 4
-DataClean$ses_educ[DataRaw$education == "Bachelor’s degree"] <- 5
-DataClean$ses_educ[DataRaw$education == "Master’s degree"] <- 6
-DataClean$ses_educ[DataRaw$education ==  "Doctorate"] <- 7
-DataClean$ses_educ <- factor(DataClean$ses_educ, levels = c(1,
-                                                              2,
-                                                                3,
-                                                                  4,
-                                                                    5,
-                                                                     6,
-                                                                      7))
+
+# Attribuer les catégories correspondantes
+DataClean$ses_educ[DataRaw$education == "No schooling"] <- "no_schooling"
+DataClean$ses_educ[DataRaw$education == "Elementary school"] <- "elementary_school"
+DataClean$ses_educ[DataRaw$education == "High school"] <- "high_school"
+DataClean$ses_educ[DataRaw$education == "Technical, community college, CEGEP or Classical college"] <- "technical_community_cegep"
+DataClean$ses_educ[DataRaw$education == "Bachelor’s degree"] <- "bachelor"
+DataClean$ses_educ[DataRaw$education == "Master’s degree"] <- "masters"
+DataClean$ses_educ[DataRaw$education == "Doctorate"] <- "doctorate"
+
+# Convertir en facteur avec les niveaux spécifiés
+DataClean$ses_educ <- factor(DataClean$ses_educ, 
+                             levels = c("no_schooling",
+                                        "elementary_school",
+                                        "high_school",
+                                        "technical_community_cegep",
+                                        "bachelor",
+                                        "masters",
+                                        "doctorate"))
+
+# Vérifier le résultat
 table(DataClean$ses_educ)
 
+
 DataClean$ses_educ_5Cat <- NA
-DataClean$ses_educ_5Cat[DataClean$ses_educ == 1 | DataClean$ses_educ == 2] <- "educBHS"
-DataClean$ses_educ_5Cat[DataClean$ses_educ == 3] <- "educHS"
-DataClean$ses_educ_5Cat[DataClean$ses_educ == 4] <- "educPostHS"
-DataClean$ses_educ_5Cat[DataClean$ses_educ == 5 ]<- "educUnivBac"
-DataClean$ses_educ_5Cat[DataClean$ses_educ == 6 | DataClean$ses_educ == 7] <- "educUnivSup"
+DataClean$ses_educ_5Cat[DataClean$ses_educ == "no_schooling" | DataClean$ses_educ == "elementary_school"] <- "educBHS"
+DataClean$ses_educ_5Cat[DataClean$ses_educ == "high_school"] <- "educHS"
+DataClean$ses_educ_5Cat[DataClean$ses_educ == "technical_community_cegep"] <- "educPostHS"
+DataClean$ses_educ_5Cat[DataClean$ses_educ == "bachelor" ]<- "educUnivBac"
+DataClean$ses_educ_5Cat[DataClean$ses_educ == "masters" | DataClean$ses_educ == "doctorate"] <- "educUnivSup"
 DataClean$ses_educ_5Cat <- factor(DataClean$ses_educ_5Cat, levels = c("educBHS",
                                                                         "educHS",
                                                                         "educPostHS",
@@ -275,271 +258,149 @@ DataClean$ses_educ_5Cat <- factor(DataClean$ses_educ_5Cat, levels = c("educBHS",
 table(DataClean$ses_educ_5Cat)
 
 DataClean$ses_educ_3Cat <- NA
-DataClean$ses_educ_3Cat[DataRaw$ses_education == 1 | DataRaw$ses_education == 2 | DataRaw$ses_education == 3] <- "educBHS"
-DataClean$ses_educ_3Cat[DataRaw$ses_education == 4] <- "educPostHS"
-DataClean$ses_educ_3Cat[DataRaw$ses_education == 5 | DataRaw$ses_education == 6 | DataRaw$ses_education == 7]<- "educUniv"
+DataClean$ses_educ_3Cat[DataClean$ses_educ == "no_schooling" | DataClean$ses_educ == "elementary_school" | DataClean$ses_educ == "high_school"] <- "educBHS"
+DataClean$ses_educ_3Cat[DataClean$ses_educ == "technical_community_cegep"] <- "educPostHS"
+DataClean$ses_educ_3Cat[DataClean$ses_educ == "masters" | DataClean$ses_educ == "doctorate" | DataClean$ses_educ == "bachelor"]<- "educUniv"
 DataClean$ses_educ_3Cat <- factor(DataClean$ses_educ_3Cat, levels = c("educBHS",
                                                                         "educPostHS",
                                                                         "educUniv"))
 
-table(DataClean$educ_5Cat)
+table(DataClean$ses_educ_3Cat)
 
 
 ## income ----------------------------------------------------------------
 
 attributes(DataRaw$ses_income)
-table(DataRaw$ses_income)
+table(DataRaw$income)
 DataClean$ses_income <- NA
-DataClean$ses_income[DataRaw$ses_income == 1] <- "no_income"
-DataClean$ses_income[DataRaw$ses_income == 2] <- "1_to_30000"
-DataClean$ses_income[DataRaw$ses_income == 3] <- "30001_to_60000"
-DataClean$ses_income[DataRaw$ses_income == 4] <- "60001_to_90000"
-DataClean$ses_income[DataRaw$ses_income == 5] <- "90001_to_110000"
-DataClean$ses_income[DataRaw$ses_income == 6] <- "110001_to_150000"
-DataClean$ses_income[DataRaw$ses_income == 7] <- "150001_to_200000"
-DataClean$ses_income[DataRaw$ses_income == 8] <- "more_than_200000"
-DataClean$ses_income <- factor(DataClean$ses_income, levels = c("no_income",
-                                                                  "1_to_30000",
-                                                                  "30001_to_60000",
-                                                                  "60001_to_90000",
-                                                                  "90001_to_110000",
-                                                                  "110001_to_150000",
-                                                                  "150001_to_200000",
-                                                                  "more_than_200000"))
+
+# Attribuer les catégories correspondantes
+DataClean$ses_income[DataRaw$income == "No income"] <- "no_income"
+DataClean$ses_income[DataRaw$income == "$ 1 to $ 30 000"] <- "1_to_30000"
+DataClean$ses_income[DataRaw$income == "$ 30 001 to $ 60 000"] <- "30001_to_60000"
+DataClean$ses_income[DataRaw$income == "$ 60 001 to $ 90 000"] <- "60001_to_90000"
+DataClean$ses_income[DataRaw$income == "$ 90 001 to $ 110 000"] <- "90001_to_110000"
+DataClean$ses_income[DataRaw$income == "$ 110 001 to $ 150 000"] <- "110001_to_150000"
+DataClean$ses_income[DataRaw$income == "$ 150 001 to $ 200 000"] <- "150001_to_200000"
+DataClean$ses_income[DataRaw$income == "More than $ 200 000"] <- "more_than_200000"
+
+# Convertir en facteur avec les niveaux spécifiés
+DataClean$ses_income <- factor(DataClean$ses_income, 
+                               levels = c("no_income",
+                                          "1_to_30000",
+                                          "30001_to_60000",
+                                          "60001_to_90000",
+                                          "90001_to_110000",
+                                          "110001_to_150000",
+                                          "150001_to_200000",
+                                          "more_than_200000"))
+
+# Vérifier le résultat
 table(DataClean$ses_income)
 
 DataClean$ses_income3Cat <- NA
-DataClean$ses_income3Cat[DataRaw$ses_income == 1 | DataRaw$ses_income == 2] <- "Low"
-DataClean$ses_income3Cat[DataRaw$ses_income == 3 | DataRaw$ses_income == 4 | DataRaw$ses_income == 5 | DataRaw$ses_income == 6] <- "Mid"
-DataClean$ses_income3Cat[DataRaw$ses_income == 7 | DataRaw$ses_income == 8] <- "High"
+
+# Utiliser les catégories de revenu au lieu des valeurs numériques
+DataClean$ses_income3Cat[DataClean$ses_income %in% c("no_income", "1_to_30000")] <- "Low"
+DataClean$ses_income3Cat[DataClean$ses_income %in% c("30001_to_60000", "60001_to_90000", "90001_to_110000", "110001_to_150000")] <- "Mid"
+DataClean$ses_income3Cat[DataClean$ses_income %in% c("150001_to_200000", "more_than_200000")] <- "High"
+
+# Convertir en facteur
 DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat)
+
+# Vérifier le résultat
 table(DataClean$ses_income3Cat)
 
 attributes(DataRaw$ses_income)
-table(DataRaw$ses_income)
 DataClean$ses_incomeCensus <- NA
-DataClean$ses_incomeCensus[DataRaw$ses_income == 1] <- "no_income"
-DataClean$ses_incomeCensus[DataRaw$ses_income == 2] <- "1_to_30000"
-DataClean$ses_incomeCensus[DataRaw$ses_income == 3] <- "30001_to_60000"
-DataClean$ses_incomeCensus[DataRaw$ses_income == 4] <- "60001_to_90000"
-DataClean$ses_incomeCensus[DataRaw$ses_income == 5] <- "90001_to_110000"
-DataClean$ses_incomeCensus[DataRaw$ses_income == 6] <- "110001_to_150000"
-DataClean$ses_incomeCensus[DataRaw$ses_income %in% c(7, 8)] <- "more_than_150000"
 
-DataClean$ses_incomeCensus <- factor(DataClean$ses_incomeCensus, levels = c("no_income",
-                                                                  "1_to_30000",
-                                                                  "30001_to_60000",
-                                                                  "60001_to_90000",
-                                                                  "90001_to_110000",
-                                                                  "110001_to_150000",
-                                                                  "more_than_150000"))
+# Utiliser les catégories de revenu de la variable income originale
+DataClean$ses_incomeCensus[DataRaw$income == "No income"] <- "no_income"
+DataClean$ses_incomeCensus[DataRaw$income == "$ 1 to $ 30 000"] <- "1_to_30000"
+DataClean$ses_incomeCensus[DataRaw$income == "$ 30 001 to $ 60 000"] <- "30001_to_60000"
+DataClean$ses_incomeCensus[DataRaw$income == "$ 60 001 to $ 90 000"] <- "60001_to_90000"
+DataClean$ses_incomeCensus[DataRaw$income == "$ 90 001 to $ 110 000"] <- "90001_to_110000"
+DataClean$ses_incomeCensus[DataRaw$income == "$ 110 001 to $ 150 000"] <- "110001_to_150000"
+DataClean$ses_incomeCensus[DataRaw$income %in% c("$ 150 001 to $ 200 000", "More than $ 200 000")] <- "more_than_150000"
+
+# Convertir en facteur avec les niveaux spécifiés
+DataClean$ses_incomeCensus <- factor(DataClean$ses_incomeCensus, 
+                                     levels = c("no_income",
+                                                "1_to_30000",
+                                                "30001_to_60000",
+                                                "60001_to_90000",
+                                                "90001_to_110000",
+                                                "110001_to_150000",
+                                                "more_than_150000"))
+
+# Vérifier le résultat
 table(DataClean$ses_incomeCensus)
 
 ## bilingualism-------------------------------------------------------------
 
-attributes(DataRaw$ses_bilingual_2)
-table(DataRaw$ses_bilingual_1)
-
-DataClean$ses_englishSkills <- NA
-DataClean$ses_englishSkills[DataRaw$ses_bilingual_1 == 4] <- "Full proficiency"
-DataClean$ses_englishSkills[DataRaw$ses_bilingual_1 == 3] <- "Conversational level"
-DataClean$ses_englishSkills[DataRaw$ses_bilingual_1 == 2] <- "Basic level"
-DataClean$ses_englishSkills[DataRaw$ses_bilingual_1 == 1] <- "No proficiency"
-DataClean$ses_englishSkills <- factor(DataClean$ses_englishSkills, levels = c("Full proficiency",
-                                                                  "Conversational level",
-                                                                  "Basic level",
-                                                                  "No proficiency"))
-table(DataClean$ses_englishSkills)
-  
-  
-  
-  
-DataClean$ses_frenchSkills <- NA
-DataClean$ses_frenchSkills[DataRaw$ses_bilingual_2 == 4] <- "Full proficiency"
-DataClean$ses_frenchSkills[DataRaw$ses_bilingual_2 == 3] <- "Conversational level"
-DataClean$ses_frenchSkills[DataRaw$ses_bilingual_2 == 2] <- "Basic level"
-DataClean$ses_frenchSkills[DataRaw$ses_bilingual_2 == 1] <- "No proficiency"
-DataClean$ses_frenchSkills <- factor(DataClean$ses_frenchSkills, levels = c("Full proficiency",
-                                                                          "Conversational level",
-                                                                          "Basic level",
-                                                                          "No proficiency"))
-table(DataClean$ses_frenchSkills)
-
-
-
 
 ## environment -------------------------------------------------------------
-
-attributes(DataRaw$ses_environment) 
-table(DataRaw$ses_environment)
-
-DataClean$ses_rurality <- NA # P-e changer le nom de cette variable pour quelque chose de plus parlant
-DataClean$ses_rurality[DataRaw$ses_environment == 1] <- "urban"
-DataClean$ses_rurality[DataRaw$ses_environment == 2] <- "suburban"
-DataClean$ses_rurality[DataRaw$ses_environment == 3] <- "rural"
-DataClean$ses_rurality <- factor(DataClean$ses_rurality, levels = c("urban",
-                                                                            "suburban",
-                                                                            "rural"))
-table(DataClean$ses_rurality)
-
 
 
 ## status ------------------------------------------------------------------
 
-attributes(DataRaw$ses_status)
-table(DataRaw$ses_status)
-
-DataClean$ses_matStatus <- NA
-DataClean$ses_matStatus[DataRaw$ses_status == 1] <- "single"
-DataClean$ses_matStatus[DataRaw$ses_status == 2] <- "married"
-DataClean$ses_matStatus[DataRaw$ses_status == 3] <- "common_law_relationship"
-DataClean$ses_matStatus[DataRaw$ses_status == 4] <- "widower_widow"
-DataClean$ses_matStatus[DataRaw$ses_status == 5] <- "divorced_separated"
-DataClean$ses_matStatus <- factor(DataClean$ses_matStatus, levels = c("single",
-                                                                  "married",
-                                                                  "common_law_relationship",
-                                                                  "widower_widow",
-                                                                  "divorced_separated"))
-table(DataClean$ses_matStatus)
-
 
 ## owner -------------------------------------------------------------------
-
-attributes(DataRaw$ses_owner)
-table(DataRaw$ses_owner)
-
-DataClean$ses_owner <- NA
-DataClean$ses_owner[DataRaw$ses_owner == 1] <- "owner"
-DataClean$ses_owner[DataRaw$ses_owner == 2] <- "tenant"
-DataClean$ses_owner[DataRaw$ses_owner == 3] <- "neither"
-DataClean$ses_owner <- factor(DataClean$ses_owner, levels = c("owner",
-                                                                  "tenant",
-                                                                  "neither"))
-table(DataClean$ses_owner)
 
 
 ## kids --------------------------------------------------------------------
 
-attributes(DataRaw$ses_kids)
-table(DataRaw$ses_kids)
 
-DataClean$ses_householdComp <- NA
-DataClean$ses_householdComp[DataRaw$ses_kids == 1] <- "partner_no_children"
-DataClean$ses_householdComp[DataRaw$ses_kids == 2] <- "partner_with_children"
-DataClean$ses_householdComp[DataRaw$ses_kids == 3] <- "no_partner_no_children"
-DataClean$ses_householdComp[DataRaw$ses_kids == 4] <- "no_partner_with_children"
-DataClean$ses_householdComp[DataRaw$ses_kids == 5] <- "roommates"
-DataClean$ses_householdComp[DataRaw$ses_kids == 6] <- "other"
-DataClean$ses_householdComp <- factor(DataClean$ses_householdComp, levels = c("partner_no_children",
-                                                                                "partner_with_children",
-                                                                                "no_partner_no_children",
-                                                                                "no_partner_with_children",
-                                                                                "roommates",
-                                                                                "other"))
-table(DataClean$ses_householdComp)
 
 
 ## ses_occupation --------------------------------------------------------------
 
-table(DataRaw$ses_occupation)
-attributes(DataRaw$ses_occupation)
-DataClean$ses_occupation <- NA
-DataClean$ses_occupation[DataRaw$ses_occupation == 1] <- "paid_employment"
-DataClean$ses_occupation[DataRaw$ses_occupation == 2] <- "self_employment"
-DataClean$ses_occupation[DataRaw$ses_occupation == 3] <- "student"
-DataClean$ses_occupation[DataRaw$ses_occupation == 4] <- "retired"
-DataClean$ses_occupation[DataRaw$ses_occupation == 5] <- "looking_for_work"
-DataClean$ses_occupation[DataRaw$ses_occupation == 6] <- "unemployed"
-DataClean$ses_occupation[DataRaw$ses_occupation == 7] <- "other"
-DataClean$ses_occupation <- factor(DataClean$ses_occupation, levels = c("paid_employment",
-                                                                          "self_employment",
-                                                                          "student",
-                                                                          "retired",
-                                                                          "looking_for_work",
-                                                                          "unemployed",
-                                                                          "other"))
 
-table(DataRaw$ses_occupation)
-attributes(DataRaw$ses_occupation)
-# Initialisation de la variable
-DataClean$ses_occupation_5Cat<- NA
-
-# Attribution des valeurs corrigées
-DataClean$ses_occupation_5Cat[DataRaw$ses_occupation == 1 | DataRaw$ses_occupation == 2] <- "employed"
-DataClean$ses_occupation_5Cat[DataRaw$ses_occupation == 5 | DataRaw$ses_occupation == 6] <- "unemployed"
-DataClean$ses_occupation_5Cat[DataRaw$ses_occupation == 4] <- "retired"
-DataClean$ses_occupation_5Cat[DataRaw$ses_occupation == 3] <- "student"
-DataClean$ses_occupation_5Cat[DataRaw$ses_occupation == 7] <- "other"
-table(DataClean$ses_occupation_5Cat)
-# Conversion en facteur avec les niveaux ordonnés
-DataClean$ses_occupation_5Cat <- factor(DataClean$ses_occupation_5Cat, 
-                                            levels = c("employed", 
-                                                       "unemployed", 
-                                                       "retired", 
-                                                       "student", 
-                                                       "other"))
-
-# Vérification des résultats
-table(DataClean$ses_occupation_5Cat)
 
 ## SES (enfant) -------------------------------------------------------------------
-
-attributes(DataRaw$ses_children)
-table(DataRaw$ses_children)
-DataRaw$ses_children <- as.numeric(DataRaw$ses_children)
-DataClean$ses_children <- NA
-DataClean$ses_children[DataRaw$ses_children == 0] <- 0
-DataClean$ses_children[DataRaw$ses_children == 1] <- 1
-DataClean$ses_children[DataRaw$ses_children == 2] <- 2
-DataClean$ses_children[DataRaw$ses_children == 3] <- 3
-DataClean$ses_children[DataRaw$ses_children == 4] <- 4
-DataClean$ses_children[DataRaw$ses_children >= 5] <- 5
-DataClean$ses_children <- factor(DataClean$ses_children, levels = c(0,
-                                                                      1,
-                                                                      2,
-                                                                      3,
-                                                                      4,
-                                                                      5),
-                                  ordered = TRUE)
-table(DataClean$ses_children)
 
 
 
 ## ethnicity -------------------------------------------------------------
-attributes(DataRaw$ses_ethnicity)
-table(DataRaw$ses_ethnicity)
-DataClean$ses_ethnicity <- NA
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 1] <- "white"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 2] <- "black"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 3] <- "indigenous"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 4] <- "asian"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 5] <- "hispanic"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 6] <- "arab"
-DataClean$ses_ethnicity[DataRaw$ses_ethnicity == 7] <- "other"
-DataClean$ses_ethnicity <- factor(DataClean$ses_ethnicity, levels = c("white",
-                                                                        "black",
-                                                                        "indigenous",
-                                                                        "asian",
-                                                                        "hispanic",
-                                                                        "arab",
-                                                                        "other"))
+
+table(DataRaw$ethnicity)
+correspondance <- c(
+  "Aboriginal" = "indigenous",
+  "Arab" = "arab",
+  "Asian" = "asian",
+  "Black" = "black",
+  "Hispanic" = "hispanic",
+  "Other" = "other",
+  "White" = "white"
+)
+
+# Application de la transformation
+DataClean$ses_ethnicity <- correspondance[DataRaw$ethnicity]
+
+# Conversion en facteur avec les niveaux spécifiés
+DataClean$ses_ethnicity <- factor(DataClean$ses_ethnicity, 
+                                   levels = c("white", "black", "indigenous", 
+                                              "asian", "hispanic", "arab", "other"))
+
+# Vérification du résultat
 table(DataClean$ses_ethnicity, useNA = "ifany")
 
 DataClean$ses_ethnicityWhite <- NA
-DataClean$ses_ethnicityWhite[DataRaw$ses_ethnicity == 1] <- 1
-DataClean$ses_ethnicityWhite[DataRaw$ses_ethnicity != 1] <- 0
+DataClean$ses_ethnicityWhite[DataRaw$ethnicity == "White"] <- 1
+DataClean$ses_ethnicityWhite[DataRaw$ethnicity != "White"] <- 0
 table(DataClean$ses_ethnicityWhite)
 
 DataClean$ses_ethnicityWB <- NA
-DataClean$ses_ethnicityWB[DataRaw$ses_ethnicity == 1] <- "white"
-DataClean$ses_ethnicityWB[DataRaw$ses_ethnicity == 2] <- "black"
-DataClean$ses_ethnicityWB[(DataRaw$ses_ethnicity %in% c(3, 4, 5, 6, 7))] <- "other"
+DataClean$ses_ethnicityWB[DataRaw$ethnicity == "White"] <- "white"
+DataClean$ses_ethnicityWB[DataRaw$ethnicity == "Black"] <- "black"
+DataClean$ses_ethnicityWB[(DataRaw$ethnicity %in% c("Aboriginal", 
+"Asian", "Hispanic", "Arab", "Other"))] <- "other"
 DataClean$ses_ethnicityWB <- factor(DataClean$ses_ethnicityWB)
 DataClean$ses_ethnicityWB <- relevel(DataClean$ses_ethnicityWB, ref = "white")
 table(DataClean$ses_ethnicityWB, useNA = "ifany")
 
 
-labels <- stringr::str_trim(names(attributes(DataRaw$ses_ethnicity)$labels))
+labels <- stringr::str_trim(names(attributes(DataRaw$ethnicity)$labels))
 json_data <- list(
   `1` = labels[1],
   `0` = labels[-1]
@@ -550,13 +411,14 @@ jsonlite::toJSON(json_data, pretty = TRUE)
 
 
 ## orientation -----------------------------------------------------------
-attributes(DataRaw$ses_orientation)
-table(DataRaw$ses_orientation)
+
+table(DataRaw$sexual_orientation)
 DataClean$ses_sexOrientation <- NA
-DataClean$ses_sexOrientation[DataRaw$ses_orientation == 1] <- "heterosexual"
-DataClean$ses_sexOrientation[DataRaw$ses_orientation == 2] <- "gay"
-DataClean$ses_sexOrientation[DataRaw$ses_orientation == 3] <- "bisexual"
-DataClean$ses_sexOrientation[DataRaw$ses_orientation == 4] <- "other"
+DataClean$ses_sexOrientation[DataRaw$sexual_orientation == "Heterosexual"] <- "heterosexual"
+DataClean$ses_sexOrientation[DataRaw$sexual_orientation == "Homosexual"] <- "gay"
+DataClean$ses_sexOrientation[DataRaw$sexual_orientation == "Bisexual"] <- "bisexual"
+DataClean$ses_sexOrientation[DataRaw$sexual_orientation == "Other"] <- "other"
+
 DataClean$ses_sexOrientation <- factor(DataClean$ses_sexOrientation, levels = c("heterosexual",
                                                                                         "gay",
                                                                                         "bisexual",
@@ -566,89 +428,112 @@ table(DataClean$ses_sexOrientation)
 ## heterosexual
 
 DataClean$ses_sexOrientationHetero <- NA
-DataClean$ses_sexOrientationHetero[DataRaw$ses_orientation == 1] <- 1
-DataClean$ses_sexOrientationHetero[DataRaw$ses_orientation != 1] <- 0
+DataClean$ses_sexOrientationHetero[DataRaw$sexual_orientation == "Heterosexual"] <- 1
+DataClean$ses_sexOrientationHetero[DataRaw$sexual_orientation != "Heterosexual"] <- 0
 table(DataClean$ses_sexOrientationHetero)
 
 
 
 ## parent ----------------------------------------------------------------
 
-attributes(DataRaw$ses_parent)
-table(DataRaw$ses_parent)
-DataClean$ses_parentImmigrant <- NA
-DataClean$ses_parentImmigrant[DataRaw$ses_parent == 1] <- 1
-DataClean$ses_parentImmigrant[DataRaw$ses_parent == 2] <- 0
-table(DataClean$ses_parentImmigrant)
-
 
 ## immigrant -------------------------------------------------------------
 
-attributes(DataRaw$ses_immigrant)
-table(DataRaw$ses_immigrant)
+
+table(DataRaw$birthplace)
+# Créer la variable ses_immigrant (initialement NA)
 DataClean$ses_immigrant <- NA
-DataClean$ses_immigrant[DataRaw$ses_immigrant == 1] <- 0
-DataClean$ses_immigrant[DataRaw$ses_immigrant != 1] <- 1
-table(DataClean$ses_immigrant)
+
+# Convertir les codes de pays en format standardisé (tous en majuscules)
+# On extrait d'abord le code du pays du format JSON
+birthplace_codes <- gsub('.*"code":"([^"]+)".*', "\\1", DataRaw$birthplace)
+birthplace_codes <- toupper(birthplace_codes)
+
+# Identifier les codes canadiens (CA, CA-QC)
+canadian_codes <- c("CA", "CA-QC")
+
+# Assigner 0 aux personnes nées au Canada (non-immigrants)
+DataClean$ses_immigrant[birthplace_codes %in% canadian_codes] <- 0
+
+# Assigner 1 aux personnes nées à l'étranger (immigrants)
+DataClean$ses_immigrant[!birthplace_codes %in% canadian_codes] <- 1
+
+
+# Vérifier le résultat
+table(DataClean$ses_immigrant, useNA = "ifany")
 
 ## dwelling --------------------------------------------------------------
-attributes(DataRaw$ses_dwelling)
-table(DataRaw$ses_dwelling, useNA = "ifany")
 
-DataClean$ses_dwelling <- NA
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 1] <- "apartment_complex"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 2] <- "loft"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 3] <- "condominium"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 4] <- "high_rise_apartment"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 5] <- "stand_alone_house"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 6] <- "townhouse"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 7] <- "duplex"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 8] <- "cooperative_housing"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 9] <- "social_or_public_housing"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 10] <- "mobile_home"
-DataClean$ses_dwelling[DataRaw$ses_dwelling == 11] <- "other"
-DataClean$ses_dwelling <- factor(DataClean$ses_dwelling, levels = c("apartment_complex",
-                                                                              "loft",
-                                                                              "condominium",
-                                                                              "high_rise_apartment",
-                                                                              "stand_alone_house",
-                                                                              "townhouse",
-                                                                              "duplex",
-                                                                              "cooperative_housing",
-                                                                              "social_or_public_housing",
-                                                                              "mobile_home",
-                                                                              "other"))
+table(DataRaw$dwelling, useNA = "ifany")
+
+# Création de la correspondance entre les catégories originales et les nouvelles catégories
+DataClean$ses_dwelling <- NA  # Initialisation
+
+# Transformation avec R de base
+DataClean$ses_dwelling[DataRaw$dwelling == "Apartment in a building that has fewer than five storeys"] <- "apartment_complex"
+DataClean$ses_dwelling[DataRaw$dwelling == "Loft"] <- "loft"
+DataClean$ses_dwelling[DataRaw$dwelling == "Condo"] <- "condominium"
+DataClean$ses_dwelling[DataRaw$dwelling == "High-rise apartment"] <- "high_rise_apartment"
+DataClean$ses_dwelling[DataRaw$dwelling == "Detached house"] <- "stand_alone_house"
+DataClean$ses_dwelling[DataRaw$dwelling == "Townhome"] <- "townhouse"
+DataClean$ses_dwelling[DataRaw$dwelling == "Duplex"] <- "duplex"
+DataClean$ses_dwelling[DataRaw$dwelling == "Co-op"] <- "cooperative_housing"
+DataClean$ses_dwelling[DataRaw$dwelling == "Public housing"] <- "social_or_public_housing"
+DataClean$ses_dwelling[DataRaw$dwelling == "Mobile house (boat, van, etc.)"] <- "mobile_home"
+DataClean$ses_dwelling[DataRaw$dwelling == "Other" | is.na(DataRaw$dwelling)] <- "other"
+
+# Conversion en facteur avec les niveaux spécifiés
+DataClean$ses_dwelling <- factor(
+  DataClean$ses_dwelling,
+  levels = c(
+    "apartment_complex",
+    "loft",
+    "condominium",
+    "high_rise_apartment",
+    "stand_alone_house",
+    "townhouse",
+    "duplex",
+    "cooperative_housing",
+    "social_or_public_housing",
+    "mobile_home",
+    "other"
+  )
+)
+
+# Vérification avec table
 table(DataClean$ses_dwelling, useNA = "ifany")
 
-attributes(DataRaw$ses_dwelling)
-table(DataRaw$ses_dwelling)
+
+table(DataRaw$dwelling)
 
 # Initialisation
 DataClean$ses_dwelling_cat <- NA
 
-# Regroupement des codes existants
-# 1,2,3,8,9,11 -> "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 1] <- "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 2] <- "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 3] <- "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 8] <- "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 9] <- "apartment_complex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 11] <- "other"
+# Regroupement selon les nouvelles catégories de DataRaw
+# "Apartment in a building that has fewer than five storeys", "Co-op", "Condo", "Loft", "Public housing" -> "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Apartment in a building that has fewer than five storeys"] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Co-op"] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Condo"] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Loft"] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Public housing"] <- "apartment_complex"
 
-# 4 -> "high_rise_apartment"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 4] <- "high_rise_apartment"
+# "High-rise apartment" -> "high_rise_apartment"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "High-rise apartment"] <- "high_rise_apartment"
 
-# 5 -> "stand_alone_house"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 5] <- "stand_alone_house"
+# "Detached house" -> "stand_alone_house"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Detached house"] <- "stand_alone_house"
 
-# 6 -> "townhouse"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 6] <- "townhouse"
+# "Townhome" -> "townhouse"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Townhome"] <- "townhouse"
 
-# 7 -> "duplex"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 7] <- "duplex"
+# "Duplex" -> "duplex"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Duplex"] <- "duplex"
 
-# 10 -> "mobile_home"
-DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 10] <- "mobile_home"
+# "Mobile house (boat, van, etc.)" -> "mobile_home"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Mobile house (boat, van, etc.)"] <- "mobile_home"
+
+# "Other" -> "other"
+DataClean$ses_dwelling_cat[DataRaw$dwelling == "Other"] <- "other"
 
 # On définit l'ordre final des facteurs
 DataClean$ses_dwelling_cat <- factor(
@@ -659,65 +544,64 @@ DataClean$ses_dwelling_cat <- factor(
              "apartment_complex",
              "high_rise_apartment",
              "mobile_home",
-            "other")
+             "other")
 )
 table(DataClean$ses_dwelling_cat, useNA = "ifany")
 
-## bin
-
+## Variables binaires
 DataClean$ses_dwellingApp <- NA
-DataClean$ses_dwellingApp[DataRaw$ses_dwelling == 1] <- 1
-DataClean$ses_dwellingApp[DataRaw$ses_dwelling != 1] <- 0
+DataClean$ses_dwellingApp[DataRaw$dwelling == "Apartment in a building that has fewer than five storeys"] <- 1
+DataClean$ses_dwellingApp[DataRaw$dwelling != "Apartment in a building that has fewer than five storeys"] <- 0
 table(DataClean$ses_dwellingApp)
 
 DataClean$ses_dwellingLoft <- NA
-DataClean$ses_dwellingLoft[DataRaw$ses_dwelling == 2] <- 1
-DataClean$ses_dwellingLoft[DataRaw$ses_dwelling != 2] <- 0
+DataClean$ses_dwellingLoft[DataRaw$dwelling == "Loft"] <- 1
+DataClean$ses_dwellingLoft[DataRaw$dwelling != "Loft"] <- 0
 table(DataClean$ses_dwellingLoft)
 
 DataClean$ses_dwellingCondo <- NA
-DataClean$ses_dwellingCondo[DataRaw$ses_dwelling == 3] <- 1
-DataClean$ses_dwellingCondo[DataRaw$ses_dwelling != 3] <- 0
+DataClean$ses_dwellingCondo[DataRaw$dwelling == "Condo"] <- 1
+DataClean$ses_dwellingCondo[DataRaw$dwelling != "Condo"] <- 0
 table(DataClean$ses_dwellingCondo)
 
 DataClean$ses_dwellingTour <- NA
-DataClean$ses_dwellingTour[DataRaw$ses_dwelling == 4] <- 1
-DataClean$ses_dwellingTour[DataRaw$ses_dwelling != 4] <- 0
+DataClean$ses_dwellingTour[DataRaw$dwelling == "High-rise apartment"] <- 1
+DataClean$ses_dwellingTour[DataRaw$dwelling != "High-rise apartment"] <- 0
 table(DataClean$ses_dwellingTour)
 
 DataClean$ses_dwellingDetachedHouse <- NA
-DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling == 5] <- 1
-DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling != 5] <- 0
+DataClean$ses_dwellingDetachedHouse[DataRaw$dwelling == "Detached house"] <- 1
+DataClean$ses_dwellingDetachedHouse[DataRaw$dwelling != "Detached house"] <- 0
 table(DataClean$ses_dwellingDetachedHouse)
 
 DataClean$ses_dwellingTownhouse <- NA
-DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling == 6] <- 1
-DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling != 6] <- 0
+DataClean$ses_dwellingTownhouse[DataRaw$dwelling == "Townhome"] <- 1
+DataClean$ses_dwellingTownhouse[DataRaw$dwelling != "Townhome"] <- 0
 table(DataClean$ses_dwellingTownhouse)
 
 DataClean$ses_dwellingDuplex <- NA
-DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling == 7] <- 1
-DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling != 7] <- 0
+DataClean$ses_dwellingDuplex[DataRaw$dwelling == "Duplex"] <- 1
+DataClean$ses_dwellingDuplex[DataRaw$dwelling != "Duplex"] <- 0
 table(DataClean$ses_dwellingDuplex)
 
 DataClean$ses_dwellingCoop <- NA
-DataClean$ses_dwellingCoop[DataRaw$ses_dwelling == 8] <- 1
-DataClean$ses_dwellingCoop[DataRaw$ses_dwelling != 8] <- 0
+DataClean$ses_dwellingCoop[DataRaw$dwelling == "Co-op"] <- 1
+DataClean$ses_dwellingCoop[DataRaw$dwelling != "Co-op"] <- 0
 table(DataClean$ses_dwellingCoop)
 
 DataClean$ses_dwellingHLM <- NA
-DataClean$ses_dwellingHLM[DataRaw$ses_dwelling == 9] <- 1
-DataClean$ses_dwellingHLM[DataRaw$ses_dwelling != 9] <- 0
+DataClean$ses_dwellingHLM[DataRaw$dwelling == "Public housing"] <- 1
+DataClean$ses_dwellingHLM[DataRaw$dwelling != "Public housing"] <- 0
 table(DataClean$ses_dwellingHLM)
 
 DataClean$ses_dwellingMobile <- NA
-DataClean$ses_dwellingMobile[DataRaw$ses_dwelling == 10] <- 1
-DataClean$ses_dwellingMobile[DataRaw$ses_dwelling != 10] <- 0
+DataClean$ses_dwellingMobile[DataRaw$dwelling == "Mobile house (boat, van, etc.)"] <- 1
+DataClean$ses_dwellingMobile[DataRaw$dwelling != "Mobile house (boat, van, etc.)"] <- 0
 table(DataClean$ses_dwellingMobile)
 
 DataClean$ses_dwellingOther <- NA
-DataClean$ses_dwellingOther[DataRaw$ses_dwelling == 11] <- 1
-DataClean$ses_dwellingOther[DataRaw$ses_dwelling != 11] <- 0
+DataClean$ses_dwellingOther[DataRaw$dwelling == "Other"] <- 1
+DataClean$ses_dwellingOther[DataRaw$dwelling != "Other"] <- 0
 table(DataClean$ses_dwellingOther)
 
 
