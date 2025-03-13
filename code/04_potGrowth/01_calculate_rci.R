@@ -1,4 +1,4 @@
-## Prend les données du pilote et on calculte le RCI pour chaque parti
+## Prend les données du pilote et on calculte le RCI des répondants pour chaque parti
 
 # Packages ---------------------------------------------------------------
 library(dplyr)
