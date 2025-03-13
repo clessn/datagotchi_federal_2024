@@ -24,16 +24,14 @@ source("code/01_cleaning/app/lifestyle.R")
 
 source("code/01_cleaning/app/dv.R")
 
-
-
 ## Remove NA from quotas
 #DataClean <- DataClean |> drop_na(starts_with("ses"))
 
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_pilot_20250310.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250313.rds")
 
 
 # Save for clustering usage ----------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250412.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250413.rds")
