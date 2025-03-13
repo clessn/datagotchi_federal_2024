@@ -15,10 +15,9 @@ variables_act_clust <- c(
   #"lifestyle_exerciseSwim",
   #"lifestyle_exerciseOther",
   "lifestyle_exerciseNone",
-  #"lifestyle_goFishingFreq_numeric",
-  "lifestyle_goHuntingFreq_numeric"
   #"lifestyle_goMuseumsFreq_numeric"
-  #"lifestyle_motorizedActFreq_numeric",
+  "lifestyle_pleinAirFreqAll_bin"
+  #"lifestyle_pleinAirFreqSome_bin"
   #"lifestyle_volunteeringFreq_numeric"
 )
 
