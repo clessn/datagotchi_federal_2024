@@ -10,8 +10,8 @@ table(DataRaw$gender)
 #data clean
 
 DataClean$ses_gender <- NA
-DataClean$ses_gender[DataRaw$gender == "Man"] <- "man"
-DataClean$ses_gender[DataRaw$gender == "Woman"] <- "woman"
+DataClean$ses_gender[DataRaw$gender == "Man"] <- "male"
+DataClean$ses_gender[DataRaw$gender == "Woman"] <- "female"
 DataClean$ses_gender[DataRaw$gender == "Trans man"] <- "trans_man"
 DataClean$ses_gender[DataRaw$gender == "Trans woman"] <- "trans_woman"
 DataClean$ses_gender[DataRaw$gender == "Non-binary"] <- "non_binary"
@@ -23,15 +23,15 @@ table(DataClean$ses_gender)
 # gender_male ----------------------------------------------------------------
 
 DataClean$ses_genderMale <- NA
-DataClean$ses_genderMale[DataRaw$gender == "Woman"] <- 1
-DataClean$ses_genderMale[DataRaw$gender != "Woman"] <- 0
+DataClean$ses_genderMale[DataRaw$gender == "Man"] <- 1
+DataClean$ses_genderMale[DataRaw$gender != "Man"] <- 0
 table(DataClean$ses_genderMale)
 
 # gender_female ----------------------------------------------------------------
 
 DataClean$ses_genderFemale <- NA
-DataClean$ses_genderFemale[DataRaw$gender == 2] <- 1
-DataClean$ses_genderFemale[DataRaw$gender != 2] <- 0
+DataClean$ses_genderFemale[DataRaw$gender == "Woman"] <- 1
+DataClean$ses_genderFemale[DataRaw$gender != "Woman"] <- 0
 table(DataClean$ses_genderFemale)
 
 ## age--------------------------------------------------------------------------
