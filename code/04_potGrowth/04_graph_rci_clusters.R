@@ -63,7 +63,7 @@ party_colors <- c(
 )
 
 # Créer le graphique pour ce cluster
-plot_rci <- ggplot(df_filtered, aes(x = party, y = mean_rci, label = round(mean_rci, 1), color = party)) +
+plot_rci <- ggplot(df_filtered, aes(x = party, y = rci, label = round(rci, 1), color = party)) +
   geom_hline(yintercept = 0, color = "black", size = 1.2) +  # Ligne de référence
   geom_point(size = 6) +  # Points colorés pour le RCI
   geom_text(vjust = -1, size = 5) +  # Valeurs du RCI sur les points
@@ -71,6 +71,7 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = mean_rci, label = round(mean_
   labs(title = paste("Potentiel de croissance des partis pour le cluster", selected_cluster),
        x = "Parti politique", y = "RCI") +
   theme_minimal() +
+  scale_y_continuous(limits = c(-100, 100)) +
   theme(
     text = element_text(size = 14),
     legend.position = "none"

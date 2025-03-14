@@ -560,7 +560,6 @@ DataClean$lifestyle_consCoffee[DataRaw$coffee == "Starbucks"] <- "starbucks"
 DataClean$lifestyle_consCoffee[DataRaw$coffee == "Second Cup"] <- "second_cup"
 DataClean$lifestyle_consCoffee[DataRaw$coffee == "McDonald's"] <- "mcdonalds"
 DataClean$lifestyle_consCoffee[DataRaw$coffee == "Other"] <- "other"
-
 DataClean$lifestyle_consCoffee[DataRaw$coffee == "Independent coffee shops"] <- "independent"
 DataClean$lifestyle_consCoffee[DataRaw$coffee == "I don’t go to coffee shops"] <- "no_coffee"
 
