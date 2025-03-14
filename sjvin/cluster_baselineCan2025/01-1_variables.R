@@ -15,6 +15,7 @@
 # Le début et la fin du groupement seront clairement indiqués
 # Les groupements seront utilisés à l'étape 02 de la préparation des données
 #
+
 variables_act <- c(
   "id",
   "lifestyle_exerciseGym",

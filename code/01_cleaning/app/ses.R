@@ -10,8 +10,8 @@ table(DataRaw$gender)
 #data clean
 
 DataClean$ses_gender <- NA
-DataClean$ses_gender[DataRaw$gender == "Man"] <- "man"
-DataClean$ses_gender[DataRaw$gender == "Woman"] <- "woman"
+DataClean$ses_gender[DataRaw$gender == "Man"] <- "male"
+DataClean$ses_gender[DataRaw$gender == "Woman"] <- "female"
 DataClean$ses_gender[DataRaw$gender == "Trans man"] <- "trans_man"
 DataClean$ses_gender[DataRaw$gender == "Trans woman"] <- "trans_woman"
 DataClean$ses_gender[DataRaw$gender == "Non-binary"] <- "non_binary"
@@ -23,15 +23,15 @@ table(DataClean$ses_gender)
 # gender_male ----------------------------------------------------------------
 
 DataClean$ses_genderMale <- NA
-DataClean$ses_genderMale[DataRaw$gender == "Woman"] <- 1
-DataClean$ses_genderMale[DataRaw$gender != "Woman"] <- 0
+DataClean$ses_genderMale[DataRaw$gender == "Man"] <- 1
+DataClean$ses_genderMale[DataRaw$gender != "Man"] <- 0
 table(DataClean$ses_genderMale)
 
 # gender_female ----------------------------------------------------------------
 
 DataClean$ses_genderFemale <- NA
-DataClean$ses_genderFemale[DataRaw$gender == 2] <- 1
-DataClean$ses_genderFemale[DataRaw$gender != 2] <- 0
+DataClean$ses_genderFemale[DataRaw$gender == "Woman"] <- 1
+DataClean$ses_genderFemale[DataRaw$gender != "Woman"] <- 0
 table(DataClean$ses_genderFemale)
 
 ## age--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ DataClean$ses_ageGroup5Years[DataRaw$age >= 20 & DataRaw$age < 25] <- "20_24"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 25 & DataRaw$age < 30] <- "25_29"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 30 & DataRaw$age < 35] <- "30_34"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 35 & DataRaw$age < 40] <- "35_39"
-DataClean$ses_ageGroup5Years[DataRaw$age >= 40 & DataRaw$age < 45] <- "40-44"
+DataClean$ses_ageGroup5Years[DataRaw$age >= 40 & DataRaw$age < 45] <- "40_44"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 45 & DataRaw$age < 50] <- "45_49"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 50 & DataRaw$age < 55] <- "50_54"
 DataClean$ses_ageGroup5Years[DataRaw$age >= 55 & DataRaw$age < 60] <- "55_59"
