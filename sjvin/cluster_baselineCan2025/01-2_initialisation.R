@@ -12,8 +12,9 @@
 library(tidyverse)
 
 # Charger les données
-DataPilot <- readRDS("/Users/sarah-janevincent/Library/CloudStorage/Dropbox/clessn_capp/datagotchi/datagotchi_federal_2024/_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
-DataApp <- readRDS("")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
+DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250313.rds")
+
 
 # Sélection des variables communes
 DataPilot <- DataPilot %>%
