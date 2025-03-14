@@ -1,5 +1,11 @@
 # SES
- 
+## Postal code
+
+table(DataRaw$postal_code)
+
+DataClean$ses_postalCode <- DataRaw$postal_code
+
+table(DataClean$ses_postalCode)
 ## gender ----------------------------------------------------------------------
 
 
