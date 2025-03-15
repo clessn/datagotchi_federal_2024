@@ -323,6 +323,90 @@ X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.fra
 # Vérification des dimensions de la matrice
 cat("Dimensions de la matrice d'entraînement:", dim(X_train_dummy), "\n")
 
+# ------------------------------------------------------------------------
+# Fixation manuelle des valeurs de référence des variables
+# ------------------------------------------------------------------------
+cat("Configuration manuelle des catégories de référence pour correspondre au modèle original...\n")
+
+# 1. D'abord, fixer la classe de référence pour la variable dépendante dv_voteChoice
+# Vérifier d'abord les niveaux actuels
+cat("Niveaux actuels de dv_voteChoice:", paste(levels(y_train_final), collapse=", "), "\n")
+
+# Supposons que "bq" est la référence dans le modèle original (à ajuster selon vos données)
+if ("bq" %in% levels(y_train_final)) {
+  y_train_final <- relevel(y_train_final, ref = "bq")
+  cat("Variable dépendante: 'bq' définie comme référence\n")
+} else {
+  cat("Impossible de définir 'bq' comme référence car ce niveau n'existe pas\n")
+}
+
+# 2. Fixer les références pour les variables catégorielles dans X_train_final
+# Vérifier d'abord si les variables sont bien des facteurs
+for (var_name in names(X_train_final)) {
+  if (!is.factor(X_train_final[[var_name]])) {
+    cat("La variable", var_name, "n'est pas un facteur, ignorer\n")
+    next
+  }
+  
+  # Définir manuellement les références selon la liste fournie
+  if (var_name == "ses_region" && "prairie" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "prairie")
+    cat("ses_region: 'prairie' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_typeTransport" && "active_transport" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "active_transport")
+    cat("lifestyle_typeTransport: 'active_transport' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_consClothes" && "large_retailers" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "large_retailers")
+    cat("lifestyle_consClothes: 'large_retailers' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_exercise" && "gym" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "gym")
+    cat("lifestyle_exercise: 'gym' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_favAlcool" && "beer" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "beer")
+    cat("lifestyle_favAlcool: 'beer' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_consCoffee" && "tim_hortons" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "tim_hortons")
+    cat("lifestyle_consCoffee: 'tim_hortons' définie comme référence\n")
+  }
+  else if (var_name == "ses_language" && "english" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "english")
+    cat("ses_language: 'english' définie comme référence\n")
+  }
+  else if (var_name == "ses_dwelling_cat" && "stand_alone_house" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "stand_alone_house")
+    cat("ses_dwelling_cat: 'stand_alone_house' définie comme référence\n")
+  }
+  else if (var_name == "lifestyle_clothingStyleGroups" && "easygoing" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "easygoing")
+    cat("lifestyle_clothingStyleGroups: 'easygoing' définie comme référence\n")
+  }
+  else if (var_name == "ses_educ" && "no_schooling" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "no_schooling")
+    cat("ses_educ: 'no_schooling' définie comme référence\n")
+  }
+  else if (var_name == "ses_income3Cat" && "High" %in% levels(X_train_final[[var_name]])) {
+    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "High")
+    cat("ses_income3Cat: 'High' définie comme référence\n")
+  }
+}
+
+# 3. Recréer la matrice de dummy variables après avoir réordonnancé les facteurs
+cat("Recréation des variables dummy après recodage des références...\n")
+dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE, sep = "_")
+X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
+
+# Vérification de la nouvelle matrice dummy
+cat("Nouvelles dimensions de la matrice d'entraînement:", dim(X_train_dummy), "\n")
+
+# Vérifier les variables binaires qui doivent avoir 0 comme référence
+# Pour ces variables, nous n'avons pas besoin de faire de changement car 
+# la référence est déjà 0 par défaut avec dummyVars et fullRank=TRUE
+
 # Entraînement du modèle final
 final_model <- multinom(
   y_train_final ~ ., 
