@@ -7,7 +7,36 @@ library(rsconnect)
 # ------------------------------------------------------------------------
 # 1. Chargement du modèle final (chemin relatif)
 # ------------------------------------------------------------------------
-final_model <- readRDS("data/finalmodel_withOutInteractions.rds")
+final_model <- readRDS("data/finalmodel_withRTAPredictions_2025-04-15.rds")
+
+# Charger les données RTA pour les prédictions
+rta_predictions <- read.csv("data/rta_predictions_partis.csv", stringsAsFactors = FALSE)
+
+# Si le fichier des prédictions RTA n'existe pas, on crée une version vide pour éviter les erreurs
+if (!file.exists("data/rta_predictions_partis.csv")) {
+  # Créer un dataframe vide avec les colonnes nécessaires
+  rta_predictions <- data.frame(
+    rta = character(),
+    CPC = numeric(),
+    LPC = numeric(),
+    NDP = numeric(),
+    GPC = numeric(),
+    BQ = numeric(),
+    stringsAsFactors = FALSE
+  )
+  # Sauvegarder le fichier vide
+  write.csv(rta_predictions, "data/rta_predictions_partis.csv", row.names = FALSE)
+}
+
+# Calculer les moyennes des prédictions par parti pour utiliser comme valeurs par défaut
+mean_cpc <- mean(rta_predictions$CPC, na.rm = TRUE)
+mean_lpc <- mean(rta_predictions$LPC, na.rm = TRUE)
+mean_ndp <- mean(rta_predictions$NDP, na.rm = TRUE)
+mean_gpc <- mean(rta_predictions$GPC, na.rm = TRUE)
+mean_bq <- mean(rta_predictions$BQ, na.rm = TRUE)
+
+# S'assurer que les RTA sont en majuscules
+rta_predictions$rta <- toupper(rta_predictions$rta)
 
 # ------------------------------------------------------------------------
 # 2. Définition manuelle des variables utilisées dans le modèle
@@ -22,7 +51,8 @@ final_vars <- c(
   "lifestyle_goHuntingFreq_numeric", "lifestyle_goFishingFreq_bin",
   "lifestyle_goMuseumsFreq_bin", "lifestyle_volunteeringFreq",
   "lifestyle_motorizedActFreq_bin", "lifestyle_hasTattoos", "ses_educ",
-  "ses_income3Cat", "lifestyle_ownPet_bin"
+  "ses_income3Cat", "lifestyle_ownPet_bin",
+  "prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"
 )
 
 # Définition manuelle des choix possibles pour chaque variable
@@ -42,7 +72,7 @@ possible_choices <- list(
   ses_ethnicityWhite = c(0, 1),
   ses_sexOrientationHetero = c(0, 1),
   ses_genderFemale = c(0, 1),
-  lifestyle_clothingStyleGroups = c("easygoing", "edgy", "formal"),
+  lifestyle_clothingStyleGroups = c("easygoing", "edgy", "formal", "other"),
   lifestyle_goHuntingFreq_numeric = c(0, 0.25, 0.5, 0.75, 1),
   lifestyle_goFishingFreq_bin = c(0, 1),
   lifestyle_goMuseumsFreq_bin = c(0, 1),
@@ -51,16 +81,22 @@ possible_choices <- list(
   lifestyle_hasTattoos = c(0, 1),
   ses_educ = c("no_schooling", "elementary_school", "high_school", "technical_community_cegep", "bachelor", "masters", "doctorate"),
   ses_income3Cat = c("High", "Low", "Mid"),
-  lifestyle_ownPet_bin = c(0, 1)
+  lifestyle_ownPet_bin = c(0, 1),
+  # Variables de prédiction RTA (valeurs par défaut)
+  prediction_CPC = c(mean_cpc),
+  prediction_LPC = c(mean_lpc),
+  prediction_NDP = c(mean_ndp),
+  prediction_GPC = c(mean_gpc),
+  prediction_BQ = c(mean_bq)
 )
 
 # ------------------------------------------------------------------------
-# 3. Création d’un objet dummyVars pour transformer les données
+# 3. Création d'un objet dummyVars pour transformer les données
 #
-# Puisque nous n’avons plus accès à DataModel pour construire
+# Puisque nous n'avons plus accès à DataModel pour construire
 # dummyVars, nous créons un data.frame fictif (training_structure)
 # en prenant pour chaque variable la première valeur de possible_choices.
-# Cela reproduit la structure de données utilisée lors de l’entraînement.
+# Cela reproduit la structure de données utilisée lors de l'entraînement.
 # ------------------------------------------------------------------------
 training_structure <- as.data.frame(lapply(final_vars, function(v) {
   if (is.numeric(possible_choices[[v]])) {
@@ -80,7 +116,42 @@ for(v in final_vars) {
   }
 }
 
-# Création de l’objet dummyVars (la même transformation qu’à l’entraînement)
+# Fixer manuellement les catégories de référence pour correspondre au modèle
+if ("ses_region" %in% names(training_structure) && "prairie" %in% levels(training_structure$ses_region)) {
+  training_structure$ses_region <- relevel(training_structure$ses_region, ref = "prairie")
+}
+if ("lifestyle_typeTransport" %in% names(training_structure) && "active_transport" %in% levels(training_structure$lifestyle_typeTransport)) {
+  training_structure$lifestyle_typeTransport <- relevel(training_structure$lifestyle_typeTransport, ref = "active_transport")
+}
+if ("lifestyle_consClothes" %in% names(training_structure) && "large_retailers" %in% levels(training_structure$lifestyle_consClothes)) {
+  training_structure$lifestyle_consClothes <- relevel(training_structure$lifestyle_consClothes, ref = "large_retailers")
+}
+if ("lifestyle_exercise" %in% names(training_structure) && "gym" %in% levels(training_structure$lifestyle_exercise)) {
+  training_structure$lifestyle_exercise <- relevel(training_structure$lifestyle_exercise, ref = "gym")
+}
+if ("lifestyle_favAlcool" %in% names(training_structure) && "beer" %in% levels(training_structure$lifestyle_favAlcool)) {
+  training_structure$lifestyle_favAlcool <- relevel(training_structure$lifestyle_favAlcool, ref = "beer")
+}
+if ("lifestyle_consCoffee" %in% names(training_structure) && "tim_hortons" %in% levels(training_structure$lifestyle_consCoffee)) {
+  training_structure$lifestyle_consCoffee <- relevel(training_structure$lifestyle_consCoffee, ref = "tim_hortons")
+}
+if ("ses_language" %in% names(training_structure) && "english" %in% levels(training_structure$ses_language)) {
+  training_structure$ses_language <- relevel(training_structure$ses_language, ref = "english")
+}
+if ("ses_dwelling_cat" %in% names(training_structure) && "stand_alone_house" %in% levels(training_structure$ses_dwelling_cat)) {
+  training_structure$ses_dwelling_cat <- relevel(training_structure$ses_dwelling_cat, ref = "stand_alone_house")
+}
+if ("lifestyle_clothingStyleGroups" %in% names(training_structure) && "easygoing" %in% levels(training_structure$lifestyle_clothingStyleGroups)) {
+  training_structure$lifestyle_clothingStyleGroups <- relevel(training_structure$lifestyle_clothingStyleGroups, ref = "easygoing")
+}
+if ("ses_educ" %in% names(training_structure) && "no_schooling" %in% levels(training_structure$ses_educ)) {
+  training_structure$ses_educ <- relevel(training_structure$ses_educ, ref = "no_schooling")
+}
+if ("ses_income3Cat" %in% names(training_structure) && "High" %in% levels(training_structure$ses_income3Cat)) {
+  training_structure$ses_income3Cat <- relevel(training_structure$ses_income3Cat, ref = "High")
+}
+
+# Création de l'objet dummyVars (la même transformation qu'à l'entraînement)
 dummies_final <- dummyVars(" ~ .", data = training_structure, fullRank = TRUE, sep = "_")
 
 # ------------------------------------------------------------------------
@@ -90,6 +161,8 @@ ui <- fluidPage(
   titlePanel("Prédiction du Choix de Vote"),
   sidebarLayout(
     sidebarPanel(
+      # Nouvel input pour le code postal
+      textInput("postalCode", "Code postal (pour prédictions RTA)", ""),
       # Génération dynamique des inputs à partir de possible_choices
       uiOutput("dynamic_inputs"),
       actionButton("predictBtn", "Prédire")
@@ -110,7 +183,10 @@ server <- function(input, output, session) {
   
   # Création dynamique des inputs pour chaque variable
   output$dynamic_inputs <- renderUI({
-    inputs <- lapply(final_vars, function(v) {
+    # Exclure les variables de prédiction RTA et le code postal qui sont gérés séparément
+    vars_to_show <- setdiff(final_vars, c("prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"))
+    
+    inputs <- lapply(vars_to_show, function(v) {
       if (!is.numeric(possible_choices[[v]])) {
         selectInput(inputId = v, label = v,
                     choices = possible_choices[[v]],
@@ -132,19 +208,69 @@ server <- function(input, output, session) {
     do.call(tagList, inputs)
   })
   
+  # Fonction pour extraire la RTA à partir d'un code postal
+  get_rta <- function(postal_code) {
+    # Standardiser le code postal (majuscules, sans espaces)
+    postal_code <- toupper(gsub("[^A-Za-z0-9]", "", postal_code))
+    # Extraire les 3 premiers caractères (RTA)
+    if (nchar(postal_code) >= 3) {
+      return(substr(postal_code, 1, 3))
+    } else {
+      return(NA)
+    }
+  }
+  
+  # Fonction pour obtenir les prédictions RTA
+  get_rta_predictions <- function(rta) {
+    if (is.na(rta) || !rta %in% rta_predictions$rta) {
+      # Si RTA non trouvée, utiliser les moyennes
+      return(list(
+        prediction_CPC = mean_cpc,
+        prediction_LPC = mean_lpc,
+        prediction_NDP = mean_ndp,
+        prediction_GPC = mean_gpc,
+        prediction_BQ = mean_bq
+      ))
+    } else {
+      # Sinon utiliser les valeurs spécifiques à la RTA
+      rta_data <- rta_predictions[rta_predictions$rta == rta, ]
+      return(list(
+        prediction_CPC = rta_data$CPC,
+        prediction_LPC = rta_data$LPC,
+        prediction_NDP = rta_data$NDP,
+        prediction_GPC = rta_data$GPC,
+        prediction_BQ = rta_data$BQ
+      ))
+    }
+  }
+  
   observeEvent(input$predictBtn, {
     output$prediction <- renderPrint({ "Calcul en cours..." })
     output$probabilities <- renderTable({ NULL })
     
     tryCatch({
-      # Rassembler les valeurs saisies dans un data.frame
-      newdata <- data.frame(lapply(final_vars, function(v) input[[v]]),
-                            stringsAsFactors = FALSE)
-      colnames(newdata) <- final_vars
+      # Extraire la RTA à partir du code postal
+      rta <- get_rta(input$postalCode)
       
-      # Conversion des variables numériques (si issues d’un selectInput)
-      for(v in final_vars) {
-        if (is.numeric(possible_choices[[v]])) {
+      # Obtenir les prédictions RTA
+      rta_preds <- get_rta_predictions(rta)
+      
+      # Rassembler les valeurs saisies dans un data.frame
+      vars_to_collect <- setdiff(final_vars, c("prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"))
+      newdata <- data.frame(lapply(vars_to_collect, function(v) input[[v]]),
+                          stringsAsFactors = FALSE)
+      colnames(newdata) <- vars_to_collect
+      
+      # Ajouter les prédictions RTA
+      newdata$prediction_CPC <- rta_preds$prediction_CPC
+      newdata$prediction_LPC <- rta_preds$prediction_LPC
+      newdata$prediction_NDP <- rta_preds$prediction_NDP
+      newdata$prediction_GPC <- rta_preds$prediction_GPC
+      newdata$prediction_BQ <- rta_preds$prediction_BQ
+      
+      # Conversion des variables numériques (si issues d'un selectInput)
+      for(v in names(newdata)) {
+        if (v %in% final_vars && is.numeric(possible_choices[[v]])) {
           newdata[[v]] <- as.numeric(newdata[[v]])
         }
       }
@@ -170,9 +296,44 @@ server <- function(input, output, session) {
       for(v in final_vars) {
         if (!is.numeric(possible_choices[[v]])) {
           newdata2[[v]] <- factor(newdata2[[v]],
-                                  levels = possible_choices[[v]],
-                                  ordered = FALSE)
+                                levels = possible_choices[[v]],
+                                ordered = FALSE)
         }
+      }
+      
+      # Fixer manuellement les catégories de référence pour correspondre au modèle
+      if ("ses_region" %in% names(newdata2) && "prairie" %in% levels(newdata2$ses_region)) {
+        newdata2$ses_region <- relevel(newdata2$ses_region, ref = "prairie")
+      }
+      if ("lifestyle_typeTransport" %in% names(newdata2) && "active_transport" %in% levels(newdata2$lifestyle_typeTransport)) {
+        newdata2$lifestyle_typeTransport <- relevel(newdata2$lifestyle_typeTransport, ref = "active_transport")
+      }
+      if ("lifestyle_consClothes" %in% names(newdata2) && "large_retailers" %in% levels(newdata2$lifestyle_consClothes)) {
+        newdata2$lifestyle_consClothes <- relevel(newdata2$lifestyle_consClothes, ref = "large_retailers")
+      }
+      if ("lifestyle_exercise" %in% names(newdata2) && "gym" %in% levels(newdata2$lifestyle_exercise)) {
+        newdata2$lifestyle_exercise <- relevel(newdata2$lifestyle_exercise, ref = "gym")
+      }
+      if ("lifestyle_favAlcool" %in% names(newdata2) && "beer" %in% levels(newdata2$lifestyle_favAlcool)) {
+        newdata2$lifestyle_favAlcool <- relevel(newdata2$lifestyle_favAlcool, ref = "beer")
+      }
+      if ("lifestyle_consCoffee" %in% names(newdata2) && "tim_hortons" %in% levels(newdata2$lifestyle_consCoffee)) {
+        newdata2$lifestyle_consCoffee <- relevel(newdata2$lifestyle_consCoffee, ref = "tim_hortons")
+      }
+      if ("ses_language" %in% names(newdata2) && "english" %in% levels(newdata2$ses_language)) {
+        newdata2$ses_language <- relevel(newdata2$ses_language, ref = "english")
+      }
+      if ("ses_dwelling_cat" %in% names(newdata2) && "stand_alone_house" %in% levels(newdata2$ses_dwelling_cat)) {
+        newdata2$ses_dwelling_cat <- relevel(newdata2$ses_dwelling_cat, ref = "stand_alone_house")
+      }
+      if ("lifestyle_clothingStyleGroups" %in% names(newdata2) && "easygoing" %in% levels(newdata2$lifestyle_clothingStyleGroups)) {
+        newdata2$lifestyle_clothingStyleGroups <- relevel(newdata2$lifestyle_clothingStyleGroups, ref = "easygoing")
+      }
+      if ("ses_educ" %in% names(newdata2) && "no_schooling" %in% levels(newdata2$ses_educ)) {
+        newdata2$ses_educ <- relevel(newdata2$ses_educ, ref = "no_schooling")
+      }
+      if ("ses_income3Cat" %in% names(newdata2) && "High" %in% levels(newdata2$ses_income3Cat)) {
+        newdata2$ses_income3Cat <- relevel(newdata2$ses_income3Cat, ref = "High")
       }
       
       # Transformation dummyVars
