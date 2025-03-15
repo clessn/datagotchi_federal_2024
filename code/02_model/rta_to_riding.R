@@ -164,3 +164,24 @@ summary_stats <- data.frame(
 print(summary_stats)
 
 cat("\nTraitement terminé avec succès!\n")
+
+# Vérification de la couverture des RTA
+cat("\nVérification de la couverture des RTA:\n")
+total_rta_original <- length(unique(rta$rta))
+total_rta_final <- nrow(rta_final_predictions)
+
+cat("Nombre total de RTA dans les données originales:", total_rta_original, "\n")
+cat("Nombre total de RTA dans les prédictions finales:", total_rta_final, "\n")
+cat("Pourcentage de couverture:", round(total_rta_final/total_rta_original*100, 2), "%\n")
+
+# Identifier les RTA manquants, le cas échéant
+if(total_rta_original != total_rta_final) {
+  rta_manquants <- setdiff(unique(rta$rta), rta_final_predictions$rta)
+  cat("Nombre de RTA manquants:", length(rta_manquants), "\n")
+  
+  if(length(rta_manquants) > 0 && length(rta_manquants) <= 20) {
+    cat("Liste des RTA manquants:", paste(rta_manquants, collapse=", "), "\n")
+  } else if(length(rta_manquants) > 20) {
+    cat("Les 20 premiers RTA manquants:", paste(head(rta_manquants, 20), collapse=", "), "...\n")
+  }
+}

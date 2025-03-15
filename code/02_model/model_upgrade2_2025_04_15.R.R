@@ -1,0 +1,462 @@
+# ------------------------------------------------------------------------
+# 1) Chargement des packages
+# ------------------------------------------------------------------------
+library(parallel)
+library(nnet)
+library(caret)
+library(tidyverse)
+library(yardstick)
+library(pbapply)
+
+# ------------------------------------------------------------------------
+# 2) Chargement des données (pilote et application)
+# ------------------------------------------------------------------------
+# Données pilote (déjà nettoyées)
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250310.rds")
+
+# Nouvelles données de l'application
+DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250314.rds")
+
+# Chargement des prédictions par RTA
+rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis.csv",
+                           stringsAsFactors = FALSE)
+
+# Charger le modèle précédent et les résultats pour obtenir les variables du modèle
+results_train <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
+previous_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
+
+# Identifier le meilleur modèle selon l'accuracy
+best_iterations <- results_train %>%
+  group_by(model_id) %>%
+  summarise(
+    score_iter_accuracy = first(accuracy_cv),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(score_iter_accuracy))
+
+best_id <- best_iterations$model_id[1]
+cat("Meilleur modèle trouvé (ID) =", best_id, "\n")
+
+# Récupérer les variables du meilleur modèle
+best_config <- results_train %>%
+  filter(model_id == best_id)
+
+model_variables <- unique(best_config$variable)
+cat("Variables du modèle précédent:", length(model_variables), "\n")
+cat("Liste des variables:", paste(model_variables, collapse=", "), "\n")
+
+# ------------------------------------------------------------------------
+# 3) Vérification et harmonisation des facteurs
+# ------------------------------------------------------------------------
+# Vérifier le statut de dv_voteChoice dans les deux jeux de données
+cat("Class de dv_voteChoice dans DataPilot:", class(DataPilot$dv_voteChoice), "\n")
+cat("Class de dv_voteChoice dans DataApp:", class(DataApp$dv_voteChoice), "\n")
+
+# Vérification des valeurs uniques dans DataPilot
+unique_values_pilot <- unique(as.character(DataPilot$dv_voteChoice))
+cat("Valeurs uniques dans DataPilot:", paste(unique_values_pilot, collapse=", "), "\n")
+
+# Vérification des valeurs uniques dans DataApp
+unique_values_app <- unique(as.character(DataApp$dv_voteChoice))
+cat("Valeurs uniques dans DataApp:", paste(unique_values_app, collapse=", "), "\n")
+
+# Standardisation: convertir explicitement les deux variables en facteurs avec les mêmes niveaux
+# Identifier tous les niveaux possibles (excluant 'other' qui sera filtré)
+all_levels <- unique(c(
+  unique_values_pilot[unique_values_pilot != "other"],
+  unique_values_app
+))
+
+# Standardiser les noms de partis (npd -> ndp si nécessaire)
+all_levels <- unique(gsub("npd", "ndp", all_levels))
+
+cat("Niveaux standardisés à utiliser:", paste(all_levels, collapse=", "), "\n")
+
+# Convertir DataPilot$dv_voteChoice en facteur avec les niveaux standardisés
+DataPilot$dv_voteChoice <- factor(
+  gsub("npd", "ndp", as.character(DataPilot$dv_voteChoice)),
+  levels = all_levels
+)
+
+# Convertir DataApp$dv_voteChoice en facteur avec les mêmes niveaux
+DataApp$dv_voteChoice <- factor(
+  gsub("npd", "ndp", as.character(DataApp$dv_voteChoice)),
+  levels = all_levels
+)
+
+# Vérifier que les niveaux sont maintenant correctement définis
+cat("Niveaux de dv_voteChoice dans DataPilot:", 
+    paste(levels(DataPilot$dv_voteChoice), collapse=", "), "\n")
+cat("Niveaux de dv_voteChoice dans DataApp:", 
+    paste(levels(DataApp$dv_voteChoice), collapse=", "), "\n")
+
+# Fonction pour harmoniser les autres facteurs
+harmonize_factor <- function(x_pilot, x_app) {
+  # Convertir en caractères pour s'assurer de la compatibilité
+  x_pilot_char <- as.character(x_pilot)
+  x_app_char <- as.character(x_app)
+  
+  # Identifier tous les niveaux uniques
+  all_levels <- unique(c(x_pilot_char, x_app_char))
+  
+  # Reconvertir en facteurs avec les mêmes niveaux
+  x_pilot_new <- factor(x_pilot_char, levels = all_levels)
+  x_app_new <- factor(x_app_char, levels = all_levels)
+  
+  return(list(pilot = x_pilot_new, app = x_app_new))
+}
+
+# Identifier les variables du modèle qui sont des facteurs
+model_factor_vars <- model_variables[model_variables %in% names(DataPilot)]
+cat("Variables facteurs potentielles:", paste(model_factor_vars, collapse=", "), "\n")
+
+# Identifier les facteurs dans DataPilot
+pilot_factors <- names(DataPilot)[sapply(DataPilot, is.factor)]
+cat("Facteurs dans DataPilot:", paste(pilot_factors, collapse=", "), "\n")
+
+# Obtenir l'intersection
+model_factors <- intersect(model_factor_vars, pilot_factors)
+cat("Facteurs du modèle à harmoniser:", paste(model_factors, collapse=", "), "\n")
+
+# Harmoniser les facteurs importants
+for (f in model_factors) {
+  if (f %in% names(DataPilot) && f %in% names(DataApp)) {
+    cat("Harmonisation du facteur:", f, "\n")
+    
+    # Vérifier et harmoniser
+    harmonized <- harmonize_factor(DataPilot[[f]], DataApp[[f]])
+    DataPilot[[f]] <- harmonized$pilot
+    DataApp[[f]] <- harmonized$app
+    
+    cat("  Niveaux harmonisés:", paste(levels(DataPilot[[f]]), collapse=", "), "\n")
+  }
+}
+
+# ------------------------------------------------------------------------
+# 4) Préparation des données
+# ------------------------------------------------------------------------
+# Ajouter une variable source pour identifier l'origine des données
+DataPilot$source <- "pilote"
+DataApp$source <- "application"
+
+# Sélection des variables nécessaires
+# Pour DataPilot, filtrer seulement les observations avec des valeurs autres que "other"
+DataPilot_selected <- DataPilot %>%
+  filter(dv_voteChoice != "other" & !is.na(dv_voteChoice)) %>%
+  select(all_of(c(model_variables, "dv_voteChoice", "source", "ses_postalCode"))) %>%  # Ajoutez ses_postalCode ici
+  drop_na()
+
+# Pour DataApp, sélectionner les variables et ajouter ses_postalCode
+DataApp_selected <- DataApp %>%
+  filter(!is.na(dv_voteChoice)) %>%
+  select(all_of(c(model_variables, "dv_voteChoice", "source", "ses_postalCode"))) %>%
+  drop_na()
+
+# ------------------------------------------------------------------------
+# 5) Enrichissement avec les prédictions par RTA
+# ------------------------------------------------------------------------
+
+# Ensuite, vous pouvez continuer avec votre code initial
+DataPilot_selected <- DataPilot_selected %>%
+  mutate(
+    # Standardiser les codes postaux (majuscules)
+    ses_postalCode_clean = toupper(as.character(ses_postalCode)),
+    # Extraire les RTA (premiers 3 caractères)
+    rta = substr(ses_postalCode_clean, 1, 3)
+  )
+
+DataApp_selected <- DataApp_selected %>%
+  mutate(
+    # Standardiser les codes postaux (majuscules)
+    ses_postalCode_clean = toupper(as.character(ses_postalCode)),
+    # Extraire les RTA (premiers 3 caractères)
+    rta = substr(ses_postalCode_clean, 1, 3)
+  )
+
+# Standardiser les RTA dans le fichier de prédictions (pour être sûr)
+rta_predictions$rta <- toupper(rta_predictions$rta)
+
+# Fonction pour enrichir un dataframe avec les prédictions RTA
+enrich_with_predictions <- function(df, rta_preds) {
+  # Joindre les prédictions par RTA
+  df_enriched <- df %>%
+    left_join(rta_preds, by = "rta") %>%
+    mutate(
+      # Utiliser les valeurs de RTA si disponibles, sinon utiliser la moyenne
+      prediction_CPC = ifelse(is.na(CPC), mean(rta_preds$CPC, na.rm = TRUE), CPC),
+      prediction_LPC = ifelse(is.na(LPC), mean(rta_preds$LPC, na.rm = TRUE), LPC),
+      prediction_NDP = ifelse(is.na(NDP), mean(rta_preds$NDP, na.rm = TRUE), NDP),
+      prediction_GPC = ifelse(is.na(GPC), mean(rta_preds$GPC, na.rm = TRUE), GPC),
+      prediction_BQ = ifelse(is.na(BQ), mean(rta_preds$BQ, na.rm = TRUE), BQ)
+    ) %>%
+    select(-CPC, -LPC, -NDP, -GPC, -BQ)
+  
+  return(df_enriched)
+}
+
+# Enrichir les deux jeux de données
+DataPilot_enriched <- enrich_with_predictions(DataPilot_selected, rta_predictions)
+DataApp_enriched <- enrich_with_predictions(DataApp_selected, rta_predictions)
+
+# ------------------------------------------------------------------------
+# 6) Fusion des données et préparation pour modélisation
+# ------------------------------------------------------------------------
+# Fusionner les données
+DataModel <- bind_rows(DataPilot_enriched, DataApp_enriched)
+
+# Vérifier les prédictions par source
+prediction_summary <- DataModel %>%
+  group_by(source) %>%
+  summarise(
+    n = n(),
+    missing_rta = sum(is.na(rta)),
+    matched_rta = sum(rta %in% rta_predictions$rta),
+    avg_prediction_CPC = mean(prediction_CPC, na.rm = TRUE),
+    avg_prediction_LPC = mean(prediction_LPC, na.rm = TRUE),
+    avg_prediction_NDP = mean(prediction_NDP, na.rm = TRUE)
+  ) %>%
+  mutate(
+    pct_matched_rta = matched_rta / n * 100
+  )
+
+print(prediction_summary)
+
+# Vérifier que les colonnes importantes sont présentes
+cat("Vérification des colonnes importantes dans DataModel:\n")
+cat("- prediction_CPC présente:", "prediction_CPC" %in% names(DataModel), "\n")
+cat("- prediction_LPC présente:", "prediction_LPC" %in% names(DataModel), "\n")
+cat("- prediction_NDP présente:", "prediction_NDP" %in% names(DataModel), "\n")
+cat("- prediction_GPC présente:", "prediction_GPC" %in% names(DataModel), "\n")
+cat("- prediction_BQ présente:", "prediction_BQ" %in% names(DataModel), "\n")
+cat("- rta présente:", "rta" %in% names(DataModel), "\n")
+cat("- ses_postalCode présente:", "ses_postalCode" %in% names(DataModel), "\n")
+
+# ------------------------------------------------------------------------
+# 7) Séparation Train/Test avec stratification par source
+# ------------------------------------------------------------------------
+set.seed(42)
+# Stratifier par parti et par source pour maintenir la distribution
+trainIndex <- createDataPartition(
+  interaction(DataModel$dv_voteChoice, DataModel$source), 
+  p = 0.8, 
+  list = FALSE
+)
+DfTrain <- DataModel[trainIndex, ]
+DfTest <- DataModel[-trainIndex, ]
+
+# Vérification de la distribution dans les ensembles train et test
+cat("Distribution dans l'ensemble d'entraînement:", "\n")
+print(table(DfTrain$dv_voteChoice, DfTrain$source))
+
+cat("Distribution dans l'ensemble de test:", "\n")
+print(table(DfTest$dv_voteChoice, DfTest$source))
+
+# ------------------------------------------------------------------------
+# 8) Fonction d'évaluation multiclasse
+# ------------------------------------------------------------------------
+multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
+  # 1) Accuracy
+  acc <- yardstick::accuracy_vec(data$obs, data$pred)
+  
+  # 2) Kappa
+  kap <- yardstick::kap_vec(data$obs, data$pred)
+  
+  # 3) LogLoss
+  eps <- 1e-15
+  n <- nrow(data)
+  ll <- 0
+  for (i in seq_len(n)) {
+    obs_class <- as.character(data$obs[i])
+    prob_col <- paste0("prob.", obs_class)
+    p <- data[[prob_col]][i]
+    p <- max(p, eps)
+    ll <- ll - log(p)
+  }
+  ll <- ll / n
+  
+  # 4) F1-score macro
+  classes <- if (!is.null(lev)) lev else levels(data$obs)
+  f1s <- sapply(classes, function(cl) {
+    tp <- sum(data$obs == cl & data$pred == cl)
+    fp <- sum(data$obs != cl & data$pred == cl)
+    fn <- sum(data$obs == cl & data$pred != cl)
+    precision <- ifelse(tp + fp == 0, 0, tp / (tp + fp))
+    recall <- ifelse(tp + fn == 0, 0, tp / (tp + fn))
+    if (precision + recall == 0) 0 else 2 * precision * recall / (precision + recall)
+  })
+  f1_macro <- mean(f1s)
+  
+  # 5) Calcul d'une pénalité personnalisée pour les erreurs critiques
+  conf <- table(data$pred, data$obs)
+  penalty <- 0
+  penalty_value <- 5  # Coefficient de pénalité
+  if ("ndp" %in% lev && "cpc" %in% lev) {
+    if ("cpc" %in% rownames(conf) && "ndp" %in% colnames(conf)) {
+      penalty <- penalty + penalty_value * conf["cpc", "ndp"]
+    }
+  }
+  if ("gpc" %in% lev && "cpc" %in% lev) {
+    if ("cpc" %in% rownames(conf) && "gpc" %in% colnames(conf)) {
+      penalty <- penalty + penalty_value * conf["cpc", "gpc"]
+    }
+  }
+  composite_score <- acc - (penalty / n)
+  
+  out <- c(accuracy = acc, kappa = kap, logLoss = ll, f1 = f1_macro, composite_score = composite_score)
+  return(out)
+}
+
+# ------------------------------------------------------------------------
+# 9) Construction du modèle enrichi avec les variables RTA
+# ------------------------------------------------------------------------
+# Variables du modèle précédent + nouvelles variables de prédiction RTA
+final_vars <- c(model_variables, "prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ")
+
+# Préparation des données pour le modèle
+X_train_final <- DfTrain[, final_vars, drop = FALSE]
+y_train_final <- DfTrain$dv_voteChoice
+
+# Création des variables dummy
+dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE, sep = "_")
+X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
+
+# Vérification des dimensions de la matrice
+cat("Dimensions de la matrice d'entraînement:", dim(X_train_dummy), "\n")
+
+# Entraînement du modèle final
+final_model <- multinom(
+  y_train_final ~ ., 
+  data = X_train_dummy, 
+  trace = FALSE,
+  MaxNWts = 100000
+)
+
+# Symétrisation des coefficients
+all_levels <- levels(y_train_final)
+orig_coef <- coef(final_model)
+
+# Créer une matrice complète pour les coefficients
+full_coef <- matrix(0, nrow = length(all_levels), ncol = ncol(orig_coef))
+rownames(full_coef) <- all_levels
+colnames(full_coef) <- colnames(orig_coef)
+
+# Remplir full_coef pour les niveaux non de référence
+for (lvl in rownames(orig_coef)) {
+  full_coef[lvl, ] <- orig_coef[lvl, ]
+}
+
+# Pour chaque prédicteur, calculer la moyenne des coefficients sur tous les niveaux
+m <- colMeans(full_coef)
+
+# Reparamétrer de manière symétrique
+sym_coef <- full_coef - matrix(rep(m, each = length(all_levels)), nrow = length(all_levels))
+
+# Ajouter la matrice symétrique au modèle final
+final_model$sym_coef <- sym_coef
+
+# ------------------------------------------------------------------------
+# 10) Évaluation du modèle
+# ------------------------------------------------------------------------
+# Préparation des données de test
+X_test_final <- DfTest[, final_vars, drop = FALSE]
+y_test_final <- DfTest$dv_voteChoice
+
+X_test_dummy <- predict(dummies_final, newdata = X_test_final) %>% as.data.frame()
+
+# Prédictions
+pred_test_final_class <- predict(final_model, newdata = X_test_dummy)
+pred_test_final_prob <- predict(final_model, newdata = X_test_dummy, type = "probs")
+
+# Évaluation globale
+acc_test_final <- mean(pred_test_final_class == y_test_final)
+cat("Accuracy globale (test) :", acc_test_final, "\n")
+
+# Évaluation séparée par source
+DfTest_with_preds <- DfTest %>%
+  mutate(predicted = pred_test_final_class)
+
+# Performance sur les données pilotes
+acc_pilot <- DfTest_with_preds %>%
+  filter(source == "pilote") %>%
+  summarise(accuracy = mean(predicted == dv_voteChoice)) %>%
+  pull(accuracy)
+cat("Accuracy sur données pilotes :", acc_pilot, "\n")
+
+# Performance sur les données de l'application
+acc_app <- DfTest_with_preds %>%
+  filter(source == "application") %>%
+  summarise(accuracy = mean(predicted == dv_voteChoice)) %>%
+  pull(accuracy)
+cat("Accuracy sur données application :", acc_app, "\n")
+
+# Matrice de confusion
+table_test <- table(
+  predicted = pred_test_final_class,
+  actual = y_test_final
+)
+print(table_test)
+
+# Matrices de confusion séparées par source
+table_test_pilot <- with(
+  DfTest_with_preds %>% filter(source == "pilote"),
+  table(predicted = predicted, actual = dv_voteChoice)
+)
+cat("Matrice de confusion (données pilotes) :\n")
+print(table_test_pilot)
+
+table_test_app <- with(
+  DfTest_with_preds %>% filter(source == "application"),
+  table(predicted = predicted, actual = dv_voteChoice)
+)
+cat("Matrice de confusion (données application) :\n")
+print(table_test_app)
+
+# ------------------------------------------------------------------------
+# 11) Sauvegarde du modèle final enrichi
+# ------------------------------------------------------------------------
+# Sauvegarder le modèle
+saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withRTAPredictions_2025-04-15.rds")
+
+# Sauvegarder également les dummies pour les futures prédictions
+saveRDS(dummies_final, "_SharedFolder_datagotchi_federal_2024/data/modele/dummies_finalmodel_withRTAPredictions_2025-04-15.rds")
+
+cat("Modèle enrichi avec prédictions RTA sauvegardé avec succès.\n")
+
+# Comparer les performances avec le modèle précédent
+cat("Comparaison des performances avec le modèle précédent :\n")
+
+# Examiner la structure des coefficients du modèle précédent
+previous_coef <- coef(previous_model)
+cat("Dimensions des coefficients du modèle précédent:", dim(previous_coef), "\n")
+cat("Noms des lignes (classes):", rownames(previous_coef), "\n")
+cat("Nombre de variables:", ncol(previous_coef), "\n")
+cat("Quelques noms de variables:", head(colnames(previous_coef)), "...\n")
+
+# Examiner la structure des coefficients du nouveau modèle
+new_coef <- coef(final_model)
+cat("Dimensions des coefficients du nouveau modèle:", dim(new_coef), "\n")
+cat("Noms des lignes (classes):", rownames(new_coef), "\n")
+cat("Nombre de variables:", ncol(new_coef), "\n")
+cat("Quelques noms de variables:", head(colnames(new_coef)), "...\n")
+
+# Vérifier les différences entre les variables
+variables_previous <- colnames(previous_coef)
+variables_new <- colnames(new_coef)
+
+# Variables présentes dans l'ancien modèle mais pas dans le nouveau
+only_in_previous <- setdiff(variables_previous, variables_new)
+cat("Variables présentes uniquement dans l'ancien modèle:", length(only_in_previous), "\n")
+if (length(only_in_previous) > 0) {
+  cat("Exemples:", head(only_in_previous), "...\n")
+}
+
+# Variables présentes dans le nouveau modèle mais pas dans l'ancien
+only_in_new <- setdiff(variables_new, variables_previous)
+cat("Variables présentes uniquement dans le nouveau modèle:", length(only_in_new), "\n")
+if (length(only_in_new) > 0) {
+  cat("Exemples:", head(only_in_new), "...\n")
+}
+
+# Variables communes aux deux modèles
+common_variables <- intersect(variables_previous, variables_new)
+cat("Variables communes aux deux modèles:", length(common_variables), "\n")
