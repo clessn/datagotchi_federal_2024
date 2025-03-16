@@ -26,7 +26,7 @@ for (i in 1:nrow(DataRaw)) {
 # Transfert des résultats vers DataClean
 DataClean$dv_voteChoice <- factor(temp_vote,
                                levels = 1:5,
-                               labels = c("lpc", "cpc", "npd", "bq", "gpc"))
+                               labels = c("lpc", "cpc", "ndp", "bq", "gpc"))
 
 # Vérification
 print(table(DataClean$dv_voteChoice, useNA = "always"))
