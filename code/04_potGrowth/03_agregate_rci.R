@@ -73,3 +73,4 @@ df_rci_by_cluster$rci <- case_when(
 # Save it ----------------------------------------------------------------
 
 saveRDS(df_rci_by_cluster, "_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")
+

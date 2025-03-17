@@ -5,6 +5,8 @@ library(ggplot2)
 library(png)
 library(grid)
 library(cowplot)
+library(shadowtext)
+library(clessnize)
 
 # Load data ---------------------------------------------------------------
 
@@ -24,6 +26,16 @@ cluster_info <- data.frame(
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png"), 
   description = c("Voici la brève \n description du cluster 1", "Électeurs conservateurs", "Pro-environnement", 
                   "Modérés", "Indécis", "Jeunes urbains", "Traditionnalistes")
+)
+# Charger l'image iceberg
+img_iceberg <- readPNG("_SharedFolder_datagotchi_federal_2024/images/iceberg.png")
+
+# 2. Créer un rasterGrob
+iceberg_grob <- rasterGrob(
+  img_iceberg,
+  width = unit(1, "npc"),   # occupe toute la largeur du panel
+  height = unit(1, "npc"),  # occupe toute la hauteur du panel
+  interpolate = TRUE
 )
 
 # Fusionner les informations avec les RCI
@@ -62,25 +74,68 @@ party_colors <- c(
   "PPC" = "#442D7B"
 )
 
-# Créer le graphique pour ce cluster
+# Graphique
+
 plot_rci <- ggplot(df_filtered, aes(x = party, y = rci, label = round(rci, 1), color = party)) +
-  geom_hline(yintercept = 0, color = "blue", size = 1.2) +  # Ligne de référence
+  
+  # -- (a) Image en arrière-plan
+  annotation_custom(
+    iceberg_grob,
+    xmin = -Inf,   # toute la largeur
+    xmax = Inf,
+    ymin = -100,   # bas de l'iceberg
+    ymax = 55     # haut de l'iceberg
+  ) +
+  
+  # -- (b) Rectangle bleu pâle sous y = 0
   annotate("rect", 
            xmin = -Inf, xmax = Inf, 
-           ymin = -100, ymax = 0,    # correspond à la limite inférieure fixée par scale_y_continuous
-           fill = "lightblue", 
-           alpha = 0.3) +
-  geom_point(size = 6) +  # Points colorés pour le RCI
-  geom_text(vjust = -1, size = 5) +  # Valeurs du RCI sur les points
-  scale_color_manual(values = party_colors) +  # Appliquer les couleurs spécifiques
-  labs(title = paste("Potentiel de croissance des partis pour le cluster", selected_cluster),
-       x = "Parti politique", y = "RCI") +
-  theme_minimal() +
+           ymin = -100, ymax = 0,   
+           fill = "lightblue", alpha = 0.3) +
+  
+  # -- (c) Ligne de référence
+  geom_hline(yintercept = 0, color = "blue", size = 1.2) +
+  
+  # -- (d) Points et textes
+  geom_point(size = 6) +
+  geom_text(vjust = -1, size = 5) +
+  
+  # -- (e) Échelles et thème
+  scale_color_manual(values = party_colors) +
+  labs(
+    title = paste("Potentiel de croissance des partis pour le cluster", selected_cluster),
+    x = "Parti politique", 
+    y = "RCI"
+  ) +
+  theme_clean_light() +
   scale_y_continuous(limits = c(-100, 100)) +
   theme(
     text = element_text(size = 14),
     legend.position = "none"
-  )
+  ) +
+  
+  # -- (f) Autoriser l'affichage hors zone (si nécessaire)
+  coord_cartesian(clip = "off")
+
+# Créer le graphique pour ce cluster
+#plot_rci <- ggplot(df_filtered, aes(x = party, y = rci, label = round(rci, 1), color = party)) +
+#  geom_hline(yintercept = 0, color = "blue", size = 1.2) +  # Ligne de référence
+#  annotate("rect", 
+#           xmin = -Inf, xmax = Inf, 
+#           ymin = -100, ymax = 0,    # correspond à la limite inférieure fixée par scale_y_continuous
+#           fill = "lightblue", 
+#           alpha = 0.3) +
+#  geom_point(size = 6) +  # Points colorés pour le RCI
+#  geom_text(vjust = -1, size = 5) +  # Valeurs du RCI sur les points
+#  scale_color_manual(values = party_colors) +  # Appliquer les couleurs spécifiques
+#  labs(title = paste("Potentiel de croissance des partis pour le cluster", selected_cluster),
+#       x = "Parti politique", y = "RCI") +
+#  theme_minimal() +
+#  scale_y_continuous(limits = c(-100, 100)) +
+#  theme(
+#    text = element_text(size = 14),
+#    legend.position = "none"
+#  )
 
 # Assembler les 3 parties avec cowplot
 final_plot <- plot_grid(
