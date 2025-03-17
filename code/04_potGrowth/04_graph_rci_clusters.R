@@ -64,7 +64,12 @@ party_colors <- c(
 
 # Créer le graphique pour ce cluster
 plot_rci <- ggplot(df_filtered, aes(x = party, y = rci, label = round(rci, 1), color = party)) +
-  geom_hline(yintercept = 0, color = "black", size = 1.2) +  # Ligne de référence
+  geom_hline(yintercept = 0, color = "blue", size = 1.2) +  # Ligne de référence
+  annotate("rect", 
+           xmin = -Inf, xmax = Inf, 
+           ymin = -100, ymax = 0,    # correspond à la limite inférieure fixée par scale_y_continuous
+           fill = "lightblue", 
+           alpha = 0.3) +
   geom_point(size = 6) +  # Points colorés pour le RCI
   geom_text(vjust = -1, size = 5) +  # Valeurs du RCI sur les points
   scale_color_manual(values = party_colors) +  # Appliquer les couleurs spécifiques
