@@ -106,7 +106,19 @@ variables_ses_clust <- c(
   "ses_regionAtlantic",
   "ses_regionOntario",
   "ses_regionQuebec",
-  "ses_regionTerritories"
+  "ses_regionTerritories",
+  "ses_regionWest"
+)
+
+variables_dv_clust <- c(
+  "dv_turnout",
+  "dv_solidity",
+  "dv_voteChoiceLPC",
+  "dv_voteChoiceCPC",
+  "dv_voteChoiceNDP",
+  "dv_voteChoiceBQ",
+  "dv_voteChoiceGPC",
+  "dv_voteChoiceOther"
 )
 
 variables_clust <- Reduce(union, list(
@@ -115,5 +127,6 @@ variables_clust <- Reduce(union, list(
   variables_sante_clust,
   variables_mode_de_vie_clust,
   variables_commerce_clust,
-  variables_ses_clust
+  variables_ses_clust,
+  variables_dv_clust
 ))
