@@ -133,7 +133,14 @@ variables_vote <- c(
   "dv_voteChoiceNDP",
   "dv_voteChoiceBQ",
   "dv_voteChoiceGPC",
-  "dv_voteChoiceOther"
+  "dv_voteChoiceOther",
+  "dv_potgrowthLPC",
+  "dv_potgrowthCPC",
+  "dv_potgrowthNDP",
+  "dv_potgrowthBQ",
+  "dv_potgrowthGPC",
+  "dv_potgrowthPPC",
+  "dv_turnout"
 )
 
 variables_communes <- Reduce(union, list(

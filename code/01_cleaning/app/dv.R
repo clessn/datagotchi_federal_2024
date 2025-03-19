@@ -30,3 +30,27 @@ DataClean$dv_voteChoice <- factor(temp_vote,
 
 # Vérification
 print(table(DataClean$dv_voteChoice, useNA = "always"))
+
+# people pred:
+
+table(DataRaw$prevision, useNA = "always")
+
+# Transformation de prevision en dv_peoplePred
+DataClean$dv_peoplePred <- NA  # Initialisation
+
+# Conversion directe de prevision (qui contient déjà des valeurs numériques 1-5)
+# en utilisant la même logique de factorisation que pour dv_voteChoice
+DataClean$dv_peoplePred <- factor(DataRaw$prevision,
+                                 levels = 1:5,
+                                 labels = c("lpc", "cpc", "ndp", "bq", "gpc"))
+
+# Vérification - cette ligne devrait montrer la même distribution que table(DataRaw$prevision)
+print(table(DataClean$dv_peoplePred, useNA = "always"))
+
+# Pour confirmer que nous avons bien les mêmes valeurs
+# Comparaison avec les valeurs originales de prevision
+print("Distribution originale de prevision:")
+print(table(DataRaw$prevision, useNA = "always"))
+
+# Si vous avez besoin de garder aussi la version numérique
+DataClean$dv_peoplePred_num <- as.numeric(DataRaw$prevision)
