@@ -611,3 +611,29 @@ DataClean$ses_dwellingOther[DataRaw$dwelling != "Other"] <- 0
 table(DataClean$ses_dwellingOther)
 
 
+# Date
+
+table(DataRaw$X_time)
+
+# Nettoyage de la variable de date X_time
+# On suppose que X_time est déjà au format de date "YYYY-MM-DD"
+
+# Vérification du format actuel
+print("Format de X_time avant transformation:")
+print(class(DataRaw$X_time))
+print(head(DataRaw$X_time))
+
+# Création de la variable de date nettoyée dans DataClean
+# Si X_time est déjà un objet Date, on le copie simplement
+if (inherits(DataRaw$X_time, "Date")) {
+  DataClean$date <- DataRaw$X_time
+} else {
+  # Si X_time est une chaîne de caractères, on la convertit en Date
+  DataClean$date <- as.Date(DataRaw$X_time)
+}
+
+# Vérification
+print("Résumé de la variable date nettoyée:")
+print(class(DataClean$date))
+print(summary(DataClean$date))
+print(table(DataClean$date, useNA = "always"))
