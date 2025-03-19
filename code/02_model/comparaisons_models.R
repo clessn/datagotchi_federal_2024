@@ -10,7 +10,7 @@ library(kableExtra)
 library(ggplot2)
 library(gridExtra)
 library(pbapply)
-library(quarto)
+
 
 # ------------------------------------------------------------------------
 # 2) Chargement des modèles et des données
@@ -51,7 +51,7 @@ rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/r
 
 # Charger les données
 DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250310.rds")
-DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250314.rds")
+DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/_previous/datagotchi2025_canada_app_20250314.rds")
 
 # ------------------------------------------------------------------------
 # 3) Préparation des données selon la méthode du modèle original (Script 1)
@@ -477,4 +477,260 @@ ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/plot_accura
 ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/plot_accuracy_either.png", plot_accuracy_either, width = 8, height = 6)
 ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/plot_by_party.png", plot_by_party, width = 10, height = 6)
 ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/plot_by_party_either.png", plot_by_party_either, width = 10, height = 6)
+
+
+# ------------------------------------------------------------------------
+# 11) Analyse de la redirection des erreurs de prédiction
+# ------------------------------------------------------------------------
+
+# Fonction pour créer une matrice de redirection des erreurs
+create_error_redirection_matrix <- function(results_df, title) {
+  # Conserver uniquement les prédictions incorrectes
+  incorrect_predictions <- results_df %>%
+    filter(!correct_1st)
+  
+  # Créer une matrice de confusion pour les erreurs uniquement
+  error_matrix <- table(
+    predicted = incorrect_predictions$predicted_1st,
+    actual = incorrect_predictions$actual
+  )
+  
+  # Convertir en pourcentage par ligne (parti réel)
+  error_matrix_pct <- prop.table(error_matrix, margin = 2)
+  
+  # Créer un dataframe pour ggplot
+  error_df <- as.data.frame(error_matrix_pct)
+  names(error_df) <- c("Predicted", "Actual", "Proportion")
+  
+  # Mettre en forme les pourcentages
+  error_df$Percentage <- sprintf("%.1f%%", error_df$Proportion * 100)
+  
+  # Filtrer les valeurs 0 pour éviter d'encombrer le graphique
+  error_df <- error_df %>% filter(Proportion > 0)
+  
+  # Créer une heatmap avec fond blanc
+  heatmap <- ggplot(error_df, aes(x = Actual, y = Predicted, fill = Proportion)) +
+    geom_tile() +
+    geom_text(aes(label = Percentage), size = 3) +
+    scale_fill_gradient(low = "white", high = "red", labels = scales::percent) +
+    theme_minimal() +
+    theme(
+      panel.background = element_rect(fill = "white", color = NA),
+      plot.background = element_rect(fill = "white", color = NA),
+      legend.background = element_rect(fill = "white", color = NA)
+    ) +
+    labs(
+      title = title,
+      subtitle = "Quand le modèle se trompe, vers quel parti redirige-t-il la prédiction?",
+      x = "Parti réel (actual)",
+      y = "Parti prédit (predicted)",
+      fill = "Proportion"
+    ) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  return(list(matrix = error_matrix, pct_matrix = error_matrix_pct, plot = heatmap))
+}
+
+# Créer les matrices de redirection des erreurs pour les deux modèles
+error_redirect_original <- create_error_redirection_matrix(
+  results_original, 
+  "Redirection des erreurs - Modèle original"
+)
+
+error_redirect_improved <- create_error_redirection_matrix(
+  results_improved, 
+  "Redirection des erreurs - Modèle amélioré (global)"
+)
+
+# Créer les matrices de redirection des erreurs par source pour le modèle amélioré
+error_redirect_improved_pilot <- create_error_redirection_matrix(
+  results_improved %>% filter(source == "pilote"), 
+  "Redirection des erreurs - Modèle amélioré (pilote)"
+)
+
+error_redirect_improved_app <- create_error_redirection_matrix(
+  results_improved %>% filter(source == "application"), 
+  "Redirection des erreurs - Modèle amélioré (application)"
+)
+
+# Afficher les matrices
+cat("\nMatrice de redirection des erreurs - Modèle original:\n")
+print(error_redirect_original$pct_matrix)
+
+cat("\nMatrice de redirection des erreurs - Modèle amélioré (global):\n")
+print(error_redirect_improved$pct_matrix)
+
+# Analyse plus spécifique des erreurs pour chaque parti
+analyze_party_errors <- function(results_df, party_code) {
+  # Filtrer les données pour ce parti
+  party_data <- results_df %>%
+    filter(actual == party_code)
+  
+  # Calculer les prédictions incorrectes
+  incorrect <- party_data %>%
+    filter(!correct_1st)
+  
+  # Distribution des prédictions incorrectes
+  incorrect_dist <- table(incorrect$predicted_1st)
+  incorrect_pct <- prop.table(incorrect_dist) * 100
+  
+  # Nombre total de cas pour ce parti
+  total_cases <- nrow(party_data)
+  incorrect_cases <- nrow(incorrect)
+  accuracy <- 1 - (incorrect_cases / total_cases)
+  
+  # Créer un résumé
+  cat(sprintf("\nAnalyse des erreurs pour le parti %s:", party_code))
+  cat(sprintf("\nAccuracy: %.1f%% (%d corrects sur %d)", 
+              accuracy * 100, total_cases - incorrect_cases, total_cases))
+  cat(sprintf("\nLorsque le modèle se trompe (%d cas), il prédit:", incorrect_cases))
+  
+  for (party in names(incorrect_pct)) {
+    cat(sprintf("\n  - %s: %.1f%%", party, incorrect_pct[party]))
+  }
+  
+  return(list(
+    accuracy = accuracy,
+    incorrect_dist = incorrect_dist,
+    incorrect_pct = incorrect_pct
+  ))
+}
+
+# Analyser les erreurs pour chaque parti pour le modèle original
+cat("\n\n===== ANALYSE DÉTAILLÉE DES ERREURS PAR PARTI - MODÈLE ORIGINAL =====")
+parties <- levels(results_original$actual)
+error_analyses_original <- list()
+for (party in parties) {
+  error_analyses_original[[party]] <- analyze_party_errors(results_original, party)
+}
+
+# Analyser les erreurs pour chaque parti pour le modèle amélioré
+cat("\n\n===== ANALYSE DÉTAILLÉE DES ERREURS PAR PARTI - MODÈLE AMÉLIORÉ =====")
+parties <- levels(results_improved$actual)
+error_analyses_improved <- list()
+for (party in parties) {
+  error_analyses_improved[[party]] <- analyze_party_errors(results_improved, party)
+}
+
+# Créer un graphique comparatif des redirections d'erreurs pour un parti spécifique (exemple avec CPC)
+create_error_comparison_plot <- function(party_code) {
+  # Extraire les données pour le parti spécifié de chaque modèle
+  original_errors <- error_analyses_original[[party_code]]$incorrect_pct
+  improved_errors <- error_analyses_improved[[party_code]]$incorrect_pct
+  
+  # Combiner les données pour la comparaison
+  all_parties <- unique(c(names(original_errors), names(improved_errors)))
+  comparison_data <- data.frame(
+    Party = all_parties,
+    Original = 0,
+    Improved = 0
+  )
+  
+  # Remplir avec les pourcentages d'erreur
+  for (party in all_parties) {
+    if (party %in% names(original_errors)) {
+      comparison_data[comparison_data$Party == party, "Original"] <- original_errors[party]
+    }
+    if (party %in% names(improved_errors)) {
+      comparison_data[comparison_data$Party == party, "Improved"] <- improved_errors[party]
+    }
+  }
+  
+  # Convertir en format long pour ggplot
+  comparison_long <- comparison_data %>%
+    pivot_longer(cols = c("Original", "Improved"), 
+                 names_to = "Model", 
+                 values_to = "Percentage")
+  
+  # Créer le graphique avec fond blanc
+  plot <- ggplot(comparison_long, aes(x = Party, y = Percentage, fill = Model)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
+              position = position_dodge(width = 0.9), vjust = -0.5) +
+    theme_minimal() +
+    theme(
+      panel.background = element_rect(fill = "white", color = NA),
+      plot.background = element_rect(fill = "white", color = NA),
+      legend.background = element_rect(fill = "white", color = NA)
+    ) +
+    labs(
+      title = sprintf("Comparaison des redirections d'erreurs - Parti %s", party_code),
+      subtitle = "Quand le modèle se trompe, vers quels partis redirige-t-il la prédiction?",
+      x = "Parti prédit incorrectement",
+      y = "Pourcentage des erreurs",
+      fill = "Modèle"
+    )
+  
+  return(plot)
+}
+
+# Créer des graphiques de comparaison pour tous les partis
+error_comparison_plots <- list()
+for (party in parties) {
+  error_comparison_plots[[party]] <- create_error_comparison_plot(party)
+}
+
+# Sauvegarder les graphiques
+for (party in parties) {
+  ggsave(
+    sprintf("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_redirect_%s.png", party),
+    error_comparison_plots[[party]],
+    width = 10, height = 6
+  )
+}
+
+# Sauvegarder les matrices de redirection d'erreurs
+ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_redirect_original.png", 
+       error_redirect_original$plot, width = 10, height = 8)
+ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_redirect_improved.png", 
+       error_redirect_improved$plot, width = 10, height = 8)
+ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_redirect_improved_pilot.png", 
+       error_redirect_improved_pilot$plot, width = 10, height = 8)
+ggsave("_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_redirect_improved_app.png", 
+       error_redirect_improved_app$plot, width = 10, height = 8)
+
+# Modifier également les graphiques existants dans le code original pour avoir un fond blanc
+# Cela devra être ajouté après les définitions des graphiques dans la section 9
+
+# Ajout d'un fond blanc aux graphiques existants
+plot_accuracy <- plot_accuracy + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.background = element_rect(fill = "white", color = NA)
+  )
+
+plot_accuracy_either <- plot_accuracy_either + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.background = element_rect(fill = "white", color = NA)
+  )
+
+plot_by_party <- plot_by_party + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.background = element_rect(fill = "white", color = NA)
+  )
+
+plot_by_party_either <- plot_by_party_either + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    legend.background = element_rect(fill = "white", color = NA)
+  )
+
+# Ajouter à la liste des résultats
+saveRDS(
+  list(
+    error_redirect_original = error_redirect_original,
+    error_redirect_improved = error_redirect_improved,
+    error_redirect_improved_pilot = error_redirect_improved_pilot,
+    error_redirect_improved_app = error_redirect_improved_app,
+    error_analyses_original = error_analyses_original,
+    error_analyses_improved = error_analyses_improved
+  ),
+  "_SharedFolder_datagotchi_federal_2024/data/modele/comparison/error_analyses.rds"
+)
 
