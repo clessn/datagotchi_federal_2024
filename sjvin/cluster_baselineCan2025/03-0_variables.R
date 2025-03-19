@@ -11,13 +11,14 @@ variables_act_clust <- c(
   #"lifestyle_exerciseTeamSport",
   #"lifestyle_exerciseWalk",
   #"lifestyle_exerciseRun",
-  #"lifestyle_exerciseYoga",
+  "lifestyle_exerciseYoga",
   #"lifestyle_exerciseSwim",
   #"lifestyle_exerciseOther",
   "lifestyle_exerciseNone",
+  #"lifestyle_goFishingFreq_numeric",
+  "lifestyle_goHuntingFreq_numeric"
   #"lifestyle_goMuseumsFreq_numeric"
-  "lifestyle_pleinAirFreqAll_bin"
-  #"lifestyle_pleinAirFreqSome_bin"
+  #"lifestyle_motorizedActFreq_numeric"
   #"lifestyle_volunteeringFreq_numeric"
 )
 
@@ -28,7 +29,7 @@ variables_style_clust <- c(
   #"lifestyle_clothingStyleSport",
   "lifestyle_clothingStyleOther",
   "lifestyle_hasTattoos",
-  #"lifestyle_ownPetCat",
+  "lifestyle_ownPetCat",
   "lifestyle_ownPetDog",
   #"lifestyle_ownPetOther",
   #"lifestyle_ownPetCatAndDog",
@@ -83,9 +84,9 @@ variables_commerce_clust <- c(
 variables_ses_clust <- c(
   "id",
   #"ses_genderMale",
-  #"ses_age",
+  "ses_age",
   #"ses_languageEnglish",
-  #ses_languageFrench",
+  "ses_languageFrench",
   #"ses_languageOther",
   "ses_educBHS",
   #"ses_educPostHS",
@@ -100,18 +101,31 @@ variables_ses_clust <- c(
   #"ses_sexOrientationQueer",
   #"ses_regionPrairies",
   #"ses_regionBC",
-  #"ses_regionAtlantic",
-  #"ses_regionOntario",
-  "ses_regionQuebec"
+  "ses_regionAtlantic",
+  "ses_regionOntario",
+  "ses_regionQuebec",
   #"ses_regionTerritories"
+  "ses_regionWest"
+)
+
+variables_dv_clust <- c(
+  "dv_turnout",
+  "dv_solidity",
+  "dv_voteChoiceLPC",
+  "dv_voteChoiceCPC",
+  "dv_voteChoiceNDP",
+  "dv_voteChoiceBQ",
+  "dv_voteChoiceGPC",
+  "dv_voteChoiceOther"
 )
 
 variables_clust <- Reduce(union, list(
-  variables_act_clust,
-  variables_style_clust,
-  variables_sante_clust,
-  variables_mode_de_vie_clust,
-  variables_commerce_clust,
-  variables_ses_clust
+  #variables_act_clust,
+  #variables_style_clust,
+  #variables_sante_clust,
+  #variables_mode_de_vie_clust,
+  #variables_commerce_clust,
+  variables_ses_clust,
+  variables_dv_clust
 ))
 

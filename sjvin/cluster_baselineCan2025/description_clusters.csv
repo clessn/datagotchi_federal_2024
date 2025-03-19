@@ -2,10 +2,41 @@
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 1 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
+c(""lifestyle_exerciseYoga"", ""ses_dwellingApp"", ""ses_immigrant"", ""ses_incomeHigh"")
+
+Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
+c(""lifestyle_exerciseGym"", ""lifestyle_smokeFreq"")
+
+Ce cluster est composé de :
+Hommes: 27.3%, Immigrants: 40.9%
+Âge: 40 ans
+Revenus:
+  Revenu Bas: 4.5 %
+  Revenu Mid: 59.1 %
+  Revenu High: 36.4 %
+Langues:
+  En: 72.7%, Fr: 27.3%, Autres: 0%
+EducBHS: 13.6%
+EducPostHS: 22.7%
+EducUniv: 63.6%
+Ethnie (Blanc): 63.6%
+Orientation (Hétéro): 86.4%
+","Prénom proposé : Sophie
+
+Description du persona 1 :
+
+Sophie est une femme de 40 ans vivant au Canada. Elle est immigrante, ce qui se reflète dans la diversité culturelle qu'elle apporte à son environnement. Pratiquant régulièrement le yoga, elle préfère cette activité au gymnase pour rester en forme et se relaxer. Sa santé est importante pour elle, et elle ne fume pas.
+
+Elle vit dans une habitation moderne et apprécie le confort que cela lui procure. Avec un revenu élevé, Sophie a su construire une carrière réussie et épanouissante. Elle est bien éduquée, ayant un diplôme universitaire qui lui permet de travailler dans un domaine qu'elle aime. Bien qu'elle parle principalement anglais, elle connaît aussi le français, ce qui lui donne un avantage dans un pays bilingue comme le Canada.
+
+D'origine majoritairement blanche, Sophie s'intègre bien dans la société canadienne tout en apportant sa propre perspective en tant qu'immigrante. Elle vit une vie conventionnelle avec une orientation hétérosexuelle et apprécie les valeurs familiales et communautaires."
+"Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 10 :
+
+Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
 c(""lifestyle_clothingStyleOther"", ""lifestyle_hasTattoos"", ""ses_incomeLow"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""ses_dwellingDetachedHouse"", ""ses_educUniv"", ""ses_immigrant"")
+c(""ses_educUniv"", ""ses_immigrant"")
 
 Ce cluster est composé de :
 Hommes: 43.9%, Immigrants: 0%
@@ -21,395 +52,336 @@ EducPostHS: 39%
 EducUniv: 29.3%
 Ethnie (Blanc): 82.9%
 Orientation (Hétéro): 80.5%
-","Pour ce persona, je propose le prénom ""Marc"". Voici une brève description du persona correspondant :
+","Pour une personne habitant au Canada correspondant au persona 10, un prénom qui pourrait convenir est ""Marc"". Voici une brève description de ce persona :
 
-**Nom :** Marc
+---
 
-**Âge :** 45 ans
+**Nom** : Marc
 
-**Genre :** Homme
+**Âge** : 45 ans
 
-**Origine ethnique :** Blanc, 82.9%
+**Genre** : Homme
 
-**Langues parlées :** Principalement anglais (58.5%) et français (39%)
+**Langues parlées** : Marc est principalement anglophone, mais il parle également français.
 
-**Revenu :** 
-- Bas : 24.4%
-- Moyen : 65.9%
-- Élevé : 9.8%
+**Origines** : Bien qu'il soit descendant de familles établies au Canada depuis plusieurs générations, Marc s'identifie fortement à la culture canadienne-française.
 
-**Éducation :** 
-- Diplôme secondaire (EducBHS) : 31.7%
-- Diplôme post-secondaire mais pas universitaire (EducPostHS) : 39%
-- Diplôme universitaire : 29.3%
+**Situation socio-économique** : Marc a un revenu moyen, ce qui lui permet de vivre confortablement sans extravagances. Cependant, il fait partie de ceux dont le revenu est considéré comme bas au regard des standards nationaux.
 
-**Style de vie :** 
-- Style vestimentaire autre que la moyenne
-- Possède des tatouages
-- Ne vit généralement pas dans une maison individuelle
+**Éducation** : Marc a complété des études postsecondaires, mais n'a pas poursuivi jusqu'à l'université, ce qui est moins fréquent dans la population générale.
 
-**Orientation sexuelle :** Hétérosexuel, 80.5%
+**Style de vie** : Marc adopte un style vestimentaire unique et n'hésite pas à porter des vêtements en dehors des tendances conventionnelles. Il se distingue également par ses nombreux tatouages, qui reflètent souvent des aspects importants de sa vie et de sa personnalité.
 
-**Description :**
+**Profil culturel** : Bien qu'il ait grandi dans une communauté blanche et hétérosexuelle, Marc apprécie la diversité culturelle et est ouvert d'esprit. Il n'est pas immigré et n'a pas d'ascendance immigrée directe.
 
-Marc est un homme dans la quarantaine, vivant au Canada, qui se démarque par son style vestimentaire unique et ses tatouages. Il n'est pas immigré, ce qui le distingue dans un pays comme le Canada où beaucoup de diversité existe. Il a un revenu principalement moyen, mais il est plus enclin que la moyenne à avoir un revenu bas. Il a une éducation variée avec une partie significative n'ayant pas atteint le niveau universitaire. Il parle principalement anglais, mais a aussi une bonne maîtrise du français. Bien qu'il soit généralement en bonne relation avec la culture majoritaire, il préfère habiter dans des logements autres que des maisons individuelles. Marc est un homme assez typique de son milieu, mais avec un penchant pour l'expression individuelle à travers son apparence."
-"Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 10 :
+**Valeurs et loisirs** : Marc valorise l'authenticité et l'expression personnelle. Il aime explorer ses intérêts artistiques, souvent en lien avec ses tatouages, et participe à des événements culturels locaux qui célèbrent la diversité et la créativité.
 
-Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consCoffeeNone"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_ownPetNone"", ""ses_dwellingDetachedHouse"", ""ses_educUniv"", ""ses_immigrant"")
+--- 
 
-Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_exerciseGym"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetDog"", ""lifestyle_pleinAirFreqAll_bin"", ""lifestyle_smokeFreq"", ""ses_dwellingApp"", ""ses_educBHS"", ""ses_incomeHigh"")
-
-Ce cluster est composé de :
-Hommes: 58.8%, Immigrants: 27.7%
-Âge: 52.2 ans
-Revenus:
-  Revenu Bas: 11.9 %
-  Revenu Mid: 87 %
-  Revenu High: 1.1 %
-Langues:
-  En: 63.8%, Fr: 29.9%, Autres: 6.2%
-EducBHS: 0%
-EducPostHS: 34.5%
-EducUniv: 65.5%
-Ethnie (Blanc): 75.1%
-Orientation (Hétéro): 88.1%
-","Pour une personne habitant au Canada correspondant à ce profil, je propose le prénom ""François."" 
-
-**Description du persona 10 :**
-
-François est un homme de 52 ans, vivant dans une maison individuelle au Canada. Il a immigré au pays et fait partie des 27.7% d'immigrants de son groupe. Ayant complété des études universitaires, François fait partie de la majorité éduquée de son cluster. Il est également francophone, ce qui est en accord avec le fait que 29.9% de son groupe parle français.
-
-François a un style de vie sobre et ne consomme pas de café ni d'alcool. Il n'a pas de tatouages et ne possède pas d'animaux de compagnie, ce qui suggère un mode de vie simple et minimaliste. Bien qu'il ne fréquente pas les salles de sport, il reste actif par d'autres moyens et préfère rester chez lui ou profiter de la tranquillité.
-
-Avec un revenu moyen, il mène une vie confortable sans excès. Sa maison détachée reflète une préférence pour l'espace et l'indépendance. François est d’origine majoritairement blanche et s’identifie comme hétérosexuel, ce qui est représentatif de la majorité de son groupe démographique."
+Cette description vise à capturer les caractéristiques principales du persona en tenant compte des variables spécifiques fournies."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 11 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consCoffeeTimHortons"", ""lifestyle_exerciseGym"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetDog"", ""lifestyle_pleinAirFreqAll_bin"", ""lifestyle_smokeFreq"")
+c(""lifestyle_favAlcoolBeer"", ""lifestyle_smokeFreq"", ""lifestyle_typeTransportCar"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_consCoffeeNone"", ""lifestyle_exerciseNone"", ""lifestyle_ownPetNone"", ""ses_incomeHigh"", ""ses_regionQuebec"")
+c(""lifestyle_exerciseGym"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_hasTattoos"", ""lifestyle_typeTransportNoCar"", ""ses_incomeLow"", ""ses_languageEnglish"")
 
 Ce cluster est composé de :
-Hommes: 80.5%, Immigrants: 18.3%
-Âge: 23.9 ans
+Hommes: 86.8%, Immigrants: 18.7%
+Âge: 51.4 ans
 Revenus:
-  Revenu Bas: 7.3 %
-  Revenu Mid: 86.6 %
-  Revenu High: 6.1 %
+  Revenu Bas: 3.3 %
+  Revenu Mid: 82.4 %
+  Revenu High: 14.3 %
 Langues:
-  En: 89%, Fr: 8.5%, Autres: 2.4%
-EducBHS: 17.1%
-EducPostHS: 31.7%
-EducUniv: 51.2%
-Ethnie (Blanc): 69.5%
-Orientation (Hétéro): 90.2%
-","Pour ce persona, je propose le prénom ""Jake"". Voici une brève description de Jake :
+  En: 50.5%, Fr: 42.9%, Autres: 6.6%
+EducBHS: 22%
+EducPostHS: 40.7%
+EducUniv: 37.4%
+Ethnie (Blanc): 84.6%
+Orientation (Hétéro): 90.1%
+","Pour une personne vivant au Canada, et plus spécifiquement au Québec, un prénom approprié pourrait être ""Marc"".
 
-**Profil de Jake :**
+### Description du persona ""Marc"" :
 
-Jake est un jeune homme de 24 ans vivant au Canada, probablement dans une province anglophone étant donné sa maîtrise de l'anglais. Il est en majorité dans une tranche de revenu moyen et n'est probablement pas originaire du Québec. Jake a un mode de vie actif : il fréquente régulièrement la salle de sport et participe souvent à des activités de plein air. Il est également un grand consommateur de café de la chaîne Tim Hortons, ce qui est typique pour beaucoup de Canadiens. 
+- **Nom** : Marc
+- **Âge** : 51 ans
+- **Genre** : Homme
+- **Origine** : Principalement d'origine québécoise, avec une probabilité faible d'immigration (18.7%)
+- **Langue principale** : Français, bien qu'il soit aussi capable de parler anglais
+- **Région** : Province de Québec
+- **Statut socio-économique** : Revenu moyen, avec une proportion significative ayant un revenu élevé
+- **Éducation** : A probablement fait des études postsecondaires, avec une bonne chance d'avoir un diplôme universitaire
+- **Profession** : Peut exercer une profession nécessitant un niveau d'éducation élevé
+- **Mode de vie** :
+  - Préfère la bière comme boisson alcoolisée
+  - Fume plus que la moyenne de la population
+  - Utilise principalement la voiture pour se déplacer
+  - Fait peu d’exercice au gym
+  - N’a probablement pas de tatouages
+- **Culture et appartenance ethnique** : Majoritairement de descendance blanche
+- **Orientation sexuelle** : Hétérosexuel
+- **Intérêts** : Peut-être intéressé par des activités sociales où la bière est consommée, mais moins par les activités sportives en salle
 
-Jake a un style de vie assez moderne et expressif, puisqu'il a des tatouages et possède un chien comme animal de compagnie. En revanche, il est moins attiré par les cafés indépendants et ne vit pas avec un revenu élevé. Jake est également fumeur, ce qui est moins commun dans la population générale.
-
-Côté éducation, Jake a probablement un diplôme universitaire, ce qui est plus fréquent dans son groupe. Il est majoritairement de descendance européenne et se considère hétérosexuel. Bien qu'il soit plutôt jeune, il semble déjà bien établi dans sa routine quotidienne et ses préférences personnelles."
+Marc représente un profil assez typique d'une personne d'âge moyen au Québec, ayant des habitudes de consommation et de transport bien définies et une éducation qui lui permet de maintenir un revenu moyen à élevé."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 2 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consCoffeeTimHortons"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetDog"", ""lifestyle_smokeFreq"")
+c(""lifestyle_consClothesFrip"", ""lifestyle_eatMeatFreq"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_ownPetCat"", ""lifestyle_typeTransportCar"", ""ses_age"", ""ses_languageEnglish"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_consCoffeeNone"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_ownPetNone"", ""lifestyle_pleinAirFreqAll_bin"", ""lifestyle_typeTransportNoCar"", ""ses_dwellingApp"", ""ses_educBHS"", ""ses_educUniv"", ""ses_incomeHigh"", ""ses_incomeLow"", ""ses_regionQuebec"")
+c(""lifestyle_consCoffeeTimHortons"", ""lifestyle_favAlcoolBeer"", ""lifestyle_ownPetNone"", ""lifestyle_typeTransportNoCar"", ""ses_educUniv"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Ce cluster est composé de :
-Hommes: 52.4%, Immigrants: 15.3%
-Âge: 42.9 ans
+Hommes: 41.5%, Immigrants: 9.8%
+Âge: 52.7 ans
 Revenus:
-  Revenu Bas: 8.1 %
-  Revenu Mid: 91.9 %
-  Revenu High: 0 %
+  Revenu Bas: 16.3 %
+  Revenu Mid: 74.8 %
+  Revenu High: 8.9 %
 Langues:
-  En: 81.5%, Fr: 16.9%, Autres: 1.6%
-EducBHS: 5.6%
-EducPostHS: 61.3%
-EducUniv: 33.1%
-Ethnie (Blanc): 77.4%
-Orientation (Hétéro): 86.3%
-","Pour une personne habitant au Canada correspondant à ce profil, je propose le prénom ""Ryan"", un prénom courant et apprécié au Canada.
+  En: 99.2%, Fr: 0%, Autres: 0.8%
+EducBHS: 29.3%
+EducPostHS: 42.3%
+EducUniv: 28.5%
+Ethnie (Blanc): 90.2%
+Orientation (Hétéro): 90.2%
+","Prénom proposé : Emily
 
-**Persona 2 : Ryan**
+Emily est une femme anglophone de 52 ans vivant au Canada, probablement dans une province autre que le Québec, étant donné qu'elle ne parle pas français. Elle est issue d'une ethnie majoritairement blanche et a une orientation hétérosexuelle. Emily est dans la tranche de revenu moyenne, ce qui lui permet de vivre confortablement sans être opulente. Elle possède un niveau d'éducation supérieur au secondaire, mais n'a pas nécessairement terminé des études universitaires.
 
-- **Âge et Genre** : Homme de 43 ans
-- **Origine et Langue** : Principalement anglophone (81.5%), avec une bonne proportion parlant français (16.9%). Ryan est d'origine caucasienne (77.4%).
-- **Éducation et Travail** : Ryan a poursuivi des études post-secondaires (61.3%) sans forcément avoir complété une formation universitaire (33.1%). Il fait partie de la classe moyenne (91.9% de revenus moyens) et n'a pas de revenu élevé.
-- **Style de Vie** : 
-  - Ryan est un consommateur régulier de café Tim Hortons et préfère éviter les cafés indépendants.
-  - Il a des tatouages et possède un chien.
-  - Il fume plus fréquemment que la moyenne de la population.
-  - Il n'est pas adepte des activités de plein air fréquentes et n'est pas un amateur de vin rouge ou blanc.
-- **Transport et Logement** : Il utilise souvent une voiture pour ses déplacements et ne vit pas dans un appartement.
-- **Localisation** : Ryan ne vit pas au Québec et est peu probable qu'il réside dans une région où le français est prédominant.
-- **Autres Caractéristiques** : Ryan est principalement hétérosexuel (86.3%) et ne fait pas partie des populations immigrantes (15.3%).
+Dans son style de vie, Emily présente des comportements distincts : elle aime consommer des vêtements d'occasion, ce qui peut refléter un souci écologique ou un goût pour la mode vintage. Elle mange fréquemment de la viande, mais ne boit pas d'alcool, peut-être par choix personnel ou pour des raisons de santé. Emily est une amoureuse des chats, en possédant un ou plusieurs.
 
-Ce profil brosse le portrait d'une personne typique de la classe moyenne canadienne, avec des préférences et un style de vie bien ancrés dans la culture pop canadienne."
+Pour ses déplacements, Emily privilégie l'utilisation de la voiture, ce qui est courant dans de nombreuses régions du Canada où le transport en commun peut être moins accessible. Bien que le café Tim Hortons soit une référence culturelle pour de nombreux Canadiens, elle s'en passe, peut-être au profit d'autres cafés ou simplement parce qu'elle n'est pas une grande consommatrice de café. Emily ne semble pas s'intéresser à la bière, ce qui cadre avec son abstinence alcoolique.
+
+Enfin, en tant que non-immigrante, elle représente la majorité de la population canadienne d'origine blanche, et sa vie reflète un équilibre entre tradition et modernité, avec une touche personnelle propre à ses préférences et ses valeurs."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 3 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_favAlcoolWhiteWine"", ""lifestyle_ownPetNone"", ""ses_regionQuebec"")
+c(""lifestyle_consCoffeeNone"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_smokeFreq"", ""ses_age"", ""ses_educBHS"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consClothesFrip"", ""lifestyle_consCoffeeIndependent"", ""lifestyle_eatMeatFreq"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_favAlcoolRedWine"")
+c(""lifestyle_exerciseGym"", ""lifestyle_goHuntingFreq_numeric"", ""lifestyle_typeTransportNoCar"", ""ses_educUniv"")
 
 Ce cluster est composé de :
-Hommes: 35.6%, Immigrants: 17.2%
-Âge: 55.2 ans
+Hommes: 40.3%, Immigrants: 14.3%
+Âge: 57.7 ans
 Revenus:
-  Revenu Bas: 11.5 %
-  Revenu Mid: 78.2 %
-  Revenu High: 10.3 %
+  Revenu Bas: 19.5 %
+  Revenu Mid: 67.5 %
+  Revenu High: 13 %
 Langues:
-  En: 52.9%, Fr: 44.8%, Autres: 2.3%
-EducBHS: 20.7%
-EducPostHS: 24.1%
-EducUniv: 55.2%
-Ethnie (Blanc): 83.9%
-Orientation (Hétéro): 92%
-","Pour une personne habitant au Canada, et plus précisément au Québec, un prénom approprié pourrait être ""Luc"". Ce prénom est souvent associé à la culture francophone du Québec.
+  En: 61%, Fr: 39%, Autres: 0%
+EducBHS: 32.5%
+EducPostHS: 39%
+EducUniv: 28.6%
+Ethnie (Blanc): 88.3%
+Orientation (Hétéro): 92.2%
+","Pour une personne vivant au Canada et correspondant à ce profil, un prénom qui pourrait convenir est ""André"" s'il s'agit d'un homme, ou ""Marie"" s'il s'agit d'une femme. Ces prénoms sont classiques et bien acceptés à travers les communautés anglophones et francophones du pays.
 
-**Persona 3 : Luc**
+**Description pour le persona 3 :**
 
-**Description :**
+**Nom :** André Dupont
 
-Luc est un homme âgé de 55 ans, vivant dans la province de Québec. Il n'a pas d'animal de compagnie, ce qui est une caractéristique notable dans son style de vie. Luc apprécie particulièrement le vin blanc, ce qui se distingue dans ses préférences en matière de boissons alcoolisées, tandis qu'il consomme peu de vin rouge ou ne boit pas du tout d'alcool. Il est également peu intéressé par les vêtements de friperie et préfère probablement d'autres styles d'achat pour ses habits.
+**Profil :**  
+André est un homme canadien de 58 ans. Il a grandi dans un environnement francophone, mais il est également à l'aise en anglais, puisque 61% des personnes de son groupe parlent cette langue. André a complété ses études secondaires, et bien qu'il ait envisagé des études postsecondaires, il n'a pas poursuivi jusqu'à l'université.
 
-Luc n'est pas un grand consommateur de café, notamment dans les établissements indépendants, et ne mange pas fréquemment de viande. Il est important de noter qu'il accorde de l'importance à un mode de vie actif, car il a une faible tendance à ne pas faire d'exercice.
+**Mode de vie :**  
+André n'est pas un amateur de café, préférant peut-être une tasse de thé ou une boisson non caféinée. Il n'est pas très actif physiquement et ne fréquente pas le gymnase. Il préfère passer ses soirées tranquilles à la maison avec un verre de vin blanc, sa boisson alcoolisée de prédilection. Il fume à une fréquence modérée, ce qui est un aspect de son style de vie qu'il aimerait peut-être changer.
 
-Sur le plan socio-économique, Luc appartient majoritairement à la classe moyenne avec un revenu moyen et a un niveau d'éducation universitaire. Bien qu'il parle principalement le français, il est également à l'aise en anglais. Il est de descendance majoritairement blanche et s'identifie comme hétérosexuel.
+**Transport :**  
+Il utilise principalement une voiture pour se déplacer, évitant les transports en commun ou le covoiturage, ce qui est cohérent avec sa faible utilisation des modes de transport alternatifs.
 
-Avec son profil, Luc pourrait être un professionnel ou un travailleur dans un domaine qui valorise l'éducation supérieure, et son style de vie reflète des choix de consommation réfléchis et une préférence pour certains aspects culturels typiques du Québec."
+**Revenus et travail :**  
+André bénéficie d'un revenu moyen, ce qui lui permet de vivre confortablement, mais il est prudent avec ses dépenses. Il a probablement occupé un emploi dans le secteur des services ou de la vente pendant de nombreuses années, ce qui lui a permis de maintenir un style de vie stable.
+
+**Intérêts :**  
+Il n'est pas intéressé par la chasse ou les activités de plein air intenses. Au lieu de cela, il préfère des passe-temps plus calmes, comme la lecture ou les soirées entre amis. André est sociable et apprécie les discussions autour de la table, souvent animées par un bon repas et du vin.
+
+**Identité et appartenance :**  
+En tant que membre de la majorité ethnique blanche au Canada, André se sent à l'aise dans sa communauté. Sa perspective hétérosexuelle est alignée avec la majorité de la population de son groupe. Il est fier de ses racines canadiennes et est souvent nostalgique des traditions et des coutumes de son enfance. 
+
+Ce persona résume un individu qui valorise la stabilité et le confort, avec une approche traditionnelle de la vie quotidienne."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 4 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consCoffeeNone"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_ownPetNone"", ""ses_regionQuebec"")
+c(""lifestyle_favAlcoolDontDrink"", ""lifestyle_typeTransportCar"", ""ses_age"", ""ses_dwellingApp"", ""ses_educBHS"", ""ses_incomeLow"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_consCoffeeTimHortons"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetDog"", ""lifestyle_pleinAirFreqAll_bin"", ""lifestyle_smokeFreq"", ""ses_dwellingApp"", ""ses_incomeHigh"")
+c(""lifestyle_ownPetDog"", ""ses_educUniv"", ""ses_immigrant"", ""ses_incomeHigh"", ""ses_languageEnglish"")
 
 Ce cluster est composé de :
-Hommes: 47.8%, Immigrants: 25.6%
-Âge: 63.1 ans
+Hommes: 45.5%, Immigrants: 3%
+Âge: 60.6 ans
 Revenus:
-  Revenu Bas: 13.3 %
-  Revenu Mid: 85.6 %
-  Revenu High: 1.1 %
+  Revenu Bas: 39.4 %
+  Revenu Mid: 56.1 %
+  Revenu High: 4.5 %
 Langues:
-  En: 53.3%, Fr: 34.4%, Autres: 12.2%
-EducBHS: 20%
-EducPostHS: 41.1%
-EducUniv: 38.9%
-Ethnie (Blanc): 80%
-Orientation (Hétéro): 91.1%
-","Pour une personne habitant au Canada, plus spécifiquement au Québec, un prénom approprié pourrait être ""Marc-André"". Ce prénom est largement utilisé au Québec et reflète bien la culture francophone de la région.
+  En: 1.5%, Fr: 98.5%, Autres: 0%
+EducBHS: 74.2%
+EducPostHS: 22.7%
+EducUniv: 3%
+Ethnie (Blanc): 97%
+Orientation (Hétéro): 89.4%
+","Pour une personne habitant au Canada et correspondant à ce profil, je propose le prénom ""Réjeanne"". Ce prénom est traditionnellement québécois et reflète bien l'origine francophone de la personne. Voici une brève description pour le persona 4 :
 
-### Persona : Marc-André
+**Réjeanne** est une femme âgée de 61 ans qui habite au Québec. Elle est francophone, comme la grande majorité de la population de sa région. Réjeanne vit dans un appartement et a un penchant pour un style de vie sobre, ne consommant pas d'alcool. Elle préfère se déplacer en voiture, ce qui lui permet de mener une vie confortable même si elle a un revenu plutôt bas à moyen.
 
-**Âge :** 63 ans
+Elle a terminé ses études secondaires, et bien qu'elle n'ait pas poursuivi d'études universitaires, elle a complété quelques formations après le secondaire. Réjeanne n'est pas propriétaire d'un chien, probablement en raison de son style de vie en appartement et de ses préférences personnelles.
 
-**Lieu de résidence :** Québec
-
-**Profil :**
-- **Langue :** Principalement francophone (34.4% parlent français), mais avec une bonne proportion parlant aussi anglais (53.3%).
-- **Origines :** Majoritairement de descendance européenne (80% Blancs).
-- **Revenu :** Économiquement, Marc-André se situe plutôt dans la classe moyenne avec un revenu majoritairement moyen (85.6%).
-- **Niveau d'éducation :** Bien éduqué, avec une proportion importante ayant suivi des études post-secondaires (41.1%) et universitaires (38.9%).
-- **Statut d'immigration :** Natif du Canada à 74.4%, mais un quart de la population est composée d'immigrants.
-- **Style de vie :**
-  - **Café :** Préfère ne pas consommer de café (consCoffeeNone).
-  - **Vin :** Apprécie particulièrement le vin rouge.
-  - **Animaux de compagnie :** Ne possède pas d'animaux (ownPetNone).
-  - **Habitudes de consommation :** Achète rarement son café chez Tim Hortons ou dans des cafés indépendants.
-  - **Activités en plein air :** Participe rarement à des activités de plein air.
-  - **Alcool :** Ne s'abstient pas de boire, mais ne préfère pas le vin blanc ni ne s'abstient complètement.
-  - **Tabagisme :** Fume rarement, voire pas du tout.
-  - **Logement :** Vit probablement dans une maison, évitant les appartements.
-  - **Revenu :** Principalement de classe moyenne, avec un faible pourcentage dans la tranche supérieure.
-  
-Marc-André est une personne ancrée dans sa culture locale, valorisant ses traditions tout en étant ouvert aux influences extérieures, notamment en raison de la présence notable d'immigrants dans son environnement. Sa consommation de vin rouge et son absence de consommation de café ou de tabac suggèrent une approche modérée de ces plaisirs quotidiens."
+Elle est originaire du Québec, et comme la majorité des personnes de son profil, elle n'est pas immigrante et appartient à l'ethnie blanche. Elle est hétérosexuelle et vit une vie tranquille, profitant de la culture et de la communauté de sa région francophone."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 5 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_ownPetNone"", ""lifestyle_typeTransportNoCar"", ""ses_dwellingApp"", ""ses_incomeLow"", ""ses_regionQuebec"")
+c(""lifestyle_favAlcoolDontDrink"", ""lifestyle_ownPetNone"", ""lifestyle_typeTransportNoCar"", ""ses_educUniv"", ""ses_immigrant"", ""ses_incomeLow"", ""ses_languageEnglish"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_ownPetDog"", ""ses_dwellingDetachedHouse"", ""ses_incomeHigh"")
+c(""lifestyle_consCoffeeNone"", ""lifestyle_hasTattoos"", ""lifestyle_typeTransportCar"", ""ses_age"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Ce cluster est composé de :
-Hommes: 52.1%, Immigrants: 20.2%
-Âge: 39.6 ans
+Hommes: 50.7%, Immigrants: 36%
+Âge: 35.3 ans
 Revenus:
-  Revenu Bas: 35.1 %
-  Revenu Mid: 58.5 %
-  Revenu High: 6.4 %
+  Revenu Bas: 29.4 %
+  Revenu Mid: 62.5 %
+  Revenu High: 8.1 %
 Langues:
-  En: 48.9%, Fr: 47.9%, Autres: 3.2%
-EducBHS: 28.7%
-EducPostHS: 30.9%
-EducUniv: 40.4%
-Ethnie (Blanc): 75.5%
-Orientation (Hétéro): 74.5%
-","Pour cette persona habitant au Canada, un prénom qui pourrait convenir est ""Émile"", qui est un prénom courant au Québec et correspond bien à une personne de la région.
+  En: 87.5%, Fr: 2.9%, Autres: 9.6%
+EducBHS: 15.4%
+EducPostHS: 25.7%
+EducUniv: 58.8%
+Ethnie (Blanc): 55.9%
+Orientation (Hétéro): 79.4%
+","Pour une personne habitant au Canada correspondant à ce profil, je propose le prénom ""Aiden"". Voici une brève description pour ce persona :
 
-**Description du persona - Émile:**
+**Aiden** est un homme de 35 ans, un immigrant vivant au Canada. Il est anglophone, avec l'anglais étant sa langue principale, bien qu'il ait également des compétences dans d'autres langues. Aiden a un niveau d'éducation élevé, ayant complété des études universitaires. Il travaille probablement dans un domaine qui ne génère pas des revenus très élevés, mais il reste stable financièrement grâce à un revenu moyen.
 
-Émile est un homme de 39 ans vivant au Québec. Il a un style de vie urbain et pratique, vivant dans un appartement en raison de ses revenus relativement modestes. Il n'a pas de voiture et préfère utiliser les transports en commun ou d'autres modes de transport alternatifs pour se déplacer en ville. Émile n'a pas d'animaux de compagnie, ce qui est cohérent avec son mode de vie en appartement.
+Aiden ne possède pas de voiture et préfère utiliser des moyens de transport alternatifs, comme le vélo ou les transports en commun. Cela s'aligne avec son mode de vie qui est également marqué par une absence de consommation d'alcool et de café. Il est également peu probable qu'il ait des tatouages. Contrairement à beaucoup de Canadiens, Aiden n'a pas d'animal de compagnie.
 
-Bien qu'il gagne un revenu modeste, il appartient majoritairement à la classe moyenne, ce qui lui permet de mener une vie confortable tout en restant conscient de son budget. Il est francophone, mais parle aussi couramment l'anglais, ce qui l'aide dans ses interactions quotidiennes et professionnelles.
-
-Émile a un bon niveau d'éducation, ayant terminé des études universitaires. Il travaille probablement dans un domaine où il peut utiliser ses compétences académiques, bien qu'il ne soit pas dans les tranches de revenu supérieures.
-
-Émile n'est pas particulièrement intéressé par le café de spécialité et a tendance à éviter les exercices physiques réguliers. Il préfère peut-être passer du temps à explorer des activités culturelles ou intellectuelles. Il n'est pas amateur de vin blanc et n'a pas d'intérêt particulier pour posséder un chien, contrairement à beaucoup de Canadiens vivant dans des maisons unifamiliales.
-
-Enfin, Émile est majoritairement d'origine ethnique blanche et hétérosexuel. En tant qu'immigrant, il fait partie d'une minorité, mais cela enrichit sa perspective et son appréciation de la diversité culturelle du Québec."
+Socialement, Aiden est principalement entouré de gens issus de milieux divers, ce qui reflète son propre statut d'immigrant. Bien que né dans un pays étranger, il s'est bien intégré dans la société canadienne, où il s'identifie comme un homme de race blanche et a une orientation hétérosexuelle. Aiden vit probablement dans une région urbaine en dehors du Québec, où le français n'est pas la langue prédominante."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 6 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consCoffeeNone"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_smokeFreq"", ""ses_educBHS"")
+c(""lifestyle_favAlcoolMicroBeer"", ""ses_languageEnglish"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_exerciseGym"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_typeTransportNoCar"", ""ses_educUniv"")
+c(""lifestyle_favAlcoolBeer"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_smokeFreq"", ""ses_educBHS"", ""ses_incomeLow"")
 
 Ce cluster est composé de :
-Hommes: 43.6%, Immigrants: 11.5%
-Âge: 55.9 ans
+Hommes: 80.3%, Immigrants: 14.1%
+Âge: 51.3 ans
 Revenus:
-  Revenu Bas: 17.9 %
-  Revenu Mid: 70.5 %
-  Revenu High: 11.5 %
+  Revenu Bas: 1.4 %
+  Revenu Mid: 80.3 %
+  Revenu High: 18.3 %
 Langues:
-  En: 59%, Fr: 39.7%, Autres: 1.3%
-EducBHS: 32.1%
-EducPostHS: 41%
-EducUniv: 26.9%
-Ethnie (Blanc): 88.5%
-Orientation (Hétéro): 91%
-","Pour une personne habitant au Canada et correspondant au profil du persona 6, je propose le prénom ""Michel"" (ou ""Michelle"" pour une femme), qui est un prénom courant et bien établi au Canada, notamment dans les communautés francophones.
+  En: 77.5%, Fr: 22.5%, Autres: 0%
+EducBHS: 9.9%
+EducPostHS: 33.8%
+EducUniv: 56.3%
+Ethnie (Blanc): 88.7%
+Orientation (Hétéro): 87.3%
+","Pour une personne habitant au Canada et correspondant au descriptif du ""persona 6"", je propose le prénom ""David"". Ce prénom est courant au Canada et peut convenir à une personne de sexe masculin, ce qui est majoritaire dans ce groupe.
 
-**Description du persona 6 : Michel**
+**Description du persona 6 :**
 
-Michel est un homme de 56 ans vivant au Canada. Il se situe dans la tranche de revenu moyen, ce qui lui permet de mener une vie confortable sans excès. Bien qu'il n'ait pas poursuivi d'études universitaires, il a terminé ses études secondaires et a éventuellement suivi des études postsecondaires.
+David est un homme de 51 ans vivant au Canada. Il appartient principalement à la classe moyenne, avec 80.3% des membres de ce groupe ayant un revenu moyen. Il aime découvrir et consommer des bières artisanales, ce qui se démarque dans son style de vie. Par contre, il est moins enclin à boire de la bière commerciale traditionnelle, du vin rouge ou blanc, et ne fume pas fréquemment.
 
-Michel apprécie la simplicité dans son quotidien. Il ne boit pas de café ou préfère simplement s'en passer, et lorsqu'il consomme de l'alcool, il opte généralement pour du vin blanc plutôt que du vin rouge. Côté exercice, Michel ne fréquente pas le gymnase et ne s'implique pas beaucoup dans des activités physiques régulières. Il fume occasionnellement, ce qui est notable dans son style de vie.
+David est anglophone, avec l'anglais étant la langue prédominante dans sa vie, bien qu'il puisse aussi parler français. Les membres de ce cluster sont en général bien éduqués, car une majorité d'entre eux ont un diplôme universitaire. Cela suggère que David valorise l'éducation et a probablement suivi des études supérieures.
 
-Michel utilise principalement une voiture pour ses déplacements, bien qu'il puisse parfois envisager d'autres moyens de transport. Il parle principalement le français, mais il a une bonne connaissance de l'anglais. Avec une prédominance blanche dans ses ancêtres, Michel s'identifie comme hétérosexuel.
+Bien qu'il appartienne principalement à l'ethnie blanche, David pourrait être un immigrant, bien que cette probabilité soit faible (14.1%). Il s'identifie probablement comme hétérosexuel.
 
-Bien que la majorité de ses pairs ne soient pas immigrants, Michel apprécie la diversité culturelle et est ouvert aux expériences multiculturelles que lui offre la société canadienne."
+David est un individu moderne avec un goût prononcé pour les produits artisanaux et un mode de vie sain, ce qui se reflète dans ses choix en matière d'alcool et de santé."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 7 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consClothesFrip"", ""lifestyle_consCoffeeIndependent"", ""lifestyle_typeTransportNoCar"", ""ses_educUniv"", ""ses_regionQuebec"")
+c(""lifestyle_consCoffeeIndependent"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""ses_educUniv"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeNone"", ""lifestyle_consCoffeeTimHortons"", ""lifestyle_pleinAirFreqAll_bin"", ""lifestyle_smokeFreq"", ""ses_educBHS"")
+c(""lifestyle_consCoffeeTimHortons"", ""lifestyle_favAlcoolBeer"", ""lifestyle_goHuntingFreq_numeric"", ""lifestyle_smokeFreq"", ""ses_educBHS"", ""ses_immigrant"", ""ses_incomeLow"", ""ses_languageEnglish"")
 
 Ce cluster est composé de :
-Hommes: 50.7%, Immigrants: 14.5%
-Âge: 42.9 ans
+Hommes: 50.8%, Immigrants: 7.8%
+Âge: 51.6 ans
 Revenus:
-  Revenu Bas: 11.6 %
-  Revenu Mid: 68.1 %
-  Revenu High: 20.3 %
+  Revenu Bas: 2.3 %
+  Revenu Mid: 80.5 %
+  Revenu High: 17.2 %
 Langues:
-  En: 59.4%, Fr: 39.1%, Autres: 1.4%
-EducBHS: 2.9%
-EducPostHS: 20.3%
-EducUniv: 76.8%
-Ethnie (Blanc): 88.4%
-Orientation (Hétéro): 91.3%
-","Pour une personne habitant au Canada et correspondant au persona 7, je propose le prénom ""Émile"". Ce prénom est courant au Québec, une région où ce persona semble avoir une forte présence. Voici une brève description pour Émile :
+  En: 0.8%, Fr: 97.7%, Autres: 1.6%
+EducBHS: 0.8%
+EducPostHS: 39.1%
+EducUniv: 60.2%
+Ethnie (Blanc): 93%
+Orientation (Hétéro): 90.6%
+","Pour ce persona, je propose le prénom ""Éloi"". Ce prénom a une sonorité française, ce qui convient bien à une personne vivant au Québec et parlant majoritairement le français. Voici une brève description pour ce persona :
 
-Émile a 43 ans et vit à Montréal, au Québec. Il est titulaire d'un diplôme universitaire, ce qui est en accord avec la forte proportion de personnes ayant un haut niveau d'éducation dans son groupe. Il est francophone, mais connaît également bien l'anglais, reflétant la situation linguistique majoritairement bilingue de son environnement. Émile préfère se déplacer sans voiture, privilégiant des modes de transport plus écologiques et pratiques en milieu urbain comme le vélo ou les transports en commun.
+**Description du Persona 7 : Éloi**
 
-Il est un amateur de mode responsable, préférant acheter ses vêtements dans des friperies pour adopter un mode de consommation durable. Émile aime également soutenir les cafés indépendants locaux plutôt que de fréquenter des chaînes populaires comme Tim Hortons. Par ailleurs, il ne fume pas et est peu impliqué dans des activités de plein air intenses.
+Éloi est un homme de 51 ans vivant au Québec. Il est francophone et appartient majoritairement à la communauté blanche. Éloi a une bonne éducation avec un diplôme universitaire, ce qui est courant dans son milieu social. Il a un mode de vie plutôt raffiné, préférant déguster du vin rouge et blanc plutôt que de la bière, et il apprécie le café indépendant plutôt que les chaînes populaires comme Tim Hortons. Éloi est probablement impliqué dans des cercles sociaux où l'éducation et la culture sont valorisées.
 
-Émile appartient à la classe moyenne, il est majoritairement satisfait de sa situation financière. Bien qu'il soit majoritairement hétérosexuel, il est ouvert d'esprit et apprécie la diversité culturelle, ce qui est reflété par le fait qu'il ait des amis de divers horizons, y compris des immigrants. Émile est un homme blanc, comme la majorité de son groupe ethnique, et il célèbre la richesse culturelle de sa province."
+Éloi ne fume pas et n'a pas d'intérêt particulier pour la chasse. Il a un revenu moyen, ce qui lui permet de mener une vie confortable sans excès. Éloi est généralement hétérosexuel et a très peu de contacts avec les communautés immigrantes, bien qu'il soit ouvert d'esprit. Sa vie est enracinée dans la culture québécoise, et il apprécie les événements culturels et les discussions intellectuelles."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 8 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_eatMeatFreq"", ""lifestyle_exerciseGym"", ""lifestyle_ownPetDog"", ""ses_dwellingDetachedHouse"", ""ses_educUniv"", ""ses_incomeHigh"")
+c(""lifestyle_ownPetNone"", ""lifestyle_typeTransportCar"", ""ses_age"", ""ses_languageEnglish"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_ownPetNone"", ""lifestyle_smokeFreq"", ""lifestyle_typeTransportNoCar"", ""ses_dwellingApp"", ""ses_educBHS"", ""ses_incomeLow"", ""ses_regionQuebec"")
+c(""lifestyle_favAlcoolBeer"", ""lifestyle_goHuntingFreq_numeric"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetCat"", ""lifestyle_ownPetDog"", ""lifestyle_smokeFreq"", ""lifestyle_typeTransportNoCar"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Ce cluster est composé de :
-Hommes: 51.1%, Immigrants: 18.9%
-Âge: 39.6 ans
+Hommes: 41.9%, Immigrants: 27.7%
+Âge: 59.5 ans
 Revenus:
-  Revenu Bas: 0 %
-  Revenu Mid: 0 %
-  Revenu High: 100 %
+  Revenu Bas: 10.8 %
+  Revenu Mid: 69.6 %
+  Revenu High: 19.6 %
 Langues:
-  En: 80%, Fr: 14.4%, Autres: 5.6%
-EducBHS: 3.3%
-EducPostHS: 20%
-EducUniv: 76.7%
-Ethnie (Blanc): 76.7%
-Orientation (Hétéro): 86.7%
-","Pour une personne habitant au Canada correspondant à ce persona, je propose le prénom ""Alexandre"" pour un homme ou ""Sophie"" pour une femme. Ces prénoms sont populaires au Canada et conviennent bien à un profil urbain et éduqué.
+  En: 88.5%, Fr: 0%, Autres: 11.5%
+EducBHS: 22.3%
+EducPostHS: 25.7%
+EducUniv: 52%
+Ethnie (Blanc): 73%
+Orientation (Hétéro): 91.2%
+","Pour une personne habitant au Canada correspondant au persona 8, je propose le prénom ""David"". 
 
 Description du persona 8 :
 
-Alexandre/Sophie est une personne résidant dans un quartier aisé du Canada, probablement dans une maison individuelle, et ayant un mode de vie actif. Avec un revenu élevé et un niveau d'éducation universitaire, il/elle accorde une grande importance à la santé et au bien-être. Alexandre/Sophie fréquente régulièrement la salle de sport et consomme de la viande assez souvent.
+David est un homme de 59 ans vivant au Canada, probablement dans une province anglophone, étant donné sa prédominance à parler anglais. Il appartient à un groupe socio-économique moyen, avec des revenus principalement dans la tranche moyenne. David est issu d'une majorité ethnique blanche et a une éducation universitaire, ce qui lui permet de bénéficier d'une certaine stabilité professionnelle.
 
-Il/elle possède un chien, ce qui indique un amour pour les animaux de compagnie et un style de vie qui lui permet de s'en occuper dans un espace suffisant. Alexandre/Sophie ne fume pas et préfère utiliser une voiture pour se déplacer, ce qui est cohérent avec son choix de vivre dans une maison individuelle plutôt qu'un appartement.
+David préfère utiliser la voiture comme principal moyen de transport et ne possède pas d'animaux de compagnie, ce qui suggère un style de vie relativement indépendant et peut-être urbain. Il ne consomme pas souvent de bière et ne fume pas, indiquant une certaine attention à sa santé et à son bien-être.
 
-Bien que parlant principalement anglais, Alexandre/Sophie peut aussi avoir des notions de français, mais il/elle ne vit pas au Québec. En tant qu'urbain aisé, il/elle préfère probablement le café de grandes chaînes plutôt que celui des cafés indépendants.
-
-En somme, Alexandre/Sophie est une personne dynamique, bien éduquée et prospère, qui valorise un style de vie sain et actif."
+David n'a pas de tatouages et ne parle pas français, ce qui suggère qu'il ne réside pas au Québec. Avec un faible taux d'immigration dans son historique familial, il est probable qu'il est soit natif du Canada ou qu'il y vit depuis longtemps. De nature non aventureuse, il ne pratique pas fréquemment la chasse. Sa vie est plutôt stable et bien établie, et il apprécie probablement des activités plus calmes et introspectives."
 "Propose un prénom pour une personne habitant au Canada et donne une brève description pour le persona 9 :
 
 Variables avec une moyenne significativement plus élevée que la moyenne de la population en général :
-c(""lifestyle_consClothesFrip"", ""lifestyle_consCoffeeNone"", ""lifestyle_favAlcoolDontDrink"", ""ses_educBHS"")
+c(""lifestyle_consCoffeeTimHortons"", ""lifestyle_exerciseGym"", ""lifestyle_goHuntingFreq_numeric"", ""lifestyle_hasTattoos"", ""lifestyle_ownPetDog"", ""lifestyle_smokeFreq"", ""lifestyle_typeTransportCar"", ""ses_educUniv"", ""ses_languageEnglish"")
 
 Variables avec une moyenne significativement plus basse que la moyenne de la population en général :
-c(""lifestyle_consCoffeeIndependent"", ""lifestyle_exerciseGym"", ""lifestyle_exerciseNone"", ""lifestyle_favAlcoolRedWine"", ""lifestyle_favAlcoolWhiteWine"", ""lifestyle_ownPetDog"", ""lifestyle_pleinAirFreqAll_bin"", ""ses_dwellingApp"", ""ses_educUniv"")
+c(""lifestyle_consCoffeeNone"", ""lifestyle_favAlcoolDontDrink"", ""lifestyle_ownPetNone"", ""lifestyle_typeTransportNoCar"", ""ses_age"", ""ses_educBHS"", ""ses_languageFrench"", ""ses_regionQuebec"")
 
 Ce cluster est composé de :
-Hommes: 51.7%, Immigrants: 13.5%
-Âge: 53.5 ans
+Hommes: 58.5%, Immigrants: 22.9%
+Âge: 17.3 ans
 Revenus:
-  Revenu Bas: 19.1 %
-  Revenu Mid: 68.5 %
-  Revenu High: 12.4 %
+  Revenu Bas: 5.1 %
+  Revenu Mid: 72 %
+  Revenu High: 22.9 %
 Langues:
-  En: 68.5%, Fr: 25.8%, Autres: 5.6%
-EducBHS: 98.9%
-EducPostHS: 1.1%
-EducUniv: 0%
-Ethnie (Blanc): 83.1%
-Orientation (Hétéro): 89.9%
-","Pour une personne habitant au Canada et correspondant au persona 9, je propose le prénom ""Marc"".
+  En: 92.4%, Fr: 4.2%, Autres: 3.4%
+EducBHS: 5.9%
+EducPostHS: 24.6%
+EducUniv: 69.5%
+Ethnie (Blanc): 63.6%
+Orientation (Hétéro): 83.1%
+","Pour une personne habitant au Canada correspondant à ce persona, je propose le prénom ""Liam"". Ce prénom est populaire au Canada et facilement reconnaissable.
 
-### Description du Persona 9 : Marc
+**Description du Persona 9 :**
 
-- **Âge :** 53 ans
-- **Sexe :** Principalement masculin (51.7%)
-- **Statut d'immigration :** Majoritairement natif avec 13.5% d'immigrants
-- **Éducation :** Marc a généralement un diplôme d'études secondaires (98.9%) avec peu ou pas de formation post-secondaire (1.1%)
-- **Revenus :** Marc vit confortablement avec un revenu moyen (68.5%), bien que certains aient un revenu bas (19.1%)
-- **Langue :** Il parle principalement anglais (68.5%) et est également assez francophone (25.8%)
-- **Ethnicité :** Principalement de descendance blanche (83.1%)
-- **Orientation sexuelle :** Principalement hétérosexuel (89.9%)
+Liam est un jeune homme de 17 ans vivant au Canada, majoritairement anglophone. Il est dynamique et actif, fréquentant régulièrement le gymnase et participant occasionnellement à des activités de chasse. Il apprécie les tatouages et possède un chien, son fidèle compagnon. Bien qu'il ne soit pas un grand buveur d'alcool, il ne commence jamais sa journée sans un café de Tim Hortons, symbole emblématique de la culture canadienne.
 
-### Mode de vie et préférences :
+Liam préfère se déplacer en voiture, ce qui lui offre une grande autonomie et lui permet de vivre dans des zones suburbaines ou rurales tout en maintenant un mode de vie actif. Il est inscrit à l'université, où il s'investit pleinement dans ses études, reflétant un parcours académique solide et prometteur. Il fume à l'occasion, ce qui est rare parmi ses pairs.
 
-- **Consommation de vêtements :** Marc a une préférence pour les vêtements de friperie, ce qui montre un intérêt pour la mode durable ou économique.
-- **Consommation de café :** Il ne boit pas de café, que ce soit d'enseignes indépendantes ou grandes chaînes.
-- **Consommation d'alcool :** Marc ne boit pas d'alcool, ce qui le distingue de ceux qui préfèrent le vin rouge ou blanc.
-- **Exercice :** Il n'est pas fréquent dans une salle de gym, ni totalement inactif, mais n'a pas non plus une routine d'exercice intensive.
-- **Animaux de compagnie :** Il est moins susceptible de posséder un chien.
-- **Logement :** Marc est moins susceptible de vivre dans un appartement.
-- **Activités en plein air :** Il participe moins fréquemment à des activités de plein air.
-
-Marc est une personne qui vit modestement, s'habille de manière pratique et durable, et mène une vie sans alcool et sans café. Il a une vie bien établie avec une formation de base et il est bien intégré dans sa communauté locale."
+Issu d'un milieu majoritairement blanc, il est généralement hétérosexuel et fait partie d'un groupe à revenu moyen à élevé. Bien qu'il ne soit pas immigrant, il est ouvert aux diverses cultures qui composent le tissu social canadien. Liam est un jeune homme moderne, bien intégré dans la société canadienne, et qui aspire à un avenir prospère."
