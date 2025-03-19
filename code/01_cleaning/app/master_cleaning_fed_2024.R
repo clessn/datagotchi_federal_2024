@@ -24,6 +24,10 @@ source("code/01_cleaning/app/lifestyle.R")
 
 source("code/01_cleaning/app/dv.R")
 
+## tactical ----------------------------------------------------------------
+
+source("code/01_cleaning/app/tactical.R")
+
 ## Remove NA from quotas
 # DataClean <- DataClean |> drop_na(starts_with("ses"))
 
