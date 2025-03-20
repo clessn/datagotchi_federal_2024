@@ -53,15 +53,15 @@ variables_sante_clust <- c(
 
 variables_mode_de_vie_clust <- c(
   "id",
-  #"postal_code", # À transformer en rural, urbain, région, banlieue
-  "ses_dwellingApp",
+  "ses_urban"
+  #"ses_dwellingApp",
   #"ses_dwellingCondo",
-  "ses_dwellingDetachedHouse",
+  #"ses_dwellingDetachedHouse",
   #"ses_dwellingTownhouse",
   #"ses_dwellingDuplex",
   #"ses_dwellingOther",
   #"lifestyle_typeTransportCar",
-  "lifestyle_typeTransportNoCar"
+  #"lifestyle_typeTransportNoCar"
 )
 
 variables_commerce_clust <- c(
@@ -123,7 +123,7 @@ variables_clust <- Reduce(union, list(
   #variables_act_clust,
   #variables_style_clust,
   #variables_sante_clust,
-  #variables_mode_de_vie_clust,
+  variables_mode_de_vie_clust,
   #variables_commerce_clust,
   variables_ses_clust,
   variables_dv_clust
