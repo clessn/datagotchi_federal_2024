@@ -17,7 +17,7 @@ df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrow
 # Ajouter des images et descriptions factices pour chaque cluster
 cluster_info <- data.frame(
   cluster_name = c(1, 2, 3, 4, 5, 6, 7),
-  image_path = c("_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
+  image_path = c("_SharedFolder_datagotchi_federal_2024/images/cluster_1_Zoé.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
@@ -62,12 +62,29 @@ df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_
 img <- readPNG(image_path)  
 img_grob <- rasterGrob(img, interpolate = TRUE)  
 
+image_plot <- ggdraw() +
+  draw_grob(
+    img_grob, 
+    x = 0.15,        # marge à gauche (0 = bord gauche, 1 = bord droit)
+    y = 0.05,        # marge en bas (0 = bord bas, 1 = bord haut)
+    width = 0.9,
+    height = 0.9 
+  )
+
 
 # Créer la description en ggplot ------------------------------------------
 
 plot_text <- ggplot() + 
-  annotate("text", x = 1, y = 1, label = df_filtered$description[1], size = 22, fontface = "bold", family = "PixelOperatorSC") +
-  theme_void()
+  annotate("text", 
+           x = 1, 
+           y = 1, 
+           label = df_filtered$description[1], 
+           size = 22, 
+           fontface = "bold", 
+           family = "PixelOperatorSC",
+           lineheight = 0.4
+           ) +
+  theme_void() 
 
 # Créer le graph potGrowth ------------------------------------------------
 
@@ -96,7 +113,7 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
            width = 0.5) + 
   geom_text(aes(label = round(rci, 1),
                 y = ifelse(rci >= 0, rci + 15, rci - 15)),
-            size = 8,
+            size = 22,
             color = "black",
             family = "PixelOperatorSC") +
   geom_image(aes(image = image_tete),
@@ -106,7 +123,7 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   scale_fill_manual(values = party_colors) +
   scale_color_manual(values = party_colors) +
   labs(
-    title = paste("Potentiel de croissance par \n parti pour Zoé, la jeune éduquée"),
+    title = paste("Potentiel de croissance par\nparti pour Zoé, la jeune éduquée"),
     x = "Parti politique", 
     y = NULL
   ) +
@@ -121,31 +138,32 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
            hjust = 1.3,       
            vjust = 0.5,
            angle = 0,
-           size = 8,
+           size = 20,
            family = "PixelOperatorSC") +
   annotate("text",
            x = 0,   
            y = 50,     
            label = "% de solidité du vote",
            angle = 90, 
-           hjust = 0.5,
+           hjust = 0.3,
            vjust = -3.5,
-           size = 8,
+           size = 20,
            family = "PixelOperatorSC") +
   annotate("text",
            x = 0,   
            y = 50,     
            label = "% du vote potentiel",
            angle = 90, 
-           hjust = 2,
+           hjust = 2.2,
            vjust = -3.5,
-           size = 8,
+           size = 20,
            family = "PixelOperatorSC") +
-  clessnize::theme_datagotchi_light(base_size = 30) +
+  clessnize::theme_datagotchi_light(base_size = 60) +
   scale_y_continuous(limits = c(-100, 100)) +
   theme(
-    text = element_text(size = 25),
-    legend.position = "none"
+    text = element_text(size = 60),
+    legend.position = "none",
+    plot.title = element_text(lineheight = 0.4)
   ) +
   coord_cartesian(clip = "off")
 
@@ -153,11 +171,11 @@ print(plot_rci)
 
 # Assembler les 3 parties avec cowplot
 final_plot <- plot_grid(
-  img_grob,  
+  image_plot,  
   plot_text,  
   plot_rci,  
   ncol = 3,  
-  rel_widths = c(1, 2, 3)  
+  rel_widths = c(0.8, 2, 3)  
 )
 
 # Afficher le plot final
@@ -167,7 +185,7 @@ print(final_plot)
 
 ggsave(
   filename = "_SharedFolder_datagotchi_federal_2024/images/cluster_rci_plot.png",
-  width = 25, 
+  width = 20, 
   height = 10, 
   dpi = 300, 
   bg = "white",
