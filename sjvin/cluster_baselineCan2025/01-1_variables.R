@@ -14,7 +14,6 @@
 # Les variables seront regroupées au fil du temps par sens communs
 # Le début et la fin du groupement seront clairement indiqués
 # Les groupements seront utilisés à l'étape 02 de la préparation des données
-#
 
 variables_act <- c(
   "id",
@@ -134,7 +133,14 @@ variables_vote <- c(
   "dv_voteChoiceNDP",
   "dv_voteChoiceBQ",
   "dv_voteChoiceGPC",
-  "dv_voteChoiceOther"
+  "dv_voteChoiceOther",
+  "dv_potgrowthLPC",
+  "dv_potgrowthCPC",
+  "dv_potgrowthNDP",
+  "dv_potgrowthBQ",
+  "dv_potgrowthGPC",
+  "dv_potgrowthPPC",
+  "dv_turnout"
 )
 
 variables_communes <- Reduce(union, list(
