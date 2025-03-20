@@ -53,7 +53,7 @@ variables_sante_clust <- c(
 
 variables_mode_de_vie_clust <- c(
   "id",
-  #"postal_code", # À transformer en rural, urbain, région, banlieue
+  "ses_urban",
   "ses_dwellingApp",
   "ses_dwellingCondo",
   "ses_dwellingDetachedHouse",

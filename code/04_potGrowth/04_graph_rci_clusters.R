@@ -31,18 +31,10 @@ cluster_info <- data.frame(
 )
 # Charger l'image iceberg et visage
 img_iceberg <- readPNG("_SharedFolder_datagotchi_federal_2024/images/icebergPixel.png")
-img_tete <- readPNG("_SharedFolder_datagotchi_federal_2024/images/tete.png")
 
 # 2. Créer un rasterGrob
 iceberg_grob <- rasterGrob(
   img_iceberg,
-  width = unit(1, "npc"),   # occupe toute la largeur du panel
-  height = unit(1, "npc"),  # occupe toute la hauteur du panel
-  interpolate = TRUE
-)
-
-tete_grob <- rasterGrob(
-  img_tete,
   width = unit(1, "npc"),   # occupe toute la largeur du panel
   height = unit(1, "npc"),  # occupe toute la hauteur du panel
   interpolate = TRUE
@@ -61,18 +53,20 @@ selected_cluster <- 1  # Change ce nombre pour afficher un autre cluster
 df_filtered <- df_plot %>%
   filter(cluster_name == selected_cluster)
 
+# Ajouter une colonne pour l'image tête (pour toutes les observations)
+df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_1_Zoé_Head.png"
+
 # Vérifier que l'image existe bien
-image_path <- df_filtered$image_path[1]
-if (!file.exists(image_path)) stop("L'image n'existe pas à ce chemin : ", image_path)
+ image_path <- df_filtered$image_path[1]
+ if (!file.exists(image_path)) stop("L'image n'existe pas à ce chemin : ", image_path)
 
 # Charger l'image correspondante
 img <- readPNG(image_path)  
-img_iceberg_grob <- rasterGrob(img, interpolate = TRUE)  
-img_tete_grob <- rasterGrob(img, interpolate = TRUE)
+img_grob <- rasterGrob(img, interpolate = TRUE)  
 
 # Créer la description en ggplot
 plot_text <- ggplot() + 
-  annotate("text", x = 1, y = 1, label = df_filtered$description[1], size = 8, fontface = "bold") +
+  annotate("text", x = 1, y = 1, label = df_filtered$description[1], size = 8, fontface = "bold", family = "PixelOperatorSC") +
   theme_void()
 
 # Définir les couleurs spécifiques par parti
@@ -90,40 +84,47 @@ party_colors <- c(
 plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotation_custom(
     iceberg_grob,
-    xmin = -Inf,   # toute la largeur
+    xmin = -Inf,
     xmax = Inf,
-    ymin = -100,   # bas de l'iceberg
-    ymax = 55     # haut de l'iceberg
+    ymin = -100,
+    ymax = 55
+  ) +
+  geom_bar(aes(fill = party),
+           stat = "identity",
+           width = 0.08) + 
+  geom_text(aes(label = round(rci, 1),
+                color = party,
+                y = ifelse(rci >= 0, rci + 15, rci - 15)),
+            size = 8,
+            family = "PixelOperatorSC") +
+  geom_image(aes(image = image_tete),
+             size = 0.08,
+             by = "width") +
+  geom_hline(yintercept = 0, color = "blue", size = 2) +
+  scale_fill_manual(values = party_colors) +
+  scale_color_manual(values = party_colors) +
+  labs(
+    title = paste("Potentiel de croissance par \n parti pour Zoé, la jeune éduquée"),
+    x = "Parti politique", 
+    y = NULL
   ) +
   annotate("rect", 
            xmin = -Inf, xmax = Inf, 
            ymin = -100, ymax = 0,
            fill = "lightblue", alpha = 0.3) +
-  geom_hline(yintercept = 0, color = "blue", size = 1.2) +
-  geom_bar(
-    aes(fill = party),
-    stat = "identity",
-    width = 0.05) + 
-  geom_point(size = 3) +
-  geom_text(
-    aes(
-      label = round(rci, 1),
-      color = party,
-      y = ifelse(rci >= 0, rci + 8, rci - 8)
-    ),
-    size = 5
-  ) +
-  scale_fill_manual(values = party_colors) +
-  scale_color_manual(values = party_colors) +
-  labs(
-    title = paste("Potentiel de croissance des partis pour le cluster", selected_cluster),
-    x = "Parti politique", 
-    y = "RCI"
-  ) +
-  clessnize::theme_datagotchi_light(base_size = 20)+
+  annotate("text",
+           x = 0,
+           y = 0, 
+           label = "Seuil de vote",
+           hjust = 1.3,       
+           vjust = 0.5,
+           angle = 0,
+           size = 8,
+           family = "PixelOperatorSC") +
+  clessnize::theme_datagotchi_light(base_size = 30) +
   scale_y_continuous(limits = c(-100, 100)) +
   theme(
-    text = element_text(size = 14),
+    text = element_text(size = 25),
     legend.position = "none"
   ) +
   coord_cartesian(clip = "off")
