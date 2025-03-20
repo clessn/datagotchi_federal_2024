@@ -110,8 +110,8 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   ) +
   geom_bar(aes(fill = party),
            stat = "identity",
-           width = 0.5) + 
-  geom_text(aes(label = round(rci, 1),
+           width = 0.35) + 
+  geom_text(aes(label = round(rci, 0),
                 y = ifelse(rci >= 0, rci + 15, rci - 15)),
             size = 22,
             color = "black",
@@ -119,12 +119,12 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   geom_image(aes(image = image_tete),
              size = 0.08,
              by = "width") +
-  geom_hline(yintercept = 0, color = "blue", size = 2) +
+  geom_hline(yintercept = 0, color = "#040280", size = 2) +
   scale_fill_manual(values = party_colors) +
   scale_color_manual(values = party_colors) +
   labs(
     title = paste("Potentiel de croissance par\nparti pour Zoé, la jeune éduquée"),
-    x = "Parti politique", 
+    x = NULL, 
     y = NULL
   ) +
   annotate("rect", 
@@ -143,7 +143,7 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotate("text",
            x = 0,   
            y = 50,     
-           label = "% de solidité du vote",
+           label = "Solidité du vote",
            angle = 90, 
            hjust = 0.3,
            vjust = -3.5,
@@ -152,16 +152,16 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotate("text",
            x = 0,   
            y = 50,     
-           label = "% du vote potentiel",
+           label = "Vote potentiel",
            angle = 90, 
-           hjust = 2.2,
+           hjust = 3,
            vjust = -3.5,
            size = 20,
            family = "PixelOperatorSC") +
   clessnize::theme_datagotchi_light(base_size = 60) +
   scale_y_continuous(limits = c(-100, 100)) +
   theme(
-    text = element_text(size = 60),
+    text = element_text(size = 70),
     legend.position = "none",
     plot.title = element_text(lineheight = 0.4)
   ) +
