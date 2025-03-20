@@ -1,5 +1,4 @@
 # Packages ----------------------------------------------------------------
-
 library(dplyr)
 library(ggplot2)
 library(png)
@@ -9,12 +8,11 @@ library(shadowtext)
 library(clessnize)
 library(ggimage)
 
-
 # Load data ---------------------------------------------------------------
 
 df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")
 
-# Plot -------------------------------------------------------------------
+# Plot Preparation  -------------------------------------------------------------------
 
 # Ajouter des images et descriptions factices pour chaque cluster
 cluster_info <- data.frame(
@@ -26,13 +24,13 @@ cluster_info <- data.frame(
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/mario1.png"), 
-  description = c("Voici la brève \n description du cluster 1", "Électeurs conservateurs", "Pro-environnement", 
+  description = c("Description de ce cluster:\n Jeune et Urbaine\n Aime le yoga", "Électeurs conservateurs", "Pro-environnement", 
                   "Modérés", "Indécis", "Jeunes urbains", "Traditionnalistes")
 )
-# Charger l'image iceberg et visage
+# Charger l'image iceberg
 img_iceberg <- readPNG("_SharedFolder_datagotchi_federal_2024/images/icebergPixel.png")
 
-# 2. Créer un rasterGrob
+# Créer un rasterGrob
 iceberg_grob <- rasterGrob(
   img_iceberg,
   width = unit(1, "npc"),   # occupe toute la largeur du panel
@@ -56,7 +54,7 @@ df_filtered <- df_plot %>%
 # Ajouter une colonne pour l'image tête (pour toutes les observations)
 df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_1_Zoé_Head.png"
 
-# Vérifier que l'image existe bien
+# Vérifier que l'image iceberg existe bien
  image_path <- df_filtered$image_path[1]
  if (!file.exists(image_path)) stop("L'image n'existe pas à ce chemin : ", image_path)
 
@@ -64,10 +62,14 @@ df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_
 img <- readPNG(image_path)  
 img_grob <- rasterGrob(img, interpolate = TRUE)  
 
-# Créer la description en ggplot
+
+# Créer la description en ggplot ------------------------------------------
+
 plot_text <- ggplot() + 
-  annotate("text", x = 1, y = 1, label = df_filtered$description[1], size = 8, fontface = "bold", family = "PixelOperatorSC") +
+  annotate("text", x = 1, y = 1, label = df_filtered$description[1], size = 22, fontface = "bold", family = "PixelOperatorSC") +
   theme_void()
+
+# Créer le graph potGrowth ------------------------------------------------
 
 # Définir les couleurs spécifiques par parti
 party_colors <- c(
@@ -91,11 +93,11 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
   ) +
   geom_bar(aes(fill = party),
            stat = "identity",
-           width = 0.08) + 
+           width = 0.5) + 
   geom_text(aes(label = round(rci, 1),
-                color = party,
                 y = ifelse(rci >= 0, rci + 15, rci - 15)),
             size = 8,
+            color = "black",
             family = "PixelOperatorSC") +
   geom_image(aes(image = image_tete),
              size = 0.08,
@@ -119,6 +121,24 @@ plot_rci <- ggplot(df_filtered, aes(x = party, y = rci)) +
            hjust = 1.3,       
            vjust = 0.5,
            angle = 0,
+           size = 8,
+           family = "PixelOperatorSC") +
+  annotate("text",
+           x = 0,   
+           y = 50,     
+           label = "% de solidité du vote",
+           angle = 90, 
+           hjust = 0.5,
+           vjust = -3.5,
+           size = 8,
+           family = "PixelOperatorSC") +
+  annotate("text",
+           x = 0,   
+           y = 50,     
+           label = "% du vote potentiel",
+           angle = 90, 
+           hjust = 2,
+           vjust = -3.5,
            size = 8,
            family = "PixelOperatorSC") +
   clessnize::theme_datagotchi_light(base_size = 30) +
@@ -146,10 +166,11 @@ print(final_plot)
 # Save it ----------------------------------------------------------------
 
 ggsave(
-  filename = "_SharedFolder_datagotchi_federal_2024/images/cluster_rci_plot.pdf",
-  width = 20, 
+  filename = "_SharedFolder_datagotchi_federal_2024/images/cluster_rci_plot.png",
+  width = 25, 
   height = 10, 
   dpi = 300, 
-  device = "pdf"  # Force l'enregistrement en PNG
+  bg = "white",
+  device = "png"
 )
 
