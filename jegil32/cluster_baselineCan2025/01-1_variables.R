@@ -114,6 +114,7 @@ variables_ses <- c(
   "ses_genderFemale",
   "ses_gender",
   "ses_ageGroup5Years",
+  "ses_age",
   "ses_age_4Cat",
   "ses_region",
   "ses_language",

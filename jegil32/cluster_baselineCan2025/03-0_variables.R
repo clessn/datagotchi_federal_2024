@@ -84,7 +84,7 @@ variables_commerce_clust <- c(
 variables_ses_clust <- c(
   "id",
   #"ses_genderMale",
-  "ses_age",
+  "ses_age_3Cat",
   #"ses_languageEnglish",
   "ses_languageFrench",
   #"ses_languageOther",
@@ -110,7 +110,7 @@ variables_ses_clust <- c(
 
 variables_dv_clust <- c(
   "dv_turnout",
-  "dv_solidity",
+  #"dv_solidity",
   "dv_voteChoiceLPC",
   "dv_voteChoiceCPC",
   "dv_voteChoiceNDP",
