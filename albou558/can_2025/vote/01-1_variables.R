@@ -14,7 +14,7 @@
 # Les variables seront regroupées au fil du temps par sens communs
 # Le début et la fin du groupement seront clairement indiqués
 # Les groupements seront utilisés à l'étape 02 de la préparation des données
-
+#
 variables_act <- c(
   "id",
   "lifestyle_exerciseGym",
@@ -152,3 +152,5 @@ variables_communes <- Reduce(union, list(
   variables_ses,
   variables_vote
 ))
+
+

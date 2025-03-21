@@ -43,7 +43,7 @@ DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 20 & DataRaw$ses_age < 25] <- "2
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 25 & DataRaw$ses_age < 30] <- "25_29"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 30 & DataRaw$ses_age < 35] <- "30_34"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 35 & DataRaw$ses_age < 40] <- "35_39"
-DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 40 & DataRaw$ses_age < 45] <- "40-44"
+DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 40 & DataRaw$ses_age < 45] <- "40_44"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 45 & DataRaw$ses_age < 50] <- "45_49"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 50 & DataRaw$ses_age < 55] <- "50_54"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 55 & DataRaw$ses_age < 60] <- "55_59"
@@ -308,7 +308,9 @@ DataClean$ses_income3Cat <- NA
 DataClean$ses_income3Cat[DataRaw$ses_income == 1 | DataRaw$ses_income == 2] <- "Low"
 DataClean$ses_income3Cat[DataRaw$ses_income == 3 | DataRaw$ses_income == 4 | DataRaw$ses_income == 5 | DataRaw$ses_income == 6] <- "Mid"
 DataClean$ses_income3Cat[DataRaw$ses_income == 7 | DataRaw$ses_income == 8] <- "High"
-DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat)
+DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat, levels = c("Low",
+                                                                        "Mid",
+                                                                        "High"))
 table(DataClean$ses_income3Cat)
 
 attributes(DataRaw$ses_income)

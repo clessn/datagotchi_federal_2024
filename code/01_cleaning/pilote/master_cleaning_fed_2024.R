@@ -36,9 +36,9 @@ source("code/01_cleaning/pilote/attitudes.R")
 
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataClean/datagotchi2025_canada_pilot_20250310.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataClean/datagotchi2025_canada_pilot_20250319.rds")
 
 
 # Save for clustering usage ----------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
+#saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250319.rds")
