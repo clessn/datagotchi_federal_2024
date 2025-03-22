@@ -15,6 +15,10 @@ DataClean <- data.frame(id = 1:nrow(DataRaw))
 
 source("code/01_cleaning/pilote/ses.R")
 
+## riding -------------------------------------------------------------------------
+
+source("code/01_cleaning/pilote/transform_rta_into_riding.R")
+
 ## lifestyle -------------------------------------------------------------------
 
 source("code/01_cleaning/pilote/lifestyle.R")
@@ -36,7 +40,7 @@ source("code/01_cleaning/pilote/attitudes.R")
 
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataClean/datagotchi2025_canada_pilot_20250319.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds")
 
 
 # Save for clustering usage ----------------------------------------------
