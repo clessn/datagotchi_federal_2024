@@ -501,7 +501,7 @@ export_enhanced_results <- function(results, output_dir = ".") {
 
 # Exemple d'utilisation:
 # Charger les données
-data_model <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250318.csv")
+data_model <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250320.csv")
 
 # Exécuter l'analyse des corrections
 results <- analyze_corrections(data_model)
