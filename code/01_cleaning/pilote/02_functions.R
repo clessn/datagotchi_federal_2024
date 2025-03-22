@@ -8,9 +8,9 @@ fit_unit_level_models <- function(
   ses,
   n_sim = 500
 ) {
-  message("Simulation et modélisation par unité d'origine...")
+  message("Simulation des répondants par unité d'origine...")
 
-  models <- list()
+  simulations <- list()
   unique_assignments <- list()
 
   for (unit in origin_units) {
@@ -44,36 +44,14 @@ fit_unit_level_models <- function(
       return(NULL)
     })
 
-    if (is.null(sim_data) || nrow(sim_data) == 0 || all(is.na(sim_data[[target_id_col]]))) {
-      warning("Aucune donnée simulée pour ", unit)
-      next
-    }
-
-    sim_data[[target_id_col]] <- as.factor(as.character(sim_data[[target_id_col]]))
-
-    classes <- levels(sim_data[[target_id_col]])
-    if (length(classes) <= 1) {
-      warning("Impossible d’entraîner un modèle multinomial pour ", unit, " (1 seule classe)")
-      unique_assignments[[unit]] <- classes[1]
-      next
-    }
-
-    model <- tryCatch({
-      formula <- as.formula(paste(target_id_col, "~", paste(ses, collapse = " + ")))
-      nnet::multinom(formula, data = sim_data, trace = FALSE)
-    }, error = function(e) {
-      warning("Échec de l'entraînement pour ", unit, " : ", conditionMessage(e))
-      return(NULL)
-    })
-
-    if (!is.null(model)) {
-      models[[unit]] <- model
+    if (!is.null(sim_data) && nrow(sim_data) > 0) {
+      sim_data[[target_id_col]] <- as.factor(as.character(sim_data[[target_id_col]]))
+      simulations[[unit]] <- sim_data
     }
   }
 
-  list(models = models, unique_assignments = unique_assignments)
+  list(simulations = simulations, unique_assignments = unique_assignments)
 }
-
 
 
 predict_with_unit_models <- function(
@@ -85,18 +63,13 @@ predict_with_unit_models <- function(
   return = c("probabilities", "class")
 ) {
   return <- match.arg(return)
-  models <- model_list$models
+  simulations <- model_list$simulations
   uniques <- model_list$unique_assignments
 
   message("Prédiction individuelle...")
 
-  # 🔒 Inclure toutes les cibles vues dans les modèles et affectations
-  all_targets <- sort(unique(c(
-    unlist(uniques),
-    unlist(lapply(models, function(m) {
-      if (!is.null(m)) colnames(predict(m, type = "probs")) else NULL
-    }))
-  )))
+  targets_by_unit <- lapply(simulations, function(df) unique(as.character(df[[target_id_col]])))
+  all_targets_global <- sort(unique(c(unlist(uniques), unlist(targets_by_unit))))
 
   pred_list <- vector("list", nrow(survey_data))
 
@@ -104,52 +77,103 @@ predict_with_unit_models <- function(
     row <- survey_data[i, ]
     unit <- row[[origin_id_col]]
 
-    if (anyNA(row[, ses, drop = FALSE])) {
+    unit_targets <- if (unit %in% names(targets_by_unit)) {
+      sort(unique(targets_by_unit[[unit]]))
+    } else if (unit %in% names(uniques)) {
+      as.character(uniques[[unit]])
+    } else {
+      character(0)
+    }
+
+    present_ses <- ses[!is.na(row[, ses])]
+
+    message("🧪 Ligne ", i, " — unité = ", unit, ", SES valides = ", paste(present_ses, collapse = ", "))
+
+    # ❌ Aucun SES valide
+    if (length(present_ses) == 0) {
       if (return == "class") {
-        pred <- NA
+        pred <- NA_character_
       } else {
-        pred <- matrix(NA, nrow = 1, ncol = length(all_targets))
-        colnames(pred) <- all_targets
+        pred <- matrix(0, nrow = 1, ncol = length(unit_targets))
+        colnames(pred) <- unit_targets
       }
 
+    # ✅ Affectation directe si unique
     } else if (unit %in% names(uniques)) {
       rid <- as.character(uniques[[unit]])
 
       if (return == "class") {
         pred <- rid
       } else {
-        p <- setNames(rep(0, length(all_targets)), all_targets)
-        if (rid %in% names(p)) {
-          p[[rid]] <- 1
-        } else {
-          p <- c(p, setNames(1, rid))
-        }
-        pred <- matrix(p, nrow = 1)
-        colnames(pred) <- all_targets
+        pred <- matrix(0, nrow = 1, ncol = length(unit_targets))
+        colnames(pred) <- unit_targets
+        if (rid %in% colnames(pred)) pred[1, rid] <- 1
       }
 
-    } else if (unit %in% names(models)) {
-      model <- models[[unit]]
-      newdata <- row[, ses, drop = FALSE]
+    # ✅ Prédiction locale avec multinom
+    } else if (unit %in% names(simulations)) {
+      sim_data <- simulations[[unit]]
 
-      if (return == "class") {
-        pred <- as.character(predict(model, newdata = newdata, type = "class"))
-      } else {
-        prob <- predict(model, newdata = newdata, type = "probs")
+      formula <- as.formula(paste(target_id_col, "~", paste(present_ses, collapse = " + ")))
+      tmp <- model.frame(formula, data = sim_data)
+      target_vals <- unique(tmp[[target_id_col]])
 
-        if (is.vector(prob)) {
-          prob <- matrix(prob, nrow = 1)
-          colnames(prob) <- colnames(predict(model, type = "probs"))
+      # ✅ Cas : une seule classe possible → assignation directe
+      if (length(target_vals) == 1) {
+        rid <- as.character(target_vals)
+        if (return == "class") {
+          pred <- rid
+        } else {
+          pred <- matrix(0, nrow = 1, ncol = length(unit_targets))
+          colnames(pred) <- unit_targets
+          if (rid %in% colnames(pred)) pred[1, rid] <- 1
         }
 
-        p <- setNames(rep(0, length(all_targets)), all_targets)
-        p[colnames(prob)] <- prob[1, ]
-        pred <- matrix(p, nrow = 1)
-        colnames(pred) <- all_targets
+      # ✅ Cas standard multinom
+      } else {
+        model <- tryCatch({
+          nnet::multinom(formula, data = sim_data, trace = FALSE)
+        }, error = function(e) {
+          warning("Échec du modèle local pour ", unit, " : ", conditionMessage(e))
+          return(NULL)
+        })
+
+        if (is.null(model)) {
+          if (return == "class") {
+            pred <- NA_character_
+          } else {
+            pred <- matrix(0, nrow = 1, ncol = length(unit_targets))
+            colnames(pred) <- unit_targets
+          }
+
+        } else {
+          newdata <- row[, present_ses, drop = FALSE]
+
+          if (return == "class") {
+            pred <- as.character(predict(model, newdata = newdata, type = "class"))
+          } else {
+            prob <- predict(model, newdata = newdata, type = "probs")
+
+            if (is.vector(prob)) {
+              prob <- matrix(prob, nrow = 1)
+              colnames(prob) <- colnames(predict(model, type = "probs"))
+            }
+
+            pred <- matrix(0, nrow = 1, ncol = length(unit_targets))
+            colnames(pred) <- unit_targets
+
+            cols <- colnames(prob)
+            cols <- cols[cols %in% colnames(pred)]
+
+            if (length(cols) > 0) {
+              pred[1, cols] <- prob[1, cols]
+            }
+          }
+        }
       }
 
     } else {
-      stop("Aucune prédiction possible pour l'unité : ", unit)
+      stop("Aucune simulation disponible pour l’unité : ", unit)
     }
 
     pred_list[[i]] <- pred
@@ -160,9 +184,26 @@ predict_with_unit_models <- function(
       if (is.null(x) || is.na(x)) NA_character_ else as.character(x)
     }, character(1)))
   } else {
-    return(do.call(rbind, pred_list))
+    full_preds <- lapply(pred_list, function(mat) {
+      row <- rep(0, length(all_targets_global))
+      names(row) <- all_targets_global
+
+      if (!is.null(mat) && is.matrix(mat) && ncol(mat) > 0) {
+        row[colnames(mat)] <- mat[1, colnames(mat), drop = TRUE]
+      }
+
+      row
+    })
+
+    return(do.call(rbind, full_preds))
   }
 }
+
+
+
+
+
+
 
 
 

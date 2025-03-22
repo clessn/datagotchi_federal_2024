@@ -21,16 +21,11 @@
 
 ### Et retourne une matrice ou un vecteur
 
-### CHECKS À FAIRE
-## Il faut que les variables dans survey_data soient seulement origin + les SES.
-### Ensuite, il faut s'assurer que les deux datasets de census ont les SES de survey_data.
-### Il faut aussi s'assurer que nrow(census_origin) = length(unique(spatial_origin$origin)) et même chose pour target
-
 
 library(dplyr)
 
 survey_data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250319.rds") |> 
-  filter(ses_postalCode %in% c("G2L", "J3H", "A0A")) |> 
+  # filter(ses_postalCode %in% c("G2L", "J3H", "A0A")) |> 
   select(
     rta = ses_postalCode,
     ses_gender = ses_genderMale, 
@@ -38,36 +33,24 @@ survey_data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataCl
     ses_income = ses_incomeCensus
   ) |> 
   mutate(
+    rta = toupper(rta),
     ses_gender = ifelse(ses_gender == 1, "male", "female")
   )
 
-df_census_rta <- cartessn::census_canada_2022_rta
-df_census_ridings <- cartessn::census_canada_2022_electoral_ridings
+df_census_rta <- cartessn::census_canada_2022_rta |> 
+  filter(category != "male")
+df_census_ridings <- cartessn::census_canada_2022_electoral_ridings |> 
+  filter(category != "20_24")
 
-predict_spatial_target(
-  survey_data = survey_data,
-  ses = c("ses_gender", "ses_age", "ses_income"),
-  origin = "rta",
-  target = "id_riding",
-  spatial_origin = cartessn::spatial_canada_2021_rta,
-  spatial_target = cartessn::spatial_canada_2022_electoral_ridings,
-  census_origin = df_census_rta,
-  census_target = df_census_ridings,
-  return = "probabilities"
-)
-
-
-test2 <- cartessn::simulate_respondents_from_census_unit(
-  origin_unit_id = "J3H",
-  n = 500,
-  spatial_intersection = cartessn::intersect_spatial_objects(
-    spatial_ref = cartessn::spatial_canada_2021_rta,
-    id_ref = "rta",
+df <- cartessn::predict_spatial_target(
+    survey_data = survey_data[1:15,],
+    ses = c("ses_gender", "ses_age", "ses_income"),
+    origin = "rta",
+    target = "id_riding",
+    spatial_origin = cartessn::spatial_canada_2021_rta,
     spatial_target = cartessn::spatial_canada_2022_electoral_ridings,
-    id_target = "id_riding"
-  ),
-  origin_id_col = "rta",
-  target_id_col = "id_riding",
-  census_origin = df_census_rta,
-  census_target = df_census_ridings
-)
+    census_origin = df_census_rta,
+    census_target = df_census_ridings,
+    return = "probabilities",
+    n_sim = 200
+  )
