@@ -12,7 +12,7 @@
 library(tidyverse)
 
 # Charger les données
-DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250310.rds")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250319.rds")
 DataApp <- readRDS("")
 
 # Sauvegarder les données
