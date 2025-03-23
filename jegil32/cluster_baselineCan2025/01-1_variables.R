@@ -129,6 +129,7 @@ variables_ses <- c(
 
 variables_vote <- c(
   "id",
+  "dv_voteChoice",
   "dv_voteChoiceLPC",
   "dv_voteChoiceCPC",
   "dv_voteChoiceNDP",
