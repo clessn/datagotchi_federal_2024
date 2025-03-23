@@ -3,6 +3,8 @@ library(tidyr)
 library(sf)
 library(ggplot2)
 library(cartessn)
+library(patchwork)
+library(cowplot)
 
 # 1. Chargement des données
 data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250320.rds")
@@ -21,6 +23,8 @@ mapping_results <- cartessn::map_fsa_to_ridings(
   sf_ridings = sf_ridings,
   tolerance = 50
 )
+saveRDS(mapping_results, "_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
+
 
 # 5. Obtenir le mapping principal (RTA -> riding avec meilleure couverture)
 rta_to_riding <- mapping_results$fsa_to_riding_mapping %>%
@@ -74,18 +78,18 @@ coffee_battle_by_riding <- coffee_battle_by_riding %>%
   mutate(
     # Créer une variable pour la chaîne dominante (celle avec le plus de fans)
     dominant_chain = case_when(
-      tim_fans_pct >= mcdo_fans_pct & tim_fans_pct >= starbucks_fans_pct & tim_fans_pct >= secondcup_fans_pct ~ "Tim Hortons 🍁",
+      tim_fans_pct >= mcdo_fans_pct & tim_fans_pct >= starbucks_fans_pct & tim_fans_pct >= secondcup_fans_pct ~ "Tim Hortons 🇨🇦",
       mcdo_fans_pct >= tim_fans_pct & mcdo_fans_pct >= starbucks_fans_pct & mcdo_fans_pct >= secondcup_fans_pct ~ "McDonald's 🇺🇸",
-      starbucks_fans_pct >= tim_fans_pct & starbucks_fans_pct >= mcdo_fans_pct & starbucks_fans_pct >= secondcup_fans_pct ~ "Starbucks ☕",
+      starbucks_fans_pct >= tim_fans_pct & starbucks_fans_pct >= mcdo_fans_pct & starbucks_fans_pct >= secondcup_fans_pct ~ "Starbucks 🇺🇸",
       secondcup_fans_pct >= tim_fans_pct & secondcup_fans_pct >= mcdo_fans_pct & secondcup_fans_pct >= starbucks_fans_pct ~ "Second Cup 🇨🇦",
       TRUE ~ "Égalité"
     ),
     
     # Pourcentage pour la chaîne dominante
     dominant_pct = case_when(
-      dominant_chain == "Tim Hortons 🍁" ~ tim_fans_pct,
+      dominant_chain == "Tim Hortons 🇨🇦" ~ tim_fans_pct,
       dominant_chain == "McDonald's 🇺🇸" ~ mcdo_fans_pct,
-      dominant_chain == "Starbucks ☕" ~ starbucks_fans_pct,
+      dominant_chain == "Starbucks 🇺🇸" ~ starbucks_fans_pct,
       dominant_chain == "Second Cup 🇨🇦" ~ secondcup_fans_pct,
       TRUE ~ NA_real_
     )
@@ -96,17 +100,42 @@ sf_coffee_map <- sf_ridings %>%
   left_join(coffee_battle_by_riding, by = "id_riding")
 
 # 12. Sauvegarder les résultats intermédiaires
-saveRDS(mapping_results, "_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
+
 saveRDS(coffee_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/coffee_battle_pondere.rds")
 coffee_battle_by_riding <- readRDS("_SharedFolder_datagotchi_federal_2024/reports/coffee_battle_pondere.rds")
-mapping_results <- readRDS("_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
 
-# 13. Prétraitement des données pour éliminer les NA avant la création de la carte
+#
+# Correction 1: Modifier la fonction pour qu'elle fonctionne comme un thème ggplot2
+# Au lieu de prendre un argument map, elle retourne directement un thème
+remove_axes_improve_aesthetics <- function() {
+  theme(
+    # Suppression des axes et des étiquettes
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    # Amélioration de l'apparence globale
+    panel.background = element_rect(fill = "#f5f5f5", color = NA),
+    plot.background = element_rect(fill = "#ffffff", color = NA),
+    legend.background = element_rect(fill = "#ffffff", color = NA),
+    plot.margin = margin(10, 10, 10, 10),
+    # Style du titre et sous-titre
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 15)),
+    # Position et style de la légende
+    legend.position = "bottom",
+    legend.margin = margin(t = 5, b = 5),
+    legend.box.margin = margin(t = 5),
+    legend.text = element_text(size = 9)
+  )
+}
+
+# Prétraitement des données et création de la carte principale du Canada
 sf_coffee_map_clean <- sf_coffee_map %>%
-  # Remplacer les NA par une valeur qui n'apparaîtra pas dans la légende
   mutate(dominant_chain = ifelse(is.na(dominant_chain), "Non disponible", dominant_chain))
 
-# Création de la carte avec les données prétraitées
+# Création de la carte principale avec les nouvelles couleurs et style
+# Correction 2: Appliquer le thème directement après le scale_fill_manual
 canada_coffee_map <- cartessn::create_map(
   sf_coffee_map_clean,
   value_column = "dominant_chain",
@@ -115,322 +144,120 @@ canada_coffee_map <- cartessn::create_map(
   caption = "Source: Sondage Datagotchi 2025",
   legend_title = "Chaîne dominante",
   discrete_values = TRUE,
-  fill_color = c("Tim Hortons 🍁" = "#dc143c", 
-                "McDonald's 🇺🇸" = "#ffc836", 
-                "Starbucks ☕" = "#036635",
-                "Second Cup 🇨🇦" = "#003DA5",
-                "Égalité" = "#D3D3D3",
-                "Non disponible" = "#FFFFFF00"),  # Couleur transparente
+  fill_color = c(
+    "Tim Hortons 🇨🇦" = "#C8102E", 
+    "McDonald's 🇺🇸" = "#FFC72C", 
+    "Starbucks 🇺🇸" = "#00704A",
+    "Second Cup 🇨🇦" = "#003DA5",
+    "Égalité" = "#D3D3D3",
+    "Non disponible" = "#FFFFFF00"
+  ),
   background = "light",
   border_size = 0.1
-)
+) +
+scale_fill_manual(
+  values = c(
+    "Tim Hortons 🇨🇦" = "#C8102E", 
+    "McDonald's 🇺🇸" = "#FFC72C", 
+    "Starbucks 🇺🇸" = "#00704A",
+    "Second Cup 🇨🇦" = "#003DA5",
+    "Égalité" = "#D3D3D3",
+    "Non disponible" = "#FFFFFF00"
+  ),
+  breaks = c("Tim Hortons 🇨🇦", "McDonald's 🇺🇸", "Starbucks 🇺🇸", "Second Cup 🇨🇦", "Égalité")
+) +
+remove_axes_improve_aesthetics()  # La fonction retourne maintenant un thème, pas besoin d'argument
 
-# Améliorer l'esthétique
-canada_coffee_map <- canada_coffee_map +
-  ggplot2::guides(fill = ggplot2::guide_legend(nrow = 1, override.aes = list(alpha = 1))) +
-  ggplot2::scale_fill_manual(
-    values = c("Tim Hortons 🍁" = "#dc143c", 
-               "McDonald's 🇺🇸" = "#ffc836", 
-               "Starbucks ☕" = "#036635",
-               "Second Cup 🇨🇦" = "#003DA5",
-               "Égalité" = "#D3D3D3",
-               "Non disponible" = "#FFFFFF00"),  # Couleur transparente
-    breaks = c("Tim Hortons 🍁", "McDonald's 🇺🇸", "Starbucks ☕", "Second Cup 🇨🇦", "Égalité")  # Exclure "Non disponible" de la légende
-  ) +
-  ggplot2::theme(
-    legend.position = "bottom",
-    legend.margin = ggplot2::margin(t = 10, b = 10),
-    plot.title = ggplot2::element_text(face = "bold", size = 18),
-    plot.subtitle = ggplot2::element_text(size = 14, margin = ggplot2::margin(b = 20)),
-    plot.caption = ggplot2::element_text(hjust = 1, margin = ggplot2::margin(t = 15)),
-    legend.text = ggplot2::element_text(size = 10)
-  )
-
-# 14. Sauvegarder la carte
-ggsave("canada_coffee_map.png", canada_coffee_map, width = 12, height = 8, dpi = 300)
-canada_coffee_map
-
-# 15. Créer des cartes pour les principales régions urbaines
-regions <- c("montreal", "toronto", "vancouver", "ottawa_gatineau", "quebec_city", "kitchener_waterloo", "london")
-
-# 16. Créer des cartes individuelles pour chaque région
-for (region in regions) {
-  # Extraire la région avec crop_map
-  region_map <- cartessn::crop_map(sf_coffee_map, region)
-  
-  # Prétraitement des données régionales pour éliminer les NA
-  region_map_clean <- region_map %>%
-    mutate(dominant_chain = ifelse(is.na(dominant_chain), "Non disponible", dominant_chain))
-  
-  # Créer la carte thématique
-  region_coffee_map <- cartessn::create_map(
-    region_map_clean,
-    value_column = "dominant_chain",
-    title = paste("La bataille du café à", gsub("_", " ", region)),
-    subtitle = "Chaîne de café préférée par circonscription électorale",
-    caption = "Source: Sondage Datagotchi 2025",
-    legend_title = "Chaîne dominante",
-    discrete_values = TRUE,
-    fill_color = c("Tim Hortons 🍁" = "#dc143c", 
-                  "McDonald's 🇺🇸" = "#ffc836", 
-                  "Starbucks ☕" = "#036635",
-                  "Second Cup 🇨🇦" = "#003DA5",
-                  "Égalité" = "#D3D3D3",
-                  "Non disponible" = "#FFFFFF00"),
-    background = "light",
-    border_size = 0.15
-  )
-  
-  # Améliorer l'esthétique de la carte régionale
-  region_coffee_map <- region_coffee_map +
-    ggplot2::scale_fill_manual(
-      values = c("Tim Hortons 🍁" = "#dc143c", 
-                "McDonald's 🇺🇸" = "#ffc836", 
-                "Starbucks ☕" = "#036635",
-                "Second Cup 🇨🇦" = "#003DA5",
-                "Égalité" = "#D3D3D3",
-                "Non disponible" = "#FFFFFF00"),
-      breaks = c("Tim Hortons 🍁", "McDonald's 🇺🇸", "Starbucks ☕", "Second Cup 🇨🇦", "Égalité")
-    ) +
-    ggplot2::guides(fill = ggplot2::guide_legend(nrow = 1)) +
-    ggplot2::theme(
-      legend.position = "bottom",
-      legend.margin = ggplot2::margin(t = 10, b = 10),
-      plot.title = ggplot2::element_text(face = "bold", size = 16),
-      plot.subtitle = ggplot2::element_text(size = 12, margin = ggplot2::margin(b = 15)),
-      plot.caption = ggplot2::element_text(hjust = 1, margin = ggplot2::margin(t = 10)),
-      legend.text = ggplot2::element_text(size = 9)
-    )
-  
-  # Sauvegarder la carte
-  ggsave(paste0(region, "_coffee_map.png"), region_coffee_map, width = 10, height = 8, dpi = 300)
-}
-
-# 17. Créer une carte multi-panneaux pour comparer les grandes villes
-# Prétraiter les données pour le multi-panel
-sf_coffee_map_clean <- sf_coffee_map %>%
-  mutate(dominant_chain = ifelse(is.na(dominant_chain), "Non disponible", dominant_chain))
-
-# Créer une liste pour stocker les cartes de chaque région
+# Création des cartes pour les principales villes avec un style cohérent
+main_regions <- c("montreal", "toronto", "vancouver", "ottawa_gatineau")
 region_maps <- list()
-regions <- c("montreal", "toronto", "vancouver", "ottawa_gatineau")
 
-# Créer une carte pour chaque région manuellement
-for (i in seq_along(regions)) {
-  region <- regions[i]
+# Créer une carte pour chaque région principale
+for (i in seq_along(main_regions)) {
+  region <- main_regions[i]
+  
+  # Titre formaté proprement
+  formatted_title <- gsub("_", " ", region)
+  formatted_title <- paste0(toupper(substr(formatted_title, 1, 1)), 
+                           substr(formatted_title, 2, nchar(formatted_title)))
   
   # Extraire la région
   region_map <- cartessn::crop_map(sf_coffee_map_clean, region)
   
-  # Créer la carte
+  # Correction 3: Appliquer le thème correctement dans la boucle
   region_maps[[i]] <- cartessn::create_map(
     region_map,
     value_column = "dominant_chain",
-    title = gsub("_", " ", region),
+    title = formatted_title,
     discrete_values = TRUE,
-    fill_color = c("Tim Hortons 🍁" = "#C8102E",
-                  "McDonald's 🇺🇸" = "#FFC72C",
-                  "Starbucks ☕" = "#00704A",
-                  "Second Cup 🇨🇦" = "#003DA5",
-                  "Égalité" = "#D3D3D3",
-                  "Non disponible" = "#FFFFFF00"),
-    background = "light"
+    fill_color = c(
+      "Tim Hortons 🇨🇦" = "#C8102E",
+      "McDonald's 🇺🇸" = "#FFC72C",
+      "Starbucks 🇺🇸" = "#00704A",
+      "Second Cup 🇨🇦" = "#003DA5",
+      "Égalité" = "#D3D3D3",
+      "Non disponible" = "#FFFFFF00"
+    ),
+    background = "light",
+    border_size = 0.15
   ) +
   scale_fill_manual(
-    values = c("Tim Hortons 🍁" = "#C8102E",
-               "McDonald's 🇺🇸" = "#FFC72C",
-               "Starbucks ☕" = "#00704A",
-               "Second Cup 🇨🇦" = "#003DA5",
-               "Égalité" = "#D3D3D3",
-               "Non disponible" = "#FFFFFF00"),
-    breaks = c("Tim Hortons 🍁", "McDonald's 🇺🇸", "Starbucks ☕", "Second Cup 🇨🇦", "Égalité")
-  )
+    values = c(
+      "Tim Hortons 🇨🇦" = "#C8102E",
+      "McDonald's 🇺🇸" = "#FFC72C",
+      "Starbucks 🇺🇸" = "#00704A",
+      "Second Cup 🇨🇦" = "#003DA5",
+      "Égalité" = "#D3D3D3",
+      "Non disponible" = "#FFFFFF00"
+    ),
+    breaks = c("Tim Hortons 🇨🇦", "McDonald's 🇺🇸", "Starbucks 🇺🇸", "Second Cup 🇨🇦", "Égalité")
+  ) +
+  remove_axes_improve_aesthetics() +  # Applique le thème correctement
+  theme(legend.position = "none")  # Supprime la légende des cartes individuelles
 }
 
-# Combiner les cartes avec patchwork
-multi_panel_map <- patchwork::wrap_plots(region_maps, ncol = 2) +
-  patchwork::plot_annotation(
-    title = "Bataille du café dans les grandes villes canadiennes",
-    subtitle = "Chaîne de café préférée par circonscription électorale",
+# 4. Création du layout final avec patchwork
+# Une légende commune pour toutes les cartes
+common_legend <- cowplot::get_legend(
+  canada_coffee_map + 
+    guides(fill = guide_legend(nrow = 1, title.position = "top")) +
+    theme(legend.position = "bottom",
+          legend.box.margin = margin(10, 0, 0, 0))
+)
+
+# Supprimer la légende de la carte principale pour l'ajouter en bas du layout final
+canada_coffee_map <- canada_coffee_map + theme(legend.position = "none")
+
+# Combiner les cartes des villes en une grille 2x2
+city_maps_grid <- patchwork::wrap_plots(region_maps, ncol = 2)
+
+# Création du layout final : carte du Canada en haut, cartes des villes en bas
+final_layout <- (canada_coffee_map / city_maps_grid) +
+  plot_layout(heights = c(2, 3)) +
+  plot_annotation(
+    title = "La bataille du café au Canada",
+    subtitle = "Préférences des chaînes de café par région",
     caption = "Source: Sondage Datagotchi 2025",
     theme = theme(
-      plot.title = element_text(face = "bold", size = 18, hjust = 0.5),
-      plot.subtitle = element_text(size = 14, hjust = 0.5),
-      plot.caption = element_text(hjust = 1)
-    )
-  )
-multi_panel_map
-# 18. Sauvegarder la carte multi-panneaux
-ggsave("multi_panel_coffee_map.png", multi_panel_map, width = 14, height = 12, dpi = 300)
-
-# 19. Analyse des proportions globales et création d'un graphique de synthèse
-coffee_summary <- coffee_battle_by_riding %>%
-  summarize(
-    total_ridings = n(),
-    tim_hortons_wins = sum(dominant_chain == "Tim Hortons 🍁", na.rm = TRUE),
-    mcdonald_wins = sum(dominant_chain == "McDonald's 🇺🇸", na.rm = TRUE),
-    starbucks_wins = sum(dominant_chain == "Starbucks ☕", na.rm = TRUE),
-    secondcup_wins = sum(dominant_chain == "Second Cup 🇨🇦", na.rm = TRUE),
-    ties = sum(dominant_chain == "Égalité", na.rm = TRUE)
-  ) %>%
-  mutate(
-    tim_hortons_pct = tim_hortons_wins / total_ridings * 100,
-    mcdonald_pct = mcdonald_wins / total_ridings * 100,
-    starbucks_pct = starbucks_wins / total_ridings * 100,
-    secondcup_pct = secondcup_wins / total_ridings * 100,
-    ties_pct = ties / total_ridings * 100
-  )
-
-print(coffee_summary)
-
-# Créer un graphique en barres pour visualiser les résultats globaux
-summary_long <- data.frame(
-  chain = c("Tim Hortons 🍁", "McDonald's 🇺🇸", "Starbucks ☕", "Second Cup 🇨🇦", "Égalité"),
-  wins = c(
-    coffee_summary$tim_hortons_wins,
-    coffee_summary$mcdonald_wins,
-    coffee_summary$starbucks_wins,
-    coffee_summary$secondcup_wins,
-    coffee_summary$ties
-  ),
-  percentage = c(
-    coffee_summary$tim_hortons_pct,
-    coffee_summary$mcdonald_pct,
-    coffee_summary$starbucks_pct,
-    coffee_summary$secondcup_pct,
-    coffee_summary$ties_pct
-  )
-) %>%
-  # Ordonner par nombre de victoires décroissant
-  arrange(desc(wins))
-
-# Créer le facteur ordonné pour l'axe des x
-summary_long$chain <- factor(summary_long$chain, levels = summary_long$chain)
-
-# Créer le graphique
-coffee_summary_plot <- ggplot2::ggplot(summary_long, aes(x = chain, y = wins, fill = chain)) +
-  ggplot2::geom_bar(stat = "identity", width = 0.7) +
-  ggplot2::geom_text(
-    aes(label = paste0(round(percentage, 1), "%")),
-    position = position_stack(vjust = 0.5),
-    color = "white",
-    fontface = "bold",
-    size = 5
-  ) +
-  ggplot2::scale_fill_manual(
-    values = c(
-      "Tim Hortons 🍁" = "#dc143c",
-      "McDonald's 🇺🇸" = "#ffc836",
-      "Starbucks ☕" = "#036635",
-      "Second Cup 🇨🇦" = "#003DA5",
-      "Égalité" = "#D3D3D3"
-    )
-  ) +
-  ggplot2::labs(
-    title = "Popularité des chaînes de café au Canada",
-    subtitle = "Nombre de circonscriptions où chaque chaîne est dominante",
-    caption = "Source: Sondage Datagotchi 2025",
-    x = NULL,
-    y = "Nombre de circonscriptions"
-  ) +
-  ggplot2::theme_minimal() +
-  ggplot2::theme(
-    legend.position = "none",
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-    plot.subtitle = element_text(size = 12, hjust = 0.5),
-    axis.text.x = element_text(size = 12, face = "bold"),
-    axis.text.y = element_text(size = 10),
-    panel.grid.major.x = element_blank()
-  )
-coffee_summary_plot
-# Sauvegarder le graphique
-ggsave("coffee_summary_plot.png", coffee_summary_plot, width = 10, height = 6, dpi = 300)
-
-# 20. Analyse par province
-# D'abord, joindre les noms de provinces
-province_names <- cartessn::names_canada_provinces
-sf_coffee_map <- sf_coffee_map %>%
-  left_join(province_names, by = "id_province")
-
-# Résumer par province
-coffee_by_province <- sf_coffee_map %>%
-  st_drop_geometry() %>%
-  group_by(name_province) %>%
-  summarize(
-    total_ridings = n(),
-    tim_hortons_wins = sum(dominant_chain == "Tim Hortons 🍁", na.rm = TRUE),
-    mcdonald_wins = sum(dominant_chain == "McDonald's 🇺🇸", na.rm = TRUE),
-    starbucks_wins = sum(dominant_chain == "Starbucks ☕", na.rm = TRUE),
-    secondcup_wins = sum(dominant_chain == "Second Cup 🇨🇦", na.rm = TRUE),
-    ties = sum(dominant_chain == "Égalité", na.rm = TRUE)
-  ) %>%
-  mutate(
-    tim_hortons_pct = tim_hortons_wins / total_ridings * 100,
-    mcdonald_pct = mcdonald_wins / total_ridings * 100,
-    starbucks_pct = starbucks_wins / total_ridings * 100,
-    secondcup_pct = secondcup_wins / total_ridings * 100,
-    ties_pct = ties / total_ridings * 100
-  )
-
-print(coffee_by_province)
-
-# Créer un graphique de comparaison par province
-# Préparer les données au format long
-province_data_long <- coffee_by_province %>%
-  select(name_province, tim_hortons_pct, mcdonald_pct, starbucks_pct, secondcup_pct, ties_pct) %>%
-  pivot_longer(
-    cols = c(tim_hortons_pct, mcdonald_pct, starbucks_pct, secondcup_pct, ties_pct),
-    names_to = "chain",
-    values_to = "percentage"
-  ) %>%
-  mutate(
-    chain = case_when(
-      chain == "tim_hortons_pct" ~ "Tim Hortons 🍁",
-      chain == "mcdonald_pct" ~ "McDonald's 🇺🇸",
-      chain == "starbucks_pct" ~ "Starbucks ☕",
-      chain == "secondcup_pct" ~ "Second Cup 🇨🇦",
-      chain == "ties_pct" ~ "Égalité"
+      plot.title = element_text(face = "bold", size = 24, hjust = 0.5, margin = margin(b = 5, t = 10)),
+      plot.subtitle = element_text(size = 16, hjust = 0.5, margin = margin(b = 20)),
+      plot.caption = element_text(size = 10, hjust = 1, margin = margin(t = 5, b = 5)),
+      plot.background = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA)
     )
   )
 
-# Créer le graphique par province
-province_plot <- ggplot2::ggplot(
-  province_data_long,
-  aes(x = name_province, y = percentage, fill = chain)
-) +
-  ggplot2::geom_bar(stat = "identity", position = "dodge") +
-  ggplot2::scale_fill_manual(
-    values = c(
-      "Tim Hortons 🍁" = "#dc143c",
-      "McDonald's 🇺🇸" = "#ffc836",
-      "Starbucks ☕" = "#036635",
-      "Second Cup 🇨🇦" = "#003DA5",
-      "Égalité" = "#D3D3D3"
-    )
-  ) +
-  ggplot2::labs(
-    title = "Préférences de café par province",
-    subtitle = "Pourcentage de circonscriptions par chaîne dominante",
-    caption = "Source: Sondage Datagotchi 2025",
-    x = NULL,
-    y = "% des circonscriptions",
-    fill = "Chaîne"
-  ) +
-  ggplot2::theme_minimal() +
-  ggplot2::theme(
-    legend.position = "bottom",
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-    plot.subtitle = element_text(size = 12, hjust = 0.5),
-    legend.title = element_text(face = "bold"),
-    panel.grid.minor = element_blank()
-  ) +
-  ggplot2::guides(fill = guide_legend(nrow = 1))
+# Ajouter la légende commune au bas de la mise en page finale
+final_combined_layout <- final_layout + 
+  patchwork::plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
 
-# Sauvegarder le graphique par province
-ggsave("coffee_by_province_plot.png", province_plot, width = 12, height = 7, dpi = 300)
+final_combined_layout
 
-# 21. Sauvegarder les résultats finaux
-saveRDS(coffee_summary, "R/shiny/data/coffee_summary.rds")
-saveRDS(coffee_by_province, "R/shiny/data/coffee_by_province.rds")
-saveRDS(sf_coffee_map, "R/shiny/data/sf_coffee_map.rds")
+# 5. Sauvegarder avec une haute résolution
+ggsave("canada_coffee_analysis_combined.png", 
+       final_combined_layout, 
+       width = 14, 
+       height = 16, 
+       dpi = 300)
+
