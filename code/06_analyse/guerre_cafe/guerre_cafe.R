@@ -322,46 +322,46 @@ mcdo_icon <- image_read(mcdo_icon_path)
 tim_icon <- image_read(tim_icon_path)
 
 
-# Redimensionner les icônes pour qu'elles soient de la même taille
-icon_size <- 65
+# Modifier ces sections :
+
+# Redimensionnement des icônes (augmenter la taille)
+icon_size <- 95  # Augmenté de 65 à 130
 starbucks_icon_resized <- image_scale(starbucks_icon, paste0(icon_size, "x", icon_size))
 mcdo_icon_resized <- image_scale(mcdo_icon, paste0(icon_size, "x", icon_size))
 tim_icon_resized <- image_scale(tim_icon, paste0(icon_size, "x", icon_size))
 
+# Ajustement du positionnement
+x_start <- 500  # Début plus à gauche pour compenser la taille accrue
+x_spacing <- 450  # Espacement augmenté entre les éléments
 
-# Position de départ pour un meilleur centrage
-x_start <- 600  # Déplacement à droite
-x_spacing <- 350  # Plus d'espace entre les éléments
-
-# Ajouter les icônes et les étiquettes
 # Tim Hortons
 legend_text <- image_composite(legend_text, tim_icon_resized, 
-   offset = paste0("+", x_start, "+32"))
+   offset = paste0("+", x_start, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "Tim Hortons 🇨🇦",
   color = "white",
   size = 28,
-  location = paste0("+", x_start + 70, "+36"),
+  location = paste0("+", x_start + icon_size + 30, "+36"),  # Décalage augmenté
   font = "Arial")
 
 # McDonald's
 legend_text <- image_composite(legend_text, mcdo_icon_resized, 
-   offset = paste0("+", x_start + x_spacing, "+32"))
+   offset = paste0("+", x_start + x_spacing, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "McDonald's 🇺🇸",
   color = "white",
   size = 28,
-  location = paste0("+", x_start + x_spacing + 70, "+36"),
+  location = paste0("+", x_start + x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
   font = "Arial")
 
 # Starbucks
 legend_text <- image_composite(legend_text, starbucks_icon_resized, 
-   offset = paste0("+", x_start + 2*x_spacing, "+32"))
+   offset = paste0("+", x_start + 2*x_spacing, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "Starbucks 🇺🇸",
   color = "white",
   size = 28,
-  location = paste0("+", x_start + 2*x_spacing + 70, "+36"),
+  location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
   font = "Arial")
 
 
@@ -459,15 +459,13 @@ national_averages <- data %>%
     sum_weight = sum(weight, na.rm = TRUE),
     tim_hortons_avg = sum((lifestyle_consCoffeeTimHortons == 1) * weight, na.rm = TRUE) / sum_weight * 100,
     mcdo_avg = sum((lifestyle_consCoffeeMcDo == 1) * weight, na.rm = TRUE) / sum_weight * 100,
-    starbucks_avg = sum((lifestyle_consCoffeeStarbucks == 1) * weight, na.rm = TRUE) / sum_weight * 100,
-    secondcup_avg = sum((lifestyle_consCoffeeSecondCup == 1) * weight, na.rm = TRUE) / sum_weight * 100
+    starbucks_avg = sum((lifestyle_consCoffeeStarbucks == 1) * weight, na.rm = TRUE) / sum_weight * 100
   )
 
 # Arrondir les valeurs pour l'affichage
 tim_national <- round(national_averages$tim_hortons_avg, 1)
 mcdo_national <- round(national_averages$mcdo_avg, 1)
 starbucks_national <- round(national_averages$starbucks_avg, 1)
-secondcup_national <- round(national_averages$secondcup_avg, 1)
 
 # Calcul des écarts par parti
 coffee_by_party <- data %>%
@@ -480,7 +478,6 @@ coffee_by_party <- data %>%
     tim_fans_pct = sum((lifestyle_consCoffeeTimHortons == 1) * weight, na.rm = TRUE) / sum_weight * 100,
     mcdo_fans_pct = sum((lifestyle_consCoffeeMcDo == 1) * weight, na.rm = TRUE) / sum_weight * 100,
     starbucks_fans_pct = sum((lifestyle_consCoffeeStarbucks == 1) * weight, na.rm = TRUE) / sum_weight * 100,
-    secondcup_fans_pct = sum((lifestyle_consCoffeeSecondCup == 1) * weight, na.rm = TRUE) / sum_weight * 100,
     n_people = n()
   ) %>%
   ungroup() %>%
@@ -495,16 +492,16 @@ coffee_by_party <- data %>%
     ),
     tim_deviation = tim_fans_pct - national_averages$tim_hortons_avg,
     mcdo_deviation = mcdo_fans_pct - national_averages$mcdo_avg,
-    starbucks_deviation = starbucks_fans_pct - national_averages$starbucks_avg,
-    secondcup_deviation = secondcup_fans_pct - national_averages$secondcup_avg
+    starbucks_deviation = starbucks_fans_pct - national_averages$starbucks_avg
   ) %>%
   # Filtrer à nouveau pour éliminer tout parti dont le nom est NA
   filter(!is.na(party_name))
+
 # Préparation des données pour le graphique
 coffee_by_party_long <- coffee_by_party %>%
-  select(party_name, tim_deviation, mcdo_deviation, starbucks_deviation, secondcup_deviation) %>%
+  select(party_name, tim_deviation, mcdo_deviation, starbucks_deviation) %>%
   pivot_longer(
-    cols = c(tim_deviation, mcdo_deviation, starbucks_deviation, secondcup_deviation),
+    cols = c(tim_deviation, mcdo_deviation, starbucks_deviation),
     names_to = "coffee_chain",
     values_to = "deviation"
   ) %>%
@@ -512,8 +509,7 @@ coffee_by_party_long <- coffee_by_party %>%
     coffee_chain = case_when(
       coffee_chain == "tim_deviation" ~ "Tim Hortons 🇨🇦",
       coffee_chain == "mcdo_deviation" ~ "McDonald's 🇺🇸",
-      coffee_chain == "starbucks_deviation" ~ "Starbucks 🇺🇸",
-      coffee_chain == "secondcup_deviation" ~ "Second Cup 🇨🇦"
+      coffee_chain == "starbucks_deviation" ~ "Starbucks 🇺🇸"
     )
   )
 
@@ -525,47 +521,42 @@ coffee_by_party_long$party_name <- factor(coffee_by_party_long$party_name, level
 coffee_colors <- c(
   "Tim Hortons 🇨🇦" = "#C8102E",   # Rouge Tim Hortons
   "McDonald's 🇺🇸" = "#FFC72C",    # Jaune McDonald's
-  "Starbucks 🇺🇸" = "#00704A",     # Vert Starbucks
-  "Second Cup 🇨🇦" = "#4f4f4f"     # Bleu Second Cup
+  "Starbucks 🇺🇸" = "#00704A"      # Vert Starbucks
 )
 
 # Sous-titre avec les moyennes nationales
 ref_subtitle <- paste0("Moyennes nationales: Tim Hortons = ", tim_national, 
                        "%, McDonald's = ", mcdo_national, 
-                       "%, Starbucks = ", starbucks_national, 
-                       "%, Second Cup = ", secondcup_national, "%")
-
+                       "%, Starbucks = ", starbucks_national, "%")
 # 47. Créer un graphique simplifié avec un seul titre et des annotations claires
 # Conserver le code du graphique principal tel quel
 # Modification des paramètres de façon exagérée pour garantir que rien ne soit coupé
 # Modification des paramètres de façon exagérée pour garantir que rien ne soit coupé
 
-# Conserver le code du graphique principal tel quel
+# Conserver le code du graphique principal mais avec les modifications souhaitées
 simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviation, fill = coffee_chain)) +
+  # Ligne médiane plus épaisse
+  geom_hline(yintercept = 0, color = "#999999", linetype = "solid", size = 2) +
+  
+  # Barres du graphique
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_hline(yintercept = 0, color = "#555555", linetype = "dashed", size = 0.8) +
+  
+  # Symboles + et - bien visibles et en gras, exactement le même format
+  annotate("text", x = 0.5, y = 5, label = "+", color = "white", size = 12, fontface = "bold") +
+  annotate("text", x = 0.5, y = -10, label = "-", color = "white", size = 12, fontface = "bold") +
+  
   scale_fill_manual(
     name = "Chaîne de café",
     values = coffee_colors
   ) +
+  
   labs(
     title = "L'INDICE CAFÉ-POLITIQUE",
     subtitle = "Écart de consommation par rapport à la moyenne nationale (points de %)",
-    caption = paste0("Moyennes nationales: Tim Hortons = ", tim_national, 
-                   "%, McDonald's = ", mcdo_national, 
-                   "%, Starbucks = ", starbucks_national, 
-                   "%, Second Cup = ", secondcup_national, "%"),
+    caption = paste0("Moyennes nationales: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
     x = "",
-    y = "",
-    size = 12
+    y = ""
   ) +
-  # Annotations explicatives
-  annotate("text", x = 2.1, y = 5, 
-           label = "Valeurs positives = consommation\nsupérieure à la moyenne nationale", 
-           color = "white", size = 5, hjust = 0.5, vjust = -0.5) +
-  annotate("text", x = 4.4, y = -6, 
-           label = "Valeurs négatives = consommation\ninférieure à la moyenne nationale", 
-           color = "white", size = 5, hjust = 0.5, vjust = 1.5) +
   theme_map_dark() +
   theme(
     plot.title = element_text(face = "bold", size = 24, color = "white", hjust = 0.5, margin = margin(b = 10)),
@@ -573,136 +564,96 @@ simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviatio
     # Suppression de la légende standard
     legend.position = "none",
     axis.text.x = element_text(color = "white", size = 14, angle = 0, hjust = 0.5),
-    axis.text.y = element_text(color = "white", size = 16),
+    # Suppression des étiquettes sur l'axe Y 
+    axis.text.y = element_blank(),
     panel.grid.major.y = element_line(color = "#333333", size = 0.2),
+    plot.margin = margin(t = 20, r = 20, b = 30, l = 30),
     plot.caption = element_text(color = "#BBBBBB", size = 17, hjust = 0.5, margin = margin(t = 20, b = 10)),
-    # Augmenter DRASTIQUEMENT la marge en bas pour donner énormément d'espace
-    plot.margin = margin(t = 20, r = 20, b = 60, l = 20),  # EXAGÉRÉ: marge bas à 60 (était 10)
     plot.background = element_rect(fill = "#121212", color = NA),
     panel.background = element_rect(fill = "#121212", color = NA)
   )
 
-# 2. Sauvegarder le graphique sans légende avec une hauteur SIGNIFICATIVEMENT augmentée
-ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende.png", 
+# Sauvegarder le graphique sans légende
+ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende_modifie.png", 
        simplified_plot, 
        width = 14, 
-       height = 12,  # HAUTEUR EXAGÉRÉMENT AUGMENTÉE (était 9)
+       height = 10,
        dpi = 200,
        bg = "#121212")
 
-# 3. Lire le graphique avec magick
-graph_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende.png")
 
-# 4. Chemins des images de café (inchangés)
-starbucks_icon_path <- "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0001_cafe-2-starbuck.png"
-mcdo_icon_path <- "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0002_cafe-3-mcdo.png"
-tim_icon_path <- "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0007_tim.png"
-secondcup_icon_path <- "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0003_cafe-4-secondCut.png"
 
-# 5. Charger les images des cafés (inchangé)
-starbucks_icon <- image_read(starbucks_icon_path)
-mcdo_icon <- image_read(mcdo_icon_path)
-tim_icon <- image_read(tim_icon_path)
-secondcup_icon <- image_read(secondcup_icon_path)
+# 48. Ajout des éléments graphiques avec magick
+library(magick)
 
-# 6. TRÈS GRANDE hauteur de la légende
-legend_height <- 200  # EXAGÉRÉ: hauteur énormément augmentée (était 80)
-legend_bg <- image_blank(width = image_info(graph_img)$width,
-                        height = legend_height,
-                        color = "#121212")
+# Lire le graphique généré
+plot_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende_modifie.png")
 
-# 7. Redimensionner les icônes à une taille plus grande
-icon_size <- 90  # EXAGÉRÉ: taille augmentée (était 45)
-tim_icon_resized <- image_scale(tim_icon, paste0(icon_size, "x", icon_size))
-mcdo_icon_resized <- image_scale(mcdo_icon, paste0(icon_size, "x", icon_size))
-starbucks_icon_resized <- image_scale(starbucks_icon, paste0(icon_size, "x", icon_size))
-secondcup_icon_resized <- image_scale(secondcup_icon, paste0(icon_size, "x", icon_size))
+# Dimensions
+img_info <- image_info(plot_img)
+width <- img_info$width
+height <- img_info$height
 
-# 8. Calculer les positions (inchangé)
-legend_width <- image_info(legend_bg)$width
-icon_spacing <- legend_width / 5
+# Créer une légende centrée
+legend_height <- 100
+legend_bg <- image_blank(width, legend_height, color = "#121212")
 
-# 9. Placer les icônes et les textes dans la légende avec BEAUCOUP plus d'espace vertical
-# Tim Hortons - Position TRÈS ajustée
-legend_bg <- image_composite(legend_bg, tim_icon_resized, 
-                           offset = paste0("+", icon_spacing - (icon_size/2), "+50"))  # EXAGÉRÉ: Y à 50 (était 5)
-legend_bg <- image_annotate(legend_bg, 
-                          "Tim Hortons 🇨🇦",
-                          color = "white",
-                          size = 30,  # EXAGÉRÉ: taille de police augmentée (était 16)
-                          location = paste0("+", icon_spacing - 40, "+130"),  # EXAGÉRÉ: Y à 130 (était 55)
-                          font = "Arial")
+# Charger les icônes
+tim_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0007_tim.png") %>% 
+  image_scale("80x80")
+mcdo_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0002_cafe-3-mcdo.png") %>% 
+  image_scale("80x80")
+starbucks_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0001_cafe-2-starbuck.png") %>% 
+  image_scale("80x80")
 
-# McDonald's - Position TRÈS ajustée
-legend_bg <- image_composite(legend_bg, mcdo_icon_resized, 
-                           offset = paste0("+", 2*icon_spacing - (icon_size/2), "+50"))  # EXAGÉRÉ: Y à 50
-legend_bg <- image_annotate(legend_bg, 
-                          "McDonald's 🇺🇸",
-                          color = "white",
-                          size = 30,  # EXAGÉRÉ: taille de police augmentée
-                          location = paste0("+", 2*icon_spacing - 40, "+130"),  # EXAGÉRÉ: Y à 130
-                          font = "Arial")
+# Positionnement des icônes
+icon_spacing <- 400
+start_x <- (width - (3 * 50 + 2 * icon_spacing)) / 2
 
-# Starbucks - Position TRÈS ajustée
-legend_bg <- image_composite(legend_bg, starbucks_icon_resized, 
-                           offset = paste0("+", 3*icon_spacing - (icon_size/2), "+50"))  # EXAGÉRÉ: Y à 50
-legend_bg <- image_annotate(legend_bg, 
-                          "Starbucks 🇺🇸",
-                          color = "white",
-                          size = 30,  # EXAGÉRÉ: taille de police augmentée
-                          location = paste0("+", 3*icon_spacing - 35, "+130"),  # EXAGÉRÉ: Y à 130
-                          font = "Arial")
+# Composite la légende
+legend_bg <- legend_bg %>%
+  image_composite(tim_icon, offset = paste0("+", start_x, "+25")) %>%
+  image_annotate("Tim Hortons 🇨🇦", color = "white", size = 40, 
+                 location = paste0("+", start_x + 100, "+35"),  # +40px de décalage
+                 font = "Arial-Bold") %>%
+  image_composite(mcdo_icon, offset = paste0("+", start_x + icon_spacing + 50, "+30")) %>%
+  image_annotate("McDonald's 🇺🇸", color = "white", size = 40,
+                 location = paste0("+", start_x + icon_spacing + 150, "+35"),  # +40px
+                 font = "Arial-Bold") %>%
+  image_composite(starbucks_icon, offset = paste0("+", start_x + 2*icon_spacing + 100, "+30")) %>%
+  image_annotate("Starbucks 🇺🇸", color = "white", size = 40,
+                 location = paste0("+", start_x + 2*icon_spacing + 200, "+35"),  # +40px
+                 font = "Arial-Bold")
 
-# Second Cup - Position TRÈS ajustée
-legend_bg <- image_composite(legend_bg, secondcup_icon_resized, 
-                           offset = paste0("+", 4*icon_spacing - (icon_size/2), "+50"))  # EXAGÉRÉ: Y à 50
-legend_bg <- image_annotate(legend_bg, 
-                          "Second Cup 🇨🇦",
-                          color = "white",
-                          size = 30,  # EXAGÉRÉ: taille de police augmentée
-                          location = paste0("+", 4*icon_spacing - 35, "+130"),  # EXAGÉRÉ: Y à 130
-                          font = "Arial")
+# Créer le pied de page
+footer_height <- 200
+footer <- image_blank(width, footer_height, color = "#121212") %>%
+  image_annotate(paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")), 
+                 color = "#BBBBBB", 
+                 size = 28,
+                 location = "+40+30", 
+                 font = "Arial", 
+                 gravity = "west") %>%
+  image_annotate("Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
+                 color = "#BBBBBB",
+                 size = 26,
+                 location = "+40+55",
+                 font = "Arial",
+                 gravity = "west")
 
-# 10. ÉNORME hauteur pour la section de caption avec deux lignes de texte
-caption_height <- 180  # EXAGÉRÉ: hauteur très augmentée pour accommoder deux lignes
-caption_bg <- image_blank(width = image_info(graph_img)$width,
-                        height = caption_height,
-                        color = "#121212")
+# Ajouter le logo Datagotchi
+logo <- image_read("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png") %>% 
+  image_scale("300x") %>%
+  image_background("#121212")
 
-# 11. Utilise le nombre réel d'observations avec deux lignes de texte
-caption <- image_annotate(caption_bg,
-                        paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
-                        color = "#BBBBBB",
-                        size = 35,  # Taille augmentée
-                        location = "+40+25",  # Position ajustée
-                        font = "Arial")
-caption <- image_annotate(caption,
-                        "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
-                        color = "#BBBBBB",
-                        size = 35,  # Taille augmentée
-                        location = "+40+75",  # Position ajustée pour assurer un bon espacement avec la ligne précédente
-                        font = "Arial")
+footer <- footer %>%
+  image_composite(logo, gravity = "east", offset = "+40+0")
 
-# 12. Ajouter le logo avec position TRÈS ajustée
-logo_width <- round(image_info(graph_img)$width * 0.15)  # EXAGÉRÉ: largeur augmentée (était 0.12)
-logo_resized <- image_scale(logo, paste0(logo_width, "x"))
+# Assemblage final
+final_img <- image_blank(width, height + legend_height + footer_height, color = "#121212") %>%
+  image_composite(plot_img, offset = "+0+0") %>%
+  image_composite(legend_bg, offset = paste0("+0+", height)) %>%
+  image_composite(footer, offset = paste0("+0+", height + legend_height))
 
-# Position du logo TRÈS ajustée
-logo_x_pos <- image_info(caption)$width - image_info(logo_resized)$width - 40  # EXAGÉRÉ: distance du bord à 40 (était 20)
-logo_y_pos <- 30  # EXAGÉRÉ: Y à 30 (était -5)
-caption_with_logo <- image_composite(
-  caption, 
-  logo_resized, 
-  offset = paste0("+", logo_x_pos, "+", logo_y_pos)
-)
-
-# 13. Assembler l'image finale
-final_image <- image_append(c(graph_img, legend_bg, caption_with_logo), stack = TRUE)
-
-# 14. Ajouter une bordure TRÈS large
-final_with_border <- image_border(final_image, "#121212", "40x40")  # EXAGÉRÉ: bordure très élargie (était 15x15)
-
-# 15. Sauvegarder l'image finale
-image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_final_exagere.png")
-
-cat("Version finale EXAGÉRÉMENT spacieuse avec texte de source modifié créée avec succès!\n")
+# Sauvegarder
+image_write(final_img, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_politique_final.png")
