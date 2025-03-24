@@ -637,3 +637,5 @@ print("Résumé de la variable date nettoyée:")
 print(class(DataClean$date))
 print(summary(DataClean$date))
 print(table(DataClean$date, useNA = "always"))
+
+
