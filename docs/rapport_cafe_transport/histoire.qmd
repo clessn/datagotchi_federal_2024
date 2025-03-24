@@ -1,6 +1,8 @@
 ---
 mainfont: Roboto-Regular.ttf
-format: pdf 
+format: 
+  pdf:
+    fig-align: center 
 include-in-header:
   text: |
     \newfontfamily\sectionfont{PixelOperatorSC.ttf}
@@ -69,6 +71,7 @@ Tim Hortons domine majoritairement dans les régions rurales et dans l'Est du pa
 Le McDonald's, quant à lui, trouve ses bastions dans des zones intermédiaires et certaines banlieues, reflétant une stratégie de positionnement entre les deux autres géants.
 
 ![La Bataille du Café au Canada](img/cafe_map.png){width=90%}
+\newpage
 
 # L'Indice Café-Politique
 
@@ -78,6 +81,24 @@ En contraste, les sympathisants des partis progressistes comme le NPD et le Part
 Le Bloc Québécois présente un profil distinct avec une consommation de McDonald's supérieure à la moyenne, ce qui pourrait refléter des particularités culturelles québécoises. 
 Cette distribution révèle comment les choix de consommation quotidiens s'alignent de façon surprenante avec les valeurs politiques, transformant le café en un marqueur d'identité sociale au Canada.
 
+![Indice café-politique](img/cafe_graph.png){width=90%}
+\newpage
 
-![Indice café-politique](img/cafe_graph.png)
+# La Bataille des Transports au Canada
 
+Cette carte illustre la prédominance régionale des modes de transport à travers le Canada, révélant un clivage géographique important.
+La voiture domine majoritairement dans les régions rurales et dans l'Est du pays, affirmant son statut de moyen de transport principal avec la majorité des circonscriptions électorales sous son influence, représentées en bleu sur la carte.
+À l'inverse, le transport en commun s'impose principalement dans les grands centres urbains comme Toronto et certaines parties de Montréal et Vancouver, témoignant d'un clivage urbain-rural dans les préférences de déplacement.
+La moto, quant à elle, trouve ses bastions dans le Nord du pays, notamment dans les territoires comme le Nunavut et les Territoires du Nord-Ouest, reflétant peut-être des préférences régionales spécifiques ou des contraintes géographiques. On observe également quelques zones où la marche (en jaune) est le mode dominant, particulièrement visible dans certaines parties de Vancouver et au Manitoba, tandis que les VUS (en rouge) sont préférés dans certaines régions du Québec, notamment dans l'ouest de Montréal.
+
+![La Bataille des Transports au Canada](img/transport_map.png){width=80%}
+\newpage
+
+# L'Indice Transport-Politique
+
+Ce graphique, quant à lui, illustre la relation entre les préférences de transport et les affiliations politiques au Canada, révélant des clivages idéologiques significatifs.
+Le Parti conservateur semble montrer une surreprésentation des conducteurs de voitures par rapport à la moyenne nationale, tout en sous-représentant les utilisateurs de transport en commun et les marcheurs.
+À l'opposé, le Bloc Québécois semble présenter un déficit d'utilisateurs de transport en commun, contrebalancé par une légère surreprésentation des conducteurs de voitures et de VUS, témoignant peut-être des réalités géographiques spécifiques du Québec.
+Le NPD et le Parti vert, quant à eux, semble attirer davantage les marcheurs et les cyclistes, avec une sous-représentation des conducteurs automobiles chez le NPD. La moyenne nationale indique que la voiture reste dominante (47%), suivie du transport en commun (24.8%) et de la marche (13.8%).
+
+![Indice Transport-Politique](img/transport_graph.png){width=90%}
