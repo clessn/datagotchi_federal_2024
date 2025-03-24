@@ -293,7 +293,7 @@ subtitle <- image_annotate(subtitle_bg,
                          color = "#CCCCCC",
                          size = 32,  # Taille augmentée
                          gravity = "center",
-                         font = "Arial")
+                         font = "Arial-Bold")
 
 # 33. Légende améliorée avec plus d'espace
 legend_height <- 100  # Hauteur augmentée
@@ -307,7 +307,7 @@ legend_text <- image_annotate(legend_bg,
   color = "white",
   size = 32,
   location = "+40+30",
-  font = "Arial")
+  font = "Arial-Bold")
 
 # Remplacer les carrés colorés par des icônes de café
 # Chemins des images
@@ -342,7 +342,7 @@ legend_text <- image_annotate(legend_text,
   color = "white",
   size = 28,
   location = paste0("+", x_start + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial")
+  font = "Arial-Bold")
 
 # McDonald's
 legend_text <- image_composite(legend_text, mcdo_icon_resized, 
@@ -352,7 +352,7 @@ legend_text <- image_annotate(legend_text,
   color = "white",
   size = 28,
   location = paste0("+", x_start + x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial")
+  font = "Arial-Bold")
 
 # Starbucks
 legend_text <- image_composite(legend_text, starbucks_icon_resized, 
@@ -362,7 +362,7 @@ legend_text <- image_annotate(legend_text,
   color = "white",
   size = 28,
   location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial")
+  font = "Arial-Bold")
 
 
 # 36. Note méthodologique avec dimensions augmentées
@@ -377,14 +377,14 @@ caption <- image_annotate(caption_bg,
                         color = "#BBBBBB",
                         size = 24,  # Taille augmentée
                         location = "+40+25",  # Position ajustée
-                        font = "Arial")
+                        font = "Arial-Bold")
 
 caption <- image_annotate(caption,
                         "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
                         color = "#BBBBBB",
                         size = 22,  # Taille augmentée
                         location = "+40+55",  # Position ajustée
-                        font = "Arial")
+                        font = "Arial-Bold")
 
 # 37. Ligne séparatrice plus visible
 separator_height <- 3  # Épaisseur augmentée
@@ -632,13 +632,13 @@ footer <- image_blank(width, footer_height, color = "#121212") %>%
                  color = "#BBBBBB", 
                  size = 28,
                  location = "+40+30", 
-                 font = "Arial", 
+                 font = "Arial-Bold", 
                  gravity = "west") %>%
   image_annotate("Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
                  color = "#BBBBBB",
                  size = 26,
                  location = "+40+55",
-                 font = "Arial",
+                 font = "Arial-Bold",
                  gravity = "west")
 
 # Ajouter le logo Datagotchi
