@@ -8,6 +8,27 @@ library(cowplot)
 library(showtext)
 library(magick)
 
+transport_icons <- list(
+  car = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/car.png",
+  suv = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/suv.png",
+  transit = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/bus.png",
+  walk = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/walk.png",
+  bicycle = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/bike.png",
+  moto = "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/icons/moto.png"
+)
+
+# Load and resize icons
+icon_size <- 80
+transport_imgs <- list(
+  car_icon = image_read(transport_icons$car) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  suv_icon = image_read(transport_icons$suv) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  transit_icon = image_read(transport_icons$transit) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  walk_icon = image_read(transport_icons$walk) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  bicycle_icon = image_read(transport_icons$bicycle) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  moto_icon = image_read(transport_icons$moto) %>% image_scale(paste0(icon_size, "x", icon_size))
+)
+
+
 # 1. Chargement des données
 data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250323.rds")
 
@@ -326,91 +347,47 @@ subtitle <- image_annotate(subtitle_bg,
 
 # 33. Légende améliorée avec une hauteur augmentée pour éviter les superpositions
 # Create a taller legend background to accommodate all transport modes
-legend_height <- 200  # Increase height significantly
-legend_bg <- image_blank(width = canvas_width,
+# Modified legend creation with transport icons
+legend_height <- 300
+legend_bg <- image_blank(width = image_info(graph_img)$width,
                          height = legend_height,
                          color = "#121212")
 
-# Add legend title
-legend_text <- image_annotate(legend_bg,
-                              "Mode de transport dominant",
-                              color = "white",
-                              size = 32,
-                              location = "+10+10",
-                              font = "Arial-Bold")
+# Parameters for icon positioning
+x_start <- 150
+x_spacing <- 350
+y_row1 <- 50
+y_row2 <- 180
 
-# Create transport icons (using the same function you already have)
-# Function for creating transport icons remains the same
+# First Row
+legend_bg <- legend_bg %>%
+  image_composite(transport_imgs$car_icon, offset = paste0("+", x_start, "+", y_row1)) %>%
+  image_annotate("Voiture 🚗", color = "white", size = 32,
+                 location = paste0("+", x_start + icon_size + 30, "+", y_row1 + 10),
+                 font = "Arial-Bold") %>%
+  image_composite(transport_imgs$suv_icon, offset = paste0("+", x_start + x_spacing, "+", y_row1)) %>%
+  image_annotate("VUS 🚙", color = "white", size = 32,
+                 location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row1 + 10),
+                 font = "Arial-Bold") %>%
+  image_composite(transport_imgs$transit_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row1)) %>%
+  image_annotate("Transport en commun 🚇", color = "white", size = 32,
+                 location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row1 + 10),
+                 font = "Arial-Bold")
 
-# Reorganize layout into two rows of three items each
-# Parameters for positioning
-x_first_icon <- 150   # Position x of the first icon
-x_spacing <- 500      # More horizontal space between icons
-y_first_row <- 60     # Y position of first row
-y_second_row <- 130   # Y position of second row
-
-# FIRST ROW: Voiture, VUS, Transport en commun
-# Voiture
-legend_text <- image_composite(legend_text, car_icon, 
-                               offset = paste0("+", x_first_icon, "+", y_first_row))
-legend_text <- image_annotate(legend_text, 
-                              "Voiture 🚗",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + 70, "+", y_first_row + 8),
-                              font = "Arial-Bold")
-
-# VUS
-legend_text <- image_composite(legend_text, suv_icon, 
-                               offset = paste0("+", x_first_icon + x_spacing, "+", y_first_row))
-legend_text <- image_annotate(legend_text, 
-                              "VUS 🚙",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + x_spacing + 70, "+", y_first_row + 8),
-                              font = "Arial-Bold")
-
-# Transport en commun
-legend_text <- image_composite(legend_text, transit_icon, 
-                               offset = paste0("+", x_first_icon + 2*x_spacing, "+", y_first_row))
-legend_text <- image_annotate(legend_text, 
-                              "Transport en commun 🚇",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + 2*x_spacing + 70, "+", y_first_row + 8),
-                              font = "Arial-Bold")
-
-# SECOND ROW: Marche, Vélo, Moto
-# Marche
-legend_text <- image_composite(legend_text, walk_icon, 
-                               offset = paste0("+", x_first_icon, "+", y_second_row))
-legend_text <- image_annotate(legend_text, 
-                              "Marche 🚶",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + 70, "+", y_second_row + 8),
-                              font = "Arial-Bold")
-
-# Vélo
-legend_text <- image_composite(legend_text, bicycle_icon, 
-                               offset = paste0("+", x_first_icon + x_spacing, "+", y_second_row))
-legend_text <- image_annotate(legend_text, 
-                              "Vélo 🚲",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + x_spacing + 70, "+", y_second_row + 8),
-                              font = "Arial-Bold")
-
-# Moto
-legend_text <- image_composite(legend_text, moto_icon, 
-                               offset = paste0("+", x_first_icon + 2*x_spacing, "+", y_second_row))
-legend_text <- image_annotate(legend_text, 
-                              "Moto 🏍️",
-                              color = "white",
-                              size = 28,
-                              location = paste0("+", x_first_icon + 2*x_spacing + 70, "+", y_second_row + 8),
-                              font = "Arial-Bold")
-
+# Second Row
+legend_bg <- legend_bg %>%
+  image_composite(transport_imgs$walk_icon, offset = paste0("+", x_start, "+", y_row2)) %>%
+  image_annotate("Marche 🚶", color = "white", size = 32,
+                 location = paste0("+", x_start + icon_size + 30, "+", y_row2 + 10),
+                 font = "Arial-Bold") %>%
+  image_composite(transport_imgs$bicycle_icon, offset = paste0("+", x_start + x_spacing, "+", y_row2)) %>%
+  image_annotate("Vélo 🚲", color = "white", size = 32,
+                 location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row2 + 10),
+                 font = "Arial-Bold") %>%
+  image_composite(transport_imgs$moto_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row2)) %>%
+  image_annotate("Moto 🏍️", color = "white", size = 32,
+                 location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row2 + 10),
+                 font = "Arial-Bold")
 
 
 
@@ -594,9 +571,26 @@ party_order <- c("Parti conservateur", "Parti libéral", "Bloc Québécois", "NP
 transport_by_party_long$party_name <- factor(transport_by_party_long$party_name, levels = party_order)
 
 # First, for the ggplot annotations, move them even further from the chart content
+# Modify the transport_plot ggplot code
 transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviation, fill = transport_mode)) +
+  # Thicker baseline with proper positioning
+  geom_hline(yintercept = 0, color = "#999999", linetype = "solid", size = 2) +
+  
+  # Add +/- symbols aligned with discrete axis
+  annotate("text", x = -Inf, y = 5, 
+           label = "+", color = "white", size = 12, fontface = "bold",
+           hjust = -0.3, vjust = 1) +
+  annotate("text", x = -Inf, y = -10, 
+           label = "-", color = "white", size = 12, fontface = "bold",
+           hjust = -0.3, vjust = -0.5) +
+  
+  # Keep the bar plot
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_hline(yintercept = 0, color = "#555555", linetype = "dashed", size = 0.8) +
+  
+  # Add coord_cartesian to prevent clipping
+  coord_cartesian(clip = "off") +
+  
+  # Keep existing scale and labels
   scale_fill_manual(
     name = "Mode de transport",
     values = transport_colors
@@ -613,24 +607,17 @@ transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviat
     x = "",
     y = ""
   ) +
-  # Move the annotations further away from the chart area
-  annotate("text", x = 2.1, y = 5, 
-           label = "Valeurs positives = utilisation\nsupérieure à la moyenne nationale", 
-           color = "white", size = 9, hjust = 0.5, vjust = -0.5, family = "Arial-Bold") +
-  annotate("text", x = 4.4, y = -9, 
-           label = "Valeurs négatives = utilisation\ninférieure à la moyenne nationale", 
-           color = "white", size = 9, hjust = 0.5, vjust = 1.7, family = "Arial-Bold") +
+  # Modified theme settings
   theme_map_dark() +
   theme(
     text = element_text(family = "Arial-Bold"),
-    plot.title = element_text(face = "bold", size = 34, color = "white", hjust = 0.5, margin = margin(b = 15), family = "Arial-Bold"),
-    plot.subtitle = element_text(size = 24, color = "#CCCCCC", hjust = 0.5, margin = margin(b = 25), family = "Arial-Bold"),
+    plot.title = element_text(face = "bold", size = 34, color = "white", hjust = 0.5, margin = margin(b = 15)),
+    plot.subtitle = element_text(size = 24, color = "#CCCCCC", hjust = 0.5, margin = margin(b = 25)),
     legend.position = "none",
-    axis.text.x = element_text(color = "white", size = 24, angle = 0, hjust = 0.5, family = "Arial-Bold"),
-    axis.text.y = element_text(color = "white", size = 24, family = "Arial-Bold"),
+    axis.text.x = element_text(color = "white", size = 24, angle = 0, hjust = 0.5),
+    axis.text.y = element_blank(),  # Remove y-axis labels
     panel.grid.major.y = element_line(color = "#333333", size = 0.2),
-    plot.caption = element_text(color = "#BBBBBB", size = 24, hjust = 0.5, margin = margin(t = 25, b = 15), family = "Arial-Bold"),
-    # Increase bottom margin even more to make space for the legend
+    plot.caption = element_text(color = "#BBBBBB", size = 24, hjust = 0.5, margin = margin(t = 25, b = 15)),
     plot.margin = margin(t = 30, r = 30, b = 120, l = 30),
     plot.background = element_rect(fill = "#121212", color = NA),
     panel.background = element_rect(fill = "#121212", color = NA)
@@ -647,81 +634,67 @@ ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_tr
 # Read the graph with magick
 graph_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_transport_sans_legende.png")
 
-# Create a totally new legend layout with much more horizontal space
-legend_height <- 300  # Taller legend area
+# Modified legend creation with proper labels and spacing
+legend_height <- 300  # Increased height for better spacing
 legend_bg <- image_blank(width = image_info(graph_img)$width,
                          height = legend_height,
                          color = "#121212")
 
-# Use a two-row layout with 3 items per row and much more space
-# Calculate positions with better spread
-legend_width <- image_info(legend_bg)$width
-item_width <- legend_width / 3.5  # Only 3 items per row with more spacing
+# Parameters for icon and text positioning
+icon_size <- 80  # Size of transport icons
+x_start <- 150   # Starting X position
+x_spacing <- 350 # Horizontal space between items
+y_row1 <- 50     # First row Y position
+y_row2 <- 180    # Second row Y position
 
-# Row positions
-y_row1 <- 50
-y_row2 <- 180  # Much more vertical space
-
-# First row - just 3 items
-# Voiture (1st row, 1st position)
+# First Row: Voiture, VUS, Transport en commun
+# Voiture 🚗
 legend_bg <- image_composite(legend_bg, car_icon, 
-                             offset = paste0("+", item_width * 0.5 - (icon_size/2), "+", y_row1))
-legend_bg <- image_annotate(legend_bg, 
-                            "Voiture 🚗",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 0.5 - 40, "+", y_row1 + 110),
+                             offset = paste0("+", x_start, "+", y_row1))
+legend_bg <- image_annotate(legend_bg, "Voiture 🚗",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + 100, "+", y_row1 + 10),
                             font = "Arial-Bold")
 
-# VUS (1st row, 2nd position)
+# VUS 🚙
 legend_bg <- image_composite(legend_bg, suv_icon, 
-                             offset = paste0("+", item_width * 1.5 - (icon_size/2), "+", y_row1))
-legend_bg <- image_annotate(legend_bg, 
-                            "VUS 🚙",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 1.5 - 30, "+", y_row1 + 110),
+                             offset = paste0("+", x_start + x_spacing, "+", y_row1))
+legend_bg <- image_annotate(legend_bg, "VUS 🚙",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + x_spacing + 100, "+", y_row1 + 10),
                             font = "Arial-Bold")
 
-# Transport en commun (1st row, 3rd position)
+# Transport en commun 🚇
 legend_bg <- image_composite(legend_bg, transit_icon, 
-                             offset = paste0("+", item_width * 2.5 - (icon_size/2), "+", y_row1))
-legend_bg <- image_annotate(legend_bg, 
-                            "Transport en commun 🚇",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 2.5 - 140, "+", y_row1 + 110),
+                             offset = paste0("+", x_start + 2*x_spacing, "+", y_row1))
+legend_bg <- image_annotate(legend_bg, "Transport en commun 🚇",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + 2*x_spacing + 100, "+", y_row1 + 10),
                             font = "Arial-Bold")
 
-# Second row - remaining 3 items
-# Marche (2nd row, 1st position)
+# Second Row: Marche, Vélo, Moto
+# Marche 🚶
 legend_bg <- image_composite(legend_bg, walk_icon, 
-                             offset = paste0("+", item_width * 0.5 - (icon_size/2), "+", y_row2))
-legend_bg <- image_annotate(legend_bg, 
-                            "Marche 🚶",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 0.5 - 40, "+", y_row2 + 110),
+                             offset = paste0("+", x_start, "+", y_row2))
+legend_bg <- image_annotate(legend_bg, "Marche 🚶",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + 100, "+", y_row2 + 10),
                             font = "Arial-Bold")
 
-# Vélo (2nd row, 2nd position)
+# Vélo 🚲
 legend_bg <- image_composite(legend_bg, bicycle_icon, 
-                             offset = paste0("+", item_width * 1.5 - (icon_size/2), "+", y_row2))
-legend_bg <- image_annotate(legend_bg, 
-                            "Vélo 🚲",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 1.5 - 30, "+", y_row2 + 110),
+                             offset = paste0("+", x_start + x_spacing, "+", y_row2))
+legend_bg <- image_annotate(legend_bg, "Vélo 🚲",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + x_spacing + 100, "+", y_row2 + 10),
                             font = "Arial-Bold")
 
-# Moto (2nd row, 3rd position)
+# Moto 🏍️
 legend_bg <- image_composite(legend_bg, moto_icon, 
-                             offset = paste0("+", item_width * 2.5 - (icon_size/2), "+", y_row2))
-legend_bg <- image_annotate(legend_bg, 
-                            "Moto 🏍️",
-                            color = "white",
-                            size = 40,
-                            location = paste0("+", item_width * 2.5 - 30, "+", y_row2 + 110),
+                             offset = paste0("+", x_start + 2*x_spacing, "+", y_row2))
+legend_bg <- image_annotate(legend_bg, "Moto 🏍️",
+                            color = "white", size = 32,
+                            location = paste0("+", x_start + 2*x_spacing + 100, "+", y_row2 + 10),
                             font = "Arial-Bold")
 
 # Create caption with source info
