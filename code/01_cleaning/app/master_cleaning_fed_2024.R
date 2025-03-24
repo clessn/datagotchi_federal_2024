@@ -1,5 +1,9 @@
 # Packages ---------------------------------------------------------------------
 library(tidyverse)
+library(cartessn)
+
+# Assurez-vous que le package cartessn est inclus dans les dépendances
+# Si ce n'est pas déjà fait, installez cartessn avec devtools::install_github("clessnverse/cartessn")
 
 # Data -------------------------------------------------------------------------
 

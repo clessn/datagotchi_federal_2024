@@ -18,6 +18,8 @@ sf_rta <- cartessn::spatial_canada_2021_rta
 # 3. Extraction des 3 premiers caractères du code postal (RTA)
 data$rta <- substr(data$ses_postalCode, 1, 3)
 
+
+cartessn::
 # 4. Utilisation de la fonction map_fsa_to_ridings de cartessn pour associer RTA à circonscriptions
 # Cette fonction combine toutes les étapes intermédiaires de l'ancien script
 mapping_results <- cartessn::map_fsa_to_ridings(
