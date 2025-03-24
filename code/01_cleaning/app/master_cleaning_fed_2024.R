@@ -9,7 +9,7 @@ library(cartessn)
 
 ## load raw data here
 
-DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250321.csv")
+DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250323.csv")
 
 # Clean variables ---------------------------------------------------------
 
@@ -31,6 +31,10 @@ source("code/01_cleaning/app/dv.R")
 ## tactical ----------------------------------------------------------------
 
 source("code/01_cleaning/app/tactical.R")
+
+
+## Riding attribution (optional, can be commented out if not needed) -------------
+source("code/01_cleaning/app/transform_rta_to_ridings.R")
 
 ## Remove NA from quotas
 # DataClean <- DataClean |> drop_na(starts_with("ses"))
