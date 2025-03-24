@@ -170,14 +170,7 @@ canada_transport_map <- ggplot(sf_transport_map_clean) +
     breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
   ) +
   theme_map_dark() +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(color = "white", size = 14),
-    legend.text = element_text(color = "#FFFFFF", size = 12),
-    legend.background = element_rect(fill = "#121212"),
-    legend.key.size = unit(0.8, "cm"),
-    legend.margin = margin(t = 10, r = 10, b = 10, l = 10)
-  )
+  theme(legend.position = "none")  # Change this to "none" instead of "bottom"
 
 ggsave("canada_transport_map.png", 
        canada_transport_map, 
