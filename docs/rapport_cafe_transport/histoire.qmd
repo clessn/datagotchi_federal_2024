@@ -49,10 +49,10 @@ include-in-header:
     {\titlepagefont\fontsize{48pt}{18pt}\selectfont \textbf{Léger-Datagotchi}}\\[1cm]
     {\titlepagefont\fontsize{32pt}{18pt}\selectfont \textbf{Rapport Canada 2025}}\\[1cm]
     \includegraphics[width=0.2\textwidth]{img/leger_small.png}\\[1cm]
-    {\titlepagefont\fontsize{32pt}{16pt}\selectfont \textbf{CLESSN}}\\[1cm]
-    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Rapport présenté à:}\\ % Smaller normal text size
-    {\titlepagefont\fontsize{24pt}{16pt}\selectfont \textbf{Léger Marketing}}\\[1.5cm]
-    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Département de Science Politique\\Faculté des Sciences Sociales\\Université Laval}\\[2.5cm]
+    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\[1cm]
+    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{CLESSN}}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université de Montréal}}\\[1cm]
     {\titlepagefont\fontsize{16pt}{14pt}\selectfont Québec, Canada}\\[2cm]
     {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, \today}\\
     \null\vspace{\stretch{2}} % Ensures vertical centering
