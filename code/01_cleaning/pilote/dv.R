@@ -9,6 +9,7 @@ table(DataClean$dv_turnout)
 
 ## vote_choice -----------------------------------------------------------
 
+attributes(DataRaw$vote_choice)
 table(DataRaw$vote_choice)
 DataClean$dv_voteChoice <- NA
 DataClean$dv_voteChoice[DataRaw$vote_choice == 1] <- "lpc"
@@ -37,6 +38,39 @@ DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 8] <- "would_not_vote"
 DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 9] <- "would_spoil_ballot"
 DataClean$dv_voteChoiceAllOptions[DataRaw$vote_choice == 10] <- "dk"
 table(DataClean$dv_voteChoiceAllOptions)
+
+## bin
+
+DataClean$dv_voteChoiceLPC <- NA
+DataClean$dv_voteChoiceLPC[DataRaw$vote_choice == 1] <- 1
+DataClean$dv_voteChoiceLPC[DataRaw$vote_choice != 1] <- 0
+table(DataClean$dv_voteChoiceLPC)
+
+DataClean$dv_voteChoiceCPC <- NA
+DataClean$dv_voteChoiceCPC[DataRaw$vote_choice == 2] <- 1
+DataClean$dv_voteChoiceCPC[DataRaw$vote_choice != 2] <- 0
+table(DataClean$dv_voteChoiceCPC)
+
+DataClean$dv_voteChoiceNDP <- NA
+DataClean$dv_voteChoiceNDP[DataRaw$vote_choice == 3] <- 1
+DataClean$dv_voteChoiceNDP[DataRaw$vote_choice != 3] <- 0
+table(DataClean$dv_voteChoiceNDP)
+
+DataClean$dv_voteChoiceBQ <- NA
+DataClean$dv_voteChoiceBQ[DataRaw$vote_choice == 4] <- 1
+DataClean$dv_voteChoiceBQ[DataRaw$vote_choice != 4] <- 0
+table(DataClean$dv_voteChoiceBQ)
+
+DataClean$dv_voteChoiceGPC <- NA
+DataClean$dv_voteChoiceGPC[DataRaw$vote_choice == 5] <- 1
+DataClean$dv_voteChoiceGPC[DataRaw$vote_choice != 5] <- 0
+table(DataClean$dv_voteChoiceGPC)
+
+DataClean$dv_voteChoiceOther <- NA
+DataClean$dv_voteChoiceOther[DataRaw$vote_choice %in% c(6,7,8,9,10)] <- 1
+DataClean$dv_voteChoiceOther[DataRaw$vote_choice %in% c(1,2,3,4,5)] <- 0
+table(DataClean$dv_voteChoiceOther)
+
 
 ## vote_certainty --------------------------------------------------------
 

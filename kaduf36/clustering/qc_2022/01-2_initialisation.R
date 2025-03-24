@@ -59,3 +59,4 @@ df_app_2022 <- df_app_2022 %>%
 # Sauvegarder les données
 write_rds(df_pilot1_2022, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/01_pilot1_2022.rds")
 write_rds(df_app_2022, file = "_PrivateFolder_datagotchi_federal_2025/data/clustering/qc2022/01_app_2022.rds")
+

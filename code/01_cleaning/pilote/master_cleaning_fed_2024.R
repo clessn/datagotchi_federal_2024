@@ -5,7 +5,7 @@ library(tidyverse)
 
 ## load raw data here
 
-DataRaw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/data_raw/datagotchiCanadaPilote_30janvier2025.sav")
+DataRaw <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/pilote/dataRaw/datagotchiCanadaPilote_30janvier2025.sav")
 
 # Clean variables ---------------------------------------------------------
 
@@ -14,6 +14,10 @@ DataClean <- data.frame(id = 1:nrow(DataRaw))
 ## ses -------------------------------------------------------------------------
 
 source("code/01_cleaning/pilote/ses.R")
+
+## riding -------------------------------------------------------------------------
+
+source("code/01_cleaning/pilote/transform_rta_into_riding.R")
 
 ## lifestyle -------------------------------------------------------------------
 
@@ -31,6 +35,14 @@ source("code/01_cleaning/pilote/dv.R")
 
 source("code/01_cleaning/pilote/attitudes.R")
 
+## Remove NA from quotas
+#DataClean <- DataClean |> drop_na(starts_with("ses"))
+
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/DataCleanPilot_2025Janv30.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds")
+
+
+# Save for clustering usage ----------------------------------------------
+
+#saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilotClustering_20250319.rds")

@@ -17,6 +17,13 @@ table(DataClean$ses_gender)
 
 # gender_female ----------------------------------------------------------------
 
+DataClean$ses_genderMale <- NA
+DataClean$ses_genderMale[DataRaw$ses_gender == 1] <- 1
+DataClean$ses_genderMale[DataRaw$ses_gender != 1] <- 0
+table(DataClean$ses_genderMale)
+
+# gender_female ----------------------------------------------------------------
+
 DataClean$ses_genderFemale <- NA
 DataClean$ses_genderFemale[DataRaw$ses_gender == 2] <- 1
 DataClean$ses_genderFemale[DataRaw$ses_gender != 2] <- 0
@@ -36,7 +43,7 @@ DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 20 & DataRaw$ses_age < 25] <- "2
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 25 & DataRaw$ses_age < 30] <- "25_29"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 30 & DataRaw$ses_age < 35] <- "30_34"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 35 & DataRaw$ses_age < 40] <- "35_39"
-DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 40 & DataRaw$ses_age < 45] <- "40-44"
+DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 40 & DataRaw$ses_age < 45] <- "40_44"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 45 & DataRaw$ses_age < 50] <- "45_49"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 50 & DataRaw$ses_age < 55] <- "50_54"
 DataClean$ses_ageGroup5Years[DataRaw$ses_age >= 55 & DataRaw$ses_age < 60] <- "55_59"
@@ -264,10 +271,10 @@ DataClean$ses_educ_5Cat <- factor(DataClean$ses_educ_5Cat, levels = c("educBHS",
 table(DataClean$ses_educ_5Cat)
 
 DataClean$ses_educ_3Cat <- NA
-DataClean$ses_educ_3Cat[DataRaw$ses_education == 1 | DataRaw$ses_education == 2 | DataRaw$ses_education == 3] <- "educBUniv"
+DataClean$ses_educ_3Cat[DataRaw$ses_education == 1 | DataRaw$ses_education == 2 | DataRaw$ses_education == 3] <- "educBHS"
 DataClean$ses_educ_3Cat[DataRaw$ses_education == 4] <- "educPostHS"
 DataClean$ses_educ_3Cat[DataRaw$ses_education == 5 | DataRaw$ses_education == 6 | DataRaw$ses_education == 7]<- "educUniv"
-DataClean$ses_educ_3Cat <- factor(DataClean$ses_educ_3Cat, levels = c("educBUniv",
+DataClean$ses_educ_3Cat <- factor(DataClean$ses_educ_3Cat, levels = c("educBHS",
                                                                         "educPostHS",
                                                                         "educUniv"))
 
@@ -301,7 +308,9 @@ DataClean$ses_income3Cat <- NA
 DataClean$ses_income3Cat[DataRaw$ses_income == 1 | DataRaw$ses_income == 2] <- "Low"
 DataClean$ses_income3Cat[DataRaw$ses_income == 3 | DataRaw$ses_income == 4 | DataRaw$ses_income == 5 | DataRaw$ses_income == 6] <- "Mid"
 DataClean$ses_income3Cat[DataRaw$ses_income == 7 | DataRaw$ses_income == 8] <- "High"
-DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat)
+DataClean$ses_income3Cat <- factor(DataClean$ses_income3Cat, levels = c("Low",
+                                                                        "Mid",
+                                                                        "High"))
 table(DataClean$ses_income3Cat)
 
 attributes(DataRaw$ses_income)
@@ -567,7 +576,7 @@ attributes(DataRaw$ses_parent)
 table(DataRaw$ses_parent)
 DataClean$ses_parentImmigrant <- NA
 DataClean$ses_parentImmigrant[DataRaw$ses_parent == 1] <- 1
-DataClean$ses_parentImmigrant[DataRaw$ses_parent != 1] <- 0
+DataClean$ses_parentImmigrant[DataRaw$ses_parent == 2] <- 0
 table(DataClean$ses_parentImmigrant)
 
 
@@ -576,8 +585,8 @@ table(DataClean$ses_parentImmigrant)
 attributes(DataRaw$ses_immigrant)
 table(DataRaw$ses_immigrant)
 DataClean$ses_immigrant <- NA
-DataClean$ses_immigrant[DataRaw$ses_immigrant == 1] <- 1
-DataClean$ses_immigrant[DataRaw$ses_immigrant != 1] <- 0
+DataClean$ses_immigrant[DataRaw$ses_immigrant == 1] <- 0
+DataClean$ses_immigrant[DataRaw$ses_immigrant != 1] <- 1
 table(DataClean$ses_immigrant)
 
 ## dwelling --------------------------------------------------------------
@@ -651,4 +660,62 @@ DataClean$ses_dwelling_cat <- factor(
             "other")
 )
 table(DataClean$ses_dwelling_cat, useNA = "ifany")
+
+## bin
+
+DataClean$ses_dwellingApp <- NA
+DataClean$ses_dwellingApp[DataRaw$ses_dwelling == 1] <- 1
+DataClean$ses_dwellingApp[DataRaw$ses_dwelling != 1] <- 0
+table(DataClean$ses_dwellingApp)
+
+DataClean$ses_dwellingLoft <- NA
+DataClean$ses_dwellingLoft[DataRaw$ses_dwelling == 2] <- 1
+DataClean$ses_dwellingLoft[DataRaw$ses_dwelling != 2] <- 0
+table(DataClean$ses_dwellingLoft)
+
+DataClean$ses_dwellingCondo <- NA
+DataClean$ses_dwellingCondo[DataRaw$ses_dwelling == 3] <- 1
+DataClean$ses_dwellingCondo[DataRaw$ses_dwelling != 3] <- 0
+table(DataClean$ses_dwellingCondo)
+
+DataClean$ses_dwellingTour <- NA
+DataClean$ses_dwellingTour[DataRaw$ses_dwelling == 4] <- 1
+DataClean$ses_dwellingTour[DataRaw$ses_dwelling != 4] <- 0
+table(DataClean$ses_dwellingTour)
+
+DataClean$ses_dwellingDetachedHouse <- NA
+DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling == 5] <- 1
+DataClean$ses_dwellingDetachedHouse[DataRaw$ses_dwelling != 5] <- 0
+table(DataClean$ses_dwellingDetachedHouse)
+
+DataClean$ses_dwellingTownhouse <- NA
+DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling == 6] <- 1
+DataClean$ses_dwellingTownhouse[DataRaw$ses_dwelling != 6] <- 0
+table(DataClean$ses_dwellingTownhouse)
+
+DataClean$ses_dwellingDuplex <- NA
+DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling == 7] <- 1
+DataClean$ses_dwellingDuplex[DataRaw$ses_dwelling != 7] <- 0
+table(DataClean$ses_dwellingDuplex)
+
+DataClean$ses_dwellingCoop <- NA
+DataClean$ses_dwellingCoop[DataRaw$ses_dwelling == 8] <- 1
+DataClean$ses_dwellingCoop[DataRaw$ses_dwelling != 8] <- 0
+table(DataClean$ses_dwellingCoop)
+
+DataClean$ses_dwellingHLM <- NA
+DataClean$ses_dwellingHLM[DataRaw$ses_dwelling == 9] <- 1
+DataClean$ses_dwellingHLM[DataRaw$ses_dwelling != 9] <- 0
+table(DataClean$ses_dwellingHLM)
+
+DataClean$ses_dwellingMobile <- NA
+DataClean$ses_dwellingMobile[DataRaw$ses_dwelling == 10] <- 1
+DataClean$ses_dwellingMobile[DataRaw$ses_dwelling != 10] <- 0
+table(DataClean$ses_dwellingMobile)
+
+DataClean$ses_dwellingOther <- NA
+DataClean$ses_dwellingOther[DataRaw$ses_dwelling == 11] <- 1
+DataClean$ses_dwellingOther[DataRaw$ses_dwelling != 11] <- 0
+table(DataClean$ses_dwellingOther)
+
 
