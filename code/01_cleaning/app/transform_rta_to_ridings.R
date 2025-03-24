@@ -32,14 +32,14 @@ respondents_with_data <- DataClean$id %in% row.names(df_survey_for_riding)
 if(sum(respondents_with_data) > 0) {
   riding_predictions <- cartessn::predict_spatial_target(
     survey_data = df_survey_for_riding,
-    ses = c("ses_gender", "ses_age", "ses_income"),
-    origin = "rta",
-    target = "id_riding",
-    spatial_origin = cartessn::spatial_canada_2021_rta,
-    spatial_target = cartessn::spatial_canada_2022_electoral_ridings,
+    origin_col = "rta",
+    target_col = "id_riding",
+    ses_vars = c("ses_gender", "ses_age", "ses_income"),
     census_origin = cartessn::census_canada_2022_rta,
     census_target = cartessn::census_canada_2022_electoral_ridings,
-    return = "class",
+    spatial_origin = cartessn::spatial_canada_2021_rta,
+    spatial_target = cartessn::spatial_canada_2022_electoral_ridings,
+    return_type = "class",
     n_sim = 400
   )
   # Assigner les prédictions aux lignes correspondantes
