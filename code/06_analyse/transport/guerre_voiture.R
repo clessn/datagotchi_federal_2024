@@ -170,14 +170,7 @@ canada_transport_map <- ggplot(sf_transport_map_clean) +
     breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
   ) +
   theme_map_dark() +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(color = "white", size = 14),
-    legend.text = element_text(color = "#FFFFFF", size = 12),
-    legend.background = element_rect(fill = "#121212"),
-    legend.key.size = unit(0.8, "cm"),
-    legend.margin = margin(t = 10, r = 10, b = 10, l = 10)
-  )
+  theme(legend.position = "none")  # Change this to "none" instead of "bottom"
 
 ggsave("canada_transport_map.png", 
        canada_transport_map, 
@@ -332,119 +325,91 @@ subtitle <- image_annotate(subtitle_bg,
 # Remplacer les lignes concernant la légende (lignes 33-109 dans la partie assemblage)
 
 # 33. Légende améliorée avec une hauteur augmentée pour éviter les superpositions
-legend_height <- 140  # Hauteur augmentée pour deux lignes de légende
+# Create a taller legend background to accommodate all transport modes
+legend_height <- 200  # Increase height significantly
 legend_bg <- image_blank(width = canvas_width,
                          height = legend_height,
                          color = "#121212")
 
-# 34-35. Ajouter les étiquettes de la légende avec un titre correctement positionné
+# Add legend title
 legend_text <- image_annotate(legend_bg,
                               "Mode de transport dominant",
                               color = "white",
                               size = 32,
-                              location = "+40+30",
+                              location = "+10+10",
                               font = "Arial")
 
-# Créer des cercles colorés avec emojis pour les modes de transport
-circle_size <- 60  # Légèrement réduit
-circle_margin <- 20
+# Create transport icons (using the same function you already have)
+# Function for creating transport icons remains the same
 
-# Répartir les icônes sur deux lignes pour éviter les superpositions
-# Ligne 1: Voiture, VUS, Transport en commun
-# Ligne 2: Marche, Vélo, Moto
+# Reorganize layout into two rows of three items each
+# Parameters for positioning
+x_first_icon <- 150   # Position x of the first icon
+x_spacing <- 500      # More horizontal space between icons
+y_first_row <- 60     # Y position of first row
+y_second_row <- 130   # Y position of second row
 
-# Fonction simplifiée pour créer un cercle coloré avec emoji
-create_transport_icon <- function(color, emoji, size) {
-  # Créer un canvas de base
-  circle <- image_blank(width = size, height = size, color = color)
-  
-  # Ajouter l'emoji
-  circle_with_emoji <- image_annotate(circle, 
-                                      emoji,
-                                      color = "white",
-                                      size = size/2,
-                                      gravity = "center",
-                                      font = "Arial")
-  
-  return(circle_with_emoji)
-}
-
-# Créer les icônes pour chaque mode de transport
-car_icon <- create_transport_icon("#3498DB", "🚗", circle_size)
-suv_icon <- create_transport_icon("#E74C3C", "🚙", circle_size)
-transit_icon <- create_transport_icon("#2ECC71", "🚇", circle_size)
-walk_icon <- create_transport_icon("#F1C40F", "🚶", circle_size)
-bicycle_icon <- create_transport_icon("#9B59B6", "🚲", circle_size)
-moto_icon <- create_transport_icon("#E67E22", "🏍️", circle_size)
-
-# Positionnement des icônes et du texte sur deux lignes
-# Paramètres pour la distribution des icônes
-x_first_icon <- 120   # Position x de la première icône
-icon_spacing <- 450   # Espacement horizontal entre les icônes sur la même ligne
-row_spacing <- 70     # Espacement vertical entre les lignes
-
-# ===== PREMIÈRE LIGNE: Voiture, VUS, Transport en commun =====
-# Voiture - Première ligne, première position
+# FIRST ROW: Voiture, VUS, Transport en commun
+# Voiture
 legend_text <- image_composite(legend_text, car_icon, 
-                               offset = paste0("+", x_first_icon, "+", 40))
+                               offset = paste0("+", x_first_icon, "+", y_first_row))
 legend_text <- image_annotate(legend_text, 
                               "Voiture 🚗",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + 70, "+", 48),
+                              location = paste0("+", x_first_icon + 70, "+", y_first_row + 8),
                               font = "Arial")
 
-# VUS - Première ligne, deuxième position
+# VUS
 legend_text <- image_composite(legend_text, suv_icon, 
-                               offset = paste0("+", x_first_icon + icon_spacing, "+", 40))
+                               offset = paste0("+", x_first_icon + x_spacing, "+", y_first_row))
 legend_text <- image_annotate(legend_text, 
                               "VUS 🚙",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + icon_spacing + 70, "+", 48),
+                              location = paste0("+", x_first_icon + x_spacing + 70, "+", y_first_row + 8),
                               font = "Arial")
 
-# Transport en commun - Première ligne, troisième position
+# Transport en commun
 legend_text <- image_composite(legend_text, transit_icon, 
-                               offset = paste0("+", x_first_icon + 2*icon_spacing, "+", 40))
+                               offset = paste0("+", x_first_icon + 2*x_spacing, "+", y_first_row))
 legend_text <- image_annotate(legend_text, 
                               "Transport en commun 🚇",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + 2*icon_spacing + 70, "+", 48),
+                              location = paste0("+", x_first_icon + 2*x_spacing + 70, "+", y_first_row + 8),
                               font = "Arial")
 
-# ===== DEUXIÈME LIGNE: Marche, Vélo, Moto =====
-# Marche - Deuxième ligne, première position
+# SECOND ROW: Marche, Vélo, Moto
+# Marche
 legend_text <- image_composite(legend_text, walk_icon, 
-                               offset = paste0("+", x_first_icon, "+", 40 + row_spacing))
+                               offset = paste0("+", x_first_icon, "+", y_second_row))
 legend_text <- image_annotate(legend_text, 
                               "Marche 🚶",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + 70, "+", 48 + row_spacing),
+                              location = paste0("+", x_first_icon + 70, "+", y_second_row + 8),
                               font = "Arial")
 
-# Vélo - Deuxième ligne, deuxième position
+# Vélo
 legend_text <- image_composite(legend_text, bicycle_icon, 
-                               offset = paste0("+", x_first_icon + icon_spacing, "+", 40 + row_spacing))
+                               offset = paste0("+", x_first_icon + x_spacing, "+", y_second_row))
 legend_text <- image_annotate(legend_text, 
                               "Vélo 🚲",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + icon_spacing + 70, "+", 48 + row_spacing),
+                              location = paste0("+", x_first_icon + x_spacing + 70, "+", y_second_row + 8),
                               font = "Arial")
 
-# Moto - Deuxième ligne, troisième position
+# Moto
 legend_text <- image_composite(legend_text, moto_icon, 
-                               offset = paste0("+", x_first_icon + 2*icon_spacing, "+", 40 + row_spacing))
+                               offset = paste0("+", x_first_icon + 2*x_spacing, "+", y_second_row))
 legend_text <- image_annotate(legend_text, 
                               "Moto 🏍️",
                               color = "white",
                               size = 28,
-                              location = paste0("+", x_first_icon + 2*icon_spacing + 70, "+", 48 + row_spacing),
+                              location = paste0("+", x_first_icon + 2*x_spacing + 70, "+", y_second_row + 8),
                               font = "Arial")
-
 
 
 
