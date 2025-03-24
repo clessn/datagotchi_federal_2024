@@ -129,20 +129,7 @@ variables_ses <- c(
 
 variables_vote <- c(
   "id",
-  "dv_voteChoice",
-  "dv_voteChoiceLPC",
-  "dv_voteChoiceCPC",
-  "dv_voteChoiceNDP",
-  "dv_voteChoiceBQ",
-  "dv_voteChoiceGPC",
-  "dv_voteChoiceOther",
-  "dv_potgrowthLPC",
-  "dv_potgrowthCPC",
-  "dv_potgrowthNDP",
-  "dv_potgrowthBQ",
-  "dv_potgrowthGPC",
-  "dv_potgrowthPPC",
-  "dv_turnout"
+  "dv_voteChoice"
 )
 
 variables_communes <- Reduce(union, list(

@@ -15,7 +15,7 @@ for (i in 1:nrow(DataRaw)) {
         temp_vote[i] <- DataRaw$result[i]
       }
       # Cas 2: result ≠ correction et correction est entre 1-5
-      else if (DataRaw$correction[i] %in% 1:5) {
+      else if (DataRaw$correction[i] %in% 1:666) {
         temp_vote[i] <- DataRaw$correction[i]
       }
       # Autre cas: laisse NA
@@ -23,10 +23,12 @@ for (i in 1:nrow(DataRaw)) {
   }
 }
 
+temp_vote[temp_vote == 665 | temp_vote == 666] <- 6
+
 # Transfert des résultats vers DataClean
 DataClean$dv_voteChoice <- factor(temp_vote,
-                               levels = 1:5,
-                               labels = c("lpc", "cpc", "ndp", "bq", "gpc"))
+                               levels = c(1, 2, 3, 4, 5, 6),
+                               labels = c("lpc", "cpc", "ndp", "bq", "gpc", "other"))
 
 # Vérification
 print(table(DataClean$dv_voteChoice, useNA = "always"))
