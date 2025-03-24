@@ -528,8 +528,10 @@ simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviatio
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   
   # Symboles + et - bien visibles et en gras
-  annotate("text", x = 0.5, y = 5, label = "+", color = "black", size = 12, fontface = "bold") +
-  annotate("text", x = 0.5, y = -10, label = "-", color = "black", size = 12, fontface = "bold") +
+  annotate("text", x = 0.8, y = 7, label = "+ que la moyenne\ncanadienne", color = "black", size = 5, fontface = "bold") +
+  annotate("text", x = 0.8, y = -7, label = "- que la moyenne\ncanadienne", color = "black", size = 5, fontface = "bold") +
+
+  
   
   scale_fill_manual(
     name = "Chaîne de café",
@@ -539,7 +541,7 @@ simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviatio
   labs(
     title = "L'INDICE CAFÉ-POLITIQUE",
     subtitle = "Écart de consommation par rapport à la moyenne nationale (points de %)",
-    caption = paste0("Moyennes nationales: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
+    caption = paste0("Moyennes canadiennes: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
     x = "",
     y = ""
   ) +
