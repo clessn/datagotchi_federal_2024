@@ -50,7 +50,7 @@ create_coffee_plot <- function(data, var, title, y_limits) {
     labs(
       title = toupper(title),
       x = "",
-      y = ifelse(var == "tim_pct", "Percentage of consumers", "")  # Label seulement à gauche
+      y = ifelse(var == "tim_pct", "Pourcentage de consommateurs", "")  # Label seulement à gauche
     ) +
     theme_minimal() +
     theme(
@@ -80,14 +80,13 @@ combined_plot <- plot_tim + plot_mcdo + plot_starbucks +
   plot_layout(nrow = 1, widths = c(1, 1, 1)) 
 
 # 7. Ajouter titre global et annotations
-# Dans la section 7 (annotations du graphique combiné), modifier :
 final_plot <- combined_plot +
   plot_annotation(
-    title = "COFFEE CONSUMPTION BY POLITICAL AFFILIATION",
-    subtitle = "Percentage of supporters who regularly consume from each chain\nNote: Y-axis scales differ between charts for better readability",
+    title = "CONSOMMATION DE CAFÉ PAR AFFILIATION POLITIQUE",
+    subtitle = "Pourcentage de partisans qui consomment régulièrement de chaque chaîne\nRemarque: Les échelles de l'axe Y diffèrent entre les graphiques pour une meilleure lisibilité",
     caption = paste0(
       "Source: Léger-Datagotchi 2025 | n = ", format(nrow(data), big.mark = " "), 
-      "\nWeighted data based on: gender, age, province, language, education level, income, immigration, housing type"
+      "\nDonnées pondérées selon: sexe, âge, province, langue, niveau d'éducation, revenu, immigration, type de logement"
     ),
     theme = theme(
       plot.title = element_text(hjust = 0.5, size = 14, face = "bold"), # Ajouté pour centrer
@@ -97,7 +96,7 @@ final_plot <- combined_plot +
     )
   )
 final_plot
-  ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-EN.png", 
+  ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-FR.png", 
   final_plot, 
   width = 16, 
   height = 8,
@@ -108,7 +107,7 @@ final_plot
 library(magick)
 
 # Lire l'image sauvegardée
-plot_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-EN.png")
+plot_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-FR.png")
 
 # Charger le logo
 logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
@@ -126,6 +125,6 @@ y_position <- image_info(plot_img)$height - image_info(logo_resized)$height - 30
 final_with_logo <- image_composite(plot_img, logo_resized, offset = paste0("+", x_position, "+", y_position))
 
 # Sauvegarder l'image finale
-image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-EN.png")
+image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-FR.png")
 final_plot
 # 8. Sauvegarder
