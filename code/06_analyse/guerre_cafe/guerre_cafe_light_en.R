@@ -6,7 +6,7 @@ library(cartessn)
 library(patchwork)
 library(cowplot)
 library(showtext)
-library(magick) # Ajout de la librairie manquante
+library(magick)
 
 # 1. Chargement des données
 data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250323.rds")
@@ -14,9 +14,6 @@ data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datago
 # 2. Chargement des données spatiales depuis cartessn
 sf_ridings <- cartessn::spatial_canada_2022_electoral_ridings_aligned
 sf_rta <- cartessn::spatial_canada_2021_rta
-
-# Nous n'avons plus besoin de créer la variable rta puisqu'elle est déjà dans le df
-# Nous n'avons plus besoin de faire le mapping puisque l'ID de circonscription est déjà dans le df (ses_riding_id)
 
 # 3. Renommage pour la cohérence avec le script original
 data <- data %>%
@@ -57,10 +54,10 @@ coffee_battle_by_riding <- data %>%
   ) %>%
   ungroup()
 
-# 10. Déterminer la chaîne dominante dans chaque circonscription
+# 10. Déterminer la Dominant chain dans chaque circonscription
 coffee_battle_by_riding <- coffee_battle_by_riding %>%
   mutate(
-    # Créer une variable pour la chaîne dominante (celle avec le plus de fans)
+    # Créer une variable pour la Dominant chain (celle avec le plus de fans)
     dominant_chain = case_when(
       tim_fans_pct >= mcdo_fans_pct & tim_fans_pct >= starbucks_fans_pct & tim_fans_pct >= secondcup_fans_pct ~ "Tim Hortons 🇨🇦",
       mcdo_fans_pct >= tim_fans_pct & mcdo_fans_pct >= starbucks_fans_pct & mcdo_fans_pct >= secondcup_fans_pct ~ "McDonald's 🇺🇸",
@@ -69,7 +66,7 @@ coffee_battle_by_riding <- coffee_battle_by_riding %>%
       TRUE ~ "Égalité"
     ),
     
-    # Pourcentage pour la chaîne dominante
+    # Pourcentage pour la Dominant chain
     dominant_pct = case_when(
       dominant_chain == "Tim Hortons 🇨🇦" ~ tim_fans_pct,
       dominant_chain == "McDonald's 🇺🇸" ~ mcdo_fans_pct,
@@ -84,19 +81,19 @@ sf_coffee_map <- sf_ridings %>%
   left_join(coffee_battle_by_riding, by = "id_riding")
 
 # 12. Sauvegarder les résultats intermédiaires
-saveRDS(coffee_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/coffee_battle_pondere.rds")
+saveRDS(coffee_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/coffee_battle_pondere_light.rds")
 
 # 13. Paramètres pour éviter les problèmes de mémoire
 options(future.globals.maxSize = 1000 * 1024^2)  # Augmenter la limite à 1 Go
 sf_use_s2(FALSE)  # Désactiver les fonctionnalités S2 de sf pour réduire l'utilisation de la mémoire
 
-# 14. Thème simplifié pour les cartes
-theme_map_dark <- function() {
+# 14. Thème simplifié pour les cartes en mode light
+theme_map_light <- function() {
   theme_minimal() +
   theme(
-    # Fond noir
-    plot.background = element_rect(fill = "#121212", color = NA),
-    panel.background = element_rect(fill = "#121212", color = NA),
+    # Fond blanc
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
     
     # Suppression des axes et grilles
     axis.title = element_blank(),
@@ -104,52 +101,52 @@ theme_map_dark <- function() {
     axis.ticks = element_blank(),
     panel.grid = element_blank(),
     
-    # Textes en blanc
-    plot.title = element_text(face = "bold", size = 14, color = "white", hjust = 0.5),
-    plot.subtitle = element_text(size = 11, color = "#CCCCCC", hjust = 0.5),
-    plot.caption = element_text(size = 12, color = "#BBBBBB", hjust = 1),
+    # Textes en noir
+    plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, color = "#555555", hjust = 0.5),
+    plot.caption = element_text(size = 12, color = "#666666", hjust = 1),
     
     # Légende
     legend.position = "bottom",
-    legend.background = element_rect(fill = "#121212", color = NA),
-    legend.title = element_text(size = 10, color = "white"),
-    legend.text = element_text(size = 9, color = "#CCCCCC")
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.title = element_text(size = 10, color = "black"),
+    legend.text = element_text(size = 9, color = "#555555")
   )
 }
 
-# 15. Définition des couleurs pour les chaînes de café
+# 15. Définition des couleurs pour les chaînes de café (couleurs plus vives pour mode light)
 coffee_colors <- c(
   "Tim Hortons 🇨🇦" = "#C8102E",   # Rouge Tim Hortons
   "McDonald's 🇺🇸" = "#FFC72C",    # Jaune McDonald's
   "Starbucks 🇺🇸" = "#00704A",     # Vert Starbucks
-  "Second Cup 🇨🇦" = "#4f4f4f",    # Bleu Second Cup (ajouté)
-  "Non disponible" = "#33333300"    # Gris foncé transparent
+  "Second Cup 🇨🇦" = "#4f4f4f",    # Gris Second Cup
+  "Not available" = "#EEEEEE"      # Gris clair
 )
 
 # 16. Prétraitement des données
 sf_coffee_map_clean <- sf_coffee_map %>%
-  mutate(dominant_chain = ifelse(is.na(dominant_chain), "Non disponible", dominant_chain))
+  mutate(dominant_chain = ifelse(is.na(dominant_chain), "Not available", dominant_chain))
 
 # 17. Information sur le nombre d'observations
 n_observations <- nrow(data)  # Utilisez le nombre réel de répondants
 
 # 18. ===== CARTE DU CANADA =====
 canada_coffee_map <- ggplot(sf_coffee_map_clean) +
-  geom_sf(aes(fill = dominant_chain), color = "#121212", size = 0.2) +
+  geom_sf(aes(fill = dominant_chain), color = "#DDDDDD", size = 0.2) +
   scale_fill_manual(
-    name = "Chaîne dominante",
+    name = "Dominant chain",
     values = coffee_colors,
     breaks = c("Tim Hortons 🇨🇦", "McDonald's 🇺🇸", "Starbucks 🇺🇸", "Second Cup 🇨🇦")
   ) +
-  theme_map_dark() +
+  theme_map_light() +
   theme(legend.position = "none")
 
-ggsave("canada_coffee_map.png", 
+ggsave("canada_coffee_map_light.png", 
        canada_coffee_map, 
        width = 16, 
        height = 12, 
        dpi = 200,
-       bg = "#121212")
+       bg = "white")
 
 # 19. ===== CARTES URBAINES =====
 main_regions <- c("montreal", "toronto", "vancouver", "quebec_city")
@@ -161,83 +158,82 @@ for (region in main_regions) {
   
   # Créer la carte manuellement
   city_map <- ggplot(region_map) +
-    geom_sf(aes(fill = dominant_chain), color = "#121212", size = 0.15) +
+    geom_sf(aes(fill = dominant_chain), color = "#DDDDDD", size = 0.15) +
     scale_fill_manual(
       values = coffee_colors,
       breaks = c("Tim Hortons 🇨🇦", "McDonald's 🇺🇸", "Starbucks 🇺🇸", "Second Cup 🇨🇦")
     ) +
-    theme_map_dark() +
+    theme_map_light() +
     theme(legend.position = "none")
   
   # Sauvegarder chaque carte urbaine séparément avec aspect ratio carré
-  ggsave(paste0(tolower(gsub("-", "_", region)), "_coffee_map.png"), 
+  ggsave(paste0(tolower(gsub("-", "_", region)), "_coffee_map_light.png"), 
          city_map, 
          width = 6, 
          height = 6, 
          dpi = 150,
-         bg = "#121212")
+         bg = "white")
 }
 
 # 21. Paramètres dimensionnels pour l'image finale
 canvas_width <- 1800      # Largeur totale du canvas
-canada_height <- 1000       # Hauteur pour la carte du Canada
+canada_height <- 1000     # Hauteur pour la carte du Canada
 city_height <- 400        # Hauteur pour les cartes de villes
 city_spacing <- 20        # Espacement entre les cartes de villes
 section_spacing <- 40     # Espacement entre les sections
 
 # 22. Fonction pour créer une carte de ville avec de meilleures proportions
-# 22. Modifiez la fonction pour accepter un titre personnalisé
 create_city_map <- function(region_name, display_title = NULL) {
   # Utiliser le titre personnalisé si fourni, sinon utiliser region_name
   display_name <- ifelse(is.null(display_title), toupper(region_name), toupper(display_title))
   
   # Lire l'image existante
-  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_coffee_map.png")
+  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_coffee_map_light.png")
   img <- image_read(img_path)
   
   # Redimensionner l'image en préservant le ratio carré
   img_resized <- image_scale(img, paste0(toString(city_height), "x", toString(city_height)))
   
-  # Créer un canvas noir avec une largeur fixe pour toutes les villes
+  # Créer un canvas blanc avec une largeur fixe pour toutes les villes
   city_width <- city_height  # Maintenir un aspect carré
   canvas <- image_blank(width = city_width, 
-                       height = city_height + 60,  # Plus d'espace pour le titre
-                       color = "#121212")
+                      height = city_height + 60,  # Plus d'espace pour le titre
+                      color = "white")
   
   # Placer l'image sur le canvas (centrée)
   canvas_with_map <- image_composite(canvas, img_resized, 
-                                   gravity = "center")
+                                  gravity = "center")
   
   # Ajouter le titre en bas
   canvas_with_title <- image_annotate(canvas_with_map, 
     display_name,
-    color = "white", 
+    color = "black", 
     size = 28,
     font = "Arial-Bold",
     gravity = "south",
     location = "+0+20")
 
-return(canvas_with_title)
+  return(canvas_with_title)
 }
 
 # 23. Lire et redimensionner la carte du Canada
-canada_img <- image_read("canada_coffee_map.png")
+canada_img <- image_read("canada_coffee_map_light.png")
 canada_resized <- image_scale(canada_img, paste0(toString(canvas_width - 40), "x", toString(canada_height)))
 
 # 24. Créer un canvas pour la carte du Canada
 canada_canvas <- image_blank(width = canvas_width, 
   height = canada_height + 60,  # Plus d'espace pour éviter le rognage
-  color = "#121212")
+  color = "white")
 
 # 25. Centrer la carte du Canada
 canada_centered <- image_composite(canada_canvas, canada_resized, 
-                                 gravity = "center")
+                                gravity = "center")
 
 # 26. Créer les cartes de villes avec de meilleures proportions
 montreal_map <- create_city_map("montreal")
 toronto_map <- create_city_map("toronto")
 vancouver_map <- create_city_map("vancouver")
-quebec_map <- create_city_map("quebec_city", "Québec")
+quebec_map <- create_city_map("quebec_city", "QUEBEC CITY")
 
 # 27. Calculer l'espacement latéral pour centrer les cartes de villes
 city_width = image_info(montreal_map)$width
@@ -246,23 +242,23 @@ city_padding <- max(0, (canvas_width - city_total_width) / 2)
 
 # 28. Créer des séparateurs plus visibles entre les villes
 city_separator <- image_blank(width = city_spacing, 
-                             height = image_info(montreal_map)$height, 
-                             color = "#121212")
+                           height = image_info(montreal_map)$height, 
+                           color = "white")
 
 # 29. Assemblage des villes avec espacement
 city_row <- image_append(c(montreal_map, 
-                         city_separator,
-                         toronto_map, 
-                         city_separator,
-                         vancouver_map,
-                         city_separator,
-                         quebec_map), 
-                       stack = FALSE)
+                       city_separator,
+                       toronto_map, 
+                       city_separator,
+                       vancouver_map,
+                       city_separator,
+                       quebec_map), 
+                     stack = FALSE)
 
 # 30. Appliquer le padding latéral
 if (city_padding > 0) {
-  left_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "#121212")
-  right_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "#121212")
+  left_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
+  right_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
   city_row_padded <- image_append(c(left_padding, city_row, right_padding), stack = FALSE)
 } else {
   city_row_padded <- city_row
@@ -270,44 +266,43 @@ if (city_padding > 0) {
 
 # 31. Titre principal avec dimensions augmentées
 title_height <- 100  # Hauteur augmentée
-
 title_bg <- image_blank(width = canvas_width,
-                       height = title_height,
-                       color = "#121212")
+                     height = title_height,
+                     color = "white")
 
 title <- image_annotate(title_bg,
-                      "LA BATAILLE DU CAFÉ AU CANADA",
-                      color = "white",
-                      size = 48,  # Taille augmentée
-                      gravity = "center",
-                      font = "Arial-Bold")
+                    "THE COFFEE BATTLE IN CANADA",
+                    color = "black",
+                    size = 48,  # Taille augmentée
+                    gravity = "center",
+                    font = "Arial-Bold")
 
 # 32. Sous-titre avec dimensions augmentées
 subtitle_height <- 60  # Hauteur augmentée
 subtitle_bg <- image_blank(width = canvas_width,
-                          height = subtitle_height,
-                          color = "#121212")
+                        height = subtitle_height,
+                        color = "white")
 
 subtitle <- image_annotate(subtitle_bg,
-                         "Chaîne de café préférée par circonscription électorale",
-                         color = "#CCCCCC",
-                         size = 32,  # Taille augmentée
-                         gravity = "center",
-                         font = "Arial-Bold")
+                       "Preferred coffee chain by electoral riding",
+                       color = "#555555",
+                       size = 32,  # Taille augmentée
+                       gravity = "center",
+                       font = "Arial")
 
 # 33. Légende améliorée avec plus d'espace
 legend_height <- 100  # Hauteur augmentée
 legend_bg <- image_blank(width = canvas_width,
-                        height = legend_height,
-                        color = "#121212")
+                      height = legend_height,
+                      color = "white")
 
 # 34-35. Ajouter les étiquettes de la légende et les images au lieu des carrés colorés
 legend_text <- image_annotate(legend_bg,
-  "Chaîne dominante",
-  color = "white",
+  "Dominant chain",
+  color = "black",
   size = 32,
   location = "+40+30",
-  font = "Arial-Bold")
+  font = "Arial")
 
 # Remplacer les carrés colorés par des icônes de café
 # Chemins des images
@@ -321,9 +316,7 @@ starbucks_icon <- image_read(starbucks_icon_path)
 mcdo_icon <- image_read(mcdo_icon_path)
 tim_icon <- image_read(tim_icon_path)
 
-
 # Modifier ces sections :
-
 # Redimensionnement des icônes (augmenter la taille)
 icon_size <- 95  # Augmenté de 65 à 130
 starbucks_icon_resized <- image_scale(starbucks_icon, paste0(icon_size, "x", icon_size))
@@ -339,65 +332,62 @@ legend_text <- image_composite(legend_text, tim_icon_resized,
    offset = paste0("+", x_start, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "Tim Hortons 🇨🇦",
-  color = "white",
+  color = "black",
   size = 28,
   location = paste0("+", x_start + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial-Bold")
+  font = "Arial")
 
 # McDonald's
 legend_text <- image_composite(legend_text, mcdo_icon_resized, 
    offset = paste0("+", x_start + x_spacing, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "McDonald's 🇺🇸",
-  color = "white",
+  color = "black",
   size = 28,
   location = paste0("+", x_start + x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial-Bold")
+  font = "Arial")
 
 # Starbucks
 legend_text <- image_composite(legend_text, starbucks_icon_resized, 
    offset = paste0("+", x_start + 2*x_spacing, "+20"))  # Ajustement vertical
 legend_text <- image_annotate(legend_text, 
   "Starbucks 🇺🇸",
-  color = "white",
+  color = "black",
   size = 28,
   location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+36"),  # Décalage augmenté
-  font = "Arial-Bold")
-
+  font = "Arial")
 
 # 36. Note méthodologique avec dimensions augmentées
 caption_height <- 80  # Hauteur augmentée
 caption_bg <- image_blank(width = canvas_width,
-                         height = caption_height,
-                         color = "#121212")
+                       height = caption_height,
+                       color = "white")
 
 # Utilise le nombre réel d'observations
 caption <- image_annotate(caption_bg,
-                        paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
-                        color = "#BBBBBB",
-                        size = 24,  # Taille augmentée
-                        location = "+40+25",  # Position ajustée
-                        font = "Arial-Bold")
+                      paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
+                      color = "#555555",
+                      size = 24,  # Taille augmentée
+                      location = "+40+25",  # Position ajustée
+                      font = "Arial")
 
 caption <- image_annotate(caption,
-                        "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
-                        color = "#BBBBBB",
-                        size = 22,  # Taille augmentée
-                        location = "+40+55",  # Position ajustée
-                        font = "Arial-Bold")
+                      "Weighted data based on: gender, age, province, language, education level, income, immigration, housing type",
+                      color = "#555555",
+                      size = 22,  # Taille augmentée
+                      location = "+40+55",  # Position ajustée
+                      font = "Arial")
 
 # 37. Ligne séparatrice plus visible
 separator_height <- 3  # Épaisseur augmentée
 separator <- image_blank(width = canvas_width,
-                       height = separator_height,
-                       color = "#555555")  # Couleur légèrement plus claire
+                     height = separator_height,
+                     color = "#AAAAAA")  # Couleur grise claire
 
 # 38. Espacement entre sections
 spacer <- image_blank(width = canvas_width,
-                    height = section_spacing,
-                    color = "#121212")
-
-
+                  height = section_spacing,
+                  color = "white")
 
 # 39. Assembler l'image finale avec le nouvel ordre et meilleurs espacements
 final_image <- c(
@@ -421,11 +411,11 @@ final_image <- c(
 
 final_combined <- image_append(final_image, stack = TRUE)
 
-# 40. Ajouter une bordure noire
-final_with_border <- image_border(final_combined, "#121212", "30x30")  # Bordure plus grande
+# 40. Ajouter une bordure blanche
+final_with_border <- image_border(final_combined, "white", "30x30")  # Bordure plus grande
 
 # 41. Charger le logo
-logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png"
+logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
 logo <- image_read(logo_path)
 
 # 42. Redimensionner le logo à une taille appropriée
@@ -447,13 +437,13 @@ final_with_logo <- image_composite(
 )
 
 # 45. Sauvegarder l'image finale avec logo
-image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/bataille_cafe_canada_final_avec_logo.png")
+image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/bataille_cafe_canada_light_avec_logo-EN.png")
 
-cat("Image finale avec logo créée avec succès : bataille_cafe_canada_final_avec_logo.png\n")
+cat("Image finale avec logo créée avec succès : bataille_cafe_canada_light_avec_logo.png\n")
 
 # Version simplifiée du graphique café-politique avec élimination des doublons
 
-# 46. Reprendre les calculs essentiels pour l'indice café-politique
+# 46. Reprendre les calculs essentiels pour THE POLITICAL-COFFEE INDEX
 national_averages <- data %>%
   summarize(
     sum_weight = sum(weight, na.rm = TRUE),
@@ -483,11 +473,11 @@ coffee_by_party <- data %>%
   ungroup() %>%
   mutate(
     party_name = case_when(
-      dv_voteChoice == "lpc" ~ "Parti libéral",
-      dv_voteChoice == "cpc" ~ "Parti conservateur",
-      dv_voteChoice == "ndp" ~ "NPD",
+      dv_voteChoice == "lpc" ~ "Liberal Party",
+      dv_voteChoice == "cpc" ~ "Conservative Party",
+      dv_voteChoice == "ndp" ~ "NDP",
       dv_voteChoice == "bq" ~ "Bloc Québécois",
-      dv_voteChoice == "gpc" ~ "Parti vert",
+      dv_voteChoice == "gpc" ~ "Green Party",
       TRUE ~ NA_character_  # Convertir tout autre parti en NA
     ),
     tim_deviation = tim_fans_pct - national_averages$tim_hortons_avg,
@@ -514,10 +504,10 @@ coffee_by_party_long <- coffee_by_party %>%
   )
 
 # Ordonner les partis politiques du plus à droite au plus à gauche
-party_order <- c("Parti conservateur", "Parti libéral", "Bloc Québécois", "NPD", "Parti vert")
+party_order <- c("Conservative Party", "Liberal Party", "Bloc Québécois", "NDP", "Green Party")
 coffee_by_party_long$party_name <- factor(coffee_by_party_long$party_name, levels = party_order)
 
-# Couleurs pour les chaînes de café
+# Couleurs pour les chaînes de café (mêmes couleurs que dans la version sombre)
 coffee_colors <- c(
   "Tim Hortons 🇨🇦" = "#C8102E",   # Rouge Tim Hortons
   "McDonald's 🇺🇸" = "#FFC72C",    # Jaune McDonald's
@@ -526,68 +516,75 @@ coffee_colors <- c(
 
 # Sous-titre avec les moyennes nationales
 ref_subtitle <- paste0("Moyennes nationales: Tim Hortons = ", tim_national, 
-                       "%, McDonald's = ", mcdo_national, 
-                       "%, Starbucks = ", starbucks_national, "%")
-# 47. Créer un graphique simplifié avec un seul titre et des annotations claires
-# Conserver le code du graphique principal tel quel
-# Modification des paramètres de façon exagérée pour garantir que rien ne soit coupé
-# Modification des paramètres de façon exagérée pour garantir que rien ne soit coupé
+                     "%, McDonald's = ", mcdo_national, 
+                     "%, Starbucks = ", starbucks_national, "%")
 
-# Conserver le code du graphique principal mais avec les modifications souhaitées
+# Créer un graphique simplifié en mode light
 simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviation, fill = coffee_chain)) +
   # Ligne médiane plus épaisse
-  geom_hline(yintercept = 0, color = "#999999", linetype = "solid", size = 2) +
+  # Replace geom_hline with geom_segment
+  geom_segment(
+    x = 0.58,                 # Starting x position (0.5 position on the x-axis)
+    xend = length(party_order) + 0.5, # End at the last party (adjustable as needed)
+    y = 0,                   # y position (zero line)
+    yend = 0,                # keep y position the same to create a horizontal line
+    color = "#999999", 
+    linetype = "solid", 
+    size = 2
+  ) +
   
   # Barres du graphique
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   
-  # Symboles + et - bien visibles et en gras, exactement le même format
-  annotate("text", x = 0.5, y = 5, label = "+", color = "white", size = 12, fontface = "bold") +
-  annotate("text", x = 0.5, y = -10, label = "-", color = "white", size = 12, fontface = "bold") +
+  # Add +/- symbols aligned with discrete axis
+  annotate("text", x = 0.5, y = 0, 
+           label = "Canadian average", color = "black", size = 7, fontface = "bold", angle = 90) +
+  annotate("text", x = 0.5, y = 10, 
+           label = "+", color = "black", size = 10, fontface = "bold") +
+  annotate("text", x = 0.5, y = -10, 
+           label = "-", color = "black", size = 10, fontface = "bold") +
   
   scale_fill_manual(
-    name = "Chaîne de café",
+    name = "Coffee chain",
     values = coffee_colors
   ) +
   
   labs(
-    title = "L'INDICE CAFÉ-POLITIQUE",
-    subtitle = "Écart de consommation par rapport à la moyenne nationale (points de %)",
-    caption = paste0("Moyennes nationales: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
+    title = "THE POLITICAL-COFFEE INDEX",
+    subtitle = "Consumption gap compared to the Canadian average (percentage points)",
+    caption = paste0("Canadian averages: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
     x = "",
     y = ""
   ) +
-  theme_map_dark() +
+  theme_minimal() +
   theme(
-    plot.title = element_text(face = "bold", size = 24, color = "white", hjust = 0.5, margin = margin(b = 10)),
-    plot.subtitle = element_text(size = 16, color = "#CCCCCC", hjust = 0.5, margin = margin(b = 20)),
+    plot.title = element_text(face = "bold", size = 24, color = "black", hjust = 0.5, margin = margin(b = 10)),
+    plot.subtitle = element_text(size = 16, color = "#555555", hjust = 0.5, margin = margin(b = 20)),
     # Suppression de la légende standard
     legend.position = "none",
-    axis.text.x = element_text(color = "white", size = 14, angle = 0, hjust = 0.5),
+    axis.text.x = element_text(color = "black", size = 14, angle = 0, hjust = 0.5),
     # Suppression des étiquettes sur l'axe Y 
     axis.text.y = element_blank(),
-    panel.grid.major.y = element_line(color = "#333333", size = 0.2),
+    panel.grid.major.y = element_line(color = "#DDDDDD", size = 0.2),
     plot.margin = margin(t = 20, r = 20, b = 30, l = 30),
-    plot.caption = element_text(color = "#BBBBBB", size = 17, hjust = 0.5, margin = margin(t = 20, b = 10)),
-    plot.background = element_rect(fill = "#121212", color = NA),
-    panel.background = element_rect(fill = "#121212", color = NA)
+    plot.caption = element_text(color = "#666666", size = 17, hjust = 0.5, margin = margin(t = 20, b = 10)),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA)
   )
 
 # Sauvegarder le graphique sans légende
-ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende_modifie.png", 
+ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_light_sans_legende-EN.png", 
        simplified_plot, 
        width = 14, 
        height = 10,
        dpi = 200,
-       bg = "#121212")
+       bg = "white")
 
-
-
-# 48. Ajout des éléments graphiques avec magick
+# Ajout des éléments graphiques avec magick
 library(magick)
 
 # Lire le graphique généré
-plot_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_sans_legende_modifie.png")
+plot_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_light_sans_legende-EN.png")
 
 # Dimensions
 img_info <- image_info(plot_img)
@@ -596,7 +593,7 @@ height <- img_info$height
 
 # Créer une légende centrée
 legend_height <- 100
-legend_bg <- image_blank(width, legend_height, color = "#121212")
+legend_bg <- image_blank(width, legend_height, color = "white")
 
 # Charger les icônes
 tim_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0007_tim.png") %>% 
@@ -613,47 +610,47 @@ start_x <- (width - (3 * 50 + 2 * icon_spacing)) / 2
 # Composite la légende
 legend_bg <- legend_bg %>%
   image_composite(tim_icon, offset = paste0("+", start_x, "+25")) %>%
-  image_annotate("Tim Hortons 🇨🇦", color = "white", size = 40, 
-                 location = paste0("+", start_x + 100, "+35"),  # +40px de décalage
-                 font = "Arial-Bold") %>%
+  image_annotate("Tim Hortons 🇨🇦", color = "black", size = 40, 
+                location = paste0("+", start_x + 100, "+35"),
+                font = "Arial-Bold") %>%
   image_composite(mcdo_icon, offset = paste0("+", start_x + icon_spacing + 50, "+30")) %>%
-  image_annotate("McDonald's 🇺🇸", color = "white", size = 40,
-                 location = paste0("+", start_x + icon_spacing + 150, "+35"),  # +40px
-                 font = "Arial-Bold") %>%
+  image_annotate("McDonald's 🇺🇸", color = "black", size = 40,
+                location = paste0("+", start_x + icon_spacing + 150, "+35"),
+                font = "Arial-Bold") %>%
   image_composite(starbucks_icon, offset = paste0("+", start_x + 2*icon_spacing + 100, "+30")) %>%
-  image_annotate("Starbucks 🇺🇸", color = "white", size = 40,
-                 location = paste0("+", start_x + 2*icon_spacing + 200, "+35"),  # +40px
-                 font = "Arial-Bold")
+  image_annotate("Starbucks 🇺🇸", color = "black", size = 40,
+                location = paste0("+", start_x + 2*icon_spacing + 200, "+35"),
+                font = "Arial-Bold")
 
 # Créer le pied de page
 footer_height <- 200
-footer <- image_blank(width, footer_height, color = "#121212") %>%
+footer <- image_blank(width, footer_height, color = "white") %>%
   image_annotate(paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")), 
-                 color = "#BBBBBB", 
-                 size = 28,
-                 location = "+40+30", 
-                 font = "Arial-Bold", 
-                 gravity = "west") %>%
-  image_annotate("Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
-                 color = "#BBBBBB",
-                 size = 26,
-                 location = "+40+55",
-                 font = "Arial-Bold",
-                 gravity = "west")
+                color = "#555555", 
+                size = 28,
+                location = "+40+30", 
+                font = "Arial", 
+                gravity = "west") %>%
+  image_annotate("Weighted data based on: gender, age, province, language, education level, income, immigration, housing type",
+                color = "#555555",
+                size = 26,
+                location = "+40+55",
+                font = "Arial",
+                gravity = "west")
 
 # Ajouter le logo Datagotchi
-logo <- image_read("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png") %>% 
+logo <- image_read("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png") %>% 
   image_scale("300x") %>%
-  image_background("#121212")
+  image_background("white")
 
 footer <- footer %>%
   image_composite(logo, gravity = "east", offset = "+40+0")
 
 # Assemblage final
-final_img <- image_blank(width, height + legend_height + footer_height, color = "#121212") %>%
+final_img <- image_blank(width, height + legend_height + footer_height, color = "white") %>%
   image_composite(plot_img, offset = "+0+0") %>%
   image_composite(legend_bg, offset = paste0("+0+", height)) %>%
   image_composite(footer, offset = paste0("+0+", height + legend_height))
 
 # Sauvegarder
-image_write(final_img, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_politique_final.png")
+image_write(final_img, "_SharedFolder_datagotchi_federal_2024/graph/analyses/café/indice_cafe_politique_light_final-EN.png")

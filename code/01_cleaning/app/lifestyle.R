@@ -331,6 +331,16 @@ table(DataClean$lifestyle_volunteeringFreq_bin)
 
 ## type_transport --------------------------------------------------------
 
+table(DataRaw$transport)
+DataClean$lifestyle_Transport <- NA
+DataClean$lifestyle_Transport[DataRaw$transport == "Car"] <- "car"
+DataClean$lifestyle_Transport[DataRaw$transport == "SUV"] <- "suv"
+DataClean$lifestyle_Transport[DataRaw$transport == "Motorcycle"] <- "motorcycle"
+DataClean$lifestyle_Transport[DataRaw$transport == "Walk"] <- "walk"
+DataClean$lifestyle_Transport[DataRaw$transport == "Bicycle"] <- "bicycle"
+DataClean$lifestyle_Transport[DataRaw$transport == "Public transit"] <- "public_transit"
+table(DataClean$lifestyle_Transport)
+
 # Regrouper les types de transport
 DataClean$lifestyle_typeTransport <- NA
 
