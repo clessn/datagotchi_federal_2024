@@ -23,7 +23,7 @@ include-in-header:
     \usepackage[a4paper,margin=1.87cm,includefoot]{geometry}
     \renewcommand{\headrulewidth}{0pt}
     \newfontfamily\headerfont{PixelOperatorSC.ttf}
-    \fancyhead[L]{\headerfont CLESSN}
+    \fancyhead[L]{\headerfont CAPP/CLESSN}
     \fancyhead[C]{\headerfont Rapport présenté à Léger}
     \fancyhead[R]{\headerfont Datagotchi Canada 2025}
     \fancyfoot[C]{\vspace*{0.5cm}\thepage}   
@@ -47,13 +47,13 @@ include-in-header:
   \begin{center}
     \null\vspace{\stretch{1}} % Ensures vertical centering
     {\titlepagefont\fontsize{48pt}{18pt}\selectfont \textbf{Léger-Datagotchi}}\\[1cm]
-    {\titlepagefont\fontsize{22pt}{18pt}\selectfont \textbf{Rapport sur Café Transport}}\\[1cm]
+    {\titlepagefont\fontsize{25pt}{18pt}\selectfont \textbf{Rapport sur les dynamiques café-transport}}\\[1cm]
     \includegraphics[width=0.2\textwidth]{img/leger_small.png}\\[4cm]
-    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\[0.5cm]
     {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Chaire de Leadership en Enseignement des Sciences Sociales Numériques (CLESSN)}}\\[3cm]
-    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\[0.5cm]
     {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université de Montréal}}\\[1cm]
-    {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, \today}\\
+    {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, 25 mars 2025}\\
     \null\vspace{\stretch{2}} % Ensures vertical centering
   \end{center}  \thispagestyle{empty} % Prevents headers and footers on the title page
   \clearpage % Ensures the next content starts on a clean page

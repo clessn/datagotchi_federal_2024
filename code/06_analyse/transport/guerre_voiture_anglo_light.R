@@ -29,57 +29,50 @@ transport_imgs <- list(
 )
 
 
-# 1. Chargement des données
+# 1. Load data
 data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250323.rds")
 
-# 2. Chargement des données spatiales depuis cartessn
+# 2. Load spatial data from cartessn
 sf_ridings <- cartessn::spatial_canada_2022_electoral_ridings_aligned
 sf_rta <- cartessn::spatial_canada_2021_rta
 
-# 3. Extraction des 3 premiers caractères du code postal (RTA)
+# 3. Extract FSA (first 3 characters of postal code)
 data$rta <- substr(data$ses_postalCode, 1, 3)
 
-# 4. Utilisation de la fonction map_fsa_to_ridings de cartessn pour associer RTA à circonscriptions
-# Cette fonction combine toutes les étapes intermédiaires de l'ancien script
-#mapping_results <- cartessn::map_fsa_to_ridings(
-#  sf_rta = sf_rta,
-#  sf_ridings = sf_ridings,
-#  tolerance = 50
-#)
-# Si le mapping existe déjà, on peut le charger directement
+# 4. Load existing mapping results
 mapping_results <- readRDS("_SharedFolder_datagotchi_federal_2024/_previous/mapping_results_ridings_rta.rds")
 
-# 5. Obtenir le mapping principal (RTA -> riding avec meilleure couverture)
+# 5. Get the main mapping (FSA -> riding with best coverage)
 rta_to_riding <- mapping_results$fsa_to_riding_mapping %>%
   select(rta, id_riding)
 
-# 6. Joindre l'ID de circonscription à nos données
+# 6. Join riding ID to our data
 data <- data %>%
   left_join(rta_to_riding, by = "rta")
 
-# 7. Vérifier le taux de jointure
+# 7. Check join rate
 matched_count <- sum(!is.na(data$id_riding))
 total_count <- nrow(data)
 match_rate <- matched_count / total_count * 100
 
-print(paste("Nombre total de répondants:", total_count))
-print(paste("Nombre de répondants avec une circonscription identifiée:", matched_count))
-print(paste("Taux de correspondance:", round(match_rate, 2), "%"))
+print(paste("Total number of respondents:", total_count))
+print(paste("Number of respondents with an identified riding:", matched_count))
+print(paste("Match rate:", round(match_rate, 2), "%"))
 
-# 8. S'assurer que la variable weight existe, sinon créer une avec valeur 1
+# 8. Ensure weight variable exists
 if(!"weight" %in% names(data)) {
   data$weight <- 1
 }
 
-# 9. Analyse des types de transport par circonscription AVEC PONDÉRATION
+# 9. Analyze transportation types by riding WITH WEIGHTING
 transport_battle_by_riding <- data %>%
   filter(!is.na(id_riding)) %>%
   group_by(id_riding) %>%
   summarize(
-    # Somme des poids
+    # Sum of weights
     sum_weight = sum(weight, na.rm = TRUE),
     
-    # Utilisateurs pondérés pour chaque type de transport
+    # Weighted users for each transport type
     car_users = sum((lifestyle_Transport == "car") * weight, na.rm = TRUE),
     suv_users = sum((lifestyle_Transport == "suv") * weight, na.rm = TRUE),
     public_transit_users = sum((lifestyle_Transport == "public_transit") * weight, na.rm = TRUE),
@@ -87,7 +80,7 @@ transport_battle_by_riding <- data %>%
     bicycle_users = sum((lifestyle_Transport == "bicycle") * weight, na.rm = TRUE),
     motorcycle_users = sum((lifestyle_Transport == "motorcycle") * weight, na.rm = TRUE),
     
-    # Calcul des pourcentages pondérés
+    # Calculate weighted percentages
     car_pct = car_users / sum_weight * 100,
     suv_pct = suv_users / sum_weight * 100,
     public_transit_pct = public_transit_users / sum_weight * 100,
@@ -95,68 +88,68 @@ transport_battle_by_riding <- data %>%
     bicycle_pct = bicycle_users / sum_weight * 100,
     motorcycle_pct = motorcycle_users / sum_weight * 100,
     
-    # Nombre de répondants non-pondéré (pour référence)
+    # Number of unweighted respondents (for reference)
     n_people = n()
   ) %>%
   ungroup()
 
-# 10. Déterminer le type de transport dominant dans chaque circonscription
+# 10. Determine dominant transport type in each riding
 transport_battle_by_riding <- transport_battle_by_riding %>%
   mutate(
-    # Créer une variable pour le type de transport dominant (celui avec le plus d'utilisateurs)
+    # Create variable for dominant transport mode (the one with most users)
     dominant_mode = case_when(
-      car_pct >= suv_pct & car_pct >= public_transit_pct & car_pct >= walk_pct & car_pct >= bicycle_pct & car_pct >= motorcycle_pct ~ "Voiture 🚗",
-      suv_pct >= car_pct & suv_pct >= public_transit_pct & suv_pct >= walk_pct & suv_pct >= bicycle_pct & suv_pct >= motorcycle_pct ~ "VUS 🚙",
-      public_transit_pct >= car_pct & public_transit_pct >= suv_pct & public_transit_pct >= walk_pct & public_transit_pct >= bicycle_pct & public_transit_pct >= motorcycle_pct ~ "Transport en commun 🚇",
-      walk_pct >= car_pct & walk_pct >= suv_pct & walk_pct >= public_transit_pct & walk_pct >= bicycle_pct & walk_pct >= motorcycle_pct ~ "Marche 🚶",
-      bicycle_pct >= car_pct & bicycle_pct >= suv_pct & bicycle_pct >= public_transit_pct & bicycle_pct >= walk_pct & bicycle_pct >= motorcycle_pct ~ "Vélo 🚲",
-      motorcycle_pct >= car_pct & motorcycle_pct >= suv_pct & motorcycle_pct >= public_transit_pct & motorcycle_pct >= walk_pct & motorcycle_pct >= bicycle_pct ~ "Moto 🏍️",
-      TRUE ~ "Égalité"
+      car_pct >= suv_pct & car_pct >= public_transit_pct & car_pct >= walk_pct & car_pct >= bicycle_pct & car_pct >= motorcycle_pct ~ "Car 🚗",
+      suv_pct >= car_pct & suv_pct >= public_transit_pct & suv_pct >= walk_pct & suv_pct >= bicycle_pct & suv_pct >= motorcycle_pct ~ "SUV 🚙",
+      public_transit_pct >= car_pct & public_transit_pct >= suv_pct & public_transit_pct >= walk_pct & public_transit_pct >= bicycle_pct & public_transit_pct >= motorcycle_pct ~ "Public Transit 🚇",
+      walk_pct >= car_pct & walk_pct >= suv_pct & walk_pct >= public_transit_pct & walk_pct >= bicycle_pct & walk_pct >= motorcycle_pct ~ "Walk 🚶",
+      bicycle_pct >= car_pct & bicycle_pct >= suv_pct & bicycle_pct >= public_transit_pct & bicycle_pct >= walk_pct & bicycle_pct >= motorcycle_pct ~ "Bicycle 🚲",
+      motorcycle_pct >= car_pct & motorcycle_pct >= suv_pct & motorcycle_pct >= public_transit_pct & motorcycle_pct >= walk_pct & motorcycle_pct >= bicycle_pct ~ "Motorcycle 🏍️",
+      TRUE ~ "Tie"
     ),
     
-    # Pourcentage pour le type de transport dominant
+    # Percentage for dominant transport type
     dominant_pct = case_when(
-      dominant_mode == "Voiture 🚗" ~ car_pct,
-      dominant_mode == "VUS 🚙" ~ suv_pct,
-      dominant_mode == "Transport en commun 🚇" ~ public_transit_pct,
-      dominant_mode == "Marche 🚶" ~ walk_pct,
-      dominant_mode == "Vélo 🚲" ~ bicycle_pct,
-      dominant_mode == "Moto 🏍️" ~ motorcycle_pct,
+      dominant_mode == "Car 🚗" ~ car_pct,
+      dominant_mode == "SUV 🚙" ~ suv_pct,
+      dominant_mode == "Public Transit 🚇" ~ public_transit_pct,
+      dominant_mode == "Walk 🚶" ~ walk_pct,
+      dominant_mode == "Bicycle 🚲" ~ bicycle_pct,
+      dominant_mode == "Motorcycle 🏍️" ~ motorcycle_pct,
       TRUE ~ NA_real_
     )
   )
 
-# 11. Joindre les résultats aux données spatiales pour visualisation
+# 11. Join results to spatial data for visualization
 sf_transport_map <- sf_ridings %>%
   left_join(transport_battle_by_riding, by = "id_riding")
 
-# 12. Sauvegarder les résultats intermédiaires
-saveRDS(transport_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/transport_battle_pondere_light.rds")
+# 12. Save intermediate results
+saveRDS(transport_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/transport_battle_pondere_light_en.rds")
 
-# 13. Paramètres pour éviter les problèmes de mémoire
-options(future.globals.maxSize = 1000 * 1024^2)  # Augmenter la limite à 1 Go
-sf_use_s2(FALSE)  # Désactiver les fonctionnalités S2 de sf pour réduire l'utilisation de la mémoire
+# 13. Parameters to avoid memory issues
+options(future.globals.maxSize = 1000 * 1024^2)  # Increase limit to 1GB
+sf_use_s2(FALSE)  # Disable sf S2 features to reduce memory usage
 
-# 14. Thème simplifié pour les cartes en mode light
+# 14. Simplified theme for light mode maps
 theme_map_light <- function() {
   theme_minimal() +
     theme(
-      # Fond blanc
+      # White background
       plot.background = element_rect(fill = "white", color = NA),
       panel.background = element_rect(fill = "white", color = NA),
       
-      # Suppression des axes et grilles
+      # Remove axes and grids
       axis.title = element_blank(),
       axis.text = element_blank(),
       axis.ticks = element_blank(),
       panel.grid = element_blank(),
       
-      # Textes en noir
+      # Black text
       plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
       plot.subtitle = element_text(size = 11, color = "#555555", hjust = 0.5),
       plot.caption = element_text(size = 12, color = "#666666", hjust = 1),
       
-      # Légende
+      # Legend
       legend.position = "bottom",
       legend.background = element_rect(fill = "white", color = NA),
       legend.title = element_text(size = 10, color = "black"),
@@ -164,62 +157,62 @@ theme_map_light <- function() {
     )
 }
 
-# 15. Définition des couleurs pour les types de transport
+# 15. Define colors for transport types
 transport_colors <- c(
-  "Voiture 🚗" = "#3498DB",        # Bleu
-  "VUS 🚙" = "#E74C3C",            # Rouge
-  "Transport en commun 🚇" = "#2ECC71",  # Vert
-  "Marche 🚶" = "#F1C40F",         # Jaune
-  "Vélo 🚲" = "#9B59B6",           # Violet
-  "Moto 🏍️" = "#E67E22",          # Orange
-  "Non disponible" = "#EEEEEE"     # Gris clair
+  "Car 🚗" = "#3498DB",        # Blue
+  "SUV 🚙" = "#E74C3C",            # Red
+  "Public Transit 🚇" = "#2ECC71",  # Green
+  "Walk 🚶" = "#F1C40F",         # Yellow
+  "Bicycle 🚲" = "#9B59B6",           # Purple
+  "Motorcycle 🏍️" = "#E67E22",          # Orange
+  "Not available" = "#EEEEEE"   # Light grey
 )
 
-# 16. Prétraitement des données
+# 16. Preprocess data
 sf_transport_map_clean <- sf_transport_map %>%
-  mutate(dominant_mode = ifelse(is.na(dominant_mode), "Non disponible", dominant_mode))
+  mutate(dominant_mode = ifelse(is.na(dominant_mode), "Not available", dominant_mode))
 
-# 17. Information sur le nombre d'observations
-n_observations <- nrow(data)  # Utilisez le nombre réel de répondants
+# 17. Information on number of observations
+n_observations <- nrow(data)  # Use actual number of respondents
 
-# 18. ===== CARTE DU CANADA =====
+# 18. ===== CANADA MAP =====
 canada_transport_map <- ggplot(sf_transport_map_clean) +
   geom_sf(aes(fill = dominant_mode), color = "#DDDDDD", size = 0.2) +
   scale_fill_manual(
-    name = "Mode de transport",
+    name = "Transport Mode",
     values = transport_colors,
-    breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
+    breaks = c("Car 🚗", "SUV 🚙", "Public Transit 🚇", "Walk 🚶", "Bicycle 🚲", "Motorcycle 🏍️")
   ) +
   theme_map_light() +
   theme(legend.position = "none")  # Change this to "none" instead of "bottom"
 
-ggsave("canada_transport_map_light.png", 
+ggsave("canada_transport_map_light_en.png", 
        canada_transport_map, 
        width = 16, 
        height = 12, 
        dpi = 200,
        bg = "white")
 
-# 19. ===== CARTES URBAINES =====
+# 19. ===== URBAN MAPS =====
 main_regions <- c("montreal", "toronto", "vancouver", "quebec_city")
 
-# 20. Créer et sauvegarder chaque carte urbaine individuellement
+# 20. Create and save each urban map individually
 for (region in main_regions) {
-  # Extraire la région
+  # Extract region
   region_map <- cartessn::crop_map(sf_transport_map_clean, region)
   
-  # Créer la carte manuellement
+  # Create map manually
   city_map <- ggplot(region_map) +
     geom_sf(aes(fill = dominant_mode), color = "#DDDDDD", size = 0.15) +
     scale_fill_manual(
       values = transport_colors,
-      breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
+      breaks = c("Car 🚗", "SUV 🚙", "Public Transit 🚇", "Walk 🚶", "Bicycle 🚲", "Motorcycle 🏍️")
     ) +
     theme_map_light() +
     theme(legend.position = "none")
   
-  # Sauvegarder chaque carte urbaine séparément avec aspect ratio carré
-  ggsave(paste0(tolower(gsub("-", "_", region)), "_transport_map_light.png"), 
+  # Save each urban map separately with square aspect ratio
+  ggsave(paste0(tolower(gsub("-", "_", region)), "_transport_map_light_en.png"), 
          city_map, 
          width = 6, 
          height = 6, 
@@ -227,79 +220,79 @@ for (region in main_regions) {
          bg = "white")
 }
 
-# Cette section gère la mise en page et l'assemblage des cartes et de la légende
+# This section handles layout and assembly of maps and legend
 
-# Définition des paramètres de dimensions
-canvas_width <- 1800      # Largeur totale du canvas
-canada_height <- 1000     # Hauteur pour la carte du Canada
-city_height <- 400        # Hauteur pour les cartes de villes
-city_spacing <- 20        # Espacement entre les cartes de villes
-section_spacing <- 40     # Espacement entre les sections augmenté
+# Definition of dimension parameters
+canvas_width <- 1800      # Total canvas width
+canada_height <- 1000     # Height for Canada map
+city_height <- 400        # Height for city maps
+city_spacing <- 20        # Spacing between city maps
+section_spacing <- 40     # Spacing between sections increased
 
-# 22. Fonction pour créer une carte de ville avec de meilleures proportions
+# 22. Function to create a city map with better proportions
 create_city_map <- function(region_name, display_title = NULL) {
-  # Utiliser le titre personnalisé si fourni, sinon utiliser region_name
+  # Use custom title if provided, otherwise use region_name
   display_name <- ifelse(is.null(display_title), toupper(region_name), toupper(display_title))
   
-  # Lire l'image existante
-  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_transport_map_light.png")
+  # Read existing image
+  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_transport_map_light_en.png")
   img <- image_read(img_path)
   
-  # Redimensionner l'image en préservant le ratio carré
+  # Resize image preserving square ratio
   img_resized <- image_scale(img, paste0(toString(city_height), "x", toString(city_height)))
   
-  # Créer un canvas blanc avec une largeur fixe pour toutes les villes
-  city_width <- city_height  # Maintenir un aspect carré
+  # Create white canvas with fixed width for all cities
+  city_width <- city_height  # Maintain square aspect
   canvas <- image_blank(width = city_width, 
-                        height = city_height + 60,  # Plus d'espace pour le titre
+                        height = city_height + 60,  # More space for title
                         color = "white")
   
-  # Placer l'image sur le canvas (centrée)
+  # Place image on canvas (centered)
   canvas_with_map <- image_composite(canvas, img_resized, 
                                      gravity = "center")
   
-  # Ajouter le titre en bas
+  # Add title at bottom
   canvas_with_title <- image_annotate(canvas_with_map, 
                                       display_name,
                                       color = "black", 
-                                      size = 28,  # Taille de police augmentée
+                                      size = 28,  # Increased font size
                                       font = "Arial-Bold",
                                       gravity = "south",
-                                      location = "+0+20")  # Plus d'espace au bas
+                                      location = "+0+20")  # More space at bottom
   
   return(canvas_with_title)
 }
 
-# 23. Lire et redimensionner la carte du Canada avec légende
-canada_img <- image_read("canada_transport_map_light.png")
+# 23. Read and resize Canada map with legend
+canada_img <- image_read("canada_transport_map_light_en.png")
 canada_resized <- image_scale(canada_img, paste0(toString(canvas_width - 40), "x", toString(canada_height)))
 
-# 24. Créer un canvas pour la carte du Canada
+# 24. Create canvas for Canada map
 canada_canvas <- image_blank(width = canvas_width, 
-                             height = canada_height + 60,  # Plus d'espace pour éviter le rognage
+                             height = canada_height + 60,  # More space to avoid cropping
                              color = "white")
 
-# 25. Centrer la carte du Canada
+# 25. Center Canada map
 canada_centered <- image_composite(canada_canvas, canada_resized, 
                                    gravity = "center")
 
-# 26. Créer les cartes de villes avec de meilleures proportions
+# 26. Create city maps with better proportions
 montreal_map <- create_city_map("montreal")
 toronto_map <- create_city_map("toronto")
 vancouver_map <- create_city_map("vancouver")
 quebec_map <- create_city_map("quebec_city", "QUÉBEC")
 
-# 27. Calculer l'espacement latéral pour centrer les cartes de villes
+# 27. Calculate lateral spacing to center city maps
 city_width = image_info(montreal_map)$width
 city_total_width <- 4 * city_width + (3 * city_spacing)
 city_padding <- max(0, (canvas_width - city_total_width) / 2)
 
-# 28. Créer des séparateurs plus visibles entre les villes
+# 28. Create more visible separators between cities
 city_separator <- image_blank(width = city_spacing, 
                               height = image_info(montreal_map)$height, 
                               color = "white")
 
-# 29. Assemblage des villes avec espacement
+# 29. Assemble cities with spacing
 city_row <- image_append(c(montreal_map, 
                            city_separator,
                            toronto_map, 
@@ -309,7 +302,7 @@ city_row <- image_append(c(montreal_map,
                            quebec_map), 
                          stack = FALSE)
 
-# 30. Appliquer le padding latéral
+# 30. Apply lateral padding
 if (city_padding > 0) {
   left_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
   right_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
@@ -318,36 +311,36 @@ if (city_padding > 0) {
   city_row_padded <- city_row
 }
 
-# 31. Titre principal avec dimensions augmentées
-title_height <- 100  # Hauteur augmentée
+# 31. Main title with increased dimensions
+title_height <- 100  # Increased height
 title_bg <- image_blank(width = canvas_width,
                         height = title_height,
                         color = "white")
 
 title <- image_annotate(title_bg,
-                        "LA BATAILLE DU TRANSPORT AU CANADA",
+                        "TRANSPORTATION BATTLE IN CANADA",
                         color = "black",
-                        size = 48,  # Taille augmentée
+                        size = 48,  # Increased size
                         gravity = "center",
                         font = "Arial-Bold")
 
-# 32. Sous-titre avec dimensions augmentées
-subtitle_height <- 60  # Hauteur augmentée
+# 32. Subtitle with increased dimensions
+subtitle_height <- 60  # Increased height
 subtitle_bg <- image_blank(width = canvas_width,
                            height = subtitle_height,
                            color = "white")
 
 subtitle <- image_annotate(subtitle_bg,
-                           "Mode de transport préféré par circonscription électorale",
+                           "Preferred transportation mode by electoral district",
                            color = "#555555",
-                           size = 32,  # Taille augmentée
+                           size = 32,  # Increased size
                            gravity = "center",
                            font = "Arial")
 
 
-# Correction pour la légende des transports
+# Correction for transport legend
 
-# 33. Légende améliorée avec une hauteur augmentée pour éviter les superpositions
+# 33. Improved legend with increased height to avoid overlaps
 # Create a taller legend background to accommodate all transport modes
 map_legend_height <- 300  # Renamed to avoid conflicts with later code
 map_legend_bg <- image_blank(width = canvas_width,
@@ -363,128 +356,127 @@ y_row2 <- 180
 # First Row
 map_legend_bg <- map_legend_bg %>%
   image_composite(transport_imgs$car_icon, offset = paste0("+", x_start, "+", y_row1)) %>%
-  image_annotate("Voiture 🚗", color = "black", size = 32,
+  image_annotate("Car 🚗", color = "black", size = 32,
                  location = paste0("+", x_start + icon_size + 30, "+", y_row1 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$suv_icon, offset = paste0("+", x_start + x_spacing, "+", y_row1)) %>%
-  image_annotate("VUS 🚙", color = "black", size = 32,
+  image_annotate("SUV 🚙", color = "black", size = 32,
                  location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row1 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$transit_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row1)) %>%
-  image_annotate("Transport en commun 🚇", color = "black", size = 32,
+  image_annotate("Public Transit 🚇", color = "black", size = 32,
                  location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row1 + 10),
                  font = "Arial-Bold")
 
 # Second Row
 map_legend_bg <- map_legend_bg %>%
   image_composite(transport_imgs$walk_icon, offset = paste0("+", x_start, "+", y_row2)) %>%
-  image_annotate("Marche 🚶", color = "black", size = 32,
+  image_annotate("Walk 🚶", color = "black", size = 32,
                  location = paste0("+", x_start + icon_size + 30, "+", y_row2 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$bicycle_icon, offset = paste0("+", x_start + x_spacing, "+", y_row2)) %>%
-  image_annotate("Vélo 🚲", color = "black", size = 32,
+  image_annotate("Bicycle 🚲", color = "black", size = 32,
                  location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row2 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$moto_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row2)) %>%
-  image_annotate("Moto 🏍️", color = "black", size = 32,
+  image_annotate("Motorcycle 🏍️", color = "black", size = 32,
                  location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row2 + 10),
                  font = "Arial-Bold")
 
 
-# 36. Note méthodologique avec dimensions augmentées
-caption_height <- 80  # Hauteur augmentée
+# 36. Methodological note with increased dimensions
+caption_height <- 80  # Increased height
 caption_bg <- image_blank(width = canvas_width,
                           height = caption_height,
                           color = "white")
 
-# Utilise le nombre réel d'observations
-n_observations <- nrow(data)  # Utilisez le nombre réel de répondants
+# Use actual number of observations
+n_observations <- nrow(data)  # Use actual number of respondents
 caption <- image_annotate(caption_bg,
-                          paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
+                          paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = ",")),
                           color = "#555555",
-                          size = 24,  # Taille augmentée
-                          location = "+40+25",  # Position ajustée
+                          size = 24,  # Increased size
+                          location = "+40+25",  # Adjusted position
                           font = "Arial-Bold")
 
 caption <- image_annotate(caption,
-                          "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
+                          "Data weighted by: gender, age, province, language, education level, income, immigration status, housing type",
                           color = "#555555",
-                          size = 22,  # Taille augmentée
-                          location = "+40+55",  # Position ajustée
+                          size = 22,  # Increased size
+                          location = "+40+55",  # Adjusted position
                           font = "Arial-Bold")
 
-# 37. Ligne séparatrice plus visible
-separator_height <- 3  # Épaisseur augmentée
+# 37. More visible separator line
+separator_height <- 3  # Increased thickness
 separator <- image_blank(width = canvas_width,
                          height = separator_height,
-                         color = "#AAAAAA")  # Couleur grise claire
+                         color = "#AAAAAA")  # Light grey color
 
-# 38. Espacement entre sections
+# 38. Spacing between sections
 spacer <- image_blank(width = canvas_width,
                       height = section_spacing,
                       color = "white")
 
-# 39. Assembler l'image finale avec le nouvel ordre et meilleurs espacements
+# 39. Assemble final image with new order and better spacing
 final_image <- c(
-  title,                           # Titre principal
-  subtitle,                        # Sous-titre
-  spacer,                          # Espacement
-  separator,                       # Ligne de séparation
-  spacer,                          # Espacement
-  map_legend_bg,                   # Légende personnalisée en HAUT (avec icônes)
-  spacer,                          # Espacement
-  separator,                       # Ligne de séparation
-  spacer,                          # Espacement
-  city_row_padded,                 # Cartes des villes
-  spacer,                          # Espacement
-  separator,                       # Ligne de séparation
-  spacer,                          # Espacement
-  canada_centered,                 # Carte du Canada (sans légende intégrée)
-  spacer,                          # Espacement
-  caption                          # Notes méthodologiques
+  title,                           # Main title
+  subtitle,                        # Subtitle
+  spacer,                          # Spacing
+  separator,                       # Separator line
+  spacer,                          # Spacing
+  map_legend_bg,                   # Custom legend at TOP (with icons)
+  spacer,                          # Spacing
+  separator,                       # Separator line
+  spacer,                          # Spacing
+  city_row_padded,                 # City maps
+  spacer,                          # Spacing
+  separator,                       # Separator line
+  spacer,                          # Spacing
+  canada_centered,                 # Canada map (without integrated legend)
+  spacer,                          # Spacing
+  caption                          # Methodological notes
 )
 
 final_combined <- image_append(final_image, stack = TRUE)
 
-# 40. Ajouter une bordure blanche
-final_with_border <- image_border(final_combined, "white", "30x30")  # Bordure plus grande
+# 40. Add white border
+final_with_border <- image_border(final_combined, "white", "30x30")  # Larger border
 
-# 41. Charger le logo (si disponible)
+# 41. Load logo (if available)
 logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
 if (file.exists(logo_path)) {
   logo <- image_read(logo_path)
   
-  # 42. Redimensionner le logo à une taille appropriée
+  # 42. Resize logo to appropriate size
   logo_width <- round(image_info(final_with_border)$width * 0.15)
   logo_resized <- image_scale(logo, paste0(logo_width, "x"))
   
-  # 43. Calculer la position pour le coin inférieur droit
+  # 43. Calculate position for bottom right corner
   margin <- 30
   x_position <- image_info(final_with_border)$width - image_info(logo_resized)$width - margin
   y_position <- image_info(final_with_border)$height - image_info(logo_resized)$height - margin
   
-  # 44. Ajouter le logo à l'image finale
+  # 44. Add logo to final image
   final_with_logo <- image_composite(
     final_with_border, 
     logo_resized, 
     offset = paste0("+", x_position, "+", y_position)
   )
   
-  # 45. Sauvegarder l'image finale avec logo
-  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/bataille_transport_canada_light_avec_logo.png")
+  # 45. Save final image with logo
+  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/battle_transport_canada_light_with_logo_en.png")
   
-  cat("Image finale avec logo créée avec succès : bataille_transport_canada_light_avec_logo.png\n")
+  cat("Final image with logo created successfully: battle_transport_canada_light_with_logo_en.png\n")
 } else {
-  # Si le logo n'est pas disponible, sauvegarder sans logo
-  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/bataille_transport_canada_light.png")
+  # If logo not available, save without logo
+  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/battle_transport_canada_light_en.png")
   
-  cat("Image finale sans logo créée avec succès : bataille_transport_canada_light.png\n")
+  cat("Final image without logo created successfully: battle_transport_canada_light_en.png\n")
 }
 
 
 
-
-## L'indice Transport-Politique en mode light
+## Transport-Politics Index in light mode
 
 # Calculate national averages for transport modes
 national_averages <- data %>%
@@ -525,11 +517,11 @@ transport_by_party <- data %>%
   ungroup() %>%
   mutate(
     party_name = case_when(
-      dv_voteChoice == "lpc" ~ "Parti libéral",
-      dv_voteChoice == "cpc" ~ "Parti conservateur",
-      dv_voteChoice == "ndp" ~ "NPD",
+      dv_voteChoice == "lpc" ~ "Liberal Party",
+      dv_voteChoice == "cpc" ~ "Conservative Party",
+      dv_voteChoice == "ndp" ~ "NDP",
       dv_voteChoice == "bq" ~ "Bloc Québécois",
-      dv_voteChoice == "gpc" ~ "Parti vert",
+      dv_voteChoice == "gpc" ~ "Green Party",
       TRUE ~ NA_character_
     ),
     car_deviation = car_pct - national_averages$car_avg,
@@ -553,38 +545,36 @@ transport_by_party_long <- transport_by_party %>%
   ) %>%
   mutate(
     transport_mode = case_when(
-      transport_mode == "car_deviation" ~ "Voiture 🚗",
-      transport_mode == "suv_deviation" ~ "VUS 🚙",
-      transport_mode == "public_transit_deviation" ~ "Transport en commun 🚇",
-      transport_mode == "walk_deviation" ~ "Marche 🚶",
-      transport_mode == "bicycle_deviation" ~ "Vélo 🚲",
-      transport_mode == "motorcycle_deviation" ~ "Moto 🏍️"
+      transport_mode == "car_deviation" ~ "Car 🚗",
+      transport_mode == "suv_deviation" ~ "SUV 🚙",
+      transport_mode == "public_transit_deviation" ~ "Public Transit 🚇",
+      transport_mode == "walk_deviation" ~ "Walk 🚶",
+      transport_mode == "bicycle_deviation" ~ "Bicycle 🚲",
+      transport_mode == "motorcycle_deviation" ~ "Motorcycle 🏍️"
     )
   )
 
 # Order parties from right to left politically
-party_order <- c("Parti conservateur", "Parti libéral", "Bloc Québécois", "NPD", "Parti vert")
+party_order <- c("Conservative Party", "Liberal Party", "Bloc Québécois", "NDP", "Green Party")
 transport_by_party_long$party_name <- factor(transport_by_party_long$party_name, levels = party_order)
 
 # Modify the transport_plot ggplot code for light theme
 transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviation, fill = transport_mode)) +
 
-  # Thicker baseline with proper positioning
-
   # Replace geom_hline with geom_segment
   geom_segment(
-    x = 0.5,                 # Starting x position (0.5 position on the x-axis)
-    xend = length(party_order) + 0.5, # End at the last party (adjustable as needed)
-    y = 0,                   # y position (zero line)
-    yend = 0,                # keep y position the same to create a horizontal line
+    x = 0.5,                      # Starting x position
+    xend = length(party_order) + 0.5, # End at the last party
+    y = 0,                        # y position (zero line)
+    yend = 0,                     # keep y position the same for horizontal line
     color = "#999999", 
     linetype = "solid", 
     size = 2
   ) +
   
-  # Add +/- symbols aligned with discrete axis
+  # Add +/- symbols and labels aligned with discrete axis
   annotate("text", x = 0.3, y = 0, 
-           label = "moyenne canadienne", color = "black", size = 7, fontface = "bold", angle = 90) +
+           label = "Canadian average", color = "black", size = 7, fontface = "bold", angle = 90) +
   annotate("text", x = 0.3, y = 10, 
            label = "+", color = "black", size = 10, fontface = "bold") +
   annotate("text", x = 0.3, y = -10, 
@@ -601,18 +591,18 @@ transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviat
   
   # Keep existing scale and labels
   scale_fill_manual(
-    name = "Mode de transport",
+    name = "Transport Mode",
     values = transport_colors
   ) +
   labs(
-    title = "L'INDICE TRANSPORT-POLITIQUE",
-    subtitle = "Écart de préférence de transport par rapport à la moyenne canadienne (points de %)",
-    caption = paste0("Moyennes canadiennes : Voiture = ", car_national, 
-                     "%, VUS = ", suv_national, 
-                     "%, Transport en commun = ", transit_national,
-                     "%, Marche = ", walk_national,
-                     "%, Vélo = ", bicycle_national,
-                     "%, Moto = ", motorcycle_national, "%"),
+    title = "TRANSPORT-POLITICAL INDEX",
+    subtitle = "Deviation from national average transportation preference (% points)",
+    caption = paste0("National averages: Car = ", car_national, 
+                     "%, SUV = ", suv_national, 
+                     "%, Public Transit = ", transit_national,
+                     "%, Walking = ", walk_national,
+                     "%, Bicycle = ", bicycle_national,
+                     "%, Motorcycle = ", motorcycle_national, "%"),
     x = "",
     y = ""
   ) +
@@ -636,7 +626,7 @@ transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviat
 dir.create("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport", recursive = TRUE, showWarnings = FALSE)
 
 # Save the graph without legend, with increased height
-ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_transport_light_sans_legende.png", 
+ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/index_transport_light_no_legend_en.png", 
        transport_plot, 
        width = 14, 
        height = 10,
@@ -644,7 +634,7 @@ ggsave("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_tr
        bg = "white")
 
 # Read the graph with magick
-graph_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_transport_light_sans_legende.png")
+graph_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/index_transport_light_no_legend_en.png")
 
 # Modified legend creation with proper labels and spacing
 legend_height <- 100  # Legend height
@@ -658,53 +648,53 @@ x_spacing <- 350 # Horizontal space between items
 y_row1 <- 50     # First row Y position
 y_row2 <- 180    # Second row Y position
 
-# First Row: Voiture, VUS, Transport en commun
-# Voiture 🚗
+# First Row: Car, SUV, Public Transit
+# Car 🚗
 legend_bg <- image_composite(legend_bg, transport_imgs$car_icon, 
                              offset = paste0("+", x_start, "+", y_row1/2))
-legend_bg <- image_annotate(legend_bg, "Voiture 🚗",
+legend_bg <- image_annotate(legend_bg, "Car 🚗",
                             color = "black", size = 32,
                             location = paste0("+", x_start + icon_size + 30, "+", y_row1/2 + 10),
                             font = "Arial-Bold")
 
-# VUS 🚙
+# SUV 🚙
 legend_bg <- image_composite(legend_bg, transport_imgs$suv_icon, 
                              offset = paste0("+", x_start + x_spacing, "+", y_row1/2))
-legend_bg <- image_annotate(legend_bg, "VUS 🚙",
+legend_bg <- image_annotate(legend_bg, "SUV 🚙",
                             color = "black", size = 32,
                             location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row1/2 + 10),
                             font = "Arial-Bold")
 
-# Transport en commun 🚇
+# Public Transit 🚇
 legend_bg <- image_composite(legend_bg, transport_imgs$transit_icon, 
                              offset = paste0("+", x_start + 2*x_spacing, "+", y_row1/2))
-legend_bg <- image_annotate(legend_bg, "Transport en commun 🚇",
+legend_bg <- image_annotate(legend_bg, "Public Transit 🚇",
                             color = "black", size = 32,
                             location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row1/2 + 10),
                             font = "Arial-Bold")
 
-# Create caption with source info - cafe style positioning
-caption_height <- 150  # Reduced from 180
+# Create caption with source info - improved positioning
+caption_height <- 150  # Caption height
 caption_bg <- image_blank(width = image_info(graph_img)$width,
                           height = caption_height,
                           color = "white")
 
-# Add source information with cafe style positioning and reduced text size
+# Add source information with improved positioning and text size
 caption <- image_annotate(caption_bg,
-                          paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
+                          paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = ",")),
                           color = "#555555",
-                          size = 24,  # Reduced to match cafe script
+                          size = 24,  # Adjusted size
                           location = "+40+30",
                           font = "Arial-Bold")
 
 caption <- image_annotate(caption,
-                          "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
+                          "Data weighted by: gender, age, province, language, education level, income, immigration status, housing type",
                           color = "#555555",
-                          size = 22,  # Reduced to match cafe script
+                          size = 22,  # Adjusted size
                           location = "+40+70",  # Adjusted for smaller text
                           font = "Arial-Bold")
 
-# Logo positioning more like the cafe style
+# Logo positioning
 logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
 logo <- image_read(logo_path)
 logo_width <- round(image_info(graph_img)$width * 0.15)
@@ -724,18 +714,18 @@ legend_row2 <- image_blank(width = image_info(graph_img)$width,
                            height = legend_row2_height,
                            color = "white")
 
-# Second Row: Marche, Vélo, Moto
+# Second Row: Walk, Bicycle, Motorcycle
 legend_row2 <- legend_row2 %>%
   image_composite(transport_imgs$walk_icon, offset = paste0("+", x_start, "+", y_row1/2)) %>%
-  image_annotate("Marche 🚶", color = "black", size = 32,
+  image_annotate("Walk 🚶", color = "black", size = 32,
                  location = paste0("+", x_start + icon_size + 30, "+", y_row1/2 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$bicycle_icon, offset = paste0("+", x_start + x_spacing, "+", y_row1/2)) %>%
-  image_annotate("Vélo 🚲", color = "black", size = 32,
+  image_annotate("Bicycle 🚲", color = "black", size = 32,
                  location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row1/2 + 10),
                  font = "Arial-Bold") %>%
   image_composite(transport_imgs$moto_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row1/2)) %>%
-  image_annotate("Moto 🏍️", color = "black", size = 32,
+  image_annotate("Motorcycle 🏍️", color = "black", size = 32,
                  location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row1/2 + 10),
                  font = "Arial-Bold")
 
@@ -746,6 +736,6 @@ final_image <- image_append(c(graph_img, legend_bg, legend_row2, caption_with_lo
 final_with_border <- image_border(final_image, "white", "40x40")
 
 # Save final image
-image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/indice_transport_light_final.png")
+image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/index_transport_light_final_en.png")
 
-cat("Transport-Politique index light graph created successfully!\n")
+cat("Transport-Politics index light graph created successfully!\n")
