@@ -27,13 +27,13 @@ df_grouped <- df %>%
 
 # Define Canadian party colors
 party_colors <- c(
-  "Parti libéral" = "#D71920",       # Red
-  "Parti conservateur" = "#1A4782",  # Blue
-  "Nouveau Parti démocratique" = "#F58220",                 # Orange
-  "Bloc Québécois" = "#33B2CC",      # Light Blue
-  "Parti vert" = "#3D9B35",          # Green
-  "PPC" = "#49176D",                 # Purple
-  "Other" = "#AAAAAA"                # Grey
+  "Parti libéral" = "#D71920",                # Red
+  "Parti conservateur" = "#1A4782",           # Blue
+  "Nouveau Parti démocratique" = "#F58220",   # Orange
+  "Bloc Québécois" = "#33B2CC",               # Light Blue
+  "Parti vert" = "#3D9B35",                   # Green
+  "PPC" = "#49176D",                          # Purple
+  "Other" = "#AAAAAA"                         # Grey
 )
 
 # Map party codes to readable names
