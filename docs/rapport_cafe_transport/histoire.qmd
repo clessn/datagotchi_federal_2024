@@ -49,10 +49,10 @@ include-in-header:
     {\titlepagefont\fontsize{48pt}{18pt}\selectfont \textbf{Léger-Datagotchi}}\\[1cm]
     {\titlepagefont\fontsize{32pt}{18pt}\selectfont \textbf{Rapport Canada 2025}}\\[1cm]
     \includegraphics[width=0.2\textwidth]{img/leger_small.png}\\[1cm]
-    {\titlepagefont\fontsize{32pt}{16pt}\selectfont \textbf{CLESSN}}\\[1cm]
-    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Rapport présenté à:}\\ % Smaller normal text size
-    {\titlepagefont\fontsize{24pt}{16pt}\selectfont \textbf{Léger Marketing}}\\[1.5cm]
-    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Département de Science Politique\\Faculté des Sciences Sociales\\Université Laval}\\[2.5cm]
+    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\[1cm]
+    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{CLESSN}}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université de Montréal}}\\[1cm]
     {\titlepagefont\fontsize{16pt}{14pt}\selectfont Québec, Canada}\\[2cm]
     {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, \today}\\
     \null\vspace{\stretch{2}} % Ensures vertical centering
@@ -71,7 +71,6 @@ Tim Hortons domine majoritairement dans les régions rurales et dans l'Est du pa
 Le McDonald's, quant à lui, trouve ses bastions dans des zones intermédiaires et certaines banlieues, reflétant une stratégie de positionnement entre les deux autres géants.
 
 ![La Bataille du Café au Canada](img/cafe_map.png){width=90%}
-\newpage
 
 # L'Indice Café-Politique
 
@@ -81,8 +80,7 @@ En contraste, les sympathisants des partis progressistes comme le NPD et le Part
 Le Bloc Québécois présente un profil distinct avec une consommation de McDonald's supérieure à la moyenne, ce qui pourrait refléter des particularités culturelles québécoises. 
 Cette distribution révèle comment les choix de consommation quotidiens s'alignent de façon surprenante avec les valeurs politiques, transformant le café en un marqueur d'identité sociale au Canada.
 
-![Indice café-politique](img/cafe_graph.png){width=90%}
-\newpage
+![Indice café-politique](img/cafe_graph.png){width=100%}
 
 # La Bataille des Transports au Canada
 
@@ -91,8 +89,7 @@ La voiture domine majoritairement dans les régions rurales et dans l'Est du pay
 À l'inverse, le transport en commun s'impose principalement dans les grands centres urbains comme Toronto et certaines parties de Montréal et Vancouver, témoignant d'un clivage urbain-rural dans les préférences de déplacement.
 La moto, quant à elle, trouve ses bastions dans le Nord du pays, notamment dans les territoires comme le Nunavut et les Territoires du Nord-Ouest, reflétant peut-être des préférences régionales spécifiques ou des contraintes géographiques. On observe également quelques zones où la marche (en jaune) est le mode dominant, particulièrement visible dans certaines parties de Vancouver et au Manitoba, tandis que les VUS (en rouge) sont préférés dans certaines régions du Québec, notamment dans l'ouest de Montréal.
 
-![La Bataille des Transports au Canada](img/transport_map.png){width=80%}
-\newpage
+![La Bataille des Transports au Canada](img/transport_map.png){width=75%}
 
 # L'Indice Transport-Politique
 
