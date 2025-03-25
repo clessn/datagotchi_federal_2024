@@ -50,7 +50,7 @@ create_coffee_plot <- function(data, var, title, y_limits) {
     labs(
       title = toupper(title),
       x = "",
-      y = ifelse(var == "tim_pct", "Pourcentage de consommateurs", "")  # Label seulement à gauche
+      y = ifelse(var == "tim_pct", "Percentage of consumers", "")  # Label seulement à gauche
     ) +
     theme_minimal() +
     theme(
