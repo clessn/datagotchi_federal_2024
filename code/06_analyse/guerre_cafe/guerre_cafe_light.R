@@ -522,14 +522,27 @@ ref_subtitle <- paste0("Moyennes nationales: Tim Hortons = ", tim_national,
 # Créer un graphique simplifié en mode light
 simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviation, fill = coffee_chain)) +
   # Ligne médiane plus épaisse
-  geom_hline(yintercept = 0, color = "#999999", linetype = "solid", size = 2) +
+  # Replace geom_hline with geom_segment
+  geom_segment(
+    x = 0.58,                 # Starting x position (0.5 position on the x-axis)
+    xend = length(party_order) + 0.5, # End at the last party (adjustable as needed)
+    y = 0,                   # y position (zero line)
+    yend = 0,                # keep y position the same to create a horizontal line
+    color = "#999999", 
+    linetype = "solid", 
+    size = 2
+  ) +
   
   # Barres du graphique
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   
-  # Symboles + et - bien visibles et en gras
-  annotate("text", x = 0.5, y = 5, label = "+", color = "black", size = 12, fontface = "bold") +
-  annotate("text", x = 0.5, y = -10, label = "-", color = "black", size = 12, fontface = "bold") +
+  # Add +/- symbols aligned with discrete axis
+  annotate("text", x = 0.5, y = 0, 
+           label = "moyenne canadienne", color = "black", size = 7, fontface = "bold", angle = 90) +
+  annotate("text", x = 0.5, y = 10, 
+           label = "+", color = "black", size = 10, fontface = "bold") +
+  annotate("text", x = 0.5, y = -10, 
+           label = "-", color = "black", size = 10, fontface = "bold") +
   
   scale_fill_manual(
     name = "Chaîne de café",
@@ -538,8 +551,8 @@ simplified_plot <- ggplot(coffee_by_party_long, aes(x = party_name, y = deviatio
   
   labs(
     title = "L'INDICE CAFÉ-POLITIQUE",
-    subtitle = "Écart de consommation par rapport à la moyenne nationale (points de %)",
-    caption = paste0("Moyennes nationales: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
+    subtitle = "Écart de consommation par rapport à la moyenne canadienne (points de %)",
+    caption = paste0("Moyennes canadiennes: Tim Hortons = ", tim_national, "%, McDonald's = ", mcdo_national, "%, Starbucks = ", starbucks_national, "%"),
     x = "",
     y = ""
   ) +
