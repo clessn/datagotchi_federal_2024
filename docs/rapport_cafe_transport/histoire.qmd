@@ -47,13 +47,12 @@ include-in-header:
   \begin{center}
     \null\vspace{\stretch{1}} % Ensures vertical centering
     {\titlepagefont\fontsize{48pt}{18pt}\selectfont \textbf{Léger-Datagotchi}}\\[1cm]
-    {\titlepagefont\fontsize{32pt}{18pt}\selectfont \textbf{Rapport Canada 2025}}\\[1cm]
-    \includegraphics[width=0.2\textwidth]{img/leger_small.png}\\[1cm]
-    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\[1cm]
-    {\titlepagefont\fontsize{26pt}{16pt}\selectfont \textbf{CLESSN}}\\[1cm]
-    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\[1cm]
+    {\titlepagefont\fontsize{22pt}{18pt}\selectfont \textbf{Rapport sur Café Transport}}\\[1cm]
+    \includegraphics[width=0.2\textwidth]{img/leger_small.png}\\[4cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Centre d'analyse des politiques publiques (CAPP)}}\\
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Chaire de Leadership en Enseignement des Sciences Sociales Numériques (CLESSN)}}\\[3cm]
+    {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université Laval}}\\
     {\titlepagefont\fontsize{16pt}{16pt}\selectfont \textbf{Université de Montréal}}\\[1cm]
-    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Québec, Canada}\\[2cm]
     {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, \today}\\
     \null\vspace{\stretch{2}} % Ensures vertical centering
   \end{center}  \thispagestyle{empty} % Prevents headers and footers on the title page
@@ -70,7 +69,7 @@ Tim Hortons domine majoritairement dans les régions rurales et dans l'Est du pa
 À l'inverse, Starbucks s'impose principalement dans les grands centres urbains comme Vancouver et certaines parties de Toronto, témoignant d'une fracture urbaine-rurale dans les préférences de consommation. 
 Le McDonald's, quant à lui, trouve ses bastions dans des zones intermédiaires et certaines banlieues, reflétant une stratégie de positionnement entre les deux autres géants.
 
-![La Bataille du Café au Canada](img/cafe_map.png){width=90%}
+![La Bataille du Café au Canada](img/cafe_map.png){width=80%}
 
 # L'Indice Café-Politique
 
