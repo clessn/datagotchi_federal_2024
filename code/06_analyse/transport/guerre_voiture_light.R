@@ -47,7 +47,7 @@ data$rta <- substr(data$ses_postalCode, 1, 3)
 #  tolerance = 50
 #)
 # Si le mapping existe déjà, on peut le charger directement
-mapping_results <- readRDS("_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
+mapping_results <- readRDS("_SharedFolder_datagotchi_federal_2024/_previous/mapping_results_ridings_rta.rds")
 
 # 5. Obtenir le mapping principal (RTA -> riding avec meilleure couverture)
 rta_to_riding <- mapping_results$fsa_to_riding_mapping %>%
@@ -568,18 +568,31 @@ transport_by_party_long$party_name <- factor(transport_by_party_long$party_name,
 
 # Modify the transport_plot ggplot code for light theme
 transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviation, fill = transport_mode)) +
+
   # Thicker baseline with proper positioning
-  geom_hline(yintercept = 0, color = "#999999", linetype = "solid", size = 2) +
+
+  # Replace geom_hline with geom_segment
+  geom_segment(
+    x = 0.5,                 # Starting x position (0.5 position on the x-axis)
+    xend = length(party_order) + 0.5, # End at the last party (adjustable as needed)
+    y = 0,                   # y position (zero line)
+    yend = 0,                # keep y position the same to create a horizontal line
+    color = "#999999", 
+    linetype = "solid", 
+    size = 2
+  ) +
   
   # Add +/- symbols aligned with discrete axis
-  annotate("text", x = 0.5, y = 5, 
-           label = "+", color = "black", size = 12, fontface = "bold") +
-  annotate("text", x = 0.5, y = -10, 
-           label = "-", color = "black", size = 12, fontface = "bold") +
+  annotate("text", x = 0.3, y = 0, 
+           label = "moyenne canadienne", color = "black", size = 7, fontface = "bold", angle = 90) +
+  annotate("text", x = 0.3, y = 10, 
+           label = "+", color = "black", size = 10, fontface = "bold") +
+  annotate("text", x = 0.3, y = -10, 
+           label = "-", color = "black", size = 10, fontface = "bold") +
   
   # Keep the bar plot
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  
+   
   # Add coord_cartesian to prevent clipping
   coord_cartesian(clip = "off") +
   
@@ -593,8 +606,8 @@ transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviat
   ) +
   labs(
     title = "L'INDICE TRANSPORT-POLITIQUE",
-    subtitle = "Écart de préférence de transport par rapport à la moyenne nationale (points de %)",
-    caption = paste0("Moyennes nationales: Voiture = ", car_national, 
+    subtitle = "Écart de préférence de transport par rapport à la moyenne canadienne (points de %)",
+    caption = paste0("Moyennes canadiennes : Voiture = ", car_national, 
                      "%, VUS = ", suv_national, 
                      "%, Transport en commun = ", transit_national,
                      "%, Marche = ", walk_national,
