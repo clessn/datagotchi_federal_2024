@@ -8,11 +8,11 @@ data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datago
 
 # 2. Définir les couleurs officielles des partis
 party_colors <- c(
-  "CPC" = "#1A4782",  # Conservative - Blue
-  "LPC" = "#D71920",   # Liberal - Red
+  "PCC" = "#1A4782",  # Conservative - Blue
+  "PLC" = "#D71920",   # Liberal - Red
   "BQ" = "#33B2CC",    # Bloc Québécois - Light blue
-  "NDP" = "#F58220",   # NDP - Orange
-  "GP" = "#3D9B35"     # Green Party - Green
+  "NPD" = "#F58220",   # NDP - Orange
+  "PV" = "#3D9B35"     # Green Party - Green
 )
 
 # 3. Calculer la consommation par parti (version simplifiée)
@@ -28,14 +28,14 @@ coffee_by_party <- data %>%
   ) %>%
   mutate(
     party = case_when(
-      dv_voteChoice == "cpc" ~ "CPC",
-      dv_voteChoice == "lpc" ~ "LPC", 
-      dv_voteChoice == "ndp" ~ "NDP",
+      dv_voteChoice == "cpc" ~ "PCC",
+      dv_voteChoice == "lpc" ~ "PLC", 
+      dv_voteChoice == "ndp" ~ "NPD",
       dv_voteChoice == "bq" ~ "BQ",
-      dv_voteChoice == "gpc" ~ "GP"
+      dv_voteChoice == "gpc" ~ "PV"
     )
   ) %>%
-  mutate(party = factor(party, levels = c("CPC", "LPC", "BQ", "NDP", "GP")))
+  mutate(party = factor(party, levels = c("PCC", "PLC", "BQ", "NPD", "PV")))
 
 # 4. Fonction pour créer les graphiques
 create_coffee_plot <- function(data, var, title, y_limits) {
