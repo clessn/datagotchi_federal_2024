@@ -1,4 +1,5 @@
-print("ATTENTION: étape plus longue pour ajouter les circonscriptions")
+
+print("ATTENTION: étape plus longue pour ajouter les circonscriptions. Prévoir 10 minutes environ")
 # Vérification des données d'entrée pour les NA
 print("Vérification des données d'entrée pour valeurs manquantes...")
 df_survey_for_riding <- DataClean |>
