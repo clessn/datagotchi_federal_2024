@@ -6,7 +6,9 @@ library(grid)
 library(cowplot)
 library(shadowtext)
 library(clessnize)
+library(magick)
 library(ggimage)
+library(patchwork)
 
 # Load data ---------------------------------------------------------------
 
@@ -17,17 +19,17 @@ df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrow
 # Ajouter des images et descriptions factices pour chaque cluster
 cluster_info <- data.frame(
   cluster_name = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-  image_path = c("_SharedFolder_datagotchi_federal_2024/images/cluster_1_Zoé.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/mario1.png"), 
-  descriptionFr = c("Description de ce cluster:\n Jeune et Urbaine\n Aime le yoga",
+  image_path = c("_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png"), 
+  descriptionFr = c("Description de ce cluster:\n Jennifer est une Ontarienne\n urbaine de 50 ans\n faisant partie de la classe moyenne.\n Elle habite un condo,\n va au gym et prend\n son café au Starbucks.\n Elle se déplace en transport en commun.\n Elle aime le vin rouge\n et fréquente les musées.",
                     "Électeurs conservateurs",
                     "Pro-environnement",
                     "Modérés",
@@ -37,7 +39,7 @@ cluster_info <- data.frame(
                     "Jeunes urbains",
                     "Jeunes urbains",
                     "Traditionnalistes"),
-descriptionEn = c("Cluster's description:\n Young, Urban\n Loves yoga",
+descriptionEn = c("Cluster's description:\n Jennifer is a 50-year-old\n urban Ontarian who is part\n of the middle class.\n She lives in a condo,\n goes to the gym,\n gets her coffee at Starbucks.\n She uses public transit.\n She enjoys red wine\n and visits museums.",
                   "Électeurs conservateurs",
                   "Pro-environnement", 
                   "Modérés",
@@ -73,7 +75,7 @@ df_filtered <- df_plot %>%
   filter(cluster_name == selected_cluster)
 
 # Ajouter une colonne pour l'image tête (pour toutes les observations)
-df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_1_Zoé_Head.png"
+df_filtered$image_tete <- "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0000_Jennifer2000.png"
 
 # Vérifier que l'image iceberg existe bien
  image_path <- df_filtered$image_path[1]
@@ -133,7 +135,7 @@ party_colors <- c(
   "PPC" = "#442D7B"
 )
 
-# Graphique Fr
+# Graphique Fr sans logo --------------------------------------------------
 
 plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotation_custom(
@@ -204,7 +206,27 @@ plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
 
 print(plot_rciFr)
 
-# Graphique En
+# Assembler les 3 parties avec cowplot fr
+final_plotFr <- plot_grid(
+  image_plot,  
+  plot_textFr,  
+  plot_rciFr,  
+  ncol = 3,  
+  rel_widths = c(0.8, 2, 3)  
+)
+
+# Save graph without logo Fr ----------------------------------------------------------------
+
+ggsave(
+  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withoutLogo.png",
+  width = 20, 
+  height = 10, 
+  dpi = 300, 
+  bg = "white",
+  device = "png"
+)
+
+# Graphique En sans logo --------------------------------------------------
 
 plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotation_custom(
@@ -240,7 +262,7 @@ plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotate("text",
            x = 0,
            y = 0, 
-           label = "Seuil de vote",
+           label = "Voting threshold",
            hjust = 1.3,       
            vjust = 0.5,
            angle = 0,
@@ -249,7 +271,7 @@ plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotate("text",
            x = 0,   
            y = 50,     
-           label = "Solidité du vote",
+           label = "Vote certainty",
            angle = 90, 
            hjust = 0.3,
            vjust = -3.5,
@@ -258,7 +280,7 @@ plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
   annotate("text",
            x = 0,   
            y = 50,     
-           label = "Vote potentiel",
+           label = "Potential vote",
            angle = 90, 
            hjust = 3,
            vjust = -3.5,
@@ -275,29 +297,6 @@ plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
 
 print(plot_rciEn)
 
-# Assembler les 3 parties avec cowplot fr
-final_plotFr <- plot_grid(
-  image_plot,  
-  plot_textFr,  
-  plot_rciFr,  
-  ncol = 3,  
-  rel_widths = c(0.8, 2, 3)  
-)
-
-# Afficher le plot final
-print(final_plotFr)
-
-# Save it Fr ----------------------------------------------------------------
-
-ggsave(
-  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr.png",
-  width = 20, 
-  height = 10, 
-  dpi = 300, 
-  bg = "white",
-  device = "png"
-)
-
 # Assembler les 3 parties avec cowplot En
 final_plotEn <- plot_grid(
   image_plot,  
@@ -310,10 +309,10 @@ final_plotEn <- plot_grid(
 # Afficher le plot final
 print(final_plotEn)
 
-# Save it En ----------------------------------------------------------------
+# Save graph without logo En ----------------------------------------------------------------
 
 ggsave(
-  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn.png",
+  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withoutLogo.png",
   width = 20, 
   height = 10, 
   dpi = 300, 
@@ -321,3 +320,58 @@ ggsave(
   device = "png"
 )
 
+# Add logo Fr graph ----------------------------------------------------------------
+
+# Ajouter logo
+logo_image <- readPNG("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png")
+logo_grob <- rasterGrob(logo_image, interpolate = TRUE)
+
+# 2. Use a blank ggdraw(), then draw_plot() + draw_grob()
+final_plot_with_logo <- ggdraw() +
+  draw_plot(final_plotFr, x = 0, y = 0.05, width = 1, height = 0.95) +
+  # Then draw the logo on top, anchored to bottom-right
+  draw_grob(
+    logo_grob,
+    x = 0.98,               
+    y = -0.45,               
+    hjust = 1,               
+    vjust = 0,               
+    width = 0.10            
+  )
+
+print(final_plot_with_logo)
+
+ggsave(
+  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo.png",
+  width = 20, 
+  height = 10, 
+  dpi = 300, 
+  bg = "white",
+  device = "png"
+)
+
+# Add logo En graph ----------------------------------------------------------------
+
+# Use a blank ggdraw(), then draw_plot() + draw_grob()
+final_plot_withLogo_En <- ggdraw() +
+  draw_plot(final_plotEn, x = 0, y = 0.05, width = 1, height = 0.95) +
+  # Then draw the logo on top, anchored to bottom-right
+  draw_grob(
+    logo_grob,
+    x = 0.98,               
+    y = -0.45,               
+    hjust = 1,               
+    vjust = 0,               
+    width = 0.10            
+  )
+
+print(final_plot_withLogo_En)
+
+ggsave(
+  filename = "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo.png",
+  width = 20, 
+  height = 10, 
+  dpi = 300, 
+  bg = "white",
+  device = "png"
+)
