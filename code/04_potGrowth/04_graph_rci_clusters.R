@@ -29,26 +29,28 @@ cluster_info <- data.frame(
                  "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png", 
                  "_SharedFolder_datagotchi_federal_2024/images/Cluster_Datagotchi__0001_Jennifer2000.png"), 
-  descriptionFr = c("Description de ce cluster:\n Jennifer est une Ontarienne\n urbaine de 50 ans\n faisant partie de la classe moyenne.\n Elle habite un condo,\n va au gym et prend\n son café au Starbucks.\n Elle se déplace en transport en commun.\n Elle aime le vin rouge\n et fréquente les musées.",
-                    "Description de ce cluster:\n Arjun est un immigrant Ontarien ou de l'Ouest de 45 ans. Il accompli souvent des tâches manuelles et aime les sports motorisés.",
-                    "Description de ce cluster:\n Michel est une Québécois francophone\n de 60 ans qui habite en région.\n Il est retraité.\n Il habite son duplex et\n aime faire des voyages à saveur historique.\n Il ne consulte pas beaucoup\n les réseaux sociaux. Il aime le vin\n et ne boit pas beaucoup de café.\n Il principalement une personne de matin.",
-                    "Description de ce cluster:\n David est un Ontarien éduqué et aisé\n de 50 ans qui habite dans une\n maison de ville. Il occupe un emploi professionnel.\n Il a un chien, va au gym,\n est prend son café au Tim Hortons. Il aime pêcher.",
-                    "Description de ce cluster:\n John est un albertain de 40 ans,\n qui occupe un emploi manuel et\n qui fait partie de la classe moyenne.\n Il fait des sports motorisés, chasse et pêche.\n Il mange de la viande à tous\n les repas ou presque. Il prend\n son café dans les chaines (surtout au Tim,\n mais McDonald's ça lui plait aussi).\n Il aime les boissons spiritueuses.",
-                    "Description de ce cluster:\n Maxime est un québécois de 35 ans.\n Il vit dans son appartement, fait du plein air\n et des sports motorisés.\n Il chasse et pêche à l'occasion.\n Il boit de la bière.",
-                    "Description de ce cluster:\n Zoe est une femme de 35 ans\n vivant dans un milieu urbain.\n Elle habite son appartement\n et occupe un emploi de professionnel ou de management.\n Elle se déplace à vélo et est tatouée.\n Elle consulte beaucoup instagram.\n Elle a un chat et un chien.\n Elle prend son café au Starbucks\n et fait de la course à pieds.",
-                    "Description de ce cluster:\n Julie est une québécoise de 50 ans\n peu éduquée avec peu de moyens.\n Elle habite son bloc appartement avec son chat\n et prend des marches.\n Elle ne boit pas de café et aime le vin.\n Elle est tatouée.",
-                    "Description de ce cluster:\n Robert est un homme des provinces atlantiques de 55 ans.\n Il habite sa maison et occupe un emploi manuel.\n Il pêche beaucoup, chasse à l'occasion.\n Il aime la bière et les boissons spiritueuses.\n Il prend son café au Tim Hortons.\n Il accompli souvent des tâches manuelles.",
-                    "Description de ce cluster:\n Emily est éduquée et vit dans un appartement ou un condo avec son chat. Elle est végétarienne. Elle fait du yoga et fréquente les cafés indépendants. Elle s'habille dans les friperies. Elle aime les cocktails et fume du pot à l'occasion."),
-descriptionEn = c("Cluster's description:\n Jennifer is a 50-year-old\n urban Ontarian who is part\n of the middle class.\n She lives in a condo,\n goes to the gym,\n gets her coffee at Starbucks.\n She uses public transit.\n She enjoys red wine\n and visits museums.",
-                  "Cluster's description:\n Électeurs conservateurs",
-                  "Cluster's description:\n Pro-environnement", 
-                  "Cluster's description:\n Modérés",
-                  "Cluster's description:\n Indécis",
-                  "Cluster's description:\n Jeunes urbains",
-                  "Cluster's description:\n Jeunes urbains",
-                  "Cluster's description:\n Jeunes urbains",
-                  "Cluster's description:\n Jeunes urbains",
-                  "Cluster's description:\n Traditionnalistes"))
+  descriptionFr = c("Description de ce cluster:\nJennifer est une Ontarienne\nurbaine de 50 ans\nfaisant partie de la classe moyenne.\nElle habite un condo,\nva au gym et prend\nson café au Starbucks.\nElle se déplace en transport en commun.\nElle aime le vin rouge\net fréquente les musées.",
+    "Description de ce cluster:\nArjun est un immigrant Ontarien\nou de l'Ouest de 45 ans.\nIl accomplit souvent des tâches manuelles\net aime les sports motorisés.",
+    "Description de ce cluster:\nMichel est un Québécois francophone\nde 60 ans qui habite en région.\nIl est retraité, habite un duplex\net aime les voyages historiques.\nIl consulte peu les réseaux sociaux.",
+    "Description de ce cluster:\nDavid est un Ontarien éduqué et aisé\nde 50 ans qui habite dans une maison de ville.\nIl occupe un emploi professionnel,\na un chien, va au gym\net prend son café au Tim Hortons.\nIl aime pêcher.",
+    "Description de ce cluster:\nJohn est un Albertain de 40 ans,\nqui occupe un emploi manuel\net fait partie de la classe moyenne.\nIl pratique des sports motorisés,\nla chasse et la pêche.\nIl mange de la viande presque à chaque repas\net prend son café dans des chaînes.",
+    "Description de ce cluster:\nMaxime est un Québécois de 35 ans.\nIl vit dans un appartement,\nfait du plein air et des sports motorisés.\nIl chasse et pêche occasionnellement,\net boit de la bière.",
+    "Description de ce cluster:\nZoe est une femme de 35 ans\nvivant en milieu urbain.\nElle habite en appartement et occupe un emploi professionnel ou de management.\nElle se déplace à vélo, est tatouée,\nconsulte beaucoup Instagram,\na un chat et un chien,\nprend son café au Starbucks\net fait de la course à pied.",
+    "Description de ce cluster:\nJulie est une Québécoise de 50 ans\npeu éduquée et avec peu de moyens.\nElle habite dans un bloc avec son chat,\nprend des marches,\nne boit pas de café et aime le vin.\nElle est tatouée.",
+    "Description de ce cluster:\nRobert est un homme des provinces atlantiques de 55 ans.\nIl habite sa maison et occupe un emploi manuel.\nIl pêche beaucoup, chasse à l'occasion,\naime la bière et les boissons spiritueuses,\net prend son café au Tim Hortons.",
+    "Description de ce cluster:\nEmily est éduquée et vit dans un appartement ou condo avec son chat.\nElle est végétarienne, fait du yoga,\nfréquente les cafés indépendants,\ns'habille en friperie,\naime les cocktails et fume occasionnellement."),
+  descriptionEn  = c(
+    "Cluster's description:\nJennifer is a 50-year-old urban Ontarian\nwho is part of the middle class.\nShe lives in a condo,\ngoes to the gym,\ngets her coffee at Starbucks,\nuses public transit,\nenjoys red wine\nand visits museums.",
+    "Cluster's description:\nArjun is an Ontarian immigrant\nor from the West, aged 45.\nHe often performs manual tasks\nand enjoys motor sports.",
+    "Cluster's description:\nMichel is a French-speaking Quebecer\naged 60 living in a rural area.\nHe is retired, lives in a duplex,\nand enjoys historically flavored trips.\nHe rarely uses social media.",
+    "Cluster's description:\nDavid is a well-educated, affluent Ontarian\naged 50 living in a townhouse.\nHe works in a professional field,\nhas a dog, goes to the gym,\ngets his coffee at Tim Hortons,\nand enjoys fishing.",
+    "Cluster's description:\nJohn is a 40-year-old Albertan\nwith a manual job and a middle-class lifestyle.\nHe enjoys motor sports, hunting and fishing,\neats meat almost every meal,\nand drinks coffee from chains.",
+    "Cluster's description:\nMaxime is a 35-year-old Quebecer\nliving in an apartment,\nwho enjoys outdoor and motor sports,\noccasionally hunts and fishes,\nand drinks beer.",
+    "Cluster's description:\nZoe is a 35-year-old urban woman\nliving in an apartment with a professional or management job.\nShe cycles, has tattoos,\nfrequently uses Instagram,\nlives with a cat and a dog,\ngets her coffee at Starbucks,\nand runs.",
+    "Cluster's description:\nJulie is a 50-year-old Quebecer\nwith limited education and means.\nShe lives in a housing block with her cat,\ntakes walks,\ndoes not drink coffee, and enjoys wine.\nShe is tattooed.",
+    "Cluster's description:\nRobert is a 55-year-old man from the Atlantic provinces.\nHe lives in his house and works manually.\nHe fishes a lot, hunts occasionally,\nenjoys beer and spirits,\nand gets his coffee at Tim Hortons.",
+    "Cluster's description:\nEmily is educated and lives in an apartment or condo with her cat.\nShe is vegetarian, practices yoga,\nvisits independent cafes,\nshops at thrift stores,\nloves cocktails and occasionally smokes cannabis."
+  ))
 
 # Charger l'image iceberg
 img_iceberg <- readPNG("_SharedFolder_datagotchi_federal_2024/images/icebergPixel.png")
@@ -138,13 +140,6 @@ party_colors <- c(
 # Graphique Fr sans logo --------------------------------------------------
 
 plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
-  annotation_custom(
-    iceberg_grob,
-    xmin = -Inf,
-    xmax = Inf,
-    ymin = -100,
-    ymax = 55
-  ) +
   geom_bar(aes(fill = party),
            stat = "identity",
            width = 0.35) + 
@@ -164,10 +159,6 @@ plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
     x = NULL, 
     y = NULL
   ) +
-  annotate("rect", 
-           xmin = -Inf, xmax = Inf, 
-           ymin = -100, ymax = 0,
-           fill = "lightblue", alpha = 0.3) +
   annotate("text",
            x = 0,
            y = 0, 
