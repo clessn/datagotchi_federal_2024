@@ -51,8 +51,8 @@ logo_image <- readPNG("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black
 logo_grob <- rasterGrob(logo_image, interpolate = TRUE)
 
 # Définir le texte de méthodologie
-methodologyTextFr <- "Méthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur probabilité de voter pour chaque parti.\n Un score relatif est ensuite calculé : le parti préféré reçoit un score positif (écart avec le 2e),\n les autres un score négatif (écart avec le 1er).\n Ce score permet de mesurer la solidité du vote et le potentiel de croissance des partis dans chaque segment électoral.\n Pour élaborer les clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021)."
-methodologyTextEn <- "Methodology: To calculate the RCI, respondents rate their likelihood of voting for each party on a scale of 10.\n A relative score is then calculated: the preferred party receives a positive score (the difference with the second),\n while the others receive a negative score (the difference with the first).\n This score measures the solidity of the vote and the growth potential of parties in each electoral segment.\n To develop the clusters, we used the k-means method on the data from our pilot survey (n = 1021)."
+methodologyTextFr <- "\nMéthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur probabilité de voter pour chaque parti.\n Un score relatif est ensuite calculé : le parti préféré reçoit un score positif (écart avec le 2e),\n les autres un score négatif (écart avec le 1er).\n Ce score permet de mesurer la solidité du vote et le potentiel de croissance des partis dans chaque segment électoral.\n Pour élaborer les clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021)."
+methodologyTextEn <- "\nMethodology: To calculate the RCI, respondents rate their likelihood of voting for each party on a scale of 10.\n A relative score is then calculated: the preferred party receives a positive score (the difference with the second),\n while the others receive a negative score (the difference with the first).\n This score measures the solidity of the vote and the growth potential of parties in each electoral segment.\n To develop the clusters, we used the k-means method on the data from our pilot survey (n = 1021)."
 
 # ------------------------- Boucle sur les clusters -------------------------
 for(cluster in unique(df_plot$cluster_name)) {
@@ -61,21 +61,21 @@ for(cluster in unique(df_plot$cluster_name)) {
   df_filtered <- df_plot %>% filter(cluster_name == cluster)
   
   # Créer le plot de méthodologie (texte)
-  plot_methodologyFr <- ggplot() +
-    annotate("text", x = 0.5, y = 0.5,
-             label = methodologyTextFr,
-             size = 18, family = "PixelOperatorSC",
-             lineheight = 0.3,
-             hjust = 0.5, vjust = 0.5) +
-    theme_void()
-  
-  plot_methodologyEn <- ggplot() +
-    annotate("text", x = 0.5, y = 0.5,
-             label = methodologyTextEn,
-             size = 18, family = "PixelOperatorSC",
-             lineheight = 0.3,
-             hjust = 0.5, vjust = 0.5) +
-    theme_void()
+  #plot_methodologyFr <- ggplot() +
+  #  annotate("text", x = 0.5, y = 0.5,
+  #           label = methodologyTextFr,
+  #           size = 18, family = "PixelOperatorSC",
+  #           lineheight = 0.3,
+  #           hjust = 0.5, vjust = 0.5) +
+  #  theme_void()
+  #
+  #plot_methodologyEn <- ggplot() +
+  #  annotate("text", x = 0.5, y = 0.5,
+  #           label = methodologyTextEn,
+  #           size = 18, family = "PixelOperatorSC",
+  #           lineheight = 0.3,
+  #           hjust = 0.5, vjust = 0.5) +
+  #  theme_void()
   
   # -------------------- Graphique RCI en français --------------------
   plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
@@ -98,24 +98,37 @@ for(cluster in unique(df_plot$cluster_name)) {
     )) +
     labs(
       title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_label[1]),
-      x = NULL, y = NULL
+      x = NULL,
+      y = NULL,
+      caption = methodologyTextFr
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "lightblue", alpha = 0.3) +
-    annotate("text", x = 0, y = 0, label = "Seuil",
-             hjust = 1.6, vjust = 0.5, angle = 0, size = 20, family = "PixelOperatorSC") +
-    annotate("text", x = 0, y = 0, label = "de vote",
-             hjust = 1.3, vjust = 3.2, angle = 0, size = 20, family = "PixelOperatorSC") +
+    annotate("text", x = 0, y = 0, label = "Seuil\nde vote",
+             hjust = 0.5, vjust = -1, angle = 90, size = 20, lineheight = 0.2, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Solidité du vote",
              angle = 90, hjust = 0.3, vjust = -3.5, size = 20, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Vote potentiel",
              angle = 90, hjust = 3, vjust = -3.5, size = 20, family = "PixelOperatorSC") +
+    coord_cartesian(clip = "off") +
     clessnize::theme_datagotchi_light(base_size = 60) +
-    scale_y_continuous(limits = c(-100, 100)) +
+    scale_y_continuous(
+      limits = c(-100, 100)
+    ) +
     theme(text = element_text(size = 70),
           legend.position = "none",
-          plot.title = element_text(lineheight = 0.2)) +
-    coord_cartesian(clip = "off")
+          plot.title = element_text(lineheight = 0.2),
+          plot.caption = element_text(lineheight = 0.2, size = 40),
+          plot.caption.position = "plot",
+          plot.margin = margin(t = 10, r = 10, b = 10, l = 20) 
+        )
+
+  ## Test hubert
+  ggsave(
+    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/tests_hubert/", df_filtered$cluster_name[1], "_rciFr.png"),
+    plot = plot_rciFr,
+    width = 10, height = 10, dpi = 300, bg = "white", device = "png"
+  )
   
   # -------------------- Graphique RCI en anglais --------------------
   plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
