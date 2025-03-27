@@ -66,8 +66,9 @@ for(cluster in unique(df_plot$cluster_name)) {
   plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
     annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
+    geom_hline(yintercept = -1, color = "#040280", size = 2) +
     geom_text(aes(label = round(rci, 0),
-                  y = ifelse(rci >= 0, rci + 15, rci - 15)),
+                  y = ifelse(rci >= 0, rci + 20, rci - 20)),
               size = 22, color = "black", family = "PixelOperatorSC") +
     geom_image(aes(image = image_tete), size = 0.08, by = "width") +
     scale_fill_manual(values = party_colors) +
@@ -110,8 +111,9 @@ for(cluster in unique(df_plot$cluster_name)) {
   plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
     annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
+    geom_hline(yintercept = -1, color = "#040280", size = 2) +
     geom_text(aes(label = round(rci, 0),
-                  y = ifelse(rci >= 0, rci + 15, rci - 15)),
+                  y = ifelse(rci >= 0, rci + 20, rci - 20)),
               size = 22, color = "black", family = "PixelOperatorSC") +
     geom_image(aes(image = image_tete), size = 0.08, by = "width") +
     scale_fill_manual(values = party_colors) +
@@ -140,49 +142,49 @@ for(cluster in unique(df_plot$cluster_name)) {
           plot.margin = margin(t = 10, r = 10, b = 10, l = 30)
     ) 
   
-  plot_finalFr <- ggdraw() +
-    draw_plot(plot_rciFr, 
-              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
-              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
-              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
-              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
-    draw_label(
-      "Source : Léger-Datagotchi 2025 | Méthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur probabilité de voter pour\nchaque parti.Un score relatif est ensuite calculé : le parti préféré reçoit un score positif (écart avec le 2e), les autres un score\nnégatif (écart avec le 1er). Ce score permet de mesurer la solidité du vote et le potentiel de croissance des partis dans chaque\nsegment électoral.Pour élaborer les clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021).",
-      x = 0.10, y = 0.05, 
-      hjust = 0, vjust = 0,
-      fontfamily = "PixelOperatorSC",
-      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
-      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
-      color = "black"
-    )
+#  plot_finalFr <- ggdraw() +
+#    draw_plot(plot_rciFr, 
+#              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
+#              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
+#              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
+#              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
+#    draw_label(
+#      "Source : Léger-Datagotchi 2025 | Méthodologie: Pour calculer le RCI, les répondants #évaluent sur 10 leur probabilité de voter pour\nchaque parti.Un score relatif est ensuite #calculé : le parti préféré reçoit un score positif (écart avec le 2e), les autres un #score\nnégatif (écart avec le 1er). Ce score permet de mesurer la solidité du vote et le #potentiel de croissance des partis dans chaque\nsegment électoral.Pour élaborer les clusters, #nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021).",
+#      x = 0.10, y = 0.05, 
+#      hjust = 0, vjust = 0,
+#      fontfamily = "PixelOperatorSC",
+#      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
+#      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
+#      color = "black"
+#    )
   
-  plot_finalEn <- ggdraw() +
-    draw_plot(plot_rciEn, 
-              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
-              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
-              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
-              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
-    draw_label(
-      "Source : Léger-Datagotchi 2025 | Methodology: To calculate the RCI, respondents rate their likelihood of voting for each party on a\nscale of 10. A relative score is then calculated: the preferred party receives a positive score (the difference with the second),\nwhile the others receive a negative score (the difference with the first). This score measures the solidity of the vote and the\ngrowth potential of parties in each electoral segment. To develop the clusters, we used the k-means method on the data from our\npilot survey (n = 1021).",
-      x = 0.10, y = 0.03, 
-      hjust = 0, vjust = 0,
-      fontfamily = "PixelOperatorSC",
-      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
-      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
-      color = "black"
-    )
-  
+#  plot_finalEn <- ggdraw() +
+#    draw_plot(plot_rciEn, 
+#              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
+#              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
+#              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
+#              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
+#    draw_label(
+#      "Source : Léger-Datagotchi 2025 | Methodology: To calculate the RCI, respondents rate #their likelihood of voting for each party on a\nscale of 10. A relative score is then calculated#: the preferred party receives a positive score (the difference with the second),\nwhile the #others receive a negative score (the difference with the first). This score measures the #solidity of the vote and the\ngrowth potential of parties in each electoral segment. To develop #the clusters, we used the k-means method on the data from our\npilot survey (n = 1021).",
+#      x = 0.10, y = 0.03, 
+#      hjust = 0, vjust = 0,
+#      fontfamily = "PixelOperatorSC",
+#      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
+#      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
+#      color = "black"
+#    )
+#
   # -------------------- Sauvegardes (sans logo) --------------------
   ggsave(
     filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_", 
                       cluster, "_iceberg", i, ".png"),
-    plot = plot_finalFr,
+    plot = plot_rciFr,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   ggsave(
     filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_", 
                       cluster, "_iceberg", i, ".png"),
-    plot = plot_finalEn,
+    plot = plot_rciEn,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   cat("Cluster", cluster, "traité et sauvegardé.\n")

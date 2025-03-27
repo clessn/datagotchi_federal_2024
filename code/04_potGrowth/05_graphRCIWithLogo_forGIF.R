@@ -63,8 +63,9 @@ for(cluster in unique(df_plot$cluster_name)) {
       # Ajustez xmin/xmax/ymin/ymax selon vos besoins
       annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
       geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
+      geom_hline(yintercept = -1, color = "#040280", size = 2) +
       geom_text(aes(label = round(rci, 0),
-                    y = ifelse(rci >= 0, rci + 15, rci - 15)),
+                    y = ifelse(rci >= 0, rci + 20, rci - 20)),
                 size = 22, color = "black", family = "PixelOperatorSC") +
       geom_image(aes(image = image_tete), size = 0.08, by = "width") +
       scale_fill_manual(values = party_colors) +
@@ -122,8 +123,9 @@ for(cluster in unique(df_plot$cluster_name)) {
     plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
       annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
       geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
+      geom_hline(yintercept = -1, color = "#040280", size = 2) +
       geom_text(aes(label = round(rci, 0),
-                    y = ifelse(rci >= 0, rci + 15, rci - 15)),
+                    y = ifelse(rci >= 0, rci + 20, rci - 20)),
                 size = 22, color = "black", family = "PixelOperatorSC") +
       geom_image(aes(image = image_tete), size = 0.08, by = "width") +
       scale_fill_manual(values = party_colors) +
