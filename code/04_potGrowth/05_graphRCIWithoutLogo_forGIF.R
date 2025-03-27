@@ -9,6 +9,8 @@ library(clessnize)
 library(magick)
 library(ggimage)
 library(patchwork)
+library(jpeg)
+library(gifski)
 
 # Chargement des données RCI
 df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")
@@ -26,15 +28,6 @@ df_aggregated_rci <- df_aggregated_rci %>%
   mutate(cluster_name = as.numeric(cluster_name))
 df_plot <- df_aggregated_rci %>%
   left_join(cluster_info, by = "cluster_name")
-
-# Charger l'image iceberg et créer un grob
-img_iceberg <- readPNG("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/icebergPixel.png")
-iceberg_grob <- rasterGrob(
-  img_iceberg,
-  width = unit(1, "npc"),
-  height = unit(1, "npc"),
-  interpolate = TRUE
-)
 
 # Définir les couleurs spécifiques par parti
 party_colors <- c(
@@ -56,15 +49,27 @@ for(cluster in unique(df_plot$cluster_name)) {
   # Filtrer les données pour le cluster courant
   df_filtered <- df_plot %>% filter(cluster_name == cluster)
   
+  # Boucle sur les 8 images iceberg
+  for(i in 1:8) {
+  
+  # Charger l'image iceberg correspondant à la itération i
+  img_filename <- paste0("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/iceberg_", i, ".jpg")
+  img_iceberg <- readJPEG(img_filename)
+  iceberg_grob <- rasterGrob(
+    img_iceberg,
+    width = unit(1, "npc"),
+    height = unit(1, "npc"),
+    interpolate = TRUE
+  )
+  
   # -------------------- Graphique RCI en français --------------------
   plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
-    annotation_custom(iceberg_grob, xmin = -Inf, xmax = Inf, ymin = -100, ymax = 55) +
+    annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
     geom_text(aes(label = round(rci, 0),
                   y = ifelse(rci >= 0, rci + 15, rci - 15)),
               size = 22, color = "black", family = "PixelOperatorSC") +
     geom_image(aes(image = image_tete), size = 0.08, by = "width") +
-    geom_hline(yintercept = 0, color = "#040280", size = 2) +
     scale_fill_manual(values = party_colors) +
     scale_color_manual(values = party_colors) +
     scale_x_discrete(labels = c(
@@ -81,7 +86,7 @@ for(cluster in unique(df_plot$cluster_name)) {
       y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
-             fill = "lightblue", alpha = 0.3) +
+             fill = "#1bb8d3", alpha = 0.3) +
     annotate("text", x = 0, y = 0, label = "Seuil\nde vote",
              hjust = 0.5, vjust = -1, angle = 90, size = 20, lineheight = 0.2, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Solidité du vote",
@@ -103,13 +108,12 @@ for(cluster in unique(df_plot$cluster_name)) {
   
   # -------------------- Graphique RCI en anglais --------------------
   plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
-    annotation_custom(iceberg_grob, xmin = -Inf, xmax = Inf, ymin = -100, ymax = 55) +
+    annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
     geom_text(aes(label = round(rci, 0),
                   y = ifelse(rci >= 0, rci + 15, rci - 15)),
               size = 22, color = "black", family = "PixelOperatorSC") +
     geom_image(aes(image = image_tete), size = 0.08, by = "width") +
-    geom_hline(yintercept = 0, color = "#040280", size = 2) +
     scale_fill_manual(values = party_colors) +
     scale_color_manual(values = party_colors) +
     labs(
@@ -117,7 +121,7 @@ for(cluster in unique(df_plot$cluster_name)) {
       x = NULL, y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
-             fill = "lightblue", alpha = 0.3) +
+             fill = "#1bb8d3", alpha = 0.3) +
     annotate("text", x = 0, y = 0, label = "Voting\nThreshold",
              hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC",
              lineheight = 0.2) +
@@ -170,13 +174,47 @@ for(cluster in unique(df_plot$cluster_name)) {
   
   # -------------------- Sauvegardes (sans logo) --------------------
   ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_", cluster, ".png"),
+    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_", 
+                      cluster, "_iceberg", i, ".png"),
     plot = plot_finalFr,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_", cluster, ".png"),
+    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_", 
+                      cluster, "_iceberg", i, ".png"),
     plot = plot_finalEn,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
-  ) }
-
+  )
+  cat("Cluster", cluster, "traité et sauvegardé.\n")
+  } 
+  
+  cat("Cluster", cluster, ": 8 images FR et EN générées.\n")
+  
+  # 4) Créer le GIF français pour ce cluster
+  frames_fr <- paste0(
+    "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_",
+    cluster, "_iceberg", 1:8, ".png"
+  )
+  gifski(
+    png_files = frames_fr,
+    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withoutLogo_", cluster, ".gif"),
+    delay = 0.5,
+    loop = TRUE
+  )
+  
+  # 5) Créer le GIF anglais pour ce cluster
+  frames_en <- paste0(
+    "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_",
+    cluster, "_iceberg", 1:8, ".png"
+  )
+  gifski(
+    png_files = frames_en,
+    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withoutLogo_", cluster, ".gif"),
+    delay = 0.5,
+    loop = TRUE
+  )
+  
+  cat("Cluster", cluster, ": GIF FR et GIF EN créés.\n\n")
+  
+} # Fin boucle sur les clusters
+  }

@@ -171,13 +171,13 @@ for(cluster in unique(df_plot$cluster_name)) {
     draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.12)
   
   ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo_", cluster, ".png"),
+    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithLogo_fr/cluster_rci_plotFr_withLogo_", cluster, ".png"),
     plot = plot_finalFr,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   
   ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo_", cluster, ".png"),
+    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithLogo_en/cluster_rci_plotEn_withLogo_", cluster, ".png"),
     plot = plot_finalEn,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
