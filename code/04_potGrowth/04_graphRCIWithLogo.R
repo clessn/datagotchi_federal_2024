@@ -50,32 +50,11 @@ party_colors <- c(
 logo_image <- readPNG("_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png")
 logo_grob <- rasterGrob(logo_image, interpolate = TRUE)
 
-# Définir le texte de méthodologie
-methodologyTextFr <- "\nMéthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur probabilité de voter pour chaque parti.\n Un score relatif est ensuite calculé : le parti préféré reçoit un score positif (écart avec le 2e),\n les autres un score négatif (écart avec le 1er).\n Ce score permet de mesurer la solidité du vote et le potentiel de croissance des partis dans chaque segment électoral.\n Pour élaborer les clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021)."
-methodologyTextEn <- "\nMethodology: To calculate the RCI, respondents rate their likelihood of voting for each party on a scale of 10.\n A relative score is then calculated: the preferred party receives a positive score (the difference with the second),\n while the others receive a negative score (the difference with the first).\n This score measures the solidity of the vote and the growth potential of parties in each electoral segment.\n To develop the clusters, we used the k-means method on the data from our pilot survey (n = 1021)."
-
-# ------------------------- Boucle sur les clusters -------------------------
+# ------------------------- Boucle sur les clusters sans logo  -------------------------
 for(cluster in unique(df_plot$cluster_name)) {
   
   # Filtrer les données pour le cluster courant
   df_filtered <- df_plot %>% filter(cluster_name == cluster)
-  
-  # Créer le plot de méthodologie (texte)
-  #plot_methodologyFr <- ggplot() +
-  #  annotate("text", x = 0.5, y = 0.5,
-  #           label = methodologyTextFr,
-  #           size = 18, family = "PixelOperatorSC",
-  #           lineheight = 0.3,
-  #           hjust = 0.5, vjust = 0.5) +
-  #  theme_void()
-  #
-  #plot_methodologyEn <- ggplot() +
-  #  annotate("text", x = 0.5, y = 0.5,
-  #           label = methodologyTextEn,
-  #           size = 18, family = "PixelOperatorSC",
-  #           lineheight = 0.3,
-  #           hjust = 0.5, vjust = 0.5) +
-  #  theme_void()
   
   # -------------------- Graphique RCI en français --------------------
   plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
@@ -99,8 +78,7 @@ for(cluster in unique(df_plot$cluster_name)) {
     labs(
       title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_label[1]),
       x = NULL,
-      y = NULL,
-      caption = methodologyTextFr
+      y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "lightblue", alpha = 0.3) +
@@ -121,14 +99,7 @@ for(cluster in unique(df_plot$cluster_name)) {
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
           plot.margin = margin(t = 10, r = 10, b = 10, l = 20) 
-        )
-
-  ## Test hubert
-  ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/tests_hubert/", df_filtered$cluster_name[1], "_rciFr.png"),
-    plot = plot_rciFr,
-    width = 10, height = 10, dpi = 300, bg = "white", device = "png"
-  )
+    )
   
   # -------------------- Graphique RCI en anglais --------------------
   plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
@@ -143,13 +114,13 @@ for(cluster in unique(df_plot$cluster_name)) {
     scale_color_manual(values = party_colors) +
     labs(
       title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_label[1]),
-      x = NULL, y = NULL,
-      caption = methodologyTextEn
+      x = NULL, y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "lightblue", alpha = 0.3) +
     annotate("text", x = 0, y = 0, label = "Voting\nThreshold",
-             hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC") +
+             hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC",
+             lineheight = 0.2) +
     annotate("text", x = 0, y = 50, label = "Vote certainty",
              angle = 90, hjust = 0.3, vjust = -3.5, size = 20, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Potential vote",
@@ -162,42 +133,52 @@ for(cluster in unique(df_plot$cluster_name)) {
           plot.title = element_text(lineheight = 0.2),
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
-          plot.margin = margin(t = 10, r = 10, b = 10, l = 20)
-          ) 
-    
+          plot.margin = margin(t = 10, r = 10, b = 10, l = 30)
+    ) 
   
-
-  # -------------------- Sauvegardes (sans logo) --------------------
-  ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withoutLogo_", cluster, ".png"),
-    plot = plot_rciFr,
-    width = 10, height = 10, dpi = 300, bg = "white", device = "png"
-  )
-  ggsave(
-    filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withoutLogo_", cluster, ".png"),
-    plot = plot_rciEn,
-    width = 10, height = 10, dpi = 300, bg = "white", device = "png"
-  )
+  plot_finalFr <- ggdraw() +
+    draw_plot(plot_rciFr, 
+              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
+              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
+              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
+              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
+    draw_label(
+      "Source : Léger-Datagotchi 2025 | Méthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur\nprobabilité de voter pour chaque parti. Un score relatif est ensuite calculé : le parti préféré reçoit un\nscore positif (écart avec le 2e), les autres un score négatif (écart avec le 1er). Ce score permet de mesurer\nla solidité du vote et le potentiel de croissance des partis dans chaque segment électoral. Pour élaborer\nles clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021).",
+      x = 0.10, y = 0.03, 
+      hjust = 0, vjust = 0,
+      fontfamily = "PixelOperatorSC",
+      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
+      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
+      color = "black"
+    ) + 
+    draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.12)
   
-  # -------------------- Ajout du logo (FR) --------------------
-  final_plot_with_logo_Fr <- ggdraw(clip = "off") +
-    draw_plot(plot_rciFr, x = 0, y = 0.05, width = 1, height = 0.95) +
-    draw_grob(logo_grob, x = 0.98, y = -0.45, hjust = 1, vjust = 0, width = 0.10)
+  plot_finalEn <- ggdraw() +
+    draw_plot(plot_rciEn, 
+              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
+              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
+              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
+              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
+    draw_label(
+      "Source : Léger-Datagotchi 2025 | Methodology: To calculate the RCI, respondents rate their likelihood of voting for\neach party on a scale of 10.A relative score is then calculated: the preferred party receives a positive score (the\ndifference with the second), while the others receive a negative score (the difference with the first). This score\nmeasures the solidity of the vote and the growth potential of parties in each electoral segment. To develop\nthe clusters, we used the k-means method on the data from our pilot survey (n = 1021).",
+      x = 0.10, y = 0.03, 
+      hjust = 0, vjust = 0,
+      fontfamily = "PixelOperatorSC",
+      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
+      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
+      color = "black"
+    ) + 
+    draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.12)
   
   ggsave(
     filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo_", cluster, ".png"),
-    plot = final_plot_with_logo_Fr,
+    plot = plot_finalFr,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   
-  # -------------------- Ajout du logo (EN) --------------------
-  final_plot_with_logo_En <- ggdraw(clip = "off") +
-    draw_plot(plot_rciEn, x = 0, y = 0.05, width = 1, height = 0.95) +
-    draw_grob(logo_grob, x = 0.98, y = -0.45, hjust = 1, vjust = 0, width = 0.10)
-  
   ggsave(
     filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo_", cluster, ".png"),
-    plot = final_plot_with_logo_En,
+    plot = plot_finalEn,
     width = 10, height = 10, dpi = 300, bg = "white", device = "png"
   )
   
