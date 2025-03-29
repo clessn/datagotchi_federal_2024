@@ -9,40 +9,47 @@ library(rsconnect)
 # ------------------------------------------------------------------------
 final_model <- readRDS("data/finalmodel_withRTAPredictions_2025-04-15.rds")
 
-# Charger les données RTA pour les prédictions
-rta_predictions <- read.csv("data/rta_predictions_partis.csv", stringsAsFactors = FALSE)
+# Charger les contributions RTA pré-calculées au lieu des prédictions brutes
+rta_contributions <- read.csv("data/rta_precalculated_contributions.csv", stringsAsFactors = FALSE)
 
-# Si le fichier des prédictions RTA n'existe pas, on crée une version vide pour éviter les erreurs
-if (!file.exists("data/rta_predictions_partis.csv")) {
+# Si le fichier des contributions RTA n'existe pas, on crée une version vide pour éviter les erreurs
+if (!file.exists("data/rta_precalculated_contributions.csv")) {
   # Créer un dataframe vide avec les colonnes nécessaires
-  rta_predictions <- data.frame(
+  rta_contributions <- data.frame(
     rta = character(),
-    CPC = numeric(),
-    LPC = numeric(),
-    NDP = numeric(),
-    GPC = numeric(),
-    BQ = numeric(),
+    bq = numeric(),
+    cpc = numeric(),
+    lpc = numeric(),
+    ndp = numeric(),
+    gpc = numeric(),
     stringsAsFactors = FALSE
   )
+  # Ajouter une ligne DEFAULT avec des valeurs nulles
+  rta_contributions <- rbind(rta_contributions, 
+                            data.frame(rta = "DEFAULT", bq = 0, cpc = 0, lpc = 0, ndp = 0, gpc = 0))
   # Sauvegarder le fichier vide
-  write.csv(rta_predictions, "data/rta_predictions_partis.csv", row.names = FALSE)
+  write.csv(rta_contributions, "data/rta_precalculated_contributions.csv", row.names = FALSE)
 }
 
-# Calculer les moyennes des prédictions par parti pour utiliser comme valeurs par défaut
-mean_cpc <- mean(rta_predictions$CPC, na.rm = TRUE)
-mean_lpc <- mean(rta_predictions$LPC, na.rm = TRUE)
-mean_ndp <- mean(rta_predictions$NDP, na.rm = TRUE)
-mean_gpc <- mean(rta_predictions$GPC, na.rm = TRUE)
-mean_bq <- mean(rta_predictions$BQ, na.rm = TRUE)
-
 # S'assurer que les RTA sont en majuscules
-rta_predictions$rta <- toupper(rta_predictions$rta)
+rta_contributions$rta <- toupper(rta_contributions$rta)
+
+# Obtenir les valeurs par défaut (ligne DEFAULT)
+default_contributions <- rta_contributions %>%
+  filter(rta == "DEFAULT") %>%
+  select(-rta)
+
+# Si pas de ligne DEFAULT, créer des valeurs par défaut (zéro)
+if(nrow(default_contributions) == 0) {
+  party_cols <- setdiff(names(rta_contributions), "rta")
+  default_contributions <- as.data.frame(matrix(0, nrow = 1, ncol = length(party_cols)))
+  names(default_contributions) <- party_cols
+}
 
 # ------------------------------------------------------------------------
-# 2. Définition manuelle des variables utilisées dans le modèle
-#    et des choix possibles (ces valeurs sont à adapter selon votre codage)
+# 2. Définition des variables socio-démographiques (sans variables RTA)
 # ------------------------------------------------------------------------
-final_vars <- c(
+socio_vars <- c(
   "ses_region", "ses_immigrant", "lifestyle_typeTransport",
   "lifestyle_consClothes", "lifestyle_exercise", "lifestyle_eatMeatFreq",
   "lifestyle_favAlcool", "lifestyle_consCoffee", "ses_language",
@@ -51,9 +58,11 @@ final_vars <- c(
   "lifestyle_goHuntingFreq_numeric", "lifestyle_goFishingFreq_bin",
   "lifestyle_goMuseumsFreq_bin", "lifestyle_volunteeringFreq",
   "lifestyle_motorizedActFreq_bin", "lifestyle_hasTattoos", "ses_educ",
-  "ses_income3Cat", "lifestyle_ownPet_bin",
-  "prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"
+  "ses_income3Cat", "lifestyle_ownPet_bin"
 )
+
+# Liste des variables RTA dont nous avons besoin pour la prédiction
+rta_vars <- c("prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ")
 
 # Définition manuelle des choix possibles pour chaque variable
 possible_choices <- list(
@@ -81,81 +90,11 @@ possible_choices <- list(
   lifestyle_hasTattoos = c(0, 1),
   ses_educ = c("no_schooling", "elementary_school", "high_school", "technical_community_cegep", "bachelor", "masters", "doctorate"),
   ses_income3Cat = c("High", "Low", "Mid"),
-  lifestyle_ownPet_bin = c(0, 1),
-  # Variables de prédiction RTA (valeurs par défaut)
-  prediction_CPC = c(mean_cpc),
-  prediction_LPC = c(mean_lpc),
-  prediction_NDP = c(mean_ndp),
-  prediction_GPC = c(mean_gpc),
-  prediction_BQ = c(mean_bq)
+  lifestyle_ownPet_bin = c(0, 1)
 )
 
 # ------------------------------------------------------------------------
-# 3. Création d'un objet dummyVars pour transformer les données
-#
-# Puisque nous n'avons plus accès à DataModel pour construire
-# dummyVars, nous créons un data.frame fictif (training_structure)
-# en prenant pour chaque variable la première valeur de possible_choices.
-# Cela reproduit la structure de données utilisée lors de l'entraînement.
-# ------------------------------------------------------------------------
-training_structure <- as.data.frame(lapply(final_vars, function(v) {
-  if (is.numeric(possible_choices[[v]])) {
-    as.numeric(possible_choices[[v]][1])
-  } else {
-    possible_choices[[v]][1]
-  }
-}), stringsAsFactors = FALSE)
-colnames(training_structure) <- final_vars
-
-# Pour les variables non numériques, convertir en facteur non ordonné
-for(v in final_vars) {
-  if (!is.numeric(possible_choices[[v]])) {
-    training_structure[[v]] <- factor(training_structure[[v]],
-                                      levels = possible_choices[[v]],
-                                      ordered = FALSE)
-  }
-}
-
-# Fixer manuellement les catégories de référence pour correspondre au modèle
-if ("ses_region" %in% names(training_structure) && "prairie" %in% levels(training_structure$ses_region)) {
-  training_structure$ses_region <- relevel(training_structure$ses_region, ref = "prairie")
-}
-if ("lifestyle_typeTransport" %in% names(training_structure) && "active_transport" %in% levels(training_structure$lifestyle_typeTransport)) {
-  training_structure$lifestyle_typeTransport <- relevel(training_structure$lifestyle_typeTransport, ref = "active_transport")
-}
-if ("lifestyle_consClothes" %in% names(training_structure) && "large_retailers" %in% levels(training_structure$lifestyle_consClothes)) {
-  training_structure$lifestyle_consClothes <- relevel(training_structure$lifestyle_consClothes, ref = "large_retailers")
-}
-if ("lifestyle_exercise" %in% names(training_structure) && "gym" %in% levels(training_structure$lifestyle_exercise)) {
-  training_structure$lifestyle_exercise <- relevel(training_structure$lifestyle_exercise, ref = "gym")
-}
-if ("lifestyle_favAlcool" %in% names(training_structure) && "beer" %in% levels(training_structure$lifestyle_favAlcool)) {
-  training_structure$lifestyle_favAlcool <- relevel(training_structure$lifestyle_favAlcool, ref = "beer")
-}
-if ("lifestyle_consCoffee" %in% names(training_structure) && "tim_hortons" %in% levels(training_structure$lifestyle_consCoffee)) {
-  training_structure$lifestyle_consCoffee <- relevel(training_structure$lifestyle_consCoffee, ref = "tim_hortons")
-}
-if ("ses_language" %in% names(training_structure) && "english" %in% levels(training_structure$ses_language)) {
-  training_structure$ses_language <- relevel(training_structure$ses_language, ref = "english")
-}
-if ("ses_dwelling_cat" %in% names(training_structure) && "stand_alone_house" %in% levels(training_structure$ses_dwelling_cat)) {
-  training_structure$ses_dwelling_cat <- relevel(training_structure$ses_dwelling_cat, ref = "stand_alone_house")
-}
-if ("lifestyle_clothingStyleGroups" %in% names(training_structure) && "easygoing" %in% levels(training_structure$lifestyle_clothingStyleGroups)) {
-  training_structure$lifestyle_clothingStyleGroups <- relevel(training_structure$lifestyle_clothingStyleGroups, ref = "easygoing")
-}
-if ("ses_educ" %in% names(training_structure) && "no_schooling" %in% levels(training_structure$ses_educ)) {
-  training_structure$ses_educ <- relevel(training_structure$ses_educ, ref = "no_schooling")
-}
-if ("ses_income3Cat" %in% names(training_structure) && "High" %in% levels(training_structure$ses_income3Cat)) {
-  training_structure$ses_income3Cat <- relevel(training_structure$ses_income3Cat, ref = "High")
-}
-
-# Création de l'objet dummyVars (la même transformation qu'à l'entraînement)
-dummies_final <- dummyVars(" ~ .", data = training_structure, fullRank = TRUE, sep = "_")
-
-# ------------------------------------------------------------------------
-# 4. Interface utilisateur
+# 3. Interface utilisateur
 # ------------------------------------------------------------------------
 ui <- fluidPage(
   titlePanel("Prédiction du Choix de Vote"),
@@ -171,22 +110,38 @@ ui <- fluidPage(
       h3("Résultat de la prédiction"),
       verbatimTextOutput("prediction"),
       h4("Probabilités associées"),
-      tableOutput("probabilities")
+      tableOutput("probabilities"),
+      h4("Détails RTA"),
+      verbatimTextOutput("rta_details"),
+      h4("Logs de débogage"),
+      verbatimTextOutput("debug_log")
     )
   )
 )
 
 # ------------------------------------------------------------------------
-# 5. Serveur
+# 4. Serveur
 # ------------------------------------------------------------------------
 server <- function(input, output, session) {
   
+  # Variables réactives pour stocker les logs de débogage
+  debug_logs <- reactiveVal("")
+  
+  # Fonction pour ajouter des logs de débogage
+  add_log <- function(message) {
+    current_logs <- debug_logs()
+    new_logs <- paste(current_logs, message, sep = "\n")
+    debug_logs(new_logs)
+  }
+  
+  # Affichage des logs de débogage
+  output$debug_log <- renderPrint({
+    debug_logs()
+  })
+  
   # Création dynamique des inputs pour chaque variable
   output$dynamic_inputs <- renderUI({
-    # Exclure les variables de prédiction RTA et le code postal qui sont gérés séparément
-    vars_to_show <- setdiff(final_vars, c("prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"))
-    
-    inputs <- lapply(vars_to_show, function(v) {
+    inputs <- lapply(socio_vars, function(v) {
       if (!is.numeric(possible_choices[[v]])) {
         selectInput(inputId = v, label = v,
                     choices = possible_choices[[v]],
@@ -220,138 +175,230 @@ server <- function(input, output, session) {
     }
   }
   
-  # Fonction pour obtenir les prédictions RTA
-  get_rta_predictions <- function(rta) {
-    if (is.na(rta) || !rta %in% rta_predictions$rta) {
-      # Si RTA non trouvée, utiliser les moyennes
-      return(list(
-        prediction_CPC = mean_cpc,
-        prediction_LPC = mean_lpc,
-        prediction_NDP = mean_ndp,
-        prediction_GPC = mean_gpc,
-        prediction_BQ = mean_bq
-      ))
+  # Fonction pour obtenir les contributions RTA pré-calculées
+  get_rta_contributions <- function(rta) {
+    if (is.na(rta) || !rta %in% rta_contributions$rta) {
+      # Si RTA non trouvée, utiliser la ligne DEFAULT
+      return(default_contributions)
     } else {
       # Sinon utiliser les valeurs spécifiques à la RTA
-      rta_data <- rta_predictions[rta_predictions$rta == rta, ]
-      return(list(
-        prediction_CPC = rta_data$CPC,
-        prediction_LPC = rta_data$LPC,
-        prediction_NDP = rta_data$NDP,
-        prediction_GPC = rta_data$GPC,
-        prediction_BQ = rta_data$BQ
-      ))
+      rta_data <- rta_contributions[rta_contributions$rta == rta, ]
+      return(rta_data[, -which(names(rta_data) == "rta")])
     }
   }
   
   observeEvent(input$predictBtn, {
+    # Réinitialiser les logs de débogage
+    debug_logs("")
+    
     output$prediction <- renderPrint({ "Calcul en cours..." })
     output$probabilities <- renderTable({ NULL })
+    output$rta_details <- renderPrint({ NULL })
     
     tryCatch({
       # Extraire la RTA à partir du code postal
       rta <- get_rta(input$postalCode)
       
-      # Obtenir les prédictions RTA
-      rta_preds <- get_rta_predictions(rta)
+      # Obtenir les contributions RTA pré-calculées
+      rta_contribs <- get_rta_contributions(rta)
+      
+      # Afficher les détails de RTA
+      output$rta_details <- renderPrint({
+        if (is.na(rta)) {
+          return("Aucune RTA valide extraite du code postal.")
+        } else {
+          if (rta %in% rta_contributions$rta) {
+            return(paste("RTA trouvée:", rta, "\nContributions utilisées:", 
+                         paste(names(rta_contribs), "=", round(as.numeric(rta_contribs), 4), collapse=", ")))
+          } else {
+            return(paste("RTA non trouvée:", rta, "\nValeurs DEFAULT utilisées:",
+                         paste(names(default_contributions), "=", round(as.numeric(default_contributions), 4), collapse=", ")))
+          }
+        }
+      })
       
       # Rassembler les valeurs saisies dans un data.frame
-      vars_to_collect <- setdiff(final_vars, c("prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ"))
-      newdata <- data.frame(lapply(vars_to_collect, function(v) input[[v]]),
+      newdata <- data.frame(lapply(socio_vars, function(v) input[[v]]),
                           stringsAsFactors = FALSE)
-      colnames(newdata) <- vars_to_collect
-      
-      # Ajouter les prédictions RTA
-      newdata$prediction_CPC <- rta_preds$prediction_CPC
-      newdata$prediction_LPC <- rta_preds$prediction_LPC
-      newdata$prediction_NDP <- rta_preds$prediction_NDP
-      newdata$prediction_GPC <- rta_preds$prediction_GPC
-      newdata$prediction_BQ <- rta_preds$prediction_BQ
+      colnames(newdata) <- socio_vars
       
       # Conversion des variables numériques (si issues d'un selectInput)
       for(v in names(newdata)) {
-        if (v %in% final_vars && is.numeric(possible_choices[[v]])) {
+        if (v %in% socio_vars && is.numeric(possible_choices[[v]])) {
           newdata[[v]] <- as.numeric(newdata[[v]])
         }
       }
       
-      # Création d'une ligne "dummy" pour forcer la présence de tous les niveaux
-      dummy_row <- sapply(final_vars, function(v) {
-        if (!is.numeric(possible_choices[[v]])) {
-          if (length(possible_choices[[v]]) > 1)
-            possible_choices[[v]][2]
-          else
-            possible_choices[[v]][1]
-        } else {
-          as.numeric(possible_choices[[v]][1])
+      # Obtenir les noms et dimensions des coefficients du modèle pour débogage
+      model_coefs <- coef(final_model)
+      model_coef_names <- colnames(model_coefs)
+      add_log(paste("Dimensions des coefficients du modèle:", nrow(model_coefs), "x", ncol(model_coefs)))
+      add_log(paste("Classes dans le modèle:", paste(rownames(model_coefs), collapse=", ")))
+      
+      # Préparer les données pour la prédiction du modèle original
+      # MÉTHODE ALTERNATIVE: utiliser predict.nnet directement
+      
+      # Obtenir la structure du modèle nnet original
+      wts <- final_model$wts
+      mask <- final_model$mask
+      vhash <- sapply(attr(terms(final_model), "variables"), deparse)[-1]
+      xlevels <- final_model$xlevels
+
+      # Préparer manuellement les données comme dans predict.nnet
+      # 1. Créer un data.frame temporaire avec toutes les variables nécessaires
+      # Pour les variables RTA manquantes, on met des valeurs neutres pour l'instant
+      x_temp <- newdata
+      for (v in rta_vars) {
+        x_temp[[v]] <- 0  # Valeur temporaire, sera remplacée plus tard
+      }
+      
+      # Format et releveling des facteurs comme dans le modèle original
+      for(v in names(x_temp)) {
+        if (v %in% socio_vars && !is.numeric(possible_choices[[v]])) {
+          x_temp[[v]] <- factor(x_temp[[v]], levels = possible_choices[[v]])
         }
-      }, simplify = FALSE)
-      dummy_row <- as.data.frame(dummy_row, stringsAsFactors = FALSE)
-      colnames(dummy_row) <- final_vars
+      }
       
-      # Combiner la ligne dummy et la nouvelle observation (la ligne dummy en première position)
-      newdata2 <- rbind(dummy_row, newdata)
+      # Relevel important variables
+      if ("ses_region" %in% names(x_temp) && "prairie" %in% levels(x_temp$ses_region)) {
+        x_temp$ses_region <- relevel(x_temp$ses_region, ref = "prairie")
+      }
+      if ("lifestyle_typeTransport" %in% names(x_temp) && "active_transport" %in% levels(x_temp$lifestyle_typeTransport)) {
+        x_temp$lifestyle_typeTransport <- relevel(x_temp$lifestyle_typeTransport, ref = "active_transport")
+      }
+      if ("lifestyle_consClothes" %in% names(x_temp) && "large_retailers" %in% levels(x_temp$lifestyle_consClothes)) {
+        x_temp$lifestyle_consClothes <- relevel(x_temp$lifestyle_consClothes, ref = "large_retailers")
+      }
+      if ("lifestyle_exercise" %in% names(x_temp) && "gym" %in% levels(x_temp$lifestyle_exercise)) {
+        x_temp$lifestyle_exercise <- relevel(x_temp$lifestyle_exercise, ref = "gym")
+      }
+      if ("lifestyle_favAlcool" %in% names(x_temp) && "beer" %in% levels(x_temp$lifestyle_favAlcool)) {
+        x_temp$lifestyle_favAlcool <- relevel(x_temp$lifestyle_favAlcool, ref = "beer")
+      }
+      if ("lifestyle_consCoffee" %in% names(x_temp) && "tim_hortons" %in% levels(x_temp$lifestyle_consCoffee)) {
+        x_temp$lifestyle_consCoffee <- relevel(x_temp$lifestyle_consCoffee, ref = "tim_hortons")
+      }
+      if ("ses_language" %in% names(x_temp) && "english" %in% levels(x_temp$ses_language)) {
+        x_temp$ses_language <- relevel(x_temp$ses_language, ref = "english")
+      }
+      if ("ses_dwelling_cat" %in% names(x_temp) && "stand_alone_house" %in% levels(x_temp$ses_dwelling_cat)) {
+        x_temp$ses_dwelling_cat <- relevel(x_temp$ses_dwelling_cat, ref = "stand_alone_house")
+      }
+      if ("lifestyle_clothingStyleGroups" %in% names(x_temp) && "easygoing" %in% levels(x_temp$lifestyle_clothingStyleGroups)) {
+        x_temp$lifestyle_clothingStyleGroups <- relevel(x_temp$lifestyle_clothingStyleGroups, ref = "easygoing")
+      }
+      if ("ses_educ" %in% names(x_temp) && "no_schooling" %in% levels(x_temp$ses_educ)) {
+        x_temp$ses_educ <- relevel(x_temp$ses_educ, ref = "no_schooling")
+      }
+      if ("ses_income3Cat" %in% names(x_temp) && "High" %in% levels(x_temp$ses_income3Cat)) {
+        x_temp$ses_income3Cat <- relevel(x_temp$ses_income3Cat, ref = "High")
+      }
       
-      # Pour chaque variable catégorielle, forcer la conversion en facteur non ordonné avec tous les niveaux
-      for(v in final_vars) {
-        if (!is.numeric(possible_choices[[v]])) {
-          newdata2[[v]] <- factor(newdata2[[v]],
-                                levels = possible_choices[[v]],
-                                ordered = FALSE)
+      # 2. Créer les variables dummy
+      dv <- dummyVars(" ~ .", data = x_temp, fullRank = TRUE, sep = "_")
+      x_dummy <- predict(dv, newdata = x_temp)
+      
+      # Vérifier si toutes les colonnes requises par le modèle sont présentes
+      model_varnames <- colnames(model_coefs)
+      varnames_present <- colnames(x_dummy)
+
+      # Log pour débogage
+      add_log(paste("Nombre de variables dans le modèle (avec intercept):", length(model_varnames)))
+      add_log(paste("Nombre de variables dans les données:", length(varnames_present)))
+      
+      # Vérifier les variables manquantes
+      missing_vars <- setdiff(model_varnames[-1], varnames_present)  # Ignore l'intercept
+      if (length(missing_vars) > 0) {
+        add_log(paste("Variables manquantes:", paste(missing_vars, collapse=", ")))
+        
+        # Ajouter les variables manquantes avec des zéros
+        missing_matrix <- matrix(0, nrow = nrow(x_dummy), ncol = length(missing_vars))
+        colnames(missing_matrix) <- missing_vars
+        x_dummy <- cbind(x_dummy, missing_matrix)
+      }
+      
+      # Réorganiser les colonnes pour correspondre exactement à l'ordre attendu par le modèle
+      final_columns <- model_varnames[-1]  # Ignore l'intercept qui sera ajouté plus tard
+      x_ordered <- matrix(0, nrow = nrow(x_dummy), ncol = length(final_columns))
+      colnames(x_ordered) <- final_columns
+      
+      for (col in final_columns) {
+        if (col %in% colnames(x_dummy)) {
+          x_ordered[, col] <- x_dummy[, col]
         }
       }
       
-      # Fixer manuellement les catégories de référence pour correspondre au modèle
-      if ("ses_region" %in% names(newdata2) && "prairie" %in% levels(newdata2$ses_region)) {
-        newdata2$ses_region <- relevel(newdata2$ses_region, ref = "prairie")
-      }
-      if ("lifestyle_typeTransport" %in% names(newdata2) && "active_transport" %in% levels(newdata2$lifestyle_typeTransport)) {
-        newdata2$lifestyle_typeTransport <- relevel(newdata2$lifestyle_typeTransport, ref = "active_transport")
-      }
-      if ("lifestyle_consClothes" %in% names(newdata2) && "large_retailers" %in% levels(newdata2$lifestyle_consClothes)) {
-        newdata2$lifestyle_consClothes <- relevel(newdata2$lifestyle_consClothes, ref = "large_retailers")
-      }
-      if ("lifestyle_exercise" %in% names(newdata2) && "gym" %in% levels(newdata2$lifestyle_exercise)) {
-        newdata2$lifestyle_exercise <- relevel(newdata2$lifestyle_exercise, ref = "gym")
-      }
-      if ("lifestyle_favAlcool" %in% names(newdata2) && "beer" %in% levels(newdata2$lifestyle_favAlcool)) {
-        newdata2$lifestyle_favAlcool <- relevel(newdata2$lifestyle_favAlcool, ref = "beer")
-      }
-      if ("lifestyle_consCoffee" %in% names(newdata2) && "tim_hortons" %in% levels(newdata2$lifestyle_consCoffee)) {
-        newdata2$lifestyle_consCoffee <- relevel(newdata2$lifestyle_consCoffee, ref = "tim_hortons")
-      }
-      if ("ses_language" %in% names(newdata2) && "english" %in% levels(newdata2$ses_language)) {
-        newdata2$ses_language <- relevel(newdata2$ses_language, ref = "english")
-      }
-      if ("ses_dwelling_cat" %in% names(newdata2) && "stand_alone_house" %in% levels(newdata2$ses_dwelling_cat)) {
-        newdata2$ses_dwelling_cat <- relevel(newdata2$ses_dwelling_cat, ref = "stand_alone_house")
-      }
-      if ("lifestyle_clothingStyleGroups" %in% names(newdata2) && "easygoing" %in% levels(newdata2$lifestyle_clothingStyleGroups)) {
-        newdata2$lifestyle_clothingStyleGroups <- relevel(newdata2$lifestyle_clothingStyleGroups, ref = "easygoing")
-      }
-      if ("ses_educ" %in% names(newdata2) && "no_schooling" %in% levels(newdata2$ses_educ)) {
-        newdata2$ses_educ <- relevel(newdata2$ses_educ, ref = "no_schooling")
-      }
-      if ("ses_income3Cat" %in% names(newdata2) && "High" %in% levels(newdata2$ses_income3Cat)) {
-        newdata2$ses_income3Cat <- relevel(newdata2$ses_income3Cat, ref = "High")
+      # Maintenant, à ce stade toutes les variables du modèle sont présentes dans x_ordered
+      # REMPLACER les valeurs des variables de prédiction RTA par les vraies valeurs de RTA contributions
+      
+      # Mapper les noms de variables RTA aux noms dans rta_contribs
+      rta_mapping <- list(
+        "prediction_CPC" = "cpc",
+        "prediction_LPC" = "lpc",
+        "prediction_NDP" = "ndp",
+        "prediction_GPC" = "gpc",
+        "prediction_BQ" = "bq"
+      )
+      
+      # Mettre à jour les valeurs RTA
+      for (var in rta_vars) {
+        if (var %in% colnames(x_ordered) && rta_mapping[[var]] %in% names(rta_contribs)) {
+          x_ordered[, var] <- as.numeric(rta_contribs[[rta_mapping[[var]]]])
+        }
       }
       
-      # Transformation dummyVars
-      newdata_dummy <- predict(dummies_final, newdata = newdata2) %>% as.data.frame()
-      newdata_dummy <- newdata_dummy[-1, , drop = FALSE]  # Retirer la ligne dummy
+      # 3. Obtenir les scores bruts (coefficients linéaires) à partir du modèle
+      Z <- cbind(1, x_ordered) %*% t(model_coefs)
       
-      # Réaliser la prédiction
-      pred_class <- predict(final_model, newdata = newdata_dummy)
-      pred_prob  <- predict(final_model, newdata = newdata_dummy, type = "probs")
+      # IMPORTANT: Ajouter l'ajustement pour la classe BQ de référence
+      # La contribution du BQ (classe de référence) doit être intégrée séparément
+      bq_contribution <- 0  # Ligne de base (intercepte pour BQ = 0)
+      if ("bq" %in% names(rta_contribs)) {
+        bq_contribution <- as.numeric(rta_contribs[["bq"]])
+      }
       
+      # 4. Convertir les scores en probabilités (softmax) avec BQ comme référence
+      max_Z <- apply(Z, 1, max)
+      exp_Z <- exp(Z - max_Z)
+      
+      # Calculer exp(0 + contribution_bq) pour la classe de référence (BQ)
+      exp_bq <- exp(bq_contribution - max_Z)
+      
+      # Ajouter l'exp(BQ) à la somme totale
+      sum_exp_Z <- rowSums(exp_Z) + exp_bq
+      
+      # Calculer les probabilités pour toutes les classes sauf BQ
+      pred_prob <- exp_Z / sum_exp_Z
+      colnames(pred_prob) <- rownames(model_coefs)  # CPC, LPC, NDP, GPC
+      
+      # Calculer la probabilité pour BQ (classe de référence)
+      bq_prob <- exp_bq / sum_exp_Z
+      
+      # Combiner toutes les probabilités, y compris BQ
+      all_pred_prob <- cbind(BQ = bq_prob, pred_prob)
+      
+      # 5. Obtenir la classe prédite (inclut maintenant BQ comme option)
+      all_parties <- c("bq", rownames(model_coefs))
+      pred_probs_with_bq <- cbind(bq_prob, pred_prob)
+      colnames(pred_probs_with_bq) <- all_parties
+      pred_class <- all_parties[apply(pred_probs_with_bq, 1, which.max)]
+      
+      # Afficher les résultats
       output$prediction <- renderPrint({
-        paste("Le choix de vote prédit est :", as.character(pred_class))
+        paste("Le choix de vote prédit est :", toupper(as.character(pred_class)))
       })
+      
       output$probabilities <- renderTable({
-        pred_prob
+        # Arrondir les probabilités à 4 décimales pour plus de lisibilité
+        pred_prob_rounded <- round(all_pred_prob, 4)
+        colnames(pred_prob_rounded) <- toupper(colnames(pred_prob_rounded))
+        pred_prob_rounded
       }, rownames = TRUE)
       
     }, error = function(e) {
+      add_log(paste("ERREUR:", e$message))
+      add_log(paste("CALL:", deparse(e$call)))
+      
       output$prediction <- renderPrint({
         paste("Une erreur s'est produite :", e$message)
       })
@@ -361,6 +408,6 @@ server <- function(input, output, session) {
 }
 
 # ------------------------------------------------------------------------
-# 6. Lancement de l'application Shiny
+# 5. Lancement de l'application Shiny
 # ------------------------------------------------------------------------
 shinyApp(ui, server)

@@ -158,3 +158,11 @@ DataClean$tactical_politicalNewsSourceYouTube[DataRaw$tactical_political_news_so
 table(DataClean$tactical_politicalNewsSourceYouTube)
 
 
+DataClean$issFrgnTie25 <- NA
+DataClean$issFrgnTie25[DataRaw$tactical_foreign_us_ties == "Much closer"] <- 1
+DataClean$issFrgnTie25[DataRaw$tactical_foreign_us_ties == "Somewhat closer"] <- 0.75
+DataClean$issFrgnTie25[DataRaw$tactical_foreign_us_ties == "About the same as now"] <- 0.5
+DataClean$issFrgnTie25[DataRaw$tactical_foreign_us_ties == "Somewhat more distant"] <- 0.25
+DataClean$issFrgnTie25[DataRaw$tactical_foreign_us_ties == "Much more distant"] <- 0
+
+table(DataClean$issFrgnTie25)

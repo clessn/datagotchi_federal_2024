@@ -56,13 +56,14 @@ df_rci_by_cluster <- df_mean_rci_by_cluster |>
 
 
 ##### Au moment d'écrire ce code, la différence entre la plus grande moyenne
-#####  et la plus petite est de 0.7 environ
+#####  et la plus petite est de 1.5 environ
 max(df_mean_rci_by_cluster$mean_rci) - min(df_mean_rci_by_cluster$mean_rci) 
 
-### Donc, on peut mettre les limites -100 et 100 à -0.7 et 0.7 (et si un cluster dépasse ces limites, on le ramène à 100)
+### Donc, on peut mettre les limites -100 et 100 à -2 et 2 (et si un cluster dépasse ces limites, on le ramène à 100)
+###### On va aller plus loin que le 1.5 étant donné que ça pourrait dépasser nos limites actuelles. On espère que ça bouge pas trop.
 
 ## On peut aussi ajuster ce "coefficient", mais c'est pas mal arbitraire.
-extreme_limit <- 0.65
+extreme_limit <- 2
 
 df_rci_by_cluster$rci <- case_when(
   df_rci_by_cluster$rci <= -extreme_limit ~ -100,

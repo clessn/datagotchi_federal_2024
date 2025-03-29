@@ -1,6 +1,8 @@
 # Packages ---------------------------------------------------------------------
+
 library(tidyverse)
 library(cartessn)
+library(clessnize)
 
 # Assurez-vous que le package cartessn est inclus dans les dépendances
 # Si ce n'est pas déjà fait, installez cartessn avec devtools::install_github("clessnverse/cartessn")
@@ -30,18 +32,22 @@ source("code/01_cleaning/app/dv.R")
 
 ## tactical ----------------------------------------------------------------
 
-source("code/01_cleaning/app/tactical.R")
+source("code/01_cleaning/app/Tactical.R")
 
 
 ## Riding attribution (optional, can be commented out if not needed) -------------
 source("code/01_cleaning/app/transform_rta_to_ridings.R")
 
 ## Remove NA from quotas
-# DataClean <- DataClean |> drop_na(starts_with("ses"))
+DataClean <- DataClean |> drop_na(starts_with("ses"))
 
 # Save -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250329.rds")
+=======
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250328.rds")
+>>>>>>> ea722e1c4cd9e187de0760b463b8f5d00472af90
 
 # Save for clustering usage ----------------------------------------------
 # saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250318.rds")

@@ -443,7 +443,7 @@ final_combined <- image_append(final_image, stack = TRUE)
 final_with_border <- image_border(final_combined, "white", "30x30")  # Larger border
 
 # 41. Load logo (if available)
-logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png"
+logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
 if (file.exists(logo_path)) {
   logo <- image_read(logo_path)
   
@@ -695,7 +695,7 @@ caption <- image_annotate(caption,
                           font = "Arial-Bold")
 
 # Logo positioning
-logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png"
+logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
 logo <- image_read(logo_path)
 logo_width <- round(image_info(graph_img)$width * 0.15)
 logo_resized <- image_scale(logo, paste0(logo_width, "x"))
