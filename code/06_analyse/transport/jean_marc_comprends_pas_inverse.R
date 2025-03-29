@@ -9,7 +9,7 @@ library(magick)
 library(dplyr)
 
 # Load data
-df <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250323.rds") %>%
+df <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_Ponderee20250328.rds") %>%
   filter(dv_voteChoice != "other")
 
 # Group and calculate percentages - INVERTED RELATIONSHIP
@@ -159,3 +159,4 @@ if (file.exists(logo_path)) {
   cat("Graphique créé avec succès sans logo : transport_vote_inverse_final.png\n")
   cat("Logo non trouvé à : ", logo_path, "\n")
 }
+
