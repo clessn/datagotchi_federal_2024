@@ -11,7 +11,6 @@ library(clessnize)
 
 ## load raw data here
 
-
 DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250330.csv")
 
 # Clean variables ---------------------------------------------------------
@@ -26,14 +25,13 @@ source("code/01_cleaning/app/ses.R")
 
 source("code/01_cleaning/app/lifestyle.R")
 
-
 ## DV --------------------------------------------------------------
 
 source("code/01_cleaning/app/dv.R")
 
 ## tactical ----------------------------------------------------------------
 
-source("code/01_cleaning/app/Tactical.R")
+source("code/01_cleaning/app/tactical.R")
 
 
 ## Riding attribution (optional, can be commented out if not needed) -------------
