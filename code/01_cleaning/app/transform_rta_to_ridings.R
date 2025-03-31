@@ -1,3 +1,13 @@
+# Vérifier et installer la dernière version de clessnize
+if(!requireNamespace("clessnize", quietly = TRUE) || 
+   packageVersion("clessnize") < as.package_version("0.0.0.9000")) {
+  message("Installation ou mise à jour du package clessnize...")
+  if(!requireNamespace("devtools", quietly = TRUE)) {
+    install.packages("devtools")
+  }
+  devtools::install_github("clessn/clessnize")
+}
+
 
 print("ATTENTION: étape plus longue pour ajouter les circonscriptions. Prévoir 10 minutes environ")
 # Vérification des données d'entrée pour les NA
@@ -51,4 +61,10 @@ df_ridings_names <- cartessn::names_canada_2022_electoral_ridings |>
   select(id_riding, ses_name_riding_fr = name_riding_fr, ses_name_riding_en = name_riding_en)
 # Jointure avec DataClean pour ajouter les noms des circonscriptions
 DataClean <- left_join(DataClean, df_ridings_names, by = c("ses_riding_id" = "id_riding"))
+
 print("L'étape la plus longue est terminée, bravo pour votre patience. - Codeur PRX")
+print("ET MAINTENANT...")
+
+clessnize::jml()
+
+print("Jean-marc dans le code")

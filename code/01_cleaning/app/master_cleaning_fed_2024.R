@@ -1,6 +1,8 @@
 # Packages ---------------------------------------------------------------------
+
 library(tidyverse)
 library(cartessn)
+library(clessnize)
 
 # Assurez-vous que le package cartessn est inclus dans les dépendances
 # Si ce n'est pas déjà fait, installez cartessn avec devtools::install_github("clessnverse/cartessn")
@@ -8,6 +10,7 @@ library(cartessn)
 # Data -------------------------------------------------------------------------
 
 ## load raw data here
+
 
 DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250330.csv")
 
