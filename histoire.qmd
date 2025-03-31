@@ -1,0 +1,69 @@
+---
+mainfont: Roboto-Regular.ttf
+format: pdf 
+include-in-header:
+  text: |
+    \newfontfamily\sectionfont{PixelOperatorSC.ttf}
+    \newfontfamily\subsectionfont{PixelOperatorSC.ttf}
+    \newfontfamily\subsubsectionfont{PixelOperatorSC.ttf}
+    \addtokomafont{section}{\sectionfont}
+    \addtokomafont{subsection}{\subsectionfont}
+    \addtokomafont{subsubsection}{\subsubsectionfont}
+    \usepackage{fontspec}
+    \usepackage{fancyhdr}
+    \usepackage{graphicx}
+    \usepackage{textpos}
+    \usepackage{background}
+    \usepackage[french]{babel}
+    \usepackage{datetime2}
+    \DTMsetdatestyle{french}
+    \pagestyle{fancy}
+    \usepackage[a4paper,margin=1.87cm,includefoot]{geometry}
+    \renewcommand{\headrulewidth}{0pt}
+    \newfontfamily\headerfont{PixelOperatorSC.ttf}
+    \fancyhead[L]{\headerfont CLESSN}
+    \fancyhead[C]{\headerfont Rapport présenté à Léger}
+    \fancyhead[R]{\headerfont Datagotchi USA 2024}
+    \fancyfoot[C]{\vspace*{0.5cm}\thepage}   
+---
+
+\begin{titlepage}
+  \newfontfamily\titlepagefont{PixelOperatorSC.ttf}
+
+  % Background image setup
+  \backgroundsetup{
+    scale=1.3,
+    color=black,
+    opacity=0.5,
+    angle=0,
+    position=current page.south,
+    vshift=2.2cm,
+    hshift=0.5cm,
+    contents={\includegraphics[width=1\textwidth]{img/datagotchi_folks.png}}
+  }
+
+  \begin{center}
+    \null\vspace{\stretch{1}} % Ensures vertical centering
+    {\titlepagefont\fontsize{48pt}{18pt}\selectfont \textbf{Datagotchi}}\\[1cm]
+    {\titlepagefont\fontsize{32pt}{18pt}\selectfont \textbf{Rapport USA 2024}}\\[1cm]
+    \includegraphics[width=0.2\textwidth]{img/datagotchi.png}\\[1cm]
+    {\titlepagefont\fontsize{32pt}{16pt}\selectfont \textbf{CLESSN}}\\[0.5cm]
+    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Rapport présenté à:}\\ % Smaller normal text size
+    {\titlepagefont\fontsize{24pt}{16pt}\selectfont \textbf{Léger Marketing}}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Département de Science Politique\\Faculté des Sciences Sociales\\Université Laval}\\[1cm]
+    {\titlepagefont\fontsize{16pt}{14pt}\selectfont Québec, Canada}\\[2cm]
+    {\titlepagefont\fontsize{12pt}{12pt}\selectfont \copyright \thinspace CLESSN, \today}\\
+    \null\vspace{\stretch{2}} % Ensures vertical centering
+  \end{center}  \thispagestyle{empty} % Prevents headers and footers on the title page
+  \clearpage % Ensures the next content starts on a clean page
+\end{titlepage}
+\backgroundsetup{contents={}}
+
+\setcounter{page}{1}
+
+# Description
+
+histoire gauche droite Yes
+
+![fratboys](img/graph_vote.png)
+
