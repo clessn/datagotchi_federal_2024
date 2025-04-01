@@ -14,15 +14,24 @@ library(gifski)
 # ------------------------- Préparation des données -------------------------
 df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")
 
+
 cluster_info <- data.frame(
-  cluster_name   = 1:10,
-  cluster_label  = c("Jennifer", "Arjun", "Michel", "David", "John",
-                     "Maxime", "Zoe", "Julie", "Robert", "Emily"),
-  image_tete     = rep("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/Cluster_Datagotchi__0000_Jennifer2000.png", 10)
+  cluster_name = c("Maxime", "Michel", "David", "Robert", "Emily",
+                   "Jennifer", "John", "Julie", "Arjun", "Zoe"),
+  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0018_Maxime.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0007_Michel.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0010_David2.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0030_Robert.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0034_10--Emilie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0001_Jen-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0014_John-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0026_Julie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0004_Arjun.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0022_Zoe.png")
 )
 
-df_aggregated_rci <- df_aggregated_rci %>%
-  mutate(cluster_name = as.numeric(cluster_name))
+# df_aggregated_rci <- df_aggregated_rci %>%
+#   mutate(cluster_name = as.numeric(cluster_name))
 
 df_plot <- df_aggregated_rci %>%
   left_join(cluster_info, by = "cluster_name")
@@ -79,7 +88,7 @@ for(cluster in unique(df_plot$cluster_name)) {
         "PPC" = "PPC"
       )) +
       labs(
-        title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_label[1]),
+        title = paste0("Potentiel de croissance par\nparti pour ", cluster),
         x = NULL,
         y = NULL
       ) +
@@ -131,7 +140,7 @@ for(cluster in unique(df_plot$cluster_name)) {
       scale_fill_manual(values = party_colors) +
       scale_color_manual(values = party_colors) +
       labs(
-        title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_label[1]),
+        title = paste0("Potential for Growth per\npolitical party for ", cluster),
         x = NULL, y = NULL
       ) +
       annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
