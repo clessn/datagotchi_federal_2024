@@ -17,15 +17,40 @@ df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrow
 
 # Créer le data frame des informations sur les clusters
 cluster_info <- data.frame(
-  cluster_name   = 1:10,
-  cluster_label  = c("Jennifer", "Arjun", "Michel", "David", "John",
-                     "Maxime", "Zoe", "Julie", "Robert", "Emily"),
-  image_tete     = rep("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/Cluster_Datagotchi__0000_Jennifer2000.png", 10)
+  cluster_name = c("Maxime", "Michel", "David", "Robert", "Emily",
+                   "Jennifer", "John", "Julie", "Arjun", "Zoe"),
+  cluster_nameFR = c("Maxime, le milénial naturel",
+                     "Michel, le patriote québécois",
+                     "David, le Red Tory",
+                     "Robert, le Blue Grit",
+                     "Emily, l'hipster engagée",
+                     "Jennifer, la professionnelle urbaine",
+                     "John, le réformiste",
+                     "Julie, la terre-à-terre rangée",
+                     "Arjun, le pragmatique cosmopolite",
+                     "Zoe, l'urbaine branchée"),
+  cluster_nameEN = c("Maxime, the natural millennial",
+                     "Michel, the Québécois patriot",
+                     "David, the Red Tory",
+                     "Robert, the Blue Grit",
+                     "Emily, the committed hipster",
+                     "Jennifer, the urban professional",
+                     "John, the reformist",
+                     "Julie, the grounded traditionalist",
+                     "Arjun, the pragmatic cosmopolitan",
+                     "Zoe, the trendy urbanite"),
+  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0018_Maxime.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0007_Michel.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0010_David2.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0030_Robert.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0034_10--Emilie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0001_Jen-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0014_John-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0026_Julie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0004_Arjun.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0022_Zoe.png")
 )
 
-# Fusionner les infos de clusters avec les données RCI
-df_aggregated_rci <- df_aggregated_rci %>%
-  mutate(cluster_name = as.numeric(cluster_name))
 df_plot <- df_aggregated_rci %>%
   left_join(cluster_info, by = "cluster_name")
 
@@ -62,7 +87,7 @@ for(cluster in unique(df_plot$cluster_name)) {
     interpolate = TRUE
   )
   
-  # -------------------- Graphique RCI en français --------------------
+  # ----- Graphique en français -----
   plot_rciFr <- ggplot(df_filtered, aes(x = party, y = rci)) +
     annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
@@ -82,7 +107,7 @@ for(cluster in unique(df_plot$cluster_name)) {
       "PPC" = "PPC"
     )) +
     labs(
-      title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_label[1]),
+      title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_nameFR[1]),
       x = NULL,
       y = NULL
     ) +
@@ -96,18 +121,16 @@ for(cluster in unique(df_plot$cluster_name)) {
              angle = 90, hjust = 3, vjust = -3.5, size = 20, family = "PixelOperatorSC") +
     coord_cartesian(clip = "off") +
     clessnize::theme_datagotchi_light(base_size = 60) +
-    scale_y_continuous(
-      limits = c(-100, 100)
-    ) +
+    scale_y_continuous(limits = c(-100, 100)) +
     theme(text = element_text(size = 70),
           legend.position = "none",
           plot.title = element_text(lineheight = 0.2),
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
-          plot.margin = margin(t = 10, r = 10, b = 10, l = 20) 
+          plot.margin = margin(t = 10, r = 10, b = 10, l = 20)
     )
   
-  # -------------------- Graphique RCI en anglais --------------------
+  # ----- Graphique en anglais -----
   plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
     annotation_custom(iceberg_grob, xmin = -1.05, xmax = 7.02, ymin = -Inf, ymax = Inf) +
     geom_bar(aes(fill = party), stat = "identity", width = 0.35) + 
@@ -119,14 +142,13 @@ for(cluster in unique(df_plot$cluster_name)) {
     scale_fill_manual(values = party_colors) +
     scale_color_manual(values = party_colors) +
     labs(
-      title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_label[1]),
+      title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_nameEN[1]),
       x = NULL, y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "#1bb8d3", alpha = 0.3) +
     annotate("text", x = 0, y = 0, label = "Voting\nThreshold",
-             hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC",
-             lineheight = 0.2) +
+             hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC", lineheight = 0.2) +
     annotate("text", x = 0, y = 50, label = "Vote certainty",
              angle = 90, hjust = 0.3, vjust = -3.5, size = 20, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Potential vote",
@@ -219,4 +241,4 @@ for(cluster in unique(df_plot$cluster_name)) {
   cat("Cluster", cluster, ": GIF FR et GIF EN créés.\n\n")
   
 } # Fin boucle sur les clusters
-  }
+  
