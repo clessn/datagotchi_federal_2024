@@ -1,0 +1,422 @@
+"postal_code","circonscriptions","nb_circos"
+"G0A","Portneuf, Charlevoix-Côte-de-Beaupré, Montmorency, La Peltrie, Chauveau",5
+"G0C","Gaspé, Bonaventure",2
+"G0E","Gaspé",1
+"G0G","Duplessis",1
+"G0H","René-Lévesque, Duplessis",2
+"G0J","Matane-Matapédia, Gaspé, Bonaventure",3
+"G0K","Rimouski, Matane-Matapédia, Rivière-du-Loup-Témiscouata",3
+"G0L","Rivière-du-Loup-Témiscouata, Rimouski, Côte-du-Sud",3
+"G0M","Beauce-Sud, Mégantic, Beauce-Nord",3
+"G0N","Lotbinière-Frontenac, Beauce-Sud, Mégantic, Arthabaska, Beauce-Nord",5
+"G0P","Drummond-Bois-Francs, Arthabaska, Lotbinière-Frontenac",3
+"G0R","Bellechasse, Côte-du-Sud, Beauce-Nord",3
+"G0S","Lotbinière-Frontenac, Nicolet-Bécancour, Arthabaska, Beauce-Nord",4
+"G0T","Charlevoix-Côte-de-Beaupré, René-Lévesque",2
+"G0V","Dubuc, Charlevoix-Côte-de-Beaupré",2
+"G0W","Roberval, Ungava, Lac-Saint-Jean, Laviolette-Saint-Maurice",4
+"G0X","Champlain, Nicolet-Bécancour, Maskinongé, Laviolette-Saint-Maurice",4
+"G0Y","Mégantic",1
+"G0Z","Nicolet-Bécancour, Arthabaska, Drummond-Bois-Francs",3
+"G1A","Taschereau",1
+"G1B","Montmorency, Charlevoix-Côte-de-Beaupré",2
+"G1C","Montmorency, Jean-Lesage",2
+"G1E","Montmorency, Jean-Lesage",2
+"G1G","Charlesbourg, Chauveau",2
+"G1H","Charlesbourg",1
+"G1J","Jean-Lesage",1
+"G1K","Taschereau, Jean-Talon",2
+"G1L","Jean-Lesage",1
+"G1M","Vanier-Les Rivières",1
+"G1N","Taschereau, Jean-Talon, Vanier-Les Rivières",3
+"G1P","Vanier-Les Rivières, Jean-Talon",2
+"G1R","Taschereau",1
+"G1S","Taschereau, Jean-Talon",2
+"G1T","Jean-Talon",1
+"G1V","Jean-Talon, Taschereau",2
+"G1W","Louis-Hébert, Jean-Talon",2
+"G1X","Louis-Hébert, Jean-Talon, Vanier-Les Rivières",3
+"G1Y","Louis-Hébert",1
+"G2A","Chauveau, La Peltrie, Vanier-Les Rivières",3
+"G2B","Vanier-Les Rivières, Chauveau, La Peltrie",3
+"G2C","Vanier-Les Rivières, Chauveau, La Peltrie",3
+"G2E","La Peltrie, Vanier-Les Rivières",2
+"G2G","Louis-Hébert, La Peltrie, Jean-Talon",3
+"G2J","Vanier-Les Rivières",1
+"G2K","Vanier-Les Rivières",1
+"G2L","Charlesbourg, Montmorency",2
+"G2M","Chauveau, Charlesbourg",2
+"G2N","Chauveau, Charlesbourg",2
+"G3A","Louis-Hébert",1
+"G3B","Chauveau, Montmorency",2
+"G3C","Chauveau",1
+"G3E","Chauveau",1
+"G3G","Chauveau",1
+"G3H","Portneuf",1
+"G3J","La Peltrie, Chauveau",2
+"G3K","La Peltrie",1
+"G3L","Portneuf",1
+"G3M","Portneuf",1
+"G3N","La Peltrie, Portneuf",2
+"G3S","La Peltrie",1
+"G3Z","Charlevoix-Côte-de-Beaupré",1
+"G4A","Charlevoix-Côte-de-Beaupré",1
+"G4R","Duplessis",1
+"G4S","Duplessis",1
+"G4T","Îles-de-la-Madeleine",1
+"G4V","Gaspé",1
+"G4W","Matane-Matapédia",1
+"G4X","Gaspé",1
+"G4Z","René-Lévesque",1
+"G5A","Charlevoix-Côte-de-Beaupré",1
+"G5B","Duplessis",1
+"G5C","René-Lévesque",1
+"G5H","Matane-Matapédia",1
+"G5J","Matane-Matapédia",1
+"G5L","Rimouski",1
+"G5M","Rimouski",1
+"G5N","Rimouski",1
+"G5R","Rivière-du-Loup-Témiscouata",1
+"G5T","Rivière-du-Loup-Témiscouata",1
+"G5V","Côte-du-Sud",1
+"G5X","Beauce-Nord",1
+"G5Y","Beauce-Sud",1
+"G5Z","Beauce-Sud",1
+"G6A","Beauce-Sud",1
+"G6B","Mégantic",1
+"G6C","Bellechasse",1
+"G6E","Beauce-Nord",1
+"G6G","Lotbinière-Frontenac",1
+"G6H","Lotbinière-Frontenac",1
+"G6J","Chutes-de-la-Chaudière",1
+"G6K","Chutes-de-la-Chaudière",1
+"G6L","Arthabaska",1
+"G6P","Arthabaska",1
+"G6R","Arthabaska",1
+"G6S","Arthabaska",1
+"G6T","Arthabaska",1
+"G6V","Lévis, Bellechasse",2
+"G6W","Lévis, Bellechasse, Chutes-de-la-Chaudière",3
+"G6X","Chutes-de-la-Chaudière",1
+"G6Y","Lévis, Bellechasse",2
+"G6Z","Chutes-de-la-Chaudière",1
+"G7A","Chutes-de-la-Chaudière",1
+"G7B","Dubuc, Chicoutimi",2
+"G7G","Chicoutimi, Dubuc",2
+"G7H","Chicoutimi, Jonquière, Dubuc",3
+"G7J","Chicoutimi, Jonquière",2
+"G7K","Chicoutimi",1
+"G7N","Dubuc, Chicoutimi",2
+"G7P","Dubuc",1
+"G7S","Jonquière",1
+"G7T","Jonquière",1
+"G7X","Jonquière",1
+"G7Y","Jonquière",1
+"G7Z","Jonquière",1
+"G8A","Jonquière",1
+"G8B","Lac-Saint-Jean",1
+"G8C","Lac-Saint-Jean",1
+"G8E","Lac-Saint-Jean",1
+"G8G","Lac-Saint-Jean",1
+"G8H","Roberval",1
+"G8J","Roberval",1
+"G8K","Roberval",1
+"G8L","Roberval",1
+"G8M","Roberval",1
+"G8N","Lac-Saint-Jean",1
+"G8P","Ungava",1
+"G8T","Champlain, Trois-Rivières",2
+"G8V","Champlain",1
+"G8W","Champlain",1
+"G8Y","Trois-Rivières",1
+"G8Z","Trois-Rivières",1
+"G9A","Trois-Rivières, Maskinongé",2
+"G9B","Maskinongé",1
+"G9C","Trois-Rivières",1
+"G9H","Nicolet-Bécancour",1
+"G9N","Laviolette-Saint-Maurice, Maskinongé",2
+"G9P","Laviolette-Saint-Maurice",1
+"G9R","Laviolette-Saint-Maurice",1
+"G9T","Laviolette-Saint-Maurice",1
+"G9X","Laviolette-Saint-Maurice",1
+"H0M","Huntingdon",1
+"H1A","Pointe-aux-Trembles, LaFontaine",2
+"H1B","Pointe-aux-Trembles",1
+"H1C","LaFontaine, Pointe-aux-Trembles",2
+"H1E","LaFontaine, Anjou-Louis-Riel, Pointe-aux-Trembles",3
+"H1G","LaFontaine, Bourassa-Sauvé",2
+"H1H","Maurice-Richard, Bourassa-Sauvé",2
+"H1J","Anjou-Louis-Riel",1
+"H1K","Bourget, Anjou-Louis-Riel",2
+"H1L","Bourget, Pointe-aux-Trembles",2
+"H1M","Anjou-Louis-Riel, Rosemont, Jeanne-Mance-Viger",3
+"H1N","Bourget, Rosemont, Anjou-Louis-Riel",3
+"H1P","Jeanne-Mance-Viger, Bourassa-Sauvé",2
+"H1R","Jeanne-Mance-Viger, Viau",2
+"H1S","Jeanne-Mance-Viger, Rosemont, Viau",3
+"H1T","Rosemont, Viau, Jeanne-Mance-Viger, Anjou-Louis-Riel",4
+"H1V","Hochelaga-Maisonneuve, Bourget",2
+"H1W","Hochelaga-Maisonneuve, Rosemont",2
+"H1X","Rosemont, Viau, Hochelaga-Maisonneuve",3
+"H1Y","Rosemont, Gouin, Viau",3
+"H1Z","Viau, Jeanne-Mance-Viger",2
+"H2A","Viau",1
+"H2B","Maurice-Richard",1
+"H2C","Maurice-Richard",1
+"H2E","Viau, Laurier-Dorion, Gouin",3
+"H2G","Gouin, Viau, Rosemont",3
+"H2H","Mercier, Sainte-Marie-Saint-Jacques, Hochelaga-Maisonneuve",3
+"H2J","Mercier, Sainte-Marie-Saint-Jacques",2
+"H2K","Sainte-Marie-Saint-Jacques, Hochelaga-Maisonneuve",2
+"H2L","Sainte-Marie-Saint-Jacques, Hochelaga-Maisonneuve",2
+"H2M","Maurice-Richard, Viau",2
+"H2N","Acadie, Maurice-Richard",2
+"H2P","Laurier-Dorion",1
+"H2R","Laurier-Dorion, Gouin",2
+"H2S","Gouin, Mercier",2
+"H2T","Mercier",1
+"H2V","Mercier, Acadie, Mont-Royal-Outremont, Gouin",4
+"H2W","Sainte-Marie-Saint-Jacques, Mercier, Westmount-Saint-Louis",3
+"H2X","Westmount-Saint-Louis, Sainte-Marie-Saint-Jacques",2
+"H2Y","Sainte-Marie-Saint-Jacques, Westmount-Saint-Louis",2
+"H2Z","Westmount-Saint-Louis",1
+"H3A","Westmount-Saint-Louis",1
+"H3B","Westmount-Saint-Louis",1
+"H3C","Westmount-Saint-Louis, Saint-Henri-Sainte-Anne, Sainte-Marie-Saint-Jacques",3
+"H3E","Verdun",1
+"H3G","Westmount-Saint-Louis",1
+"H3H","Westmount-Saint-Louis, Mont-Royal-Outremont",2
+"H3J","Saint-Henri-Sainte-Anne, Westmount-Saint-Louis",2
+"H3K","Saint-Henri-Sainte-Anne",1
+"H3L","Acadie, Maurice-Richard",2
+"H3M","Acadie",1
+"H3N","Laurier-Dorion",1
+"H3P","Mont-Royal-Outremont",1
+"H3R","Mont-Royal-Outremont",1
+"H3S","Mont-Royal-Outremont, D'Arcy-McGee",2
+"H3T","Mont-Royal-Outremont, D'Arcy-McGee",2
+"H3V","Mont-Royal-Outremont, Westmount-Saint-Louis",2
+"H3W","D'Arcy-McGee, Mont-Royal-Outremont, Notre-Dame-de-Grâce",3
+"H3X","D'Arcy-McGee, Notre-Dame-de-Grâce",2
+"H3Y","Westmount-Saint-Louis, Mont-Royal-Outremont",2
+"H3Z","Westmount-Saint-Louis, Notre-Dame-de-Grâce",2
+"H4A","Notre-Dame-de-Grâce, Westmount-Saint-Louis",2
+"H4B","Notre-Dame-de-Grâce",1
+"H4C","Saint-Henri-Sainte-Anne",1
+"H4E","Saint-Henri-Sainte-Anne",1
+"H4G","Verdun, Saint-Henri-Sainte-Anne",2
+"H4H","Verdun",1
+"H4J","Saint-Laurent",1
+"H4K","Saint-Laurent",1
+"H4L","Saint-Laurent, Acadie",2
+"H4M","Saint-Laurent",1
+"H4N","Acadie, Saint-Laurent, Mont-Royal-Outremont",3
+"H4P","Mont-Royal-Outremont, Saint-Laurent",2
+"H4R","Saint-Laurent",1
+"H4S","Saint-Laurent, Marquette",2
+"H4T","Saint-Laurent, Mont-Royal-Outremont",2
+"H4V","D'Arcy-McGee, Notre-Dame-de-Grâce",2
+"H4W","D'Arcy-McGee, Notre-Dame-de-Grâce, Marquette",3
+"H4X","D'Arcy-McGee, Notre-Dame-de-Grâce",2
+"H4Y","Marquette",1
+"H4Z","Westmount-Saint-Louis",1
+"H5A","Westmount-Saint-Louis",1
+"H7A","Mille-Îles",1
+"H7B","Mille-Îles",1
+"H7C","Mille-Îles, Vimont",2
+"H7E","Mille-Îles",1
+"H7G","Laval-des-Rapides",1
+"H7H","Vimont",1
+"H7J","Vimont, Mille-Îles",2
+"H7K","Vimont",1
+"H7L","Sainte-Rose",1
+"H7M","Laval-des-Rapides, Vimont",2
+"H7N","Laval-des-Rapides",1
+"H7P","Sainte-Rose",1
+"H7R","Fabre",1
+"H7S","Laval-des-Rapides",1
+"H7T","Chomedey, Fabre",2
+"H7V","Chomedey",1
+"H7W","Chomedey, Fabre",2
+"H7X","Fabre",1
+"H7Y","Fabre",1
+"H8N","Marguerite-Bourgeoys",1
+"H8P","Marguerite-Bourgeoys",1
+"H8R","Marquette, Marguerite-Bourgeoys",2
+"H8S","Marquette",1
+"H8T","Marquette",1
+"H8Y","Robert-Baldwin, Nelligan",2
+"H8Z","Nelligan, Robert-Baldwin",2
+"H9A","Robert-Baldwin, Nelligan",2
+"H9B","Robert-Baldwin, Jacques-Cartier",2
+"H9C","Nelligan",1
+"H9E","Nelligan",1
+"H9G","Robert-Baldwin",1
+"H9H","Nelligan, Robert-Baldwin",2
+"H9J","Nelligan",1
+"H9K","Nelligan",1
+"H9P","Marquette, Jacques-Cartier",2
+"H9R","Jacques-Cartier, Marquette, Robert-Baldwin",3
+"H9S","Marquette, Jacques-Cartier",2
+"H9W","Jacques-Cartier",1
+"H9X","Jacques-Cartier",1
+"J0A","Richmond, Drummond-Bois-Francs",2
+"J0B","Mégantic, Orford, Saint-François, Richmond, Drummond-Bois-Francs",5
+"J0C","Drummond-Bois-Francs, Johnson, Nicolet-Bécancour",3
+"J0E","Iberville, Brome-Missisquoi, Orford, Richmond, Johnson",5
+"J0G","Nicolet-Bécancour, Richelieu",2
+"J0H","Johnson, Saint-Hyacinthe, Richelieu, Richmond, Borduas",5
+"J0J","Brome-Missisquoi, Iberville, Huntingdon, Saint-Jean",4
+"J0K","Berthier, Joliette, Maskinongé, Bertrand, Rousseau",5
+"J0L","Verchères, Châteauguay, Huntingdon, Iberville, Borduas, Sanguinet, La Prairie, Richelieu",8
+"J0M","Ungava",1
+"J0N","Mirabel",1
+"J0P","Soulanges",1
+"J0R","Argenteuil, Prévost",2
+"J0S","Huntingdon, Beauharnois",2
+"J0T","Argenteuil, Labelle, Bertrand, Papineau",4
+"J0V","Argenteuil, Papineau, Mirabel",3
+"J0W","Labelle, Gatineau",2
+"J0X","Gatineau, Pontiac, Papineau, Labelle",4
+"J0Y","Abitibi-Ouest, Abitibi-Est, Ungava",3
+"J0Z","Rouyn-Noranda-Témiscamingue, Abitibi-Ouest, Ungava",3
+"J1A","Saint-François",1
+"J1C","Saint-François",1
+"J1E","Saint-François",1
+"J1G","Saint-François",1
+"J1H","Sherbrooke, Saint-François, Richmond",3
+"J1J","Sherbrooke",1
+"J1K","Sherbrooke",1
+"J1L","Sherbrooke",1
+"J1M","Saint-François, Sherbrooke, Mégantic",3
+"J1N","Richmond, Sherbrooke",2
+"J1R","Richmond, Sherbrooke",2
+"J1S","Richmond",1
+"J1T","Richmond",1
+"J1X","Orford",1
+"J1Z","Drummond-Bois-Francs",1
+"J2A","Drummond-Bois-Francs, Johnson",2
+"J2B","Johnson, Drummond-Bois-Francs",2
+"J2C","Drummond-Bois-Francs, Johnson",2
+"J2E","Drummond-Bois-Francs, Johnson",2
+"J2G","Granby",1
+"J2H","Granby",1
+"J2J","Granby",1
+"J2K","Brome-Missisquoi",1
+"J2L","Brome-Missisquoi",1
+"J2M","Brome-Missisquoi, Johnson",2
+"J2N","Brome-Missisquoi",1
+"J2R","Saint-Hyacinthe",1
+"J2S","Saint-Hyacinthe",1
+"J2T","Saint-Hyacinthe",1
+"J2W","Saint-Jean",1
+"J2X","Iberville",1
+"J2Y","Saint-Jean",1
+"J3A","Saint-Jean",1
+"J3B","Saint-Jean",1
+"J3E","Verchères",1
+"J3G","Borduas, Chambly",2
+"J3H","Borduas",1
+"J3L","Chambly",1
+"J3M","Iberville",1
+"J3N","Chambly",1
+"J3P","Richelieu",1
+"J3R","Richelieu",1
+"J3T","Nicolet-Bécancour",1
+"J3V","Montarville",1
+"J3X","Verchères",1
+"J3Y","Vachon",1
+"J3Z","Vachon",1
+"J4B","Montarville",1
+"J4G","Taillon",1
+"J4H","Taillon, Marie-Victorin",2
+"J4J","Taillon, Marie-Victorin",2
+"J4K","Marie-Victorin",1
+"J4L","Taillon, Marie-Victorin",2
+"J4M","Taillon",1
+"J4N","Taillon",1
+"J4P","Laporte, Marie-Victorin",2
+"J4R","Laporte",1
+"J4S","Laporte",1
+"J4T","Laporte",1
+"J4V","Laporte",1
+"J4W","Laporte, La Pinière",2
+"J4X","La Pinière",1
+"J4Y","La Pinière",1
+"J4Z","La Pinière",1
+"J5A","Sanguinet",1
+"J5B","La Prairie",1
+"J5C","Sanguinet",1
+"J5J","Prévost",1
+"J5K","Argenteuil",1
+"J5L","Saint-Jérôme",1
+"J5M","Rousseau",1
+"J5N","Les Plaines, Terrebonne",2
+"J5R","La Prairie",1
+"J5T","Berthier",1
+"J5V","Maskinongé",1
+"J5W","L'Assomption, Repentigny",2
+"J5X","L'Assomption",1
+"J5Y","Repentigny",1
+"J5Z","L'Assomption",1
+"J6A","Repentigny",1
+"J6E","Joliette",1
+"J6J","Châteauguay",1
+"J6K","Châteauguay",1
+"J6N","Beauharnois, Châteauguay",2
+"J6R","Châteauguay",1
+"J6S","Beauharnois",1
+"J6T","Beauharnois",1
+"J6V","Masson",1
+"J6W","Terrebonne",1
+"J6X","Terrebonne",1
+"J6Y","Terrebonne",1
+"J6Z","Blainville",1
+"J7A","Blainville, Groulx",2
+"J7B","Groulx, Blainville",2
+"J7C","Blainville",1
+"J7E","Groulx",1
+"J7G","Groulx",1
+"J7H","Groulx",1
+"J7J","Mirabel, Les Plaines",2
+"J7K","Masson",1
+"J7L","Masson",1
+"J7M","Les Plaines",1
+"J7N","Mirabel",1
+"J7P","Deux-Montagnes",1
+"J7R","Deux-Montagnes",1
+"J7T","Soulanges, Vaudreuil",2
+"J7V","Vaudreuil",1
+"J7W","Vaudreuil",1
+"J7X","Soulanges",1
+"J7Y","Saint-Jérôme",1
+"J7Z","Saint-Jérôme",1
+"J8A","Prévost",1
+"J8B","Bertrand",1
+"J8C","Bertrand, Argenteuil",2
+"J8E","Labelle",1
+"J8G","Argenteuil",1
+"J8H","Argenteuil",1
+"J8L","Papineau, Gatineau",2
+"J8M","Papineau",1
+"J8N","Gatineau, Papineau",2
+"J8P","Chapleau, Papineau",2
+"J8R","Chapleau, Gatineau, Papineau",3
+"J8T","Chapleau, Gatineau",2
+"J8V","Gatineau, Chapleau",2
+"J8X","Hull",1
+"J8Y","Hull",1
+"J8Z","Hull",1
+"J9A","Hull, Pontiac",2
+"J9B","Gatineau",1
+"J9E","Gatineau",1
+"J9H","Pontiac, Hull",2
+"J9J","Pontiac, Hull",2
+"J9L","Labelle",1
+"J9P","Abitibi-Est",1
+"J9T","Abitibi-Ouest",1
+"J9V","Rouyn-Noranda-Témiscamingue",1
+"J9X","Rouyn-Noranda-Témiscamingue",1
+"J9Y","Rouyn-Noranda-Témiscamingue",1
+"J9Z","Abitibi-Ouest",1
+"K1A","Hull, Chapleau",2
