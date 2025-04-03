@@ -17,7 +17,7 @@ df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrow
 cluster_info <- data.frame(
   cluster_name = c("Maxime", "Michel", "David", "Robert", "Emily",
                    "Jennifer", "John", "Julie", "Arjun", "Zoe"),
-  cluster_nameFR = c("Maxime, le milénial naturel",
+  cluster_nameFR = c("Maxime, le millénial naturel",
                      "Michel, le patriote québécois",
                      "David, le Red Tory",
                      "Robert, le Blue Grit",
@@ -103,12 +103,14 @@ for(cluster in unique(df_plot$cluster_name)) {
         "PPC" = "PPC"
       )) +
       labs(
-        title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_nameFR[1]),
+        title = paste0(df_filtered$cluster_nameFR[1]),
         x = NULL,
         y = NULL
       ) +
       annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
                fill = "#1bb8d3", alpha = 0.3) +
+      annotate("text", x = 0, y = 0, label = "\nPotentiel de croissance par parti",
+               hjust = -0.35, vjust = -6, angle = 0, size = 30, lineheight = 0.2, family = "PixelOperatorSC") +
       annotate("text", x = 0, y = 0, label = "Seuil\nde vote",
                hjust = 0.5, vjust = -1, angle = 90, size = 20, lineheight = 0.2, family = "PixelOperatorSC") +
       annotate("text", x = 0, y = 50, label = "Solidité du vote",
@@ -118,9 +120,9 @@ for(cluster in unique(df_plot$cluster_name)) {
       coord_cartesian(clip = "off") +
       clessnize::theme_datagotchi_light(base_size = 60) +
       scale_y_continuous(limits = c(-100, 100)) +
-      theme(text = element_text(size = 70),
+      theme(text = element_text(size = 90),
             legend.position = "none",
-            plot.title = element_text(lineheight = 0.2),
+            plot.title = element_text(size = 130, face = "bold", lineheight = 0.2),
             plot.caption = element_text(lineheight = 0.2, size = 40),
             plot.caption.position = "plot",
             plot.margin = margin(t = 10, r = 10, b = 10, l = 20)
@@ -137,7 +139,7 @@ for(cluster in unique(df_plot$cluster_name)) {
         x = 0.10, y = 0.03, 
         hjust = 0, vjust = 0,
         fontfamily = "PixelOperatorSC",
-        size = 36,
+        size = 38,
         lineheight = 0.3,
         color = "black"
       ) +
@@ -155,11 +157,13 @@ for(cluster in unique(df_plot$cluster_name)) {
       scale_fill_manual(values = party_colors) +
       scale_color_manual(values = party_colors) +
       labs(
-        title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_nameEN[1]),
+        title = paste0(df_filtered$cluster_nameEN[1]),
         x = NULL, y = NULL
       ) +
       annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
                fill = "#1bb8d3", alpha = 0.3) +
+      annotate("text", x = 0, y = 0, label = "\nPotential for Growth per political party",
+               hjust = -0.2, vjust = -6, angle = 0, size = 30, lineheight = 0.2, family = "PixelOperatorSC") +
       annotate("text", x = 0, y = 0, label = "Voting\nThreshold",
                hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC", lineheight = 0.2) +
       annotate("text", x = 0, y = 50, label = "Vote certainty",
@@ -169,13 +173,13 @@ for(cluster in unique(df_plot$cluster_name)) {
       coord_cartesian(clip = "off") +
       clessnize::theme_datagotchi_light(base_size = 60) +
       scale_y_continuous(limits = c(-100, 100)) +
-      theme(text = element_text(size = 70),
+      theme(text = element_text(size = 90),
             legend.position = "none",
-            plot.title = element_text(lineheight = 0.2),
+            plot.title = element_text(size = 130, face = "bold", lineheight = 0.2),
             plot.caption = element_text(lineheight = 0.2, size = 40),
             plot.caption.position = "plot",
             plot.margin = margin(t = 10, r = 10, b = 10, l = 30)
-      )
+      ) 
     
     plot_finalEn <- ggdraw() +
       draw_plot(plot_rciEn, 
@@ -188,7 +192,7 @@ for(cluster in unique(df_plot$cluster_name)) {
         x = 0.10, y = 0.03, 
         hjust = 0, vjust = 0,
         fontfamily = "PixelOperatorSC",
-        size = 36,
+        size = 38,
         lineheight = 0.3,
         color = "black"
       ) +

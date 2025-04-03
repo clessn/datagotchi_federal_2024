@@ -19,7 +19,7 @@ df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrow
 cluster_info <- data.frame(
   cluster_name = c("Maxime", "Michel", "David", "Robert", "Emily",
                    "Jennifer", "John", "Julie", "Arjun", "Zoe"),
-  cluster_nameFR = c("Maxime, le milénial naturel",
+  cluster_nameFR = c("Maxime, le millénial naturel",
                      "Michel, le patriote québécois",
                      "David, le Red Tory",
                      "Robert, le Blue Grit",
@@ -107,12 +107,14 @@ for(cluster in unique(df_plot$cluster_name)) {
       "PPC" = "PPC"
     )) +
     labs(
-      title = paste0("Potentiel de croissance par\nparti pour ", df_filtered$cluster_nameFR[1]),
+      title = paste0(df_filtered$cluster_nameFR[1]),
       x = NULL,
       y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "#1bb8d3", alpha = 0.3) +
+    annotate("text", x = 0, y = 0, label = "\nPotentiel de croissance par parti",
+             hjust = -0.35, vjust = -8, angle = 0, size = 30, lineheight = 0.2, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 0, label = "Seuil\nde vote",
              hjust = 0.5, vjust = -1, angle = 90, size = 20, lineheight = 0.2, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 50, label = "Solidité du vote",
@@ -122,9 +124,9 @@ for(cluster in unique(df_plot$cluster_name)) {
     coord_cartesian(clip = "off") +
     clessnize::theme_datagotchi_light(base_size = 60) +
     scale_y_continuous(limits = c(-100, 100)) +
-    theme(text = element_text(size = 70),
+    theme(text = element_text(size = 90),
           legend.position = "none",
-          plot.title = element_text(lineheight = 0.2),
+          plot.title = element_text(size = 130, face = "bold", lineheight = 0.2),
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
           plot.margin = margin(t = 10, r = 10, b = 10, l = 20)
@@ -142,11 +144,13 @@ for(cluster in unique(df_plot$cluster_name)) {
     scale_fill_manual(values = party_colors) +
     scale_color_manual(values = party_colors) +
     labs(
-      title = paste0("Potential for Growth per\npolitical party for ", df_filtered$cluster_nameEN[1]),
+      title = paste0(df_filtered$cluster_nameEN[1]),
       x = NULL, y = NULL
     ) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = -100, ymax = 0,
              fill = "#1bb8d3", alpha = 0.3) +
+    annotate("text", x = 0, y = 0, label = "\nPotential for Growth per political party",
+             hjust = -0.2, vjust = -8, angle = 0, size = 30, lineheight = 0.2, family = "PixelOperatorSC") +
     annotate("text", x = 0, y = 0, label = "Voting\nThreshold",
              hjust = 0.5, vjust = -1, angle = 90, size = 20, family = "PixelOperatorSC", lineheight = 0.2) +
     annotate("text", x = 0, y = 50, label = "Vote certainty",
@@ -156,46 +160,14 @@ for(cluster in unique(df_plot$cluster_name)) {
     coord_cartesian(clip = "off") +
     clessnize::theme_datagotchi_light(base_size = 60) +
     scale_y_continuous(limits = c(-100, 100)) +
-    theme(text = element_text(size = 70),
+    theme(text = element_text(size = 90),
           legend.position = "none",
-          plot.title = element_text(lineheight = 0.2),
+          plot.title = element_text(size = 130, face = "bold", lineheight = 0.2),
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
           plot.margin = margin(t = 10, r = 10, b = 10, l = 30)
     ) 
   
-#  plot_finalFr <- ggdraw() +
-#    draw_plot(plot_rciFr, 
-#              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
-#              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
-#              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
-#              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
-#    draw_label(
-#      "Source : Léger-Datagotchi 2025 | Méthodologie: Pour calculer le RCI, les répondants #évaluent sur 10 leur probabilité de voter pour\nchaque parti.Un score relatif est ensuite #calculé : le parti préféré reçoit un score positif (écart avec le 2e), les autres un #score\nnégatif (écart avec le 1er). Ce score permet de mesurer la solidité du vote et le #potentiel de croissance des partis dans chaque\nsegment électoral.Pour élaborer les clusters, #nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021).",
-#      x = 0.10, y = 0.05, 
-#      hjust = 0, vjust = 0,
-#      fontfamily = "PixelOperatorSC",
-#      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
-#      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
-#      color = "black"
-#    )
-  
-#  plot_finalEn <- ggdraw() +
-#    draw_plot(plot_rciEn, 
-#              x = -0.10,        # Décale légèrement vers la gauche pour réduire l'espace inutile
-#              y = 0.08,         # Monte un peu vers le haut pour libérer de l'espace en bas
-#              width = 1.1,      # Augmente la largeur légèrement pour remplir mieux l'espace
-#              height = 0.82) +  # Réduit la hauteur pour faire place à la légende
-#    draw_label(
-#      "Source : Léger-Datagotchi 2025 | Methodology: To calculate the RCI, respondents rate #their likelihood of voting for each party on a\nscale of 10. A relative score is then calculated#: the preferred party receives a positive score (the difference with the second),\nwhile the #others receive a negative score (the difference with the first). This score measures the #solidity of the vote and the\ngrowth potential of parties in each electoral segment. To develop #the clusters, we used the k-means method on the data from our\npilot survey (n = 1021).",
-#      x = 0.10, y = 0.03, 
-#      hjust = 0, vjust = 0,
-#      fontfamily = "PixelOperatorSC",
-#      size = 36,                # Ajuste légèrement la taille pour garantir la lisibilité
-#      lineheight = 0.3,         # Interligne un peu plus aéré pour lisibilité
-#      color = "black"
-#    )
-#
   # -------------------- Sauvegardes (sans logo) --------------------
   ggsave(
     filename = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_", 
