@@ -1,5 +1,17 @@
-# Script complet pour calculer les prédictions politiques par RTA
-# basées sur l'appartenance aux circonscriptions
+#' Calcul des prédictions politiques par RTA (Forward Sortation Area)
+#' 
+#' Ce script calcule les prédictions politiques par RTA basées sur l'appartenance
+#' aux circonscriptions électorales. Il utilise des données spatiales pour effectuer
+#' l'intersection entre les RTA et les circonscriptions, puis calcule des prédictions
+#' pondérées pour chaque parti politique.
+#'
+#' Entrée : 
+#' - Données de prédictions par circonscription (CAtable.xlsx)
+#' - Données spatiales des RTA et circonscriptions
+#'
+#' Sortie :
+#' - Fichier CSV des prédictions par RTA (rta_predictions_partis.csv)
+#' - Fichier CSV de l'appartenance RTA-circonscription (rta_circonscriptions_appartenance.csv)
 
 # 1. Chargement des packages nécessaires
 library(openxlsx)

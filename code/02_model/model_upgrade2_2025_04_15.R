@@ -1,3 +1,21 @@
+#' Construction du modèle RTA amélioré (version 2, 15 avril 2025)
+#' 
+#' Ce script construit un modèle multinomial qui intègre les prédictions basées sur
+#' les RTA (Forward Sortation Area). Il fusionne les données pilotes et d'application,
+#' harmonise les facteurs entre les jeux de données, ajoute les prédictions par RTA,
+#' et évalue les performances du modèle.
+#'
+#' Entrée :
+#' - Données pilote nettoyées (datagotchi2025_canada_pilot_20250310.rds)
+#' - Données d'application nettoyées (datagotchi2025_canada_app_20250314.rds)
+#' - Prédictions par RTA (rta_predictions_partis.csv)
+#' - Résultats d'entraînement précédents (resultsTrainV4_31janvier2025.rds)
+#' - Modèle précédent (finalmodel_withOutInteractions.rds)
+#'
+#' Sortie :
+#' - Modèle final avec prédictions RTA (finalmodel_withRTAPredictions_2025-04-15.rds)
+#' - Variables dummy pour prédictions futures (dummies_finalmodel_withRTAPredictions_2025-04-15.rds)
+#'
 # ------------------------------------------------------------------------
 # 1) Chargement des packages
 # ------------------------------------------------------------------------

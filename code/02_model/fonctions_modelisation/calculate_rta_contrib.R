@@ -1,3 +1,16 @@
+#' Calcul des contributions pré-calculées des RTA aux prédictions par parti
+#' 
+#' Ce script calcule les contributions de chaque RTA aux prédictions des partis politiques
+#' en utilisant les coefficients du modèle. Il génère une table de référence qui peut être
+#' utilisée pour accélérer les prédictions en production.
+#'
+#' Entrée :
+#' - Prédictions par RTA (rta_predictions_partis.csv)
+#' - Modèle final avec les coefficients (finalmodel_withRTAPredictions_2025-04-15.rds)
+#'
+#' Sortie :
+#' - Table de contributions pré-calculées (rta_precalculated_contributions.csv)
+#'
 # Load required packages
 library(tidyverse)
 
