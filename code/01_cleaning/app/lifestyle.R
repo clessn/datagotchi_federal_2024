@@ -409,6 +409,15 @@ table(DataClean$lifestyle_typeTransportPublicTransit)
 
 ## clothes_consumption ---------------------------------------------------
 
+table(DataRaw$shopping)
+DataClean$lifestyle_Clothes <- NA
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Department stores (The Bay, Simons, etc.)"] <- "department_stores"
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Chain stores (Gap, Zara, etc.)"] <- "chain_stores"
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Superstores (Walmart, Costco, etc.)"] <- "superstores"
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Independent stores"] <- "independent_stores"
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Thrift stores"] <- "thrift_stores"
+DataClean$lifestyle_Clothes[DataRaw$shopping == "Online only stores"] <- "online_stores"
+table(DataClean$lifestyle_Clothes)
 
 # Regrouper les types de magasins
 DataClean$lifestyle_consClothes <- NA
