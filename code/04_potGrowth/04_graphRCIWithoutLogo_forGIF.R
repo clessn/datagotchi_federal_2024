@@ -10,7 +10,6 @@ library(magick)
 library(ggimage)
 library(patchwork)
 library(jpeg)
-library(gifski)
 
 # Chargement des données RCI
 df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")

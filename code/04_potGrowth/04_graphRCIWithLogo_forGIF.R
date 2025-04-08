@@ -9,7 +9,6 @@ library(magick)
 library(ggimage)
 library(patchwork)
 library(jpeg)
-library(gifski)
 
 # ------------------------- Préparation des données -------------------------
 df_aggregated_rci <- readRDS("_SharedFolder_datagotchi_federal_2024/data/potGrowth/03_aggregated_rci.rds")
@@ -143,7 +142,7 @@ for(cluster in unique(df_plot$cluster_name)) {
         lineheight = 0.3,
         color = "black"
       ) +
-      draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.12)
+      draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.20)
     
     # ----- Graphique en anglais -----
     plot_rciEn <- ggplot(df_filtered, aes(x = party, y = rci)) +
@@ -196,7 +195,7 @@ for(cluster in unique(df_plot$cluster_name)) {
         lineheight = 0.3,
         color = "black"
       ) +
-      draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.12)
+      draw_grob(logo_grob, x = 0.97, y = -0.46, hjust = 1, vjust = 0, width = 0.20)
     
     # 3) Sauvegarder chaque image
     ggsave(
@@ -217,30 +216,25 @@ for(cluster in unique(df_plot$cluster_name)) {
   
   cat("Cluster", cluster, ": 8 images FR et EN générées.\n")
   
-  # 4) Créer le GIF français pour ce cluster
+  # ---- Créer le GIF français ----
   frames_fr <- paste0(
     "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithLogo_fr/cluster_rci_plotFr_withLogo_",
     cluster, "_iceberg", 1:8, ".png"
   )
-  gifski(
-    png_files = frames_fr,
-    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo_", cluster, ".gif"),
-    delay = 0.5,
-    loop = TRUE
-  )
+  img_fr <- image_read(frames_fr)
+  gif_fr <- image_animate(img_fr, delay = 50, loop = 1)  # delay = 50 pour 0.5 sec
+  image_write(gif_fr,
+              path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo_", cluster, ".gif"))
   
-  # 5) Créer le GIF anglais pour ce cluster
+  # ---- Créer le GIF anglais ----
   frames_en <- paste0(
     "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithLogo_en/cluster_rci_plotEn_withLogo_",
     cluster, "_iceberg", 1:8, ".png"
   )
-  gifski(
-    png_files = frames_en,
-    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo_", cluster, ".gif"),
-    delay = 0.5,
-    loop = TRUE
-  )
+  img_en <- image_read(frames_en)
+  gif_en <- image_animate(img_en, delay = 50, loop = 1)
+  image_write(gif_en,
+              path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo_", cluster, ".gif"))
   
   cat("Cluster", cluster, ": GIF FR et GIF EN créés.\n\n")
-} # Fin de la boucle sur les clusters
-
+}
