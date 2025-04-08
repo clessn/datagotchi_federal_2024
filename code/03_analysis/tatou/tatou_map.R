@@ -31,6 +31,8 @@ mapping_results <- cartessn::map_fsa_to_ridings(
 )
 # Si le mapping existe déjà, on peut le charger directement
 #mapping_results <- readRDS("_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
+#saveRDS(mapping_results, "_SharedFolder_datagotchi_federal_2024/reports/mapping_results_ridings_rta.rds")
+
 
 # 5. Obtenir le mapping principal (RTA -> riding avec meilleure couverture)
 rta_to_riding <- mapping_results$fsa_to_riding_mapping %>%
@@ -73,33 +75,15 @@ tattoos_by_riding <- data %>%
 sf_ridings_with_tattoos <- sf_ridings %>%
   dplyr::left_join(tattoos_by_riding, by = "id_riding")
 
-# 8. Créer la heatmap avec ggplot2
-library(ggplot2)
+# 8. Sauvegarder les résultats intermédiaires
+saveRDS(tattoos_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/tatou_pondere.rds")
 
-ggplot(sf_ridings_with_tattoos) +
-  geom_sf(aes(fill = pct_tattoo), color = NA) +
-  scale_fill_viridis_c(option = "plasma", name = "Pourcentage (%)") +
-  labs(
-    title = "Pourcentage de répondants avec tatouages par circonscription",
-    subtitle = "Données pondérées par 'weight'"
-  ) +
-  theme_minimal()
-
-### à continuer ###
-
-
-# 11. Joindre les résultats aux données spatiales pour visualisation
-sf_transport_map <- sf_ridings %>%
-  left_join(transport_battle_by_riding, by = "id_riding")
-
-# 12. Sauvegarder les résultats intermédiaires
-saveRDS(transport_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/transport_battle_pondere.rds")
-
-# 13. Paramètres pour éviter les problèmes de mémoire
+# 9. Paramètres pour éviter les problèmes de mémoire
 options(future.globals.maxSize = 1000 * 1024^2)  # Augmenter la limite à 1 Go
 sf_use_s2(FALSE)  # Désactiver les fonctionnalités S2 de sf pour réduire l'utilisation de la mémoire
 
-# 14. Thème simplifié pour les cartes
+
+# 10. Thème simplifié pour les cartes
 theme_map_dark <- function() {
   theme_minimal() +
     theme(
@@ -126,62 +110,22 @@ theme_map_dark <- function() {
     )
 }
 
-# 15. Définition des couleurs pour les types de transport
-transport_colors <- c(
-  "Voiture 🚗" = "#3498DB",        # Bleu
-  "VUS 🚙" = "#E74C3C",            # Rouge
-  "Transport en commun 🚇" = "#2ECC71",  # Vert
-  "Marche 🚶" = "#F1C40F",         # Jaune
-  "Vélo 🚲" = "#9B59B6",           # Violet
-  "Moto 🏍️" = "#E67E22",          # Orange
-  "Non disponible" = "#33333300"   # Gris foncé transparent
-)
-
-# 16. Prétraitement des données
-sf_transport_map_clean <- sf_transport_map %>%
-  mutate(dominant_mode = ifelse(is.na(dominant_mode), "Non disponible", dominant_mode))
-
-# 17. Information sur le nombre d'observations
-n_observations <- nrow(data)  # Utilisez le nombre réel de répondants
-
-# 18. ===== CARTE DU CANADA =====
-canada_transport_map <- ggplot(sf_transport_map_clean) +
-  geom_sf(aes(fill = dominant_mode), color = "#121212", size = 0.2) +
-  scale_fill_manual(
-    name = "Mode de transport",
-    values = transport_colors,
-    breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
-  ) +
-  theme_map_dark() +
-  theme(legend.position = "none")  # Change this to "none" instead of "bottom"
-
-ggsave("canada_transport_map.png", 
-       canada_transport_map, 
-       width = 16, 
-       height = 12, 
-       dpi = 200,
-       bg = "#121212")
-
-# 19. ===== CARTES URBAINES =====
-main_regions <- c("montreal", "toronto", "vancouver", "quebec_city")
-
-# 20. Créer et sauvegarder chaque carte urbaine individuellement
+# 14. Création de la carte du Canada pour les tatouages
 for (region in main_regions) {
-  # Extraire la région
-  region_map <- cartessn::crop_map(sf_transport_map_clean, region)
+  # Extraire la région avec la fonction crop_map de cartessn
+  region_map <- cartessn::crop_map(sf_ridings_with_tattoos, region)
   
-  # Créer la carte manuellement
+  # Créer la carte pour la région
   city_map <- ggplot(region_map) +
-    geom_sf(aes(fill = dominant_mode), color = "#121212", size = 0.15) +
-    scale_fill_manual(
-      values = transport_colors,
-      breaks = c("Voiture 🚗", "VUS 🚙", "Transport en commun 🚇", "Marche 🚶", "Vélo 🚲", "Moto 🏍️")
-    ) +
+    geom_sf(aes(fill = pct_tattoo), color = "#121212", size = 0.15) +
+    scale_fill_viridis_c(option = "plasma", name = "Pourcentage\nde tatouages (%)") +
+    labs(title = toupper(region)) +
     theme_map_dark() +
     theme(legend.position = "none")
   
-  # Sauvegarder chaque carte urbaine séparément avec aspect ratio carré
-  ggsave(paste0(tolower(gsub("-", "_", region)), "_transport_map.png"), 
+  # Sauvegarder la carte urbaine (format carré) dans le répertoire spécifié
+  ggsave(paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/", 
+                tolower(gsub("-", "_", region)), "_tattoo_map.png"), 
          city_map, 
          width = 6, 
          height = 6, 
@@ -189,89 +133,71 @@ for (region in main_regions) {
          bg = "#121212")
 }
 
-# Cette section gère la mise en page et l'assemblage des cartes et de la légende
+# 17. Assemblage final avec magick pour créer une vue d’ensemble
 
-# Définition des paramètres de dimensions
+# Paramètres pour le canvas final
 canvas_width <- 1800      # Largeur totale du canvas
-canada_height <- 1000     # Hauteur pour la carte du Canada
-city_height <- 400        # Hauteur pour les cartes de villes
-city_spacing <- 20        # Espacement entre les cartes de villes
+canada_height <- 1000     # Hauteur de la carte du Canada
+city_height <- 400        # Hauteur des cartes urbaines
+city_spacing <- 20        # Espacement entre les cartes urbaines
 section_spacing <- 20     # Espacement entre les sections
 
-# 22. Fonction pour créer une carte de ville avec de meilleures proportions
+# 18. Fonction pour créer une image de carte urbaine avec titre (via magick)
 create_city_map <- function(region_name, display_title = NULL) {
-  # Utiliser le titre personnalisé si fourni, sinon utiliser region_name
   display_name <- ifelse(is.null(display_title), toupper(region_name), toupper(display_title))
   
-  # Lire l'image existante
-  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_transport_map.png")
+  # Chemin de l'image sauvegardée pour la région
+  img_path <- paste0(tolower(gsub("-", "_", region_name)), "_tattoo_map.png")
   img <- image_read(img_path)
   
-  # Redimensionner l'image en préservant le ratio carré
-  img_resized <- image_scale(img, paste0(toString(city_height), "x", toString(city_height)))
+  # Redimensionner l'image en conservant un format carré
+  img_resized <- image_scale(img, paste0(as.character(city_height), "x", as.character(city_height)))
   
-  # Créer un canvas noir avec une largeur fixe pour toutes les villes
-  city_width <- city_height  # Maintenir un aspect carré
-  canvas <- image_blank(width = city_width, 
-                        height = city_height + 60,  # Plus d'espace pour le titre
-                        color = "#121212")
+  # Créer un canvas noir pour la carte
+  city_width <- city_height
+  canvas <- image_blank(width = city_width, height = city_height + 60, color = "#121212")
   
-  # Placer l'image sur le canvas (centrée)
-  canvas_with_map <- image_composite(canvas, img_resized, 
-                                     gravity = "center")
+  # Centrer l'image sur le canvas
+  canvas_with_map <- image_composite(canvas, img_resized, gravity = "center")
   
-  # Ajouter le titre en bas
+  # Ajouter un titre en bas du canvas
   canvas_with_title <- image_annotate(canvas_with_map, 
                                       display_name,
                                       color = "white", 
-                                      size = 28,  # Taille de police augmentée
+                                      size = 28,
                                       font = "Arial-Bold",
                                       gravity = "south",
-                                      location = "+0+20")  # Plus d'espace au bas
+                                      location = "+0+20")
   
   return(canvas_with_title)
 }
 
-# 23. Lire et redimensionner la carte du Canada avec légende
-canada_img <- image_read("canada_transport_map.png")
-canada_resized <- image_scale(canada_img, paste0(toString(canvas_width - 40), "x", toString(canada_height)))
+# 19. Lire et redimensionner la carte du Canada
+canada_img <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/canada_tattoo_map.png")
+canada_resized <- image_scale(canada_img, paste0(as.character(canvas_width - 40), "x", as.character(canada_height)))
 
-# 24. Créer un canvas pour la carte du Canada
-canada_canvas <- image_blank(width = canvas_width, 
-                             height = canada_height + 60,  # Plus d'espace pour éviter le rognage
-                             color = "#121212")
+# 20. Créer un canvas pour la carte du Canada et centrer la carte
+canada_canvas <- image_blank(width = canvas_width, height = canada_height + 60, color = "#121212")
+canada_centered <- image_composite(canada_canvas, canada_resized, gravity = "center")
 
-# 25. Centrer la carte du Canada
-canada_centered <- image_composite(canada_canvas, canada_resized, 
-                                   gravity = "center")
+# 21. Création des images pour chacune des cartes urbaines
+montreal_map <- create_city_map("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/montreal_tattoo_map.png")
+toronto_map <- create_city_map("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/toronto_tattoo_map.png")
+vancouver_map <- create_city_map("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/vancouver_tattoo_map.png")
+quebec_map <- create_city_map("_SharedFolder_datagotchi_federal_2024/graph/analyses/tatou/quebec_city_tattoo_map.png", "QUÉBEC")
 
-# 26. Créer les cartes de villes avec de meilleures proportions
-montreal_map <- create_city_map("montreal")
-toronto_map <- create_city_map("toronto")
-vancouver_map <- create_city_map("vancouver")
-quebec_map <- create_city_map("quebec_city", "QUÉBEC")
-
-# 27. Calculer l'espacement latéral pour centrer les cartes de villes
-city_width = image_info(montreal_map)$width
+# 22. Calculer l'espacement latéral pour centrer les cartes urbaines
+city_width <- image_info(montreal_map)$width
 city_total_width <- 4 * city_width + (3 * city_spacing)
 city_padding <- max(0, (canvas_width - city_total_width) / 2)
 
-# 28. Créer des séparateurs plus visibles entre les villes
-city_separator <- image_blank(width = city_spacing, 
-                              height = image_info(montreal_map)$height, 
-                              color = "#121212")
+# 23. Créer un séparateur pour les cartes urbaines
+city_separator <- image_blank(width = city_spacing, height = image_info(montreal_map)$height, color = "#121212")
 
-# 29. Assemblage des villes avec espacement
-city_row <- image_append(c(montreal_map, 
-                           city_separator,
-                           toronto_map, 
-                           city_separator,
-                           vancouver_map,
-                           city_separator,
-                           quebec_map), 
-                         stack = FALSE)
+# 24. Assembler les cartes urbaines en une rangée
+city_row <- image_append(c(montreal_map, city_separator, toronto_map, city_separator, vancouver_map, city_separator, quebec_map), stack = FALSE)
 
-# 30. Appliquer le padding latéral
+# 25. Appliquer un padding latéral si nécessaire
 if (city_padding > 0) {
   left_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "#121212")
   right_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "#121212")
@@ -280,170 +206,99 @@ if (city_padding > 0) {
   city_row_padded <- city_row
 }
 
-# 31. Titre principal avec dimensions augmentées
-title_height <- 100  # Hauteur augmentée
-title_bg <- image_blank(width = canvas_width,
-                        height = title_height,
-                        color = "#121212")
-
+# 26. Créer le titre principal avec magick
+title_height <- 100
+title_bg <- image_blank(width = canvas_width, height = title_height, color = "#121212")
 title <- image_annotate(title_bg,
-                        "LA BATAILLE DU TRANSPORT AU CANADA",
+                        "LA DIFFUSION DES TATOUAGES AU CANADA",
                         color = "white",
-                        size = 48,  # Taille augmentée
+                        size = 48,
                         gravity = "center",
                         font = "Arial-Bold")
 
-# 32. Sous-titre avec dimensions augmentées
-subtitle_height <- 60  # Hauteur augmentée
-subtitle_bg <- image_blank(width = canvas_width,
-                           height = subtitle_height,
-                           color = "#121212")
-
+# 27. Créer le sous-titre
+subtitle_height <- 60
+subtitle_bg <- image_blank(width = canvas_width, height = subtitle_height, color = "#121212")
 subtitle <- image_annotate(subtitle_bg,
-                           "Mode de transport préféré par circonscription électorale",
+                           "Pourcentage de répondants avec tatouages par circonscription",
                            color = "#CCCCCC",
-                           size = 32,  # Taille augmentée
+                           size = 32,
                            gravity = "center",
                            font = "Arial-Bold")
 
+# 28. Créer une ligne de séparation
+separator_height <- 3
+separator <- image_blank(width = canvas_width, height = separator_height, color = "#555555")
 
-# Correction pour la légende des transports
-# Remplacer les lignes concernant la légende (lignes 33-109 dans la partie assemblage)
+# 29. Espacement entre sections
+spacer <- image_blank(width = canvas_width, height = section_spacing, color = "#121212")
 
-# 33. Légende améliorée avec une hauteur augmentée pour éviter les superpositions
-# Create a taller legend background to accommodate all transport modes
-map_legend_height <- 300  # Renamed to avoid conflicts with later code
-map_legend_bg <- image_blank(width = canvas_width,
-                             height = map_legend_height,
-                             color = "#121212")
+# 30. Créer une légende simplifiée (texte indiquant l'échelle de couleur)
+legend_text <- image_blank(width = canvas_width, height = 100, color = "#121212")
+legend_text <- image_annotate(legend_text,
+                              "Échelle de couleur : Pourcentage de tatouages (%)",
+                              color = "white",
+                              size = 32,
+                              gravity = "center",
+                              font = "Arial-Bold")
 
-# Parameters for icon positioning
-x_start <- 150
-x_spacing <- 350
-y_row1 <- 50
-y_row2 <- 180
-
-# First Row
-map_legend_bg <- map_legend_bg %>%
-  image_composite(transport_imgs$car_icon, offset = paste0("+", x_start, "+", y_row1)) %>%
-  image_annotate("Voiture 🚗", color = "white", size = 32,
-                 location = paste0("+", x_start + icon_size + 30, "+", y_row1 + 10),
-                 font = "Arial-Bold") %>%
-  image_composite(transport_imgs$suv_icon, offset = paste0("+", x_start + x_spacing, "+", y_row1)) %>%
-  image_annotate("VUS 🚙", color = "white", size = 32,
-                 location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row1 + 10),
-                 font = "Arial-Bold") %>%
-  image_composite(transport_imgs$transit_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row1)) %>%
-  image_annotate("Transport en commun 🚇", color = "white", size = 32,
-                 location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row1 + 10),
-                 font = "Arial-Bold")
-
-# Second Row
-map_legend_bg <- map_legend_bg %>%
-  image_composite(transport_imgs$walk_icon, offset = paste0("+", x_start, "+", y_row2)) %>%
-  image_annotate("Marche 🚶", color = "white", size = 32,
-                 location = paste0("+", x_start + icon_size + 30, "+", y_row2 + 10),
-                 font = "Arial-Bold") %>%
-  image_composite(transport_imgs$bicycle_icon, offset = paste0("+", x_start + x_spacing, "+", y_row2)) %>%
-  image_annotate("Vélo 🚲", color = "white", size = 32,
-                 location = paste0("+", x_start + x_spacing + icon_size + 30, "+", y_row2 + 10),
-                 font = "Arial-Bold") %>%
-  image_composite(transport_imgs$moto_icon, offset = paste0("+", x_start + 2*x_spacing, "+", y_row2)) %>%
-  image_annotate("Moto 🏍️", color = "white", size = 32,
-                 location = paste0("+", x_start + 2*x_spacing + icon_size + 30, "+", y_row2 + 10),
-                 font = "Arial-Bold")
-
-
-
-
-# 36. Note méthodologique avec dimensions augmentées
-caption_height <- 80  # Hauteur augmentée
-caption_bg <- image_blank(width = canvas_width,
-                          height = caption_height,
-                          color = "#121212")
-
-# Utilise le nombre réel d'observations
-n_observations <- nrow(data)  # Utilisez le nombre réel de répondants
+# 31. Créer la note méthodologique
+caption_height <- 80
+caption_bg <- image_blank(width = canvas_width, height = caption_height, color = "#121212")
+n_observations <- nrow(data)
 caption <- image_annotate(caption_bg,
-                          paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
+                          paste0("Source: Léger-Datagotchi 2025 | n = ", format(n_observations, big.mark = " ")),
                           color = "#BBBBBB",
-                          size = 24,  # Taille augmentée
-                          location = "+40+25",  # Position ajustée
+                          size = 24,
+                          location = "+40+25",
                           font = "Arial-Bold")
-
 caption <- image_annotate(caption,
-                          "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
+                          "Données pondérées selon le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration et le type d'habitation",
                           color = "#BBBBBB",
-                          size = 22,  # Taille augmentée
-                          location = "+40+55",  # Position ajustée
+                          size = 22,
+                          location = "+40+55",
                           font = "Arial-Bold")
 
-# 37. Ligne séparatrice plus visible
-separator_height <- 3  # Épaisseur augmentée
-separator <- image_blank(width = canvas_width,
-                         height = separator_height,
-                         color = "#555555")  # Couleur légèrement plus claire
-
-# 38. Espacement entre sections
-spacer <- image_blank(width = canvas_width,
-                      height = section_spacing,
-                      color = "#121212")
-
-# 39. Assembler l'image finale avec le nouvel ordre et meilleurs espacements
+# 32. Assembler l'image finale avec tous les éléments
 final_image <- c(
   title,                           # Titre principal
   subtitle,                        # Sous-titre
   spacer,                          # Espacement
-  separator,                       # Ligne de séparation
+  separator,                       # Séparateur
   spacer,                          # Espacement
-  map_legend_bg,                   # Légende personnalisée en HAUT (avec icônes)
+  legend_text,                     # Légende simplifiée
   spacer,                          # Espacement
-  separator,                       # Ligne de séparation
+  separator,                       # Séparateur
   spacer,                          # Espacement
-  city_row_padded,                 # Cartes des villes
+  city_row_padded,                 # Rangée des cartes urbaines
   spacer,                          # Espacement
-  separator,                       # Ligne de séparation
+  separator,                       # Séparateur
   spacer,                          # Espacement
-  canada_centered,                 # Carte du Canada (sans légende intégrée)
+  canada_centered,                 # Carte du Canada
   spacer,                          # Espacement
-  caption                          # Notes méthodologiques
+  caption                          # Note méthodologique
 )
-
 final_combined <- image_append(final_image, stack = TRUE)
 
-# 40. Ajouter une bordure noire
-final_with_border <- image_border(final_combined, "#121212", "30x30")  # Bordure plus grande
+# 33. Ajouter une bordure noire à l'image finale
+final_with_border <- image_border(final_combined, "#121212", "30x30")
 
-# 41. Charger le logo (si disponible)
+# 34. Ajouter le logo si disponible
 logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_fr.png"
 if (file.exists(logo_path)) {
   logo <- image_read(logo_path)
-  
-  # 42. Redimensionner le logo à une taille appropriée
   logo_width <- round(image_info(final_with_border)$width * 0.15)
   logo_resized <- image_scale(logo, paste0(logo_width, "x"))
-  
-  # 43. Calculer la position pour le coin inférieur droit
   margin <- 30
   x_position <- image_info(final_with_border)$width - image_info(logo_resized)$width - margin
   y_position <- image_info(final_with_border)$height - image_info(logo_resized)$height - margin
+  final_with_logo <- image_composite(final_with_border, logo_resized, offset = paste0("+", x_position, "+", y_position))
   
-  # 44. Ajouter le logo à l'image finale
-  final_with_logo <- image_composite(
-    final_with_border, 
-    logo_resized, 
-    offset = paste0("+", x_position, "+", y_position)
-  )
-  
-  # 45. Sauvegarder l'image finale avec logo
-  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/bataille_transport_canada_final_avec_logo.png")
-  
-  cat("Image finale avec logo créée avec succès : bataille_transport_canada_final_avec_logo.png\n")
+  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/tatouages/diffusion_tatouages_final_avec_logo.png")
+  cat("Image finale avec logo créée avec succès : diffusion_tatouages_final_avec_logo.png\n")
 } else {
-  # Si le logo n'est pas disponible, sauvegarder sans logo
-  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/bataille_transport_canada_final.png")
-  
-  cat("Image finale sans logo créée avec succès : bataille_transport_canada_final.png\n")
+  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/tatouages/diffusion_tatouages_final.png")
+  cat("Image finale sans logo créée avec succès : diffusion_tatouages_final.png\n")
 }
 
 
