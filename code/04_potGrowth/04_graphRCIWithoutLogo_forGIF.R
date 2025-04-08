@@ -39,16 +39,16 @@ cluster_info <- data.frame(
                      "Julie, the grounded traditionalist",
                      "Arjun, the pragmatic cosmopolitan",
                      "Zoe, the trendy urbanite"),
-  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0018_Maxime.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0007_Michel.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0010_David2.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0030_Robert.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0034_10--Emilie.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0001_Jen-Layers.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0014_John-Layers.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0026_Julie.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0004_Arjun.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0022_Zoe.png")
+  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0018_Maxime.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0007_Michel.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0010_David2.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0030_Robert.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0034_10--Emilie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0001_Jen-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0014_John-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0026_Julie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0004_Arjun.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0022_Zoe.png")
 )
 
 df_plot <- df_aggregated_rci %>%
@@ -129,7 +129,7 @@ for(cluster in unique(df_plot$cluster_name)) {
           plot.title = element_text(size = 130, face = "bold", lineheight = 0.2),
           plot.caption = element_text(lineheight = 0.2, size = 40),
           plot.caption.position = "plot",
-          plot.margin = margin(t = 10, r = 10, b = 10, l = 20)
+          plot.margin = margin(t = 30, r = 30, b = 30, l = 30)
     )
   
   # ----- Graphique en anglais -----
@@ -185,32 +185,27 @@ for(cluster in unique(df_plot$cluster_name)) {
   } 
   
   cat("Cluster", cluster, ": 8 images FR et EN générées.\n")
-  
-  # 4) Créer le GIF français pour ce cluster
-  frames_fr <- paste0(
-    "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_",
-    cluster, "_iceberg", 1:8, ".png"
-  )
-  gifski(
-    png_files = frames_fr,
-    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withoutLogo_", cluster, ".gif"),
-    delay = 0.5,
-    loop = TRUE
-  )
-  
-  # 5) Créer le GIF anglais pour ce cluster
-  frames_en <- paste0(
-    "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_",
-    cluster, "_iceberg", 1:8, ".png"
-  )
-  gifski(
-    png_files = frames_en,
-    gif_file  = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withoutLogo_", cluster, ".gif"),
-    delay = 0.5,
-    loop = TRUE
-  )
-  
-  cat("Cluster", cluster, ": GIF FR et GIF EN créés.\n\n")
-  
-} # Fin boucle sur les clusters
-  
+
+# ---- Créer le GIF français ----
+frames_fr <- paste0(
+  "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_fr/cluster_rci_plotFr_withoutLogo_",
+  cluster, "_iceberg", 1:8, ".png"
+)
+img_fr <- image_read(frames_fr)
+gif_fr <- image_animate(img_fr, delay = 50, loop = 1)  # delay = 50 pour 0.5 sec
+image_write(gif_fr,
+            path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withoutLogo_", cluster, ".gif"))
+
+# ---- Créer le GIF anglais ----
+frames_en <- paste0(
+  "_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/graphWithoutLogo_en/cluster_rci_plotEn_withoutLogo_",
+  cluster, "_iceberg", 1:8, ".png"
+)
+img_en <- image_read(frames_en)
+gif_en <- image_animate(img_en, delay = 50, loop = 1)
+image_write(gif_en,
+            path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withoutLogo_", cluster, ".gif"))
+
+cat("Cluster", cluster, ": GIF FR et GIF EN créés.\n\n")
+}
+

@@ -37,16 +37,16 @@ cluster_info <- data.frame(
                      "Julie, the grounded traditionalist",
                      "Arjun, the pragmatic cosmopolitan",
                      "Zoe, the trendy urbanite"),
-  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0018_Maxime.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0007_Michel.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0010_David2.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0030_Robert.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0034_10--Emilie.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0001_Jen-Layers.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0014_John-Layers.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0026_Julie.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0004_Arjun.png", 
-                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x1/Clusters-x1-_0000s_0022_Zoe.png")
+  image_tete = c("_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0018_Maxime.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0007_Michel.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0010_David2.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0030_Robert.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0034_10--Emilie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0001_Jen-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0014_John-Layers.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0026_Julie.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0004_Arjun.png", 
+                 "_SharedFolder_datagotchi_federal_2024/images/landingPage_potgrowth/All_Clusters_Persona/x2000/Clusters-x2000-_0000s_0022_Zoe.png")
 )
 
 df_plot <- df_aggregated_rci %>%
@@ -135,11 +135,11 @@ for(cluster in unique(df_plot$cluster_name)) {
                 width = 1.1,      
                 height = 0.82) +  
       draw_label(
-        "Source : Léger-Datagotchi 2025 | Méthodologie: Pour calculer le RCI, les répondants évaluent sur 10 leur\nprobabilité de voter pour chaque parti. Un score relatif est ensuite calculé : le parti préféré reçoit un\nscore positif (écart avec le 2e), les autres un score négatif (écart avec le 1er). Ce score permet de mesurer\nla solidité du vote et le potentiel de croissance des partis dans chaque segment électoral. Pour élaborer\nles clusters, nous avons utilisé la méthode k-means sur les données de notre sondage pilote (n = 1021).",
+        "Source : Léger-Datagotchi 2025, (n = 1021).",
         x = 0.10, y = 0.03, 
         hjust = 0, vjust = 0,
         fontfamily = "PixelOperatorSC",
-        size = 38,
+        size = 50,
         lineheight = 0.3,
         color = "black"
       ) +
@@ -188,11 +188,11 @@ for(cluster in unique(df_plot$cluster_name)) {
                 width = 1.1,      
                 height = 0.82) +  
       draw_label(
-        "Source : Léger-Datagotchi 2025 | Methodology: To calculate the RCI, respondents rate their likelihood of voting for\neach party on a scale of 10.A relative score is then calculated: the preferred party receives a positive score (the\ndifference with the second), while the others receive a negative score (the difference with the first). This score\nmeasures the solidity of the vote and the growth potential of parties in each electoral segment. To develop\nthe clusters, we used the k-means method on the data from our pilot survey (n = 1021).",
+        "Source : Léger-Datagotchi 2025, (n = 1021).",
         x = 0.10, y = 0.03, 
         hjust = 0, vjust = 0,
         fontfamily = "PixelOperatorSC",
-        size = 38,
+        size = 50,
         lineheight = 0.3,
         color = "black"
       ) +
