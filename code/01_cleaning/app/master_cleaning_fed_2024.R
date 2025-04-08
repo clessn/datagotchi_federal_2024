@@ -11,7 +11,7 @@ library(clessnize)
 
 ## load raw data here
 
-DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250330.csv")
+DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250403.csv")
 
 # Clean variables ---------------------------------------------------------
 
@@ -42,7 +42,7 @@ source("code/01_cleaning/app/transform_rta_to_ridings.R")
 
 # Save -------------------------------------------------------------------------
 
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250330.rds")
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250403.rds")
 
 # Save for clustering usage ----------------------------------------------
-# saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250318.rds")
+#saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250403.rds")
