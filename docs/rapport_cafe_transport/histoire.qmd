@@ -81,12 +81,12 @@ Cette distribution révèle comment les choix de consommation quotidiens s'align
 
 ![Indice café-politique](img/cafe_graph.png){width=100%}
 
-![Indice café-politique (Analyse triple)](_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-FR.png){width=90%}
-
 Le graphique présente la consommation de café par affiliation politique auprès de trois chaînes différentes, avec des échelles verticales distinctes pour chaque chaîne.
 Pour Tim Hortons (échelle de 0% à 50%), les partisans du PCC sont les plus grands consommateurs (environ 44%), suivis du PLC (environ 36%), du NPD (environ 33%), du PV (environ 27%), et enfin du BQ qui affiche la plus faible consommation (environ 25%).
 Pour McDonald's (échelle de 0% à 20%), la répartition est plus uniforme entre les partis. Le PCC arrive légèrement en tête (environ 10%), suivi du NPD (environ 7-8%), puis du BQ et du PLC à des niveaux similaires (environ 6-7%), et enfin du PV (environ 5-6%).
 Pour Starbucks (échelle de 0% à 10%), le PLC domine nettement (environ 38%), suivi du NPD (environ 32%), du PCC (environ 30%), du PV (environ 19%), et enfin du BQ qui affiche la consommation la plus faible (environ 14%).
+
+![Indice café-politique (Analyse triple)](img/cafe_vote.png){width=90%}
 
 # La Bataille des Transports au Canada
 
@@ -106,6 +106,6 @@ Le NPD et le Parti vert, quant à eux, semble attirer davantage les marcheurs et
 
 ![Indice Transport-Politique](img/transport_graph.png){width=90%}
 
-![Transport-Politique (Version détaillée)](_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/transport-vote-fr.png){width=90%}
-
 Le graphique montre que les électeurs du BQ (Bloc Québécois) sont les plus dépendants de la voiture (environ 65%), suivis du PCC (Parti conservateur) à environ 53% et du PLC (Parti libéral) à 47%. Le NPD et le PVC (Parti vert) ont des taux d'utilisation des transports en commun plus élevés (environ 30% et 23% respectivement) comparés aux autres partis. Pour la marche, le NPD se démarque avec environ 21% de ses électeurs, tandis que les électeurs du PVC sont les plus nombreux à utiliser le vélo (environ 5%). L'utilisation de la moto reste marginale (moins de 5%) pour tous les partis.
+
+![Transport-Politique (Version détaillée)](img/transport_vote.png){width=90%}
