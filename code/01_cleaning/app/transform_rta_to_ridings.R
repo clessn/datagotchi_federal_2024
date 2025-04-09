@@ -5,7 +5,7 @@ if(!requireNamespace("clessnize", quietly = TRUE) ||
   if(!requireNamespace("devtools", quietly = TRUE)) {
     install.packages("devtools")
   }
-  devtools::install_github("clessn/clessnize")
+  devtools::install_github("clessnverse/clessnize")
 }
 
 
