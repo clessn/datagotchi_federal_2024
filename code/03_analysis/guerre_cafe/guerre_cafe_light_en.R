@@ -9,7 +9,7 @@ library(showtext)
 library(magick)
 
 # 1. Chargement des données
-data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderee_20250323.rds")
+data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_Ponderee20250328.rds")
 
 # 2. Chargement des données spatiales depuis cartessn
 sf_ridings <- cartessn::spatial_canada_2022_electoral_ridings_aligned
@@ -79,6 +79,7 @@ coffee_battle_by_riding <- coffee_battle_by_riding %>%
 # 11. Joindre les résultats aux données spatiales pour visualisation
 sf_coffee_map <- sf_ridings %>%
   left_join(coffee_battle_by_riding, by = "id_riding")
+coffee_battle_by_riding
 
 # 12. Sauvegarder les résultats intermédiaires
 saveRDS(coffee_battle_by_riding, "_SharedFolder_datagotchi_federal_2024/reports/coffee_battle_pondere_light.rds")
@@ -140,7 +141,7 @@ canada_coffee_map <- ggplot(sf_coffee_map_clean) +
   ) +
   theme_map_light() +
   theme(legend.position = "none")
-
+canada_coffee_map
 ggsave("canada_coffee_map_light.png", 
        canada_coffee_map, 
        width = 16, 

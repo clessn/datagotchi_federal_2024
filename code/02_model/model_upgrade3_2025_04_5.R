@@ -1,3 +1,21 @@
+#' Construction du modèle RTA amélioré (version 2, 15 avril 2025)
+#' 
+#' Ce script construit un modèle multinomial qui intègre les prédictions basées sur
+#' les RTA (Forward Sortation Area) et ajoute des interactions entre variables clés.
+#' Il fusionne les données pilotes et d'application, harmonise les facteurs entre les jeux 
+#' de données, ajoute les prédictions par RTA, et évalue les performances du modèle.
+#'
+#' Entrée :
+#' - Données pilote nettoyées (datagotchi2025_canada_pilot_20250322.rds)
+#' - Données d'application nettoyées (datagotchi2025_canada_app_20250403.rds)
+#' - Prédictions par RTA (rta_predictions_partis.csv)
+#' - Résultats d'entraînement précédents (resultsTrainV4_31janvier2025.rds)
+#' - Modèle précédent (finalmodel_withOutInteractions.rds)
+#'
+#' Sortie :
+#' - Modèle final avec prédictions RTA (finalmodel_withRTAPredictions_2025-04-15.rds)
+#' - Variables dummy pour prédictions futures (dummies_finalmodel_withRTAPredictions_2025-04-15.rds)
+#'
 # ------------------------------------------------------------------------
 # 1) Chargement des packages
 # ------------------------------------------------------------------------
@@ -12,18 +30,18 @@ library(pbapply)
 # 2) Chargement des données (pilote et application)
 # ------------------------------------------------------------------------
 # Données pilote (déjà nettoyées)
-DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250310.rds")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds")
 
 # Nouvelles données de l'application
-DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250314.rds")
+DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250403.rds")
 
 # Chargement des prédictions par RTA
 rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis.csv",
                            stringsAsFactors = FALSE)
 
 # Charger le modèle précédent et les résultats pour obtenir les variables du modèle
-results_train <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
-previous_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
+results_train <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/_previous/resultsTrainV4_31janvier2025.rds")
+previous_model <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/_previous/finalmodel_withOutInteractions.rds")
 
 # Identifier le meilleur modèle selon l'accuracy
 best_iterations <- results_train %>%
@@ -64,7 +82,7 @@ cat("Valeurs uniques dans DataApp:", paste(unique_values_app, collapse=", "), "\
 # Identifier tous les niveaux possibles (excluant 'other' qui sera filtré)
 all_levels <- unique(c(
   unique_values_pilot[unique_values_pilot != "other"],
-  unique_values_app
+  unique_values_app[unique_values_app != "other"]
 ))
 
 # Standardiser les noms de partis (npd -> ndp si nécessaire)
@@ -143,20 +161,18 @@ DataApp$source <- "application"
 # Pour DataPilot, filtrer seulement les observations avec des valeurs autres que "other"
 DataPilot_selected <- DataPilot %>%
   filter(dv_voteChoice != "other" & !is.na(dv_voteChoice)) %>%
-  select(all_of(c(model_variables, "dv_voteChoice", "source", "ses_postalCode"))) %>%  # Ajoutez ses_postalCode ici
+  select(all_of(c(model_variables, "dv_voteChoice", "source", "ses_postalCode"))) %>%
   drop_na()
 
 # Pour DataApp, sélectionner les variables et ajouter ses_postalCode
 DataApp_selected <- DataApp %>%
-  filter(!is.na(dv_voteChoice)) %>%
+  filter(dv_voteChoice != "other" & !is.na(dv_voteChoice)) %>%
   select(all_of(c(model_variables, "dv_voteChoice", "source", "ses_postalCode"))) %>%
   drop_na()
 
 # ------------------------------------------------------------------------
 # 5) Enrichissement avec les prédictions par RTA
 # ------------------------------------------------------------------------
-
-# Ensuite, vous pouvez continuer avec votre code initial
 DataPilot_selected <- DataPilot_selected %>%
   mutate(
     # Standardiser les codes postaux (majuscules)
@@ -307,7 +323,85 @@ multiClassSummary2 <- function(data, lev = NULL, model = NULL) {
 }
 
 # ------------------------------------------------------------------------
-# 9) Construction du modèle enrichi avec les variables RTA
+# 8.5) Validation des interactions individuelles
+# ------------------------------------------------------------------------
+
+# Fonction pour tester une interaction spécifique
+test_interaction <- function(interaction_term, X_train, y_train, X_test, y_test) {
+  # Modèle de base sans interactions
+  base_data <- X_train[, !grepl(":", colnames(X_train))]
+  base_model <- multinom(y_train ~ ., data = base_data, trace = FALSE, MaxNWts = 100000)
+  
+  # Prédictions du modèle de base
+  base_test_data <- X_test[, !grepl(":", colnames(X_test))]
+  base_preds <- predict(base_model, newdata = base_test_data)
+  base_acc <- mean(base_preds == y_test)
+  
+  # Colonnes pour cette interaction spécifique
+  interaction_cols <- grep(paste0(interaction_term, "|", gsub(":", ".*:", interaction_term)), 
+                           colnames(X_train), value = TRUE)
+  
+  # Si aucune colonne trouvée, retourner résultat nul
+  if (length(interaction_cols) == 0) {
+    return(list(interaction = interaction_term, base_acc = base_acc, 
+                interaction_acc = NA, diff = NA, n_params = 0))
+  }
+  
+  # Modèle avec l'interaction spécifique
+  interaction_data <- cbind(base_data, X_train[, interaction_cols, drop = FALSE])
+  interaction_model <- multinom(y_train ~ ., data = interaction_data, trace = FALSE, MaxNWts = 100000)
+  
+  # Prédictions du modèle avec interaction
+  interaction_test_data <- cbind(base_test_data, X_test[, interaction_cols, drop = FALSE])
+  interaction_preds <- predict(interaction_model, newdata = interaction_test_data)
+  interaction_acc <- mean(interaction_preds == y_test)
+  
+  # Retourner les résultats
+  return(list(interaction = interaction_term, 
+              base_acc = base_acc, 
+              interaction_acc = interaction_acc,
+              diff = interaction_acc - base_acc,
+              n_params = length(interaction_cols)))
+}
+
+# Tester chaque interaction individuellement
+cat("Évaluation des interactions individuelles:\n")
+interaction_results <- list()
+
+for (interaction in interactions_to_add) {
+  cat("Évaluation de", interaction, "...\n")
+  result <- test_interaction(interaction, X_train_dummy, y_train_final, X_test_dummy, y_test_final)
+  interaction_results[[interaction]] <- result
+  cat("  Accuracy de base:", result$base_acc, "\n")
+  cat("  Accuracy avec interaction:", result$interaction_acc, "\n")
+  cat("  Différence:", result$diff, "\n")
+  cat("  Nombre de paramètres ajoutés:", result$n_params, "\n\n")
+}
+
+# Résumer les résultats
+interaction_summary <- data.frame(
+  interaction = sapply(interaction_results, function(x) x$interaction),
+  base_acc = sapply(interaction_results, function(x) x$base_acc),
+  interaction_acc = sapply(interaction_results, function(x) x$interaction_acc),
+  difference = sapply(interaction_results, function(x) x$diff),
+  n_params = sapply(interaction_results, function(x) x$n_params)
+)
+
+interaction_summary <- interaction_summary[order(-interaction_summary$difference), ]
+print(interaction_summary)
+
+# Identifier les interactions bénéfiques
+beneficial_interactions <- interaction_summary$interaction[interaction_summary$difference > 0]
+cat("Interactions qui améliorent le modèle:", paste(beneficial_interactions, collapse=", "), "\n")
+
+# Suggestion: Ne conserver que les interactions bénéfiques
+if (length(beneficial_interactions) > 0) {
+  cat("Suggestion: Ne conserver que les interactions suivantes dans le modèle final:\n")
+  cat(paste(beneficial_interactions, collapse="\n"), "\n")
+}
+
+# ------------------------------------------------------------------------
+# 9) Construction du modèle enrichi avec les variables RTA et les interactions ciblées
 # ------------------------------------------------------------------------
 # Variables du modèle précédent + nouvelles variables de prédiction RTA
 final_vars <- c(model_variables, "prediction_CPC", "prediction_LPC", "prediction_NDP", "prediction_GPC", "prediction_BQ")
@@ -322,6 +416,83 @@ X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.fra
 
 # Vérification des dimensions de la matrice
 cat("Dimensions de la matrice d'entraînement:", dim(X_train_dummy), "\n")
+
+# Définir les termes d'interaction - VERSION SIMPLIFIÉE
+interactions_to_add <- c(
+  "ses_region:ses_language",           # Interaction région et langue
+  "ses_region:ses_educ",               # Interaction région et éducation
+  "ses_educ:ses_income3Cat"            # Interaction éducation et revenu
+)
+
+# Vérifier la présence des variables d'interaction
+interaction_vars <- unique(unlist(strsplit(gsub(":", " ", paste(interactions_to_add, collapse=" ")), " ")))
+missing_vars <- setdiff(interaction_vars, names(X_train_final))
+
+if (length(missing_vars) > 0) {
+  cat("ATTENTION: Variables manquantes pour les interactions:", paste(missing_vars, collapse=", "), "\n")
+} else {
+  cat("Toutes les variables nécessaires pour les interactions sont présentes\n")
+}
+
+# Ajouter les termes d'interaction manuellement pour conserver les mêmes références
+# Pour chaque interaction, on crée toutes les combinaisons possibles des niveaux
+for (interaction_term in interactions_to_add) {
+  # Extraire les noms des variables
+  var_names <- unlist(strsplit(interaction_term, ":"))
+  var1 <- var_names[1]
+  var2 <- var_names[2]
+  
+  cat("Création de l'interaction entre", var1, "et", var2, "\n")
+  
+  # Vérifier que les deux variables sont des facteurs
+  if (is.factor(X_train_final[[var1]]) && is.factor(X_train_final[[var2]])) {
+    # Obtenez les niveaux des facteurs (sauf le niveau de référence pour fullRank=TRUE)
+    levels_var1 <- levels(X_train_final[[var1]])[-1]  # Tous sauf le premier (référence)
+    levels_var2 <- levels(X_train_final[[var2]])[-1]  # Tous sauf le premier (référence)
+    
+    # Créer une colonne pour chaque combinaison de niveaux
+    for (lvl1 in levels_var1) {
+      for (lvl2 in levels_var2) {
+        # Nom de la colonne d'interaction
+        col_name <- paste0(var1, "_", lvl1, ":", var2, "_", lvl2)
+        
+        # Créer la colonne d'interaction
+        X_train_dummy[[col_name]] <- (X_train_final[[var1]] == lvl1) & (X_train_final[[var2]] == lvl2)
+        
+        # Convertir en numérique (0/1)
+        X_train_dummy[[col_name]] <- as.numeric(X_train_dummy[[col_name]])
+      }
+    }
+  } else if (is.numeric(X_train_final[[var1]]) && is.factor(X_train_final[[var2]])) {
+    # Interaction entre variable numérique et facteur
+    levels_var2 <- levels(X_train_final[[var2]])[-1]  # Tous sauf le premier (référence)
+    
+    for (lvl2 in levels_var2) {
+      col_name <- paste0(var1, ":", var2, "_", lvl2)
+      X_train_dummy[[col_name]] <- X_train_final[[var1]] * (X_train_final[[var2]] == lvl2)
+    }
+  } else if (is.factor(X_train_final[[var1]]) && is.numeric(X_train_final[[var2]])) {
+    # Interaction entre facteur et variable numérique
+    levels_var1 <- levels(X_train_final[[var1]])[-1]  # Tous sauf le premier (référence)
+    
+    for (lvl1 in levels_var1) {
+      col_name <- paste0(var1, "_", lvl1, ":", var2)
+      X_train_dummy[[col_name]] <- (X_train_final[[var1]] == lvl1) * X_train_final[[var2]]
+    }
+  } else if (is.numeric(X_train_final[[var1]]) && is.numeric(X_train_final[[var2]])) {
+    # Interaction entre deux variables numériques
+    col_name <- paste0(var1, ":", var2)
+    X_train_dummy[[col_name]] <- X_train_final[[var1]] * X_train_final[[var2]]
+  }
+}
+
+# Vérification des dimensions de la matrice après ajout des interactions
+cat("Dimensions de la matrice d'entraînement avec interactions:", dim(X_train_dummy), "\n")
+
+# AJOUT : Compter le nombre d'interactions ajoutées
+interactions_columns <- grep(":", colnames(X_train_dummy), value = TRUE)
+cat("Nombre d'interactions ajoutées:", length(interactions_columns), "\n")
+cat("Exemples d'interactions ajoutées:", head(interactions_columns), "...\n")
 
 # ------------------------------------------------------------------------
 # Fixation manuelle des valeurs de référence des variables
@@ -340,74 +511,7 @@ if ("bq" %in% levels(y_train_final)) {
   cat("Impossible de définir 'bq' comme référence car ce niveau n'existe pas\n")
 }
 
-# 2. Fixer les références pour les variables catégorielles dans X_train_final
-# Vérifier d'abord si les variables sont bien des facteurs
-for (var_name in names(X_train_final)) {
-  if (!is.factor(X_train_final[[var_name]])) {
-    cat("La variable", var_name, "n'est pas un facteur, ignorer\n")
-    next
-  }
-  
-  # Définir manuellement les références selon la liste fournie
-  if (var_name == "ses_region" && "prairie" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "prairie")
-    cat("ses_region: 'prairie' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_typeTransport" && "active_transport" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "active_transport")
-    cat("lifestyle_typeTransport: 'active_transport' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_consClothes" && "large_retailers" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "large_retailers")
-    cat("lifestyle_consClothes: 'large_retailers' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_exercise" && "gym" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "gym")
-    cat("lifestyle_exercise: 'gym' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_favAlcool" && "beer" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "beer")
-    cat("lifestyle_favAlcool: 'beer' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_consCoffee" && "tim_hortons" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "tim_hortons")
-    cat("lifestyle_consCoffee: 'tim_hortons' définie comme référence\n")
-  }
-  else if (var_name == "ses_language" && "english" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "english")
-    cat("ses_language: 'english' définie comme référence\n")
-  }
-  else if (var_name == "ses_dwelling_cat" && "stand_alone_house" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "stand_alone_house")
-    cat("ses_dwelling_cat: 'stand_alone_house' définie comme référence\n")
-  }
-  else if (var_name == "lifestyle_clothingStyleGroups" && "easygoing" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "easygoing")
-    cat("lifestyle_clothingStyleGroups: 'easygoing' définie comme référence\n")
-  }
-  else if (var_name == "ses_educ" && "no_schooling" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "no_schooling")
-    cat("ses_educ: 'no_schooling' définie comme référence\n")
-  }
-  else if (var_name == "ses_income3Cat" && "High" %in% levels(X_train_final[[var_name]])) {
-    X_train_final[[var_name]] <- relevel(X_train_final[[var_name]], ref = "High")
-    cat("ses_income3Cat: 'High' définie comme référence\n")
-  }
-}
-
-# 3. Recréer la matrice de dummy variables après avoir réordonnancé les facteurs
-cat("Recréation des variables dummy après recodage des références...\n")
-dummies_final <- dummyVars(" ~ .", data = X_train_final, fullRank = TRUE, sep = "_")
-X_train_dummy <- predict(dummies_final, newdata = X_train_final) %>% as.data.frame()
-
-# Vérification de la nouvelle matrice dummy
-cat("Nouvelles dimensions de la matrice d'entraînement:", dim(X_train_dummy), "\n")
-
-# Vérifier les variables binaires qui doivent avoir 0 comme référence
-# Pour ces variables, nous n'avons pas besoin de faire de changement car 
-# la référence est déjà 0 par défaut avec dummyVars et fullRank=TRUE
-
-# Entraînement du modèle final
+# Entraînement du modèle final avec interactions
 final_model <- multinom(
   y_train_final ~ ., 
   data = X_train_dummy, 
@@ -445,7 +549,70 @@ final_model$sym_coef <- sym_coef
 X_test_final <- DfTest[, final_vars, drop = FALSE]
 y_test_final <- DfTest$dv_voteChoice
 
+# Utiliser la même transformation dummyVars que pour les données d'entraînement
 X_test_dummy <- predict(dummies_final, newdata = X_test_final) %>% as.data.frame()
+
+# Ajouter les termes d'interaction de manière cohérente avec l'entraînement
+for (interaction_term in interactions_to_add) {
+  # Extraire les noms des variables
+  var_names <- unlist(strsplit(interaction_term, ":"))
+  var1 <- var_names[1]
+  var2 <- var_names[2]
+  
+  # Vérifier que les deux variables sont des facteurs
+  if (is.factor(X_test_final[[var1]]) && is.factor(X_test_final[[var2]])) {
+    # Obtenez les niveaux des facteurs (sauf le niveau de référence pour fullRank=TRUE)
+    levels_var1 <- levels(X_test_final[[var1]])[-1]  # Tous sauf le premier (référence)
+    levels_var2 <- levels(X_test_final[[var2]])[-1]  # Tous sauf le premier (référence)
+    
+    # Créer une colonne pour chaque combinaison de niveaux
+    for (lvl1 in levels_var1) {
+      for (lvl2 in levels_var2) {
+        # Nom de la colonne d'interaction
+        col_name <- paste0(var1, "_", lvl1, ":", var2, "_", lvl2)
+        
+        # Créer la colonne d'interaction
+        X_test_dummy[[col_name]] <- (X_test_final[[var1]] == lvl1) & (X_test_final[[var2]] == lvl2)
+        
+        # Convertir en numérique (0/1)
+        X_test_dummy[[col_name]] <- as.numeric(X_test_dummy[[col_name]])
+      }
+    }
+  } else if (is.numeric(X_test_final[[var1]]) && is.factor(X_test_final[[var2]])) {
+    # Interaction entre variable numérique et facteur
+    levels_var2 <- levels(X_test_final[[var2]])[-1]  # Tous sauf le premier (référence)
+    
+    for (lvl2 in levels_var2) {
+      col_name <- paste0(var1, ":", var2, "_", lvl2)
+      X_test_dummy[[col_name]] <- X_test_final[[var1]] * (X_test_final[[var2]] == lvl2)
+    }
+  } else if (is.factor(X_test_final[[var1]]) && is.numeric(X_test_final[[var2]])) {
+    # Interaction entre facteur et variable numérique
+    levels_var1 <- levels(X_test_final[[var1]])[-1]  # Tous sauf le premier (référence)
+    
+    for (lvl1 in levels_var1) {
+      col_name <- paste0(var1, "_", lvl1, ":", var2)
+      X_test_dummy[[col_name]] <- (X_test_final[[var1]] == lvl1) * X_test_final[[var2]]
+    }
+  } else if (is.numeric(X_test_final[[var1]]) && is.numeric(X_test_final[[var2]])) {
+    # Interaction entre deux variables numériques
+    col_name <- paste0(var1, ":", var2)
+    X_test_dummy[[col_name]] <- X_test_final[[var1]] * X_test_final[[var2]]
+  }
+}
+
+# Vérifier que toutes les colonnes du modèle sont présentes dans les données de test
+missing_cols <- setdiff(colnames(X_train_dummy), colnames(X_test_dummy))
+if (length(missing_cols) > 0) {
+  cat("ATTENTION: Colonnes manquantes dans les données de test:", length(missing_cols), "\n")
+  # Ajouter les colonnes manquantes avec des zéros
+  for (col in missing_cols) {
+    X_test_dummy[[col]] <- 0
+  }
+}
+
+# S'assurer que l'ordre des colonnes est le même que celui utilisé lors de l'entraînement
+X_test_dummy <- X_test_dummy[, colnames(X_train_dummy)]
 
 # Prédictions
 pred_test_final_class <- predict(final_model, newdata = X_test_dummy)
@@ -498,13 +665,20 @@ print(table_test_app)
 # ------------------------------------------------------------------------
 # 11) Sauvegarde du modèle final enrichi
 # ------------------------------------------------------------------------
+# Enrichir les dummies avec les informations d'interaction pour les futures prédictions
+dummies_info <- list(
+  dummies_obj = dummies_final,
+  interaction_terms = interactions_to_add,
+  model_vars = final_vars
+)
+
 # Sauvegarder le modèle
 saveRDS(final_model, "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withRTAPredictions_2025-04-15.rds")
 
 # Sauvegarder également les dummies pour les futures prédictions
-saveRDS(dummies_final, "_SharedFolder_datagotchi_federal_2024/data/modele/dummies_finalmodel_withRTAPredictions_2025-04-15.rds")
+saveRDS(dummies_info, "_SharedFolder_datagotchi_federal_2024/data/modele/dummies_finalmodel_withRTAPredictions_2025-04-15.rds")
 
-cat("Modèle enrichi avec prédictions RTA sauvegardé avec succès.\n")
+cat("Modèle enrichi avec prédictions RTA et interactions sauvegardé avec succès.\n")
 
 # Comparer les performances avec le modèle précédent
 cat("Comparaison des performances avec le modèle précédent :\n")
@@ -544,3 +718,87 @@ if (length(only_in_new) > 0) {
 # Variables communes aux deux modèles
 common_variables <- intersect(variables_previous, variables_new)
 cat("Variables communes aux deux modèles:", length(common_variables), "\n")
+
+# ------------------------------------------------------------------------
+# 11.5) Évaluation comparative des modèles avec et sans interactions
+# ------------------------------------------------------------------------
+
+# Modèle sans interactions (uniquement avec les prédictions RTA)
+X_train_sans_interactions <- X_train_dummy[, !grepl(":", colnames(X_train_dummy))]
+cat("Dimensions de la matrice d'entraînement sans interactions:", dim(X_train_sans_interactions), "\n")
+
+# Entraînement du modèle sans interactions
+model_sans_interactions <- multinom(
+  y_train_final ~ ., 
+  data = X_train_sans_interactions, 
+  trace = FALSE,
+  MaxNWts = 100000
+)
+
+# Évaluation sur les données de test
+X_test_sans_interactions <- X_test_dummy[, !grepl(":", colnames(X_test_dummy))]
+
+# Prédictions du modèle sans interactions
+pred_test_sans_interactions <- predict(model_sans_interactions, newdata = X_test_sans_interactions)
+acc_test_sans_interactions <- mean(pred_test_sans_interactions == y_test_final)
+
+# Comparaison des performances
+cat("\n=== Comparaison des performances ===\n")
+cat("Accuracy du modèle avec interactions    :", acc_test_final, "\n")
+cat("Accuracy du modèle sans interactions    :", acc_test_sans_interactions, "\n")
+cat("Différence d'accuracy                   :", acc_test_final - acc_test_sans_interactions, "\n")
+
+# Analyse détaillée par source de données
+results_comparison <- data.frame(
+  source = DfTest$source,
+  actual = DfTest$dv_voteChoice,
+  pred_avec_interactions = pred_test_final_class,
+  pred_sans_interactions = pred_test_sans_interactions
+)
+
+# Performance par source
+source_comparison <- results_comparison %>%
+  group_by(source) %>%
+  summarise(
+    n = n(),
+    accuracy_avec = mean(pred_avec_interactions == actual),
+    accuracy_sans = mean(pred_sans_interactions == actual),
+    difference = accuracy_avec - accuracy_sans
+  )
+
+print(source_comparison)
+
+# Analyse par parti politique
+party_comparison <- results_comparison %>%
+  group_by(actual) %>%
+  summarise(
+    n = n(),
+    accuracy_avec = mean(pred_avec_interactions == actual),
+    accuracy_sans = mean(pred_sans_interactions == actual),
+    difference = accuracy_avec - accuracy_sans
+  )
+
+print(party_comparison)
+
+# Test statistique pour voir si la différence est significative
+# McNemar test pour comparer les modèles
+cat("\nTest statistique de McNemar pour comparer les modèles:\n")
+contingency_table <- table(
+  avec_correct = pred_test_final_class == y_test_final,
+  sans_correct = pred_test_sans_interactions == y_test_final
+)
+print(contingency_table)
+
+# Si les packages nécessaires sont disponibles
+if (requireNamespace("stats", quietly = TRUE)) {
+  mcnemar_test <- stats::mcnemar.test(contingency_table)
+  print(mcnemar_test)
+  
+  # Interpréter le résultat
+  alpha <- 0.05
+  if (mcnemar_test$p.value < alpha) {
+    cat("La différence de performance entre les modèles est statistiquement significative (p <", alpha, ")\n")
+  } else {
+    cat("La différence de performance entre les modèles n'est pas statistiquement significative (p >=", alpha, ")\n")
+  }
+}

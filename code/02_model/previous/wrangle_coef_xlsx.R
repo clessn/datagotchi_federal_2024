@@ -1,3 +1,16 @@
+#' Traitement des coefficients du modèle pour export
+#' 
+#' Ce script extrait les coefficients symétriques du modèle final et les formate
+#' pour faciliter leur utilisation et interprétation. Il prépare les données pour 
+#' une exportation vers Excel et effectue des vérifications pour s'assurer que
+#' l'exportation est correcte.
+#'
+#' Entrée :
+#' - Modèle final (finalmodel_withRTAPredictions_2025-04-15.rds)
+#'
+#' Sortie :
+#' - Fichier Excel des coefficients formatés (model_coefficients_formatted.xlsx)
+#'
 # Charger les packages nécessaires
 library(tidyverse)
 library(nnet)
