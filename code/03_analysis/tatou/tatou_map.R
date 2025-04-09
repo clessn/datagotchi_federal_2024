@@ -1,7 +1,3 @@
-tatou
-
-
-
 library(dplyr)
 library(tidyr)
 library(sf)
