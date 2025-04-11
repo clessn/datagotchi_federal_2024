@@ -5,7 +5,7 @@ if(!requireNamespace("clessnize", quietly = TRUE) ||
   if(!requireNamespace("devtools", quietly = TRUE)) {
     install.packages("devtools")
   }
-  devtools::install_github("clessn/clessnize")
+  devtools::install_github("clessnverse/clessnize")
 }
 
 
@@ -46,8 +46,8 @@ if(sum(respondents_with_data) > 0) {
     origin_col = "rta",
     target_col = "id_riding",
     ses_vars = c("ses_gender", "ses_age", "ses_income"),
-    census_origin = cartessn::census_canada_2022_rta,
-    census_target = cartessn::census_canada_2022_electoral_ridings,
+    census_origin = cartessn::census_canada_2022_rta,         # Assurez-vous que c'est bien cette source
+    census_target = cartessn::census_canada_2022_electoral_ridings,  # Assurez-vous que c'est bien cette cible
     spatial_origin = cartessn::spatial_canada_2021_rta,
     spatial_target = cartessn::spatial_canada_2022_electoral_ridings,
     return_type = "class",
@@ -60,6 +60,10 @@ if(sum(respondents_with_data) > 0) {
 df_ridings_names <- cartessn::names_canada_2022_electoral_ridings |>
   select(id_riding, ses_name_riding_fr = name_riding_fr, ses_name_riding_en = name_riding_en)
 # Jointure avec DataClean pour ajouter les noms des circonscriptions
+# Convertir ses_riding_id en entier
+DataClean$ses_riding_id <- as.integer(DataClean$ses_riding_id)
+
+# Puis faire la jointure
 DataClean <- left_join(DataClean, df_ridings_names, by = c("ses_riding_id" = "id_riding"))
 
 print("L'étape la plus longue est terminée, bravo pour votre patience. - Codeur PRX")

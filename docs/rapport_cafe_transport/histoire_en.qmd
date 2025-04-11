@@ -69,7 +69,7 @@ Tim Hortons largely dominates in rural regions and in the eastern part of the co
 Conversely, Starbucks is mainly established in major urban centers such as Vancouver and certain parts of Toronto, demonstrating an urban-rural divide in consumer preferences. 
 McDonald's, on the other hand, finds its strongholds in intermediate zones and certain suburbs, reflecting a positioning strategy between the two other giants.
 
-![The Coffee Battle in Canada](_SharedFolder_datagotchi_federal_2024/graph/analyses/café/bataille_cafe_canada_light_avec_logo-EN.png){width=80%}
+![The Coffee Battle in Canada](img/cafe_map_en.png){width=80%}
 
 # The Coffee-Politics Index
 
@@ -79,14 +79,14 @@ In contrast, supporters of progressive parties such as the NDP and the Green Par
 The Bloc Québécois presents a distinct profile with above-average McDonald's consumption, which could reflect Quebec's cultural particularities. 
 This distribution reveals how everyday consumption choices surprisingly align with political values, transforming coffee into a marker of social identity in Canada.
 
-![Coffee-Politics Index](img/cafe_graph.png){width=100%}
-
-![Coffee-Politics Index (Triple Analysis)](_SharedFolder_datagotchi_federal_2024/graph/analyses/café/coffee_politics_triple-FR.png){width=90%}
+![Coffee-Politics Index](img/cafe_graph_en.png){width=100%}
 
 The graph presents coffee consumption by political affiliation across three different chains, with distinct vertical scales for each chain.
 For Tim Hortons (scale from 0% to 50%), CPC supporters are the largest consumers (about 44%), followed by the LPC (about 36%), the NDP (about 33%), the Green Party (about 27%), and finally the BQ which shows the lowest consumption (about 25%).
 For McDonald's (scale from 0% to 20%), the distribution is more uniform across parties. The CPC comes slightly ahead (about 10%), followed by the NDP (about 7-8%), then the BQ and the LPC at similar levels (about 6-7%), and finally the Green Party (about 5-6%).
 For Starbucks (scale from 0% to 10%), the LPC clearly dominates (about 38%), followed by the NDP (about 32%), the CPC (about 30%), the Green Party (about 19%), and finally the BQ which shows the lowest consumption (about 14%).
+
+![Coffee-Politics Index (Triple Analysis)](img/cafe_vote_en.png){width=90%}
 
 # The Transport Battle in Canada
 
@@ -95,7 +95,7 @@ Cars predominantly dominate in rural regions and in the eastern part of the coun
 Conversely, public transportation is mainly established in major urban centers such as Toronto and certain parts of Montreal and Vancouver, demonstrating an urban-rural divide in travel preferences.
 Motorcycles, meanwhile, find their strongholds in the northern part of the country, particularly in territories such as Nunavut and the Northwest Territories, perhaps reflecting specific regional preferences or geographic constraints. There are also some areas where walking (in yellow) is the dominant mode, particularly visible in certain parts of Vancouver and Manitoba, while SUVs (in red) are preferred in certain regions of Quebec, notably in western Montreal.
 
-![The Transport Battle in Canada](img/transport_map.png){width=75%}
+![The Transport Battle in Canada](img/transport_map_en.png){width=75%}
 
 # The Transport-Politics Index
 
@@ -104,8 +104,8 @@ The Conservative Party seems to show an overrepresentation of car drivers compar
 Conversely, the Bloc Québécois seems to present a deficit of public transportation users, offset by a slight overrepresentation of car and SUV drivers, perhaps reflecting the specific geographic realities of Quebec.
 The NDP and the Green Party, meanwhile, seem to attract more pedestrians and cyclists, with an underrepresentation of car drivers in the NDP. The national average indicates that cars remain dominant (47%), followed by public transportation (24.8%) and walking (13.8%).
 
-![Transport-Politics Index](img/transport_graph.png){width=90%}
-
-![Transport-Politics (Detailed Version)](_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/transport-vote-fr.png){width=90%}
+![Transport-Politics Index](img/transport_graph_en.png){width=90%}
 
 The graph shows that BQ (Bloc Québécois) voters are the most car-dependent (about 65%), followed by the CPC (Conservative Party) at about 53% and the LPC (Liberal Party) at 47%. The NDP and the Green Party have higher rates of public transportation use (about 30% and 23% respectively) compared to other parties. For walking, the NDP stands out with about 21% of its voters, while Green Party voters are the most numerous to use bicycles (about 5%). Motorcycle use remains marginal (less than 5%) for all parties.
+
+![Transport-Politics (Detailed Version)](img/transport_vote_en.png){width=90%}

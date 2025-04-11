@@ -56,3 +56,13 @@ print(table(DataRaw$prevision, useNA = "always"))
 
 # Si vous avez besoin de garder aussi la version numérique
 DataClean$dv_peoplePred_num <- as.numeric(DataRaw$prevision)
+
+DataClean$dv_turnout_bin <- NA
+DataClean$dv_turnout_bin[DataRaw$probability == 9 | DataRaw$probability == 10] <- 1
+DataClean$dv_turnout_bin[DataRaw$probability %in% c(1:8)] <- 0
+table(DataClean$dv_turnout_bin)
+
+DataClean$dv_turnout <- NA
+DataClean$dv_turnout <- DataRaw$probability / 10
+table(DataClean$dv_turnout)
+

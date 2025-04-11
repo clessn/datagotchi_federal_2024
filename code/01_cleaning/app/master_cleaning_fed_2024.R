@@ -11,7 +11,7 @@ library(clessnize)
 
 ## load raw data here
 
-DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250327.csv")
+DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250410.csv")
 
 # Clean variables ---------------------------------------------------------
 
@@ -25,29 +25,21 @@ source("code/01_cleaning/app/ses.R")
 
 source("code/01_cleaning/app/lifestyle.R")
 
-
 ## DV --------------------------------------------------------------
 
 source("code/01_cleaning/app/dv.R")
 
 ## tactical ----------------------------------------------------------------
 
-source("code/01_cleaning/app/Tactical.R")
-
+source("code/01_cleaning/app/tactical.R")
 
 ## Riding attribution (optional, can be commented out if not needed) -------------
 source("code/01_cleaning/app/transform_rta_to_ridings.R")
 
 ## Remove NA from quotas
-DataClean <- DataClean |> drop_na(starts_with("ses"))
+#DataClean <- DataClean |> tidyr::drop_na(starts_with("ses"))
 
 # Save -------------------------------------------------------------------------
 
-<<<<<<< HEAD
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250329.rds")
-=======
-saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250328.rds")
->>>>>>> ea722e1c4cd9e187de0760b463b8f5d00472af90
+saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250410.rds")
 
-# Save for clustering usage ----------------------------------------------
-# saveRDS(DataClean, "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appClustering_20250318.rds")
