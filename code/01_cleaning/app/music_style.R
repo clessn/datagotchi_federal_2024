@@ -17,8 +17,11 @@ extract_field <- function(field) {
 }
 
 # Application
-DataClean <- DataRaw %>%
+DataTmp <- DataRaw %>%
   mutate(
     artist_name = map_chr(music, extract_field("artist")),
     genre = map_chr(music, extract_field("genre"))
   )
+
+DataClean$artist_name <- DataTmp$artist_name
+DataClean$genre <- DataTmp$genre
