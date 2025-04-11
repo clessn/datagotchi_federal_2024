@@ -1,0 +1,372 @@
+---
+title: "Validation de la robustesse du modèle de prédiction électorale"
+author: "CLESSN"
+date: \today
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    geometry:
+      - margin=2.5cm
+    fontsize: 11pt
+lang: fr
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(knitr)
+library(dplyr)
+```
+
+```{r direct-data, include=FALSE}
+# Définition directe des données extraites de l'output fourni
+# Cela élimine la dépendance au fichier RDS
+
+# Formule du modèle
+formula_model <- as.formula("dv_voteChoice ~ is_quebec:ses_immigrant + is_quebec:lifestyle_typeTransport +
+ is_quebec:lifestyle_consClothes + is_quebec:lifestyle_exercise +
+ is_quebec:lifestyle_eatMeatFreq + is_quebec:lifestyle_favAlcool +
+ is_quebec:lifestyle_consCoffee + is_quebec:ses_language +
+ is_quebec:lifestyle_smokeFreq + is_quebec:ses_age + is_quebec:ses_dwelling_cat +
+ is_quebec:ses_ethnicityWhite + is_quebec:ses_sexOrientationHetero +
+ is_quebec:ses_genderFemale + is_quebec:lifestyle_clothingStyleGroups +
+ is_quebec:lifestyle_goHuntingFreq_numeric + is_quebec:lifestyle_goFishingFreq_bin +
+ is_quebec:lifestyle_goMuseumsFreq_bin + is_quebec:lifestyle_volunteeringFreq +
+ is_quebec:lifestyle_motorizedActFreq_bin + is_quebec:lifestyle_hasTattoos +
+ is_quebec:ses_educ + is_quebec:ses_income3Cat + is_quebec:lifestyle_ownPet_bin +
+ is_quebec:prediction_CPC + is_quebec:prediction_LPC + is_quebec:prediction_NDP +
+ is_quebec:prediction_GPC + is_quebec:prediction_BQ + is_roc:ses_immigrant +
+ is_roc:lifestyle_typeTransport + is_roc:lifestyle_consClothes +
+ is_roc:lifestyle_exercise + is_roc:lifestyle_eatMeatFreq +
+ is_roc:lifestyle_favAlcool + is_roc:lifestyle_consCoffee +
+ is_roc:ses_language + is_roc:lifestyle_smokeFreq + is_roc:ses_age +
+ is_roc:ses_dwelling_cat + is_roc:ses_ethnicityWhite + is_roc:ses_sexOrientationHetero +
+ is_roc:ses_genderFemale + is_roc:lifestyle_clothingStyleGroups +
+ is_roc:lifestyle_goHuntingFreq_numeric + is_roc:lifestyle_goFishingFreq_bin +
+ is_roc:lifestyle_goMuseumsFreq_bin + is_roc:lifestyle_volunteeringFreq +
+ is_roc:lifestyle_motorizedActFreq_bin + is_roc:lifestyle_hasTattoos +
+ is_roc:ses_educ + is_roc:ses_income3Cat + is_roc:lifestyle_ownPet_bin +
+ is_roc:prediction_CPC + is_roc:prediction_LPC + is_roc:prediction_NDP +
+ is_roc:prediction_GPC + is_roc:prediction_BQ")
+
+# Résumé des métriques de robustesse
+robustness_summary <- data.frame(
+  Metric = c("Accuracy globale", 
+             "Accuracy premier ou deuxième choix", 
+             "Recall moyen (macro)", 
+             "Recall pondéré (weighted)",
+             "Accuracy Québec", 
+             "Accuracy ROC", 
+             "Accuracy top-2 Québec", 
+             "Accuracy top-2 ROC"),
+  Value = c(0.5418680, 
+            0.8272412, 
+            0.4509278, 
+            0.5418680,
+            0.5348289,
+            0.5506450,
+            0.8122311,
+            0.8459573)
+)
+
+# Résumé par parti
+party_summary <- data.frame(
+  Party = c("bq", "cpc", "lpc", "ndp", "gpc"),
+  Precision = c(0.5459112, 0.5538500, 0.5177129, 0.5600000, 0.5263158),
+  Recall = c(0.8204765, 0.5060934, 0.4340803, 0.4666667, 0.0273224),
+  F1_Score = c(0.6556079, 0.5288958, 0.4722222, 0.5090909, 0.0519481),
+  Support = c(4239, 4349, 5757, 2880, 366),
+  Top2_Accuracy = c(0.9570654, 0.7705220, 0.9023797, 0.6711806, 0.0437159)
+)
+
+# Matrice de confusion
+conf_matrix <- matrix(
+  c(3478, 818, 1624, 372, 79,
+    222, 2201, 1046, 428, 77,
+    392, 1092, 2499, 732, 112,
+    147, 234, 587, 1344, 88,
+    0, 4, 1, 4, 10),
+  nrow = 5, byrow = TRUE,
+  dimnames = list(
+    Predicted = c("bq", "cpc", "lpc", "ndp", "gpc"),
+    Actual = c("bq", "cpc", "lpc", "ndp", "gpc")
+  )
+)
+
+# Distribution des votes
+vote_distribution <- matrix(
+  c(4197, 42, 4239,
+    4248, 101, 4349,
+    5686, 71, 5757,
+    2825, 55, 2880,
+    353, 13, 366),
+  nrow = 5, byrow = TRUE,
+  dimnames = list(
+    Party = c("bq", "cpc", "lpc", "ndp", "gpc"),
+    Source = c("application", "pilote", "total")
+  )
+)
+
+# Analyse par région
+region_metrics <- data.frame(
+  Region = c("prairie", "british_columbia", "atlantic", "ontario", "quebec", "territories"),
+  Observations = c(1890, 1223, 787, 3900, 9762, 29),
+  Accuracy = c(0.5799, 0.4816, 0.6010, 0.5487, 0.5348, 0.4483),
+  Top2_Accuracy = c(0.8402, 0.8029, 0.8818, 0.8556, 0.8122, 0.7586)
+)
+
+# Résultats bootstrap
+bootstrap_mean <- 0.5177
+bootstrap_sd <- 0.0138
+ci_lower <- 0.4845
+ci_upper <- 0.5404
+
+# Calibration pour BQ
+calib_bq <- data.frame(
+  Probability_Bin = c("[0,0.1]", "(0.1,0.2]", "(0.2,0.3]", "(0.3,0.4]", "(0.4,0.5]", 
+                     "(0.5,0.6]", "(0.6,0.7]", "(0.7,0.8]", "(0.8,0.9]"),
+  Observed_Frequency = c(0.006967407, 0.159731544, 0.257194245, 0.336010710, 0.470588235,
+                        0.578692494, 0.643232589, 0.706081081, 1.000000000),
+  Count = c(8468, 745, 1112, 1494, 1887, 2065, 1522, 296, 2),
+  Avg_Predicted_Prob = c(0.01506628, 0.15230167, 0.25334681, 0.35321918, 0.45115206,
+                         0.54925663, 0.64336569, 0.72734793, 0.81119015)
+)
+```
+
+# Résumé exécutif
+
+Ce rapport présente les résultats de l'évaluation de la robustesse du modèle de prédiction électorale. Le modèle a été testé sur un ensemble de validation comprenant 17 591 observations, représentant 30% des données disponibles. Les principales métriques de performance sont:
+
+- **Accuracy globale**: 54,19%
+- **Accuracy du premier ou deuxième choix**: 82,72%
+- **Recall moyen (macro)**: 45,09%
+- **Intervalle de confiance à 95% pour l'accuracy**: 48,45% - 54,04%
+
+Le modèle présente une performance acceptable pour la prédiction du vote, particulièrement lorsqu'on considère le premier ou le deuxième choix prédit. Les performances varient selon les partis et les régions, avec des résultats particulièrement bons dans l'Atlantique et les Prairies.
+
+# Introduction
+
+Ce document présente les résultats détaillés de l'évaluation du modèle de prédiction du choix de vote fédéral. L'objectif est d'évaluer la robustesse et la fiabilité du modèle, notamment sa capacité à prédire correctement le premier ou le deuxième choix de vote.
+
+Le modèle a été entraîné sur des données provenant de deux sources principales: une étude pilote et une application de collecte de données. Les évaluations ont été effectuées sur un ensemble de validation représentant 30% des données disponibles.
+
+## Spécification du modèle
+
+Le modèle évalué dans ce rapport est basé sur la formule suivante, qui comprend de nombreuses variables explicatives en interaction avec les régions (Québec vs. Reste du Canada):
+
+```{r formula-display}
+cat(as.character(formula_model)[2])
+```
+
+Cette formule montre que le modèle:
+
+1. Utilise une approche différenciée entre le Québec et le reste du Canada (ROC)
+2. Intègre des variables socio-démographiques (âge, genre, éducation, revenu)
+3. Inclut des variables de style de vie (transport, alimentation, loisirs)
+4. Incorpore des prédictions issues d'autres modèles pour chaque parti
+
+# Méthodologie
+
+## Préparation des données
+
+Les données ont été préparées en suivant ces étapes:
+
+1. Combinaison des données enrichies de l'étude pilote et de l'application
+2. Filtrage pour ne conserver que les observations avec un choix de vote valide
+3. Sélection des variables pertinentes selon le modèle
+4. Suppression des observations avec des valeurs manquantes
+
+L'ensemble final pour la validation comprend 17 591 observations, réparties comme suit:
+
+```{r vote-distribution}
+vote_distrib_df <- data.frame(
+  Parti = c("BQ", "CPC", "LPC", "NDP", "GPC"),
+  Application = c(4197, 4248, 5686, 2825, 353),
+  Pilote = c(42, 101, 71, 55, 13),
+  Total = c(4239, 4349, 5757, 2880, 366)
+)
+
+kable(vote_distrib_df, 
+      caption = "Distribution des votes dans l'ensemble de validation")
+```
+
+## Méthodes d'évaluation
+
+Pour évaluer la robustesse du modèle, nous avons utilisé plusieurs métriques:
+
+- **Accuracy globale**: Proportion des prédictions correctes
+- **Matrice de confusion**: Distribution des prédictions par rapport aux valeurs réelles
+- **Précision, Recall et F1-Score**: Métriques par parti
+- **Top-N Accuracy**: Proportion des cas où la vraie classe est parmi les N premières prédictions
+- **Analyse régionale**: Performance du modèle par région
+- **Analyse de stabilité**: Estimation de la variabilité de la performance via bootstrap
+- **Analyse de calibration**: Évaluation de la fiabilité des probabilités prédites
+
+# Résultats
+
+## Performance globale
+
+Le modèle atteint une accuracy globale de 54,19%, ce qui est considérable dans un contexte multipartite à 5 options. Lorsqu'on considère le premier ou deuxième choix (top-2 accuracy), la performance s'élève à 82,72%.
+
+```{r global-metrics}
+global_metrics <- data.frame(
+  Métrique = c("Accuracy globale", "Accuracy premier ou deuxième choix", 
+               "Recall moyen (macro)", "Recall pondéré (weighted)"),
+  Valeur = c(0.5419, 0.8272, 0.4509, 0.5419)
+)
+
+kable(global_metrics, digits = 4,
+      caption = "Métriques de performance globale")
+```
+
+## Performance par parti
+
+```{r party-metrics}
+party_metrics <- data.frame(
+  Parti = c("BQ", "CPC", "LPC", "NDP", "GPC"),
+  Précision = c(0.5459, 0.5539, 0.5177, 0.5600, 0.5263),
+  Recall = c(0.8205, 0.5061, 0.4341, 0.4667, 0.0273),
+  F1_Score = c(0.6556, 0.5289, 0.4722, 0.5091, 0.0519),
+  Support = c(4239, 4349, 5757, 2880, 366),
+  Top2_Accuracy = c(0.9571, 0.7705, 0.9024, 0.6712, 0.0437)
+)
+
+kable(party_metrics, digits = 4,
+      caption = "Métriques par parti politique")
+```
+
+La performance varie considérablement selon les partis:
+
+- Le **Bloc Québécois (BQ)** obtient le meilleur recall (82,05%) et une excellente top-2 accuracy (95,71%)
+- Le **Parti Conservateur (CPC)** et le **NPD** montrent des performances équilibrées
+- Le **Parti Libéral (LPC)** a un bon taux quand on considère le premier ou deuxième choix (90,24%)
+- Le **Parti Vert (GPC)** présente des performances plus faibles, probablement dues au nombre limité d'observations
+
+## Matrice de confusion
+
+```{r confusion-matrix}
+colnames(conf_matrix) <- c("BQ", "CPC", "LPC", "NDP", "GPC")
+rownames(conf_matrix) <- c("BQ", "CPC", "LPC", "NDP", "GPC")
+kable(conf_matrix, caption = "Matrice de confusion")
+```
+
+La matrice de confusion révèle plusieurs tendances intéressantes:
+
+- Le modèle prédit bien le BQ pour les électeurs du BQ (3478 bonnes prédictions)
+- Il existe une confusion significative entre les principaux partis, notamment entre LPC et CPC
+- Le GPC est rarement prédit, même pour les électeurs réels du GPC
+
+## Performance par région
+
+```{r region-metrics}
+region_metrics_nice <- data.frame(
+  Région = c("Prairies", "Colombie-Britannique", "Atlantique", "Ontario", "Québec", "Territoires"),
+  Observations = c(1890, 1223, 787, 3900, 9762, 29),
+  Accuracy = c(0.5799, 0.4816, 0.6010, 0.5487, 0.5348, 0.4483),
+  Top2_Accuracy = c(0.8402, 0.8029, 0.8818, 0.8556, 0.8122, 0.7586)
+)
+
+kable(region_metrics_nice, digits = 4,
+      caption = "Performance par région")
+```
+
+L'analyse régionale montre que:
+
+- Les meilleures performances sont obtenues dans la région **Atlantique** (60,10% d'accuracy)
+- Les **Prairies** suivent de près avec 57,99%
+- La **Colombie-Britannique** et les **Territoires** présentent les performances les plus faibles
+- Le **Québec**, qui représente le plus grand nombre d'observations, atteint une accuracy de 53,48%
+
+## Comparaison Québec vs Reste du Canada (ROC)
+
+```{r quebec-roc}
+quebec_roc <- data.frame(
+  Région = c("Québec", "Reste du Canada (ROC)"),
+  Accuracy = c(0.5348, 0.5506),
+  Top2_Accuracy = c(0.8122, 0.8460)
+)
+
+kable(quebec_roc, digits = 4,
+      caption = "Comparaison Québec vs Reste du Canada")
+```
+
+Le modèle performe légèrement mieux dans le reste du Canada (ROC) comparativement au Québec, tant pour l'accuracy simple que pour l'accuracy du premier ou deuxième choix.
+
+## Stabilité du modèle
+
+L'analyse bootstrap avec 100 répétitions sur un échantillon de 1000 observations révèle:
+
+```{r bootstrap}
+bootstrap_df <- data.frame(
+  Métrique = c("Accuracy moyenne", "Écart-type", "Borne inférieure IC-95%", "Borne supérieure IC-95%"),
+  Valeur = c(bootstrap_mean, bootstrap_sd, ci_lower, ci_upper)
+)
+
+kable(bootstrap_df, digits = 4,
+      caption = "Résultats de l'analyse bootstrap")
+```
+
+Cette faible variation indique une bonne stabilité du modèle malgré les différences régionales et partisanes.
+
+## Analyse de calibration
+
+L'analyse de calibration examine si les probabilités prédites correspondent aux fréquences observées. Voici un aperçu pour le BQ:
+
+```{r calibration-bq}
+calib_bq_nice <- data.frame(
+  Bin_Probabilité = c("[0,0.1]", "(0.1,0.2]", "(0.2,0.3]", "(0.3,0.4]", "(0.4,0.5]", 
+                     "(0.5,0.6]", "(0.6,0.7]", "(0.7,0.8]", "(0.8,0.9]"),
+  Fréquence_Observée = c(0.0070, 0.1597, 0.2572, 0.3360, 0.4706, 0.5787, 0.6432, 0.7061, 1.0000),
+  Nombre_Observations = c(8468, 745, 1112, 1494, 1887, 2065, 1522, 296, 2),
+  Prob_Moyenne_Prédite = c(0.0151, 0.1523, 0.2533, 0.3532, 0.4512, 0.5493, 0.6434, 0.7273, 0.8112)
+)
+
+kable(calib_bq_nice, digits = 4,
+      caption = "Calibration pour le Bloc Québécois")
+```
+
+Cette analyse montre que le modèle est généralement bien calibré pour le BQ, avec des probabilités prédites proches des fréquences observées, surtout dans les bins intermédiaires.
+
+# Discussion
+
+## Forces du modèle
+
+1. **Performance satisfaisante en contexte multipartite**: Une accuracy de 54,19% est substantielle dans un système à 5 partis
+2. **Excellente performance en top-2**: Prédire le premier ou deuxième choix avec 82,72% d'accuracy
+3. **Bonne performance régionale**: Particulièrement en Atlantique et dans les Prairies
+4. **Stabilité**: Faible variation des performances dans l'analyse bootstrap
+5. **Bonne calibration**: Les probabilités prédites correspondent généralement aux fréquences observées
+
+## Limites et points d'amélioration
+
+1. **Performance inégale selon les partis**: Particulièrement faible pour le Parti Vert
+2. **Confusion entre partis**: Notamment entre le LPC et le CPC
+3. **Performance régionale variable**: Plus faible en Colombie-Britannique et dans les Territoires
+4. **Déséquilibre dans les données**: Surreprésentation du Québec dans l'échantillon
+
+# Conclusion
+
+Le modèle de prédiction électorale démontre une robustesse et une fiabilité satisfaisantes, particulièrement dans sa capacité à identifier le premier ou deuxième choix des électeurs. Avec une accuracy globale de 54,19% et une top-2 accuracy de 82,72%, il offre une base solide pour l'analyse électorale.
+
+Les variations de performance entre partis et régions soulignent l'importance de considérer ces facteurs dans l'interprétation des prédictions. La stabilité du modèle, confirmée par l'analyse bootstrap, renforce sa crédibilité malgré ces variations.
+
+En conclusion, ce modèle constitue un outil précieux pour l'analyse des intentions de vote, tout en reconnaissant ses limites actuelles et les opportunités d'amélioration futures.
+
+# Annexes
+
+## Détails techniques
+
+- **Seed pour la partition**: 42
+- **Seed pour le bootstrap**: 123
+- **Proportion d'entraînement/validation**: 70%/30%
+- **Nombre de répétitions bootstrap**: 100
+- **Taille de l'échantillon bootstrap**: 1000 observations
+
+## Partis politiques
+
+- **BQ**: Bloc Québécois
+- **CPC**: Parti Conservateur du Canada
+- **LPC**: Parti Libéral du Canada
+- **NDP**: Nouveau Parti Démocratique
+- **GPC**: Parti Vert du Canada
