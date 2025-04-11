@@ -618,15 +618,15 @@ legend_bg <- legend_bg %>%
   image_composite(tim_icon, offset = paste0("+", start_x, "+25")) %>%
   image_annotate("Tim Hortons 🇨🇦", color = "black", size = 40, 
                  location = paste0("+", start_x + 100, "+35"),
-                 font = "Arial-Bold") %>%
+                 font = "Pixel Operator") %>%
   image_composite(mcdo_icon, offset = paste0("+", start_x + icon_spacing + 50, "+30")) %>%
   image_annotate("McDonald's 🇺🇸", color = "black", size = 40,
                  location = paste0("+", start_x + icon_spacing + 150, "+35"),
-                 font = "Arial-Bold") %>%
+                 font = "Pixel Operator") %>%
   image_composite(starbucks_icon, offset = paste0("+", start_x + 2*icon_spacing + 100, "+30")) %>%
   image_annotate("Starbucks 🇺🇸", color = "black", size = 40,
                  location = paste0("+", start_x + 2*icon_spacing + 200, "+35"),
-                 font = "Arial-Bold")
+                 font = "Pixel Operator")
 
 # Créer le pied de page
 footer_height <- 200
@@ -635,13 +635,13 @@ footer <- image_blank(width, footer_height, color = "white") %>%
                  color = "#555555", 
                  size = 40,
                  location = "+40+30", 
-                 font = "Arial", 
+                 font = "Pixel Operator", 
                  gravity = "west") %>%
   image_annotate("Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
                  color = "#555555",
                  size = 30,
                  location = "+40+55",
-                 font = "Arial",
+                 font = "Pixel Operator",
                  gravity = "west")
 
 # Ajouter le logo Datagotchi
