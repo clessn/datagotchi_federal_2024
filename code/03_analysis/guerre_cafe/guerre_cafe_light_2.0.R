@@ -81,7 +81,9 @@ coffee_battle_by_riding <- coffee_battle_by_riding %>%
 
 sf_coffee_map <- sf_ridings %>%
   mutate(id_riding = as.character(id_riding)) %>%
-  left_join(coffee_battle_by_riding, by = "id_riding")
+  left_join(coffee_battle_by_riding %>% 
+              mutate(id_riding = as.character(id_riding)), 
+            by = "id_riding")
 
 
 # 12. Sauvegarder les résultats intermédiaires
