@@ -222,7 +222,7 @@ for(cluster in unique(df_plot$cluster_name)) {
     cluster, "_iceberg", 1:8, ".png"
   )
   img_fr <- image_read(frames_fr)
-  gif_fr <- image_animate(img_fr, delay = 50, loop = 1)  # delay = 50 pour 0.5 sec
+  gif_fr <- image_animate(img_fr, delay = 50, loop = 0)  # delay = 50 pour 0.5 sec
   image_write(gif_fr,
               path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotFr_withLogo_", cluster, ".gif"))
   
@@ -232,7 +232,7 @@ for(cluster in unique(df_plot$cluster_name)) {
     cluster, "_iceberg", 1:8, ".png"
   )
   img_en <- image_read(frames_en)
-  gif_en <- image_animate(img_en, delay = 50, loop = 1)
+  gif_en <- image_animate(img_en, delay = 50, loop = 0)
   image_write(gif_en,
               path = paste0("_SharedFolder_datagotchi_federal_2024/graph/analyses/landingPage_clusterPotGrowth/cluster_rci_plotEn_withLogo_", cluster, ".gif"))
   
