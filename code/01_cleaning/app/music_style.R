@@ -1,6 +1,9 @@
 ## cleaning artiste et genre musical --------------------------------------------------------------
 
+library(dplyr)
 library(jsonlite)
+library(tidyr)
+library(purrr)
 
 # Fonction sécurisée avec double vérification
 extract_field <- function(field) {
@@ -23,5 +26,5 @@ DataTmp <- DataRaw %>%
     genre = map_chr(music, extract_field("genre"))
   )
 
-DataClean$artist_name <- DataTmp$artist_name
-DataClean$genre <- DataTmp$genre
+DataClean$lifestyle_favArtist <- DataTmp$artist_name
+DataClean$lifestyle_musicGenre <- DataTmp$genre
