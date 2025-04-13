@@ -602,11 +602,11 @@ legend_height <- 100
 legend_bg <- image_blank(width, legend_height, color = "white")
 
 # Charger les icônes
-tim_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0007_tim.png") %>% 
+tim_icon <- image_read("_SharedFolder_datagotchi_federal_2024/logos/coffee/tim.png") %>% 
   image_scale("80x80")
-mcdo_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0002_cafe-3-mcdo.png") %>% 
+mcdo_icon <- image_read("_SharedFolder_datagotchi_federal_2024/logos/coffee/mcdo.png") %>% 
   image_scale("80x80")
-starbucks_icon <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/café/CoffeePack/CoffeePack__0001_cafe-2-starbuck.png") %>% 
+starbucks_icon <- image_read("_SharedFolder_datagotchi_federal_2024/logos/coffee/starbuck.png") %>% 
   image_scale("80x80")
 
 # Positionnement des icônes
