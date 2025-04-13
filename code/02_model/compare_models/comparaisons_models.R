@@ -16,14 +16,14 @@ library(pbapply)
 # 2) Chargement des modèles et des données
 # ------------------------------------------------------------------------
 # Modèle original (sans RTA)
-model_original <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withOutInteractions.rds")
+model_original <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/_previous/finalmodel_withOutInteractions.rds")
 
 # Modèle amélioré (avec RTA)
 model_improved <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withRTAPredictions_2025-04-15.rds")
 dummies_improved <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/dummies_finalmodel_withRTAPredictions_2025-04-15.rds")
 
 # Charger les résultats du modèle original pour obtenir les variables
-results_train_original <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/resultsTrainV4_31janvier2025.rds")
+results_train_original <- readRDS("_SharedFolder_datagotchi_federal_2024/data/modele/_previous/resultsTrainV4_31janvier2025.rds")
 
 # Identifier le meilleur modèle selon l'accuracy
 best_iterations <- results_train_original %>%
@@ -46,11 +46,11 @@ cat("Variables du modèle original:", length(original_variables), "\n")
 cat("Liste des variables:", paste(original_variables, collapse=", "), "\n")
 
 # Charger les prédictions par RTA
-rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis.csv",
+rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis_previous.csv",
                            stringsAsFactors = FALSE)
 
 # Charger les données
-DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250310.rds")
+DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds")
 DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/_previous/datagotchi2025_canada_app_20250314.rds")
 
 # ------------------------------------------------------------------------

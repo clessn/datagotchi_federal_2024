@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Équipe Datagotchi Canada 2025">
+<meta name="dcterms.date" content="2025-01-01">
+
+<title>Rapport de performance du modèle de prédiction électorale</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="rapport_performance_modele_files/libs/clipboard/clipboard.min.js"></script>
+<script src="rapport_performance_modele_files/libs/quarto-html/quarto.js"></script>
+<script src="rapport_performance_modele_files/libs/quarto-html/popper.min.js"></script>
+<script src="rapport_performance_modele_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="rapport_performance_modele_files/libs/quarto-html/anchor.min.js"></script>
+<link href="rapport_performance_modele_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="rapport_performance_modele_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="rapport_performance_modele_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="rapport_performance_modele_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="rapport_performance_modele_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="rapport_performance_modele_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="rapport_performance_modele_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#résumé-exécutif" id="toc-résumé-exécutif" class="nav-link active" data-scroll-target="#résumé-exécutif"><span class="header-section-number">1</span> Résumé exécutif</a></li>
+  <li><a href="#introduction-au-modèle" id="toc-introduction-au-modèle" class="nav-link" data-scroll-target="#introduction-au-modèle"><span class="header-section-number">2</span> Introduction au modèle</a></li>
+  <li><a href="#métriques-globales-de-performance" id="toc-métriques-globales-de-performance" class="nav-link" data-scroll-target="#métriques-globales-de-performance"><span class="header-section-number">3</span> Métriques globales de performance</a>
+  <ul class="collapse">
+  <li><a href="#interprétation-des-métriques-globales" id="toc-interprétation-des-métriques-globales" class="nav-link" data-scroll-target="#interprétation-des-métriques-globales"><span class="header-section-number">3.1</span> Interprétation des métriques globales</a></li>
+  </ul></li>
+  <li><a href="#performance-par-parti-politique" id="toc-performance-par-parti-politique" class="nav-link" data-scroll-target="#performance-par-parti-politique"><span class="header-section-number">4</span> Performance par parti politique</a>
+  <ul class="collapse">
+  <li><a href="#analyse-visuelle-par-parti" id="toc-analyse-visuelle-par-parti" class="nav-link" data-scroll-target="#analyse-visuelle-par-parti"><span class="header-section-number">4.1</span> Analyse visuelle par parti</a></li>
+  <li><a href="#interprétation-des-performances-par-parti" id="toc-interprétation-des-performances-par-parti" class="nav-link" data-scroll-target="#interprétation-des-performances-par-parti"><span class="header-section-number">4.2</span> Interprétation des performances par parti</a></li>
+  </ul></li>
+  <li><a href="#performance-par-région" id="toc-performance-par-région" class="nav-link" data-scroll-target="#performance-par-région"><span class="header-section-number">5</span> Performance par région</a>
+  <ul class="collapse">
+  <li><a href="#analyse-visuelle-par-région" id="toc-analyse-visuelle-par-région" class="nav-link" data-scroll-target="#analyse-visuelle-par-région"><span class="header-section-number">5.1</span> Analyse visuelle par région</a></li>
+  <li><a href="#interprétation-des-performances-régionales" id="toc-interprétation-des-performances-régionales" class="nav-link" data-scroll-target="#interprétation-des-performances-régionales"><span class="header-section-number">5.2</span> Interprétation des performances régionales</a></li>
+  </ul></li>
+  <li><a href="#matrice-de-confusion-et-analyse-des-erreurs" id="toc-matrice-de-confusion-et-analyse-des-erreurs" class="nav-link" data-scroll-target="#matrice-de-confusion-et-analyse-des-erreurs"><span class="header-section-number">6</span> Matrice de confusion et analyse des erreurs</a>
+  <ul class="collapse">
+  <li><a href="#principaux-types-derreurs" id="toc-principaux-types-derreurs" class="nav-link" data-scroll-target="#principaux-types-derreurs"><span class="header-section-number">6.1</span> Principaux types d’erreurs</a></li>
+  <li><a href="#interprétation-des-erreurs-de-prédiction" id="toc-interprétation-des-erreurs-de-prédiction" class="nav-link" data-scroll-target="#interprétation-des-erreurs-de-prédiction"><span class="header-section-number">6.2</span> Interprétation des erreurs de prédiction</a></li>
+  </ul></li>
+  <li><a href="#stabilité-et-robustesse-du-modèle" id="toc-stabilité-et-robustesse-du-modèle" class="nav-link" data-scroll-target="#stabilité-et-robustesse-du-modèle"><span class="header-section-number">7</span> Stabilité et robustesse du modèle</a>
+  <ul class="collapse">
+  <li><a href="#interprétation-de-lanalyse-bootstrap" id="toc-interprétation-de-lanalyse-bootstrap" class="nav-link" data-scroll-target="#interprétation-de-lanalyse-bootstrap"><span class="header-section-number">7.1</span> Interprétation de l’analyse bootstrap</a></li>
+  </ul></li>
+  <li><a href="#robustesse-régionale" id="toc-robustesse-régionale" class="nav-link" data-scroll-target="#robustesse-régionale"><span class="header-section-number">8</span> Robustesse régionale</a>
+  <ul class="collapse">
+  <li><a href="#interprétation-de-la-robustesse-régionale" id="toc-interprétation-de-la-robustesse-régionale" class="nav-link" data-scroll-target="#interprétation-de-la-robustesse-régionale"><span class="header-section-number">8.1</span> Interprétation de la robustesse régionale</a></li>
+  </ul></li>
+  <li><a href="#distribution-des-probabilités-prédites" id="toc-distribution-des-probabilités-prédites" class="nav-link" data-scroll-target="#distribution-des-probabilités-prédites"><span class="header-section-number">9</span> Distribution des probabilités prédites</a>
+  <ul class="collapse">
+  <li><a href="#interprétation-des-distributions-de-probabilités" id="toc-interprétation-des-distributions-de-probabilités" class="nav-link" data-scroll-target="#interprétation-des-distributions-de-probabilités"><span class="header-section-number">9.1</span> Interprétation des distributions de probabilités</a></li>
+  </ul></li>
+  <li><a href="#synthèse-et-conclusion" id="toc-synthèse-et-conclusion" class="nav-link" data-scroll-target="#synthèse-et-conclusion"><span class="header-section-number">10</span> Synthèse et conclusion</a>
+  <ul class="collapse">
+  <li><a href="#forces-du-modèle" id="toc-forces-du-modèle" class="nav-link" data-scroll-target="#forces-du-modèle"><span class="header-section-number">10.1</span> Forces du modèle</a></li>
+  <li><a href="#limites-identifiées" id="toc-limites-identifiées" class="nav-link" data-scroll-target="#limites-identifiées"><span class="header-section-number">10.2</span> Limites identifiées</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">10.3</span> Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Rapport de performance du modèle de prédiction électorale</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Équipe Datagotchi Canada 2025 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="résumé-exécutif" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Résumé exécutif</h1>
+<p>Ce rapport présente les performances du modèle prédictif développé pour les élections fédérales canadiennes de 2025. Le modèle intègre des données sociodémographiques, comportementales et géographiques pour prédire l’intention de vote des électeurs parmi 5 principaux partis politiques.</p>
+<p><strong>Points clés :</strong></p>
+<ul>
+<li><strong>Précision globale (accuracy)</strong> : 53,8%, ce qui est excellent pour un modèle à 5 classes (où la chance serait de 20%)</li>
+<li><strong>Précision des 2 premiers choix (top-2 accuracy)</strong> : 81,2%, indiquant que dans plus de 8 cas sur 10, le parti choisi par l’électeur est parmi les 2 premières prédictions du modèle</li>
+<li><strong>Performance exceptionnelle</strong> pour la prédiction des votes du Bloc Québécois (86,6%)</li>
+<li><strong>Robustesse statistique</strong> confirmée par analyse bootstrap avec un intervalle de confiance étroit</li>
+<li><strong>Stabilité régionale</strong> avec une performance cohérente à travers les principales régions du Canada</li>
+</ul>
+</section>
+<section id="introduction-au-modèle" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Introduction au modèle</h1>
+<p>Ce modèle de prédiction électorale a été développé pour anticiper le choix de vote des Canadiens aux élections fédérales. Il s’agit d’un modèle multinomial qui peut prédire parmi 5 options : Bloc Québécois (BQ), Parti conservateur (CPC), Parti libéral (LPC), Nouveau Parti démocratique (NDP) et Parti vert (GPC).</p>
+<p>Le modèle intègre plusieurs types de variables :</p>
+<ul>
+<li>Caractéristiques sociodémographiques</li>
+<li>Comportements et préférences de style de vie</li>
+<li>Données géographiques (dont les régions du Canada)</li>
+<li>Indicateurs socio-économiques</li>
+</ul>
+<p>L’objectif principal est de fournir des prédictions fiables qui puissent aider à comprendre les tendances électorales et les préférences des électeurs à travers le pays.</p>
+</section>
+<section id="métriques-globales-de-performance" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Métriques globales de performance</h1>
+<p>Le modèle a été évalué à l’aide de plusieurs métriques standards en apprentissage automatique, chacune apportant une perspective différente sur sa performance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Métriques globales de performance du modèle</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Métrique</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Valeur</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Accuracy</td>
+<td style="text-align: right; color: navy !important;">0.5383860</td>
+<td style="text-align: left;">Proportion de prédictions correctes parmi toutes les prédictions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Balanced Accuracy</td>
+<td style="text-align: right; color: navy !important;">0.4415451</td>
+<td style="text-align: left;">Moyenne des taux de précision pour chaque classe (équilibre entre les classes)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Top-2 Accuracy</td>
+<td style="text-align: right; color: navy !important;">0.8120950</td>
+<td style="text-align: left;">Proportion de cas où la vraie classe est parmi les 2 premières prédictions</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<section id="interprétation-des-métriques-globales" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="interprétation-des-métriques-globales"><span class="header-section-number">3.1</span> Interprétation des métriques globales</h2>
+<ul>
+<li><p><strong>Accuracy (53,8%)</strong> : Plus de la moitié des prédictions du modèle sont correctes, ce qui est considérablement supérieur au taux de base de 20% (1/5 pour un choix aléatoire entre 5 partis).</p></li>
+<li><p><strong>Balanced Accuracy (44,2%)</strong> : Cette métrique prend en compte l’équilibre entre les classes, donnant un poids égal à chaque parti quelle que soit sa fréquence. La valeur légèrement inférieure à l’accuracy simple indique que le modèle est un peu moins performant sur certains partis moins représentés.</p></li>
+<li><p><strong>Top-2 Accuracy (81,2%)</strong> : Cette métrique exceptionnellement élevée montre que le modèle place presque toujours la vraie intention de vote de l’électeur parmi ses deux prédictions les plus probables.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/accuracy-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="performance-par-parti-politique" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Performance par parti politique</h1>
+<p>L’analyse détaillée des performances par parti révèle des différences significatives dans la capacité du modèle à prédire les différentes options politiques.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Performance du modèle par parti politique</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Parti</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Nombre d'observations</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Précision (Accuracy)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rappel</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Score F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Bloc Québécois</td>
+<td style="text-align: right;">1228</td>
+<td style="text-align: right; color: white !important; background-color: rgba(210, 226, 27, 255) !important;">0.866</td>
+<td style="text-align: right; color: white !important; background-color: rgba(210, 226, 27, 255) !important;">0.866</td>
+<td style="text-align: right; color: white !important; background-color: rgba(210, 226, 27, 255) !important;">0.928</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Conservateur</td>
+<td style="text-align: right;">1439</td>
+<td style="text-align: right; color: white !important; background-color: rgba(34, 168, 132, 255) !important;">0.557</td>
+<td style="text-align: right; color: white !important; background-color: rgba(34, 168, 132, 255) !important;">0.557</td>
+<td style="text-align: right; color: white !important; background-color: rgba(34, 168, 132, 255) !important;">0.716</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Libéral</td>
+<td style="text-align: right;">1434</td>
+<td style="text-align: right; color: white !important; background-color: rgba(44, 114, 142, 255) !important;">0.350</td>
+<td style="text-align: right; color: white !important; background-color: rgba(44, 114, 142, 255) !important;">0.350</td>
+<td style="text-align: right; color: white !important; background-color: rgba(44, 114, 142, 255) !important;">0.519</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">NPD</td>
+<td style="text-align: right;">862</td>
+<td style="text-align: right; color: white !important; background-color: rgba(35, 136, 142, 255) !important;">0.434</td>
+<td style="text-align: right; color: white !important; background-color: rgba(35, 136, 142, 255) !important;">0.434</td>
+<td style="text-align: right; color: white !important; background-color: rgba(35, 136, 142, 255) !important;">0.605</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Vert</td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right; color: white !important; background-color: rgba(68, 1, 84, 255) !important;">0.000</td>
+<td style="text-align: right; color: white !important; background-color: rgba(68, 1, 84, 255) !important;">0.000</td>
+<td style="text-align: right; color: white !important; background-color: rgba(68, 1, 84, 255) !important;">0.000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<section id="analyse-visuelle-par-parti" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="analyse-visuelle-par-parti"><span class="header-section-number">4.1</span> Analyse visuelle par parti</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/party-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interprétation-des-performances-par-parti" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="interprétation-des-performances-par-parti"><span class="header-section-number">4.2</span> Interprétation des performances par parti</h2>
+<ul>
+<li><p><strong>Bloc Québécois (86,6%)</strong> : Performance exceptionnelle, le modèle identifie correctement près de 9 électeurs du Bloc sur 10. Cette précision élevée peut s’expliquer par la concentration géographique des électeurs du Bloc au Québec et possiblement des caractéristiques distinctives fortes.</p></li>
+<li><p><strong>Parti conservateur (55,7%)</strong> : Bonne performance avec plus de la moitié des électeurs conservateurs correctement identifiés.</p></li>
+<li><p><strong>NPD (43,4%)</strong> et <strong>Parti libéral (35,0%)</strong> : Performance modérée. Le modèle a plus de difficultés à distinguer ces deux partis, comme le montrera l’analyse des erreurs plus loin.</p></li>
+<li><p><strong>Parti vert (0%)</strong> : Le modèle ne parvient pas à identifier correctement les électeurs du Parti vert. Cela s’explique principalement par le faible nombre d’observations (seulement 130 sur l’échantillon total) et potentiellement une grande diversité dans les profils des électeurs verts.</p></li>
+</ul>
+</section>
+</section>
+<section id="performance-par-région" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Performance par région</h1>
+<p>Le Canada étant un pays géographiquement et culturellement diversifié, il est crucial d’analyser la performance du modèle selon les différentes régions.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Performance du modèle par région géographique</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Région</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Nombre d'observations</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Précision (Accuracy)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Québec</td>
+<td style="text-align: right;">2736</td>
+<td style="text-align: right; color: white !important; background-color: rgba(96, 202, 96, 255) !important;">0.526</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Prairies</td>
+<td style="text-align: right;">606</td>
+<td style="text-align: right; color: white !important; background-color: rgba(253, 231, 37, 255) !important;">0.599</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Ontario</td>
+<td style="text-align: right;">1151</td>
+<td style="text-align: right; color: white !important; background-color: rgba(124, 210, 80, 255) !important;">0.540</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Colombie-Britannique</td>
+<td style="text-align: right;">369</td>
+<td style="text-align: right; color: white !important; background-color: rgba(66, 190, 113, 255) !important;">0.509</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Atlantique</td>
+<td style="text-align: right;">221</td>
+<td style="text-align: right; color: white !important; background-color: rgba(221, 227, 24, 255) !important;">0.584</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Territoires</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right; color: white !important; background-color: rgba(68, 1, 84, 255) !important;">0.300</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<section id="analyse-visuelle-par-région" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="analyse-visuelle-par-région"><span class="header-section-number">5.1</span> Analyse visuelle par région</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/region-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interprétation-des-performances-régionales" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="interprétation-des-performances-régionales"><span class="header-section-number">5.2</span> Interprétation des performances régionales</h2>
+<ul>
+<li><p><strong>Prairies (59,9%)</strong> : Meilleure performance régionale du modèle, suggérant des préférences électorales plus distinctives et peut-être plus stables dans cette région.</p></li>
+<li><p><strong>Atlantique (58,4%)</strong> : Performance également très bonne pour les provinces atlantiques.</p></li>
+<li><p><strong>Ontario (54,0%)</strong> et <strong>Québec (52,6%)</strong> : Performance solide dans les provinces les plus peuplées du Canada, légèrement au-dessus de la moyenne nationale.</p></li>
+<li><p><strong>Colombie-Britannique (50,9%)</strong> : Performance correcte mais légèrement inférieure aux autres grandes régions, suggérant potentiellement un électorat plus diversifié ou des préférences politiques plus fluides.</p></li>
+<li><p><strong>Territoires (30,0%)</strong> : Performance plus faible, mais cette région présente un très petit échantillon (seulement 10 observations), rendant les conclusions peu fiables.</p></li>
+</ul>
+</section>
+</section>
+<section id="matrice-de-confusion-et-analyse-des-erreurs" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Matrice de confusion et analyse des erreurs</h1>
+<p>La matrice de confusion est un outil crucial pour comprendre non seulement les prédictions correctes, mais aussi les types d’erreurs que fait le modèle.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/confusion-matrix-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="principaux-types-derreurs" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="principaux-types-derreurs"><span class="header-section-number">6.1</span> Principaux types d’erreurs</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Les 10 principaux types d'erreurs du modèle</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Type d'erreur</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Nombre de cas</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pourcentage des erreurs (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Libéral prédit comme Bloc Québécois</td>
+<td style="text-align: right;">445</td>
+<td style="text-align: right;">18.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Libéral prédit comme Conservateur</td>
+<td style="text-align: right;">363</td>
+<td style="text-align: right;">15.44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Conservateur prédit comme Libéral</td>
+<td style="text-align: right;">283</td>
+<td style="text-align: right;">12.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Conservateur prédit comme Bloc Québécois</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">10.97</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NPD prédit comme Conservateur</td>
+<td style="text-align: right;">203</td>
+<td style="text-align: right;">8.63</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">NPD prédit comme Bloc Québécois</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: right;">6.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NPD prédit comme Libéral</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">5.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Libéral prédit comme NPD</td>
+<td style="text-align: right;">124</td>
+<td style="text-align: right;">5.27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Conservateur prédit comme NPD</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">4.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Bloc Québécois prédit comme Libéral</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">3.57</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/error-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interprétation-des-erreurs-de-prédiction" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="interprétation-des-erreurs-de-prédiction"><span class="header-section-number">6.2</span> Interprétation des erreurs de prédiction</h2>
+<p>L’analyse des erreurs révèle plusieurs tendances importantes :</p>
+<ol type="1">
+<li><p><strong>Confusion Libéral-Bloc (18,9%)</strong> : La principale erreur est la prédiction d’électeurs libéraux comme électeurs du Bloc Québécois. Cela pourrait indiquer une certaine similitude démographique ou comportementale entre certains segments d’électeurs de ces deux partis, particulièrement au Québec.</p></li>
+<li><p><strong>Confusion Libéral-Conservateur (27,5% combiné)</strong> : Les erreurs entre ces deux partis (dans les deux sens) représentent plus d’un quart de toutes les erreurs, suggérant une frontière floue entre certains segments d’électeurs de ces partis.</p></li>
+<li><p><strong>Surprédiction du Bloc Québécois</strong> : Le modèle a tendance à surprédire le Bloc Québécois, confondant des électeurs d’autres partis (particulièrement libéraux et conservateurs) avec des électeurs du Bloc.</p></li>
+<li><p><strong>Confusion NPD avec autres partis</strong> : Les électeurs du NPD sont fréquemment confondus avec ceux des trois autres grands partis, suggérant que les électeurs NPD pourraient avoir des profils plus diversifiés.</p></li>
+</ol>
+<p>Cette analyse des erreurs pourrait aider à affiner le modèle en identifiant les segments d’électeurs qui causent le plus de confusion.</p>
+</section>
+</section>
+<section id="stabilité-et-robustesse-du-modèle" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Stabilité et robustesse du modèle</h1>
+<p>Une évaluation rigoureuse de la robustesse statistique du modèle a été réalisée grâce à une analyse de bootstrap avec 500 répétitions.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/bootstrap-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interprétation-de-lanalyse-bootstrap" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="interprétation-de-lanalyse-bootstrap"><span class="header-section-number">7.1</span> Interprétation de l’analyse bootstrap</h2>
+<p>L’analyse bootstrap révèle plusieurs aspects importants concernant la robustesse du modèle :</p>
+<ul>
+<li><p><strong>Accuracy moyenne de 53,8%</strong> : Cette valeur est très stable à travers les 500 réplications.</p></li>
+<li><p><strong>Intervalle de confiance à 95% : [52,4% - 55,2%]</strong> : Cet intervalle étroit (seulement 2,8 points de pourcentage) démontre une grande stabilité statistique du modèle.</p></li>
+<li><p><strong>Écart-type très faible (0,7%)</strong> : La faible variabilité des performances à travers les échantillons bootstrap confirme la robustesse du modèle.</p></li>
+</ul>
+<p>Cette analyse démontre que les performances du modèle ne sont pas dues au hasard ou à des particularités de l’échantillon de test, mais reflètent une réelle capacité prédictive.</p>
+</section>
+</section>
+<section id="robustesse-régionale" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Robustesse régionale</h1>
+<p>Pour évaluer si le modèle est uniformément performant à travers le Canada, nous avons analysé sa robustesse dans chaque région.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/regional-robustness-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interprétation-de-la-robustesse-régionale" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="interprétation-de-la-robustesse-régionale"><span class="header-section-number">8.1</span> Interprétation de la robustesse régionale</h2>
+<p>Cette analyse révèle plusieurs points importants concernant la robustesse géographique du modèle :</p>
+<ul>
+<li><p><strong>Performance cohérente</strong> : À l’exception des Territoires (qui ont un échantillon trop petit), toutes les régions présentent une accuracy entre 50,9% et 59,9%, démontrant une bonne robustesse géographique.</p></li>
+<li><p><strong>Indépendance relative à la taille d’échantillon</strong> : Les performances ne semblent pas fortement corrélées à la taille de l’échantillon régional, ce qui est un signe positif de robustesse.</p></li>
+<li><p><strong>Balanced accuracy</strong> : Les valeurs de balanced accuracy plus faibles (30-35%) s’expliquent par la difficulté à prédire certains partis moins représentés dans chaque région.</p></li>
+<li><p><strong>Québec vs reste du Canada</strong> : Malgré la prédominance des erreurs liées au Bloc Québécois, le modèle maintient une performance cohérente au Québec (52,6%), légèrement inférieure à la moyenne nationale mais toujours solide.</p></li>
+</ul>
+<p>Cette analyse confirme que le modèle est généralement robuste à travers les différentes régions canadiennes, avec une performance cohérente malgré les différences démographiques et politiques importantes.</p>
+</section>
+</section>
+<section id="distribution-des-probabilités-prédites" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Distribution des probabilités prédites</h1>
+<p>L’analyse des probabilités prédites par le modèle permet de comprendre la confiance du modèle dans ses prédictions.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rapport_performance_modele_files/figure-html/prob-dist-viz-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interprétation-des-distributions-de-probabilités" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="interprétation-des-distributions-de-probabilités"><span class="header-section-number">9.1</span> Interprétation des distributions de probabilités</h2>
+<p>L’analyse des distributions de probabilités révèle plusieurs caractéristiques importantes du modèle :</p>
+<ol type="1">
+<li><p><strong>Bloc Québécois</strong> : Distribution bimodale marquée avec des probabilités élevées pour les prédictions correctes, confirmant la grande confiance du modèle dans ses prédictions pour ce parti.</p></li>
+<li><p><strong>Parti conservateur</strong> : Bonne séparation entre prédictions correctes et incorrectes, avec une tendance du modèle à attribuer des probabilités plus élevées aux prédictions correctes.</p></li>
+<li><p><strong>Parti libéral</strong> : Distribution plus étalée des probabilités, même pour les prédictions correctes, suggérant une confiance modérée du modèle.</p></li>
+<li><p><strong>NPD</strong> : Chevauchement significatif entre les distributions correctes et incorrectes, indiquant une incertitude plus grande du modèle.</p></li>
+<li><p><strong>Parti vert</strong> : Peu d’observations et des probabilités généralement faibles, cohérent avec la difficulté du modèle à prédire les votes pour ce parti.</p></li>
+</ol>
+<p>Cette analyse montre que le modèle calibre généralement bien ses probabilités, avec une confiance plus élevée pour les prédictions qui s’avèrent correctes, particulièrement pour le Bloc Québécois et le Parti conservateur.</p>
+</section>
+</section>
+<section id="synthèse-et-conclusion" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Synthèse et conclusion</h1>
+<section id="forces-du-modèle" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="forces-du-modèle"><span class="header-section-number">10.1</span> Forces du modèle</h2>
+<ol type="1">
+<li><p><strong>Performance globale solide</strong> (53,8% d’accuracy) pour un problème à 5 classes</p></li>
+<li><p><strong>Excellente performance sur certains partis</strong>, particulièrement le Bloc Québécois (86,6%)</p></li>
+<li><p><strong>Top-2 accuracy exceptionnelle</strong> (81,2%), indiquant que le modèle classe presque toujours le vrai parti parmi ses deux premières prédictions</p></li>
+<li><p><strong>Stabilité statistique robuste</strong>, démontrée par l’analyse bootstrap avec un intervalle de confiance étroit</p></li>
+<li><p><strong>Performance géographique cohérente</strong> à travers les principales régions canadiennes</p></li>
+</ol>
+</section>
+<section id="limites-identifiées" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="limites-identifiées"><span class="header-section-number">10.2</span> Limites identifiées</h2>
+<ol type="1">
+<li><p><strong>Difficultés avec le Parti vert</strong> (0% d’accuracy), probablement dû au petit échantillon</p></li>
+<li><p><strong>Confusion entre certains partis</strong>, particulièrement entre Libéraux et Bloc Québécois</p></li>
+<li><p><strong>Balanced accuracy modérée</strong> (44,2%), indiquant une performance inégale entre les différentes classes</p></li>
+<li><p><strong>Calibration des probabilités</strong> à améliorer pour certains partis, comme indiqué par le score de Brier (0,595)</p></li>
+</ol>
+</section>
+<section id="conclusion" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">10.3</span> Conclusion</h2>
+<p>Le modèle développé présente des performances solides pour la prédiction des intentions de vote aux élections fédérales canadiennes, avec une accuracy globale de 53,8% et une top-2 accuracy de 81,2%. Sa robustesse est confirmée tant au niveau statistique (bootstrap) que géographique (performance cohérente dans toutes les régions).</p>
+<p>Le modèle est particulièrement performant pour prédire les votes pour le Bloc Québécois et le Parti conservateur, mais présente des difficultés avec le Parti vert et montre certaines confusions entre Libéraux et autres partis.</p>
+<p>Ces résultats démontrent la capacité du modèle à capturer efficacement les tendances électorales canadiennes et confirment sa validité pour l’analyse des comportements électoraux à l’échelle nationale.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

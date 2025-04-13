@@ -1,5 +1,5 @@
 ---
-title: "Validation de la robustesse du modèle de prédiction électorale"
+title: "Validation de la robustesse du modèle ROC vs QC de prédiction électorale"
 author: "CLESSN"
 date: \today
 format:
