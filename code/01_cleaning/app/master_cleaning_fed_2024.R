@@ -45,3 +45,4 @@ n_respondents <- nrow(DataClean)
 
 file_name <- paste0(end_date, "_n", n_respondents, "datagotchi2025_canada_app.rds")
 saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", file_name))
+saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", "df_latest.rds"))
