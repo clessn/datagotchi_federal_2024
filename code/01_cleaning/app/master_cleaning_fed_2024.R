@@ -1,16 +1,11 @@
 source("code/01_cleaning/app/package_checks.R")
 
 # Data -------------------------------------------------------------------------
-<<<<<<< HEAD
-## load raw data here
-DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250412.csv")
-=======
 ## Mettre le chemin vers le fichier de données ici
 ## Faire ainsi pour pouvoir nommer le fichier de sortie avec la date de fin
 
 raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250410.csv"
 DataRaw <- read.csv(raw_file_path)
->>>>>>> da55f64 (change naming scheme)
 
 # Clean variables ---------------------------------------------------------
 DataClean <- data.frame(id = 1:nrow(DataRaw))
