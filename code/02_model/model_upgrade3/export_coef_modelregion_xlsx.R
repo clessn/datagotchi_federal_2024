@@ -1,44 +1,56 @@
 #' Export des coefficients du modèle multinomial pour l'application datagotchi
 #' 
-#' Ce script charge le modèle RTA avec interactions régionales, extrait et
-#' transforme les coefficients pour les rendre compatibles avec l'application Python.
-#' Il utilise la même approche que précédemment pour les coefficients symétriques.
+#' Ce script charge le modèle RTA amélioré et exporte les coefficients symétriques
+#' au format compatible avec l'application Python, incluant le traitement spécial pour le BQ.
 #'
 #' Entrée :
-#' - Modèle final (finalmodel_withRTAPredictions_6Regions_2025-04-09.rds)
+#' - Modèle final (finalmodel_withRTAPredictions_april3_2025-04-16.rds)
 #'
 #' Sortie :
-#' - Fichier Excel des coefficients formatés (model_coefficients_formatted.xlsx)
+#' - Fichier Excel des coefficients formatés pour les développeurs
+#' - Fichier CSV des intercepts pour l'application
 
-# Charger les packages nécessaires
+# Chargement des packages nécessaires
 library(tidyverse)
 library(nnet)
 library(openxlsx)
 library(tibble)
 
+# Configuration et chargement du modèle ----------------------------------------
+
 # Définir le chemin vers le modèle
-model_path <- "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withRTAPredictions_6Regions_2025-04-09.rds"
+model_path <- "_SharedFolder_datagotchi_federal_2024/data/modele/finalmodel_withRTAPredictions_april3_2025-04-16.rds"
+
+# Vérifier l'existence du fichier
+if (!file.exists(model_path)) {
+  stop(paste0("Le fichier modèle n'existe pas: ", model_path))
+}
 
 # Charger le modèle final
 cat("Chargement du modèle:", model_path, "\n")
 final_model <- readRDS(model_path)
 
-# Vérifier si le modèle contient déjà les coefficients symétriques
+# Définir l'ordre des partis pour l'export (ordre attendu par les développeurs)
+export_parties <- c("lpc", "gpc", "cpc", "bq", "ndp")
+
+# Vérifier la présence des coefficients symétriques ----------------------------
+
 if (!exists("sym_coef", where = final_model)) {
   cat("Calcul des coefficients symétriques...\n")
   
-  # Extraire la matrice des coefficients originaux
+  # Extraire les coefficients originaux
   orig_coef <- coef(final_model)
   
   # Récupérer tous les niveaux de la variable réponse
-  all_levels <- c(rownames(orig_coef), "bq") # Assurer que "bq" est inclus
+  # On suppose que "bq" est la référence dans le modèle
+  all_levels <- c(rownames(orig_coef), "bq") 
   
   # Créer une matrice complète pour les coefficients
   full_coef <- matrix(0, nrow = length(all_levels), ncol = ncol(orig_coef))
   rownames(full_coef) <- all_levels
   colnames(full_coef) <- colnames(orig_coef)
   
-  # Remplir la matrice pour les niveaux non de référence
+  # Remplir full_coef pour les niveaux non de référence
   for (lvl in rownames(orig_coef)) {
     full_coef[lvl, ] <- orig_coef[lvl, ]
   }
@@ -49,55 +61,21 @@ if (!exists("sym_coef", where = final_model)) {
   # Reparamétrer de manière symétrique
   sym_coef <- full_coef - matrix(rep(m, each = length(all_levels)), nrow = length(all_levels))
   
-  # Ajouter les coefficients symétriques au modèle
+  # Ajouter la matrice symétrique au modèle final
   final_model$sym_coef <- sym_coef
   
-  # Optionnel: Sauvegarder le modèle avec les coefficients symétriques
-  saveRDS(final_model, gsub("\\.rds$", "_with_sym_coef.rds", model_path))
-  cat("Modèle sauvegardé avec coefficients symétriques\n")
+  # Sauvegarder le modèle avec les coefficients symétriques
+  sym_model_path <- gsub("\\.rds$", "_with_sym_coef.rds", model_path)
+  saveRDS(final_model, sym_model_path)
+  cat("Modèle sauvegardé avec coefficients symétriques:", sym_model_path, "\n")
 } else {
   cat("Le modèle contient déjà des coefficients symétriques\n")
   sym_coef <- final_model$sym_coef
 }
 
-# Définir l'ordre des partis pour l'export (celui attendu par les développeurs)
-export_parties <- c("lpc", "gpc", "cpc", "bq", "ndp")
+# Préparation des données pour l'export ----------------------------------------
 
-# EXTRACTION DES COEFFICIENTS --------------------------------------------------
-
-# 1. Fichier avec tous les coefficients (sans intercept)
-coef_transposed <- sym_coef %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "Party") %>%
-  {t(.[,-1])} %>% # Transposer sans la colonne Party
-  as.data.frame() %>%
-  set_names(sym_coef %>% rownames()) %>%
-  rownames_to_column(var = "Predictor") %>%
-  select(Predictor, all_of(export_parties)) %>%
-  filter(Predictor != "(Intercept)")
-
-# 2. Fichier des intercepts seulement
-intercept_df <- sym_coef %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "Party") %>%
-  select(Party, Intercept = "(Intercept)") %>%
-  filter(Party %in% export_parties) %>%
-  mutate(Intercept = format(Intercept, scientific = FALSE)) %>%
-  arrange(factor(Party, levels = export_parties))
-
-# Exportation des deux fichiers
-output_file <- "_SharedFolder_datagotchi_federal_2024/data/modele/coef_matrix_6Regions.xlsx"
-write.xlsx(list(
-  "Coefficients" = coef_transposed,
-  "Intercepts" = intercept_df
-), output_file)
-
-cat("Exportation réussie :\n",
-    "- Coefficients dans l'onglet 'Coefficients'\n",
-    "- Intercepts dans l'onglet 'Intercepts'\n",
-    "Fichier :", output_file, "\n")
-
-# En plus, générer le fichier au format attendu par les développeurs
+# 1. Formater pour l'export développeur
 results_df <- data.frame()
 
 # Traiter l'intercept séparément
@@ -117,6 +95,8 @@ for (party in export_parties) {
 }
 
 results_df <- rbind(results_df, intercept_row)
+
+# Fonctions utilitaires --------------------------------------------------------
 
 # Fonction pour déterminer si une variable est une interaction régionale
 is_regional_interaction <- function(var_name) {
@@ -147,7 +127,8 @@ extract_base_var <- function(var_name) {
   return(var_name)
 }
 
-# Traiter toutes les variables (sauf l'intercept)
+# Traitement de toutes les variables (sauf l'intercept) -----------------------
+
 vars_to_process <- colnames(sym_coef)[colnames(sym_coef) != "(Intercept)"]
 
 for (var in vars_to_process) {
@@ -204,35 +185,65 @@ for (var in vars_to_process) {
   results_df <- rbind(results_df, row)
 }
 
-# Exporter le résultat au format attendu par les développeurs
-output_file_dev <- "_SharedFolder_datagotchi_federal_2024/data/modele/model_coefficients_formatted_with_bq.xlsx"
-openxlsx::write.xlsx(results_df, output_file_dev, rowNames = FALSE)
+# Exporter les fichiers pour les développeurs ----------------------------------
 
-# Générer aussi un fichier intercepts.csv pour le script Python
+# 1. Format tableau complet pour les coefficients
+output_file_coef <- "_SharedFolder_datagotchi_federal_2024/data/modele/model_coefficients_formatted.xlsx"
+openxlsx::write.xlsx(results_df, output_file_coef, rowNames = FALSE)
+
+# 2. Générer le fichier intercepts.csv pour le script Python
 intercepts_df <- data.frame(
   party = export_parties,
   intercept = sapply(export_parties, function(p) sym_coef[p, "(Intercept)"])
 )
 
-# Ajouter les colonnes de projection RTA si elles existent
+# Ajouter les colonnes de projection RTA
 rta_vars <- vars_to_process[grepl("prediction_", vars_to_process)]
 rta_parties <- unique(gsub("^prediction_", "", gsub(":.*$", "", rta_vars)))
-for (p in rta_parties) {
-  col_name <- paste0("projection_", p)
-  intercepts_df[[col_name]] <- 1.0  # Valeur par défaut
+
+# Par défaut, initialiser toutes les projections à 1.0
+for (rta_party in rta_parties) {
+  for (target_party in export_parties) {
+    col_name <- paste0("projection_", target_party)
+    if (!(col_name %in% names(intercepts_df))) {
+      intercepts_df[[col_name]] <- 1.0  # Valeur par défaut
+    }
+  }
 }
+
+# Ajustement pour tenir compte du traitement spécial du BQ
+# La valeur reste 1.0, car le script Python gère la mise à zéro hors Québec
 
 # Exporter le fichier d'intercepts
 intercepts_file <- "_SharedFolder_datagotchi_federal_2024/data/modele/intercepts.csv"
 write.csv(intercepts_df, intercepts_file, row.names = FALSE)
 
-cat("\nExportation des fichiers pour les développeurs :\n")
-cat("- Format standard:", output_file_dev, "\n")
-cat("- Fichier intercepts:", intercepts_file, "\n")
+# Exporter aussi un fichier à format fixe pour débogage
+output_file_transposed <- "_SharedFolder_datagotchi_federal_2024/data/modele/coef_matrix.xlsx"
+coef_transposed <- sym_coef %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "Party") %>%
+  {t(.[,-1])} %>% # Transposer sans la colonne Party
+  as.data.frame() %>%
+  set_names(sym_coef %>% rownames()) %>%
+  rownames_to_column(var = "Predictor") %>%
+  select(Predictor, all_of(export_parties))
+
+write.xlsx(list(
+  "Coefficients" = coef_transposed,
+  "Intercepts" = intercepts_df
+), output_file_transposed)
+
+# Vérification des résultats --------------------------------------------------
+
+cat("\n--- Exportation des fichiers terminée ---\n")
+cat("- Format pour les développeurs:", output_file_coef, "\n")
+cat("- Fichier intercepts.csv:", intercepts_file, "\n")
+cat("- Format transposé pour vérification:", output_file_transposed, "\n")
 
 # Vérification des fichiers exportés
 cat("\n--- Vérification des coefficients exportés ---\n")
-exported_coefs <- openxlsx::read.xlsx(output_file_dev)
+exported_coefs <- openxlsx::read.xlsx(output_file_coef)
 cat("Nombre de lignes exportées:", nrow(exported_coefs), "\n")
 cat("Nombre de colonnes exportées:", ncol(exported_coefs), "\n")
 
@@ -264,4 +275,5 @@ for (var in vars_to_check) {
 cat("\n--- Résumé ---\n")
 cat(sprintf("Nombre total de variables exportées: %d\n", nrow(results_df)))
 cat(sprintf("Nombre de partis exportés: %d\n", length(export_parties)))
+cat(sprintf("Partis exportés: %s\n", paste(export_parties, collapse=", ")))
 cat("Export terminé avec succès!\n")
