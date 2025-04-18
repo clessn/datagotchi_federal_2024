@@ -294,3 +294,14 @@ table(DataClean$tactical_proBorderControl_bin)
 # tactical_issue_lgbtq ----------------------------------------------------
 # To what extent should the federal government defend the rights of LGBTQ+ people?
 
+# tactical_iss_bilinguisme -----------------------------------------------
+
+table(DataRaw$tactical_iss_bilingual_prime_minister)
+DataClean$tactical_iss_PMbilingue <- NA
+DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Not at all important"] <- 0
+DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Slightly important"] <- 0.25
+DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Moderately important"] <- 0.5
+DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Very important"] <- 0.75
+DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Extremely important"] <- 1
+table(DataClean$tactical_iss_PMbilingue)
+
