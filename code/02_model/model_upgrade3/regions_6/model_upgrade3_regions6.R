@@ -37,7 +37,7 @@ library(pbapply)
 DataPilot <- readRDS("_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds")
 
 # Nouvelles données de l'application
-DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_20250408.rds")
+DataApp <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/20250413_n78871datagotchi2025_canada_app.rds")
 
 # Chargement des prédictions par RTA
 rta_predictions <- read.csv("_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis.csv",
@@ -233,7 +233,18 @@ DataApp_enriched <- DataApp_enriched %>%
     ses_region = factor(ses_region, levels = region_levels)
   )
 
-# Fusion des données pour la modélisation
+# Vérifier le type de ses_immigrant dans les deux dataframes
+cat("Type de ses_immigrant dans DataPilot_enriched:", class(DataPilot_enriched$ses_immigrant), "\n")
+cat("Type de ses_immigrant dans DataApp_enriched:", class(DataApp_enriched$ses_immigrant), "\n")
+
+# Harmoniser le type de ses_immigrant (convertir en numeric)
+# Si ses_immigrant dans DataApp_enriched contient des valeurs qui peuvent être converties en numeric
+DataApp_enriched$ses_immigrant <- as.numeric(as.character(DataApp_enriched$ses_immigrant))
+
+# Vérifier si la conversion a fonctionné
+cat("Nouveau type de ses_immigrant dans DataApp_enriched:", class(DataApp_enriched$ses_immigrant), "\n")
+
+# Maintenant essayer de combiner les dataframes
 DataModel <- bind_rows(DataPilot_enriched, DataApp_enriched)
 
 # ------------------------------------------------------------------------
@@ -525,33 +536,79 @@ if ("bq" %in% levels(DfTrain$dv_voteChoice)) {
 
 # 2. Fixer les références pour les variables catégorielles
 reference_mapping <- list(
-  ses_region = "ontario",
+  ses_region = "prairie",  # Modifié: "ontario" -> "prairie"
+  ses_immigrant = "0",
   lifestyle_typeTransport = "active_transport",
   lifestyle_consClothes = "large_retailers",
   lifestyle_exercise = "gym",
+  lifestyle_eatMeatFreq = "0",
   lifestyle_favAlcool = "beer",
   lifestyle_consCoffee = "tim_hortons",
   ses_language = "english",
+  lifestyle_smokeFreq = "0",
+  ses_age = "0",
   ses_dwelling_cat = "stand_alone_house",
+  ses_ethnicityWhite = "0",
+  ses_sexOrientationHetero = "0",
+  ses_genderFemale = "0",
   lifestyle_clothingStyleGroups = "easygoing",
+  lifestyle_goHuntingFreq_numeric = "0",
+  lifestyle_goFishingFreq_bin = "0",
+  lifestyle_goMuseumsFreq_bin = "0",
+  lifestyle_volunteeringFreq = "0",
+  lifestyle_motorizedActFreq_bin = "0",
+  lifestyle_hasTattoos = "0",
   ses_educ = "no_schooling",
-  ses_income3Cat = "High"
+  ses_income3Cat = "High",
+  lifestyle_ownPet_bin = "0"
 )
 
 # Appliquer les références
 for (var_name in names(reference_mapping)) {
   ref_value <- reference_mapping[[var_name]]
   
-  if (var_name %in% names(DfTrain) && is.factor(DfTrain[[var_name]]) && ref_value %in% levels(DfTrain[[var_name]])) {
-    DfTrain[[var_name]] <- relevel(DfTrain[[var_name]], ref = ref_value)
-    DfTest[[var_name]] <- relevel(DfTest[[var_name]], ref = ref_value)
-    cat(var_name, ": '", ref_value, "' définie comme référence\n", sep="")
-  } else if (var_name %in% names(DfTrain)) {
-    cat("Impossible de définir '", ref_value, "' comme référence pour ", var_name, 
-        " (soit n'est pas un facteur, soit la valeur n'existe pas)\n", sep="")
+  if (var_name %in% names(DfTrain)) {
+    # Pour les variables numériques codées comme "0"
+    if (ref_value == "0" && is.numeric(DfTrain[[var_name]])) {
+      cat(var_name, ": Variable numérique, pas besoin de définir '0' comme référence\n", sep="")
+      next
+    }
+    
+    # Pour les variables factorielles
+    if (is.factor(DfTrain[[var_name]])) {
+      if (ref_value %in% levels(DfTrain[[var_name]])) {
+        DfTrain[[var_name]] <- relevel(DfTrain[[var_name]], ref = ref_value)
+        DfTest[[var_name]] <- relevel(DfTest[[var_name]], ref = ref_value)
+        cat(var_name, ": '", ref_value, "' définie comme référence\n", sep="")
+      } else {
+        cat("Impossible de définir '", ref_value, "' comme référence pour ", var_name, 
+            " (valeur non présente dans les niveaux actuels: ", 
+            paste(levels(DfTrain[[var_name]]), collapse=", "), ")\n", sep="")
+      }
+    } 
+    # Pour les variables binaires qui pourraient être numériques mais devant être traitées comme facteurs
+    else if (grepl("_bin$|White$|Hetero$|Female$|hasTattoos$", var_name) && !is.factor(DfTrain[[var_name]])) {
+      # Convertir en facteur d'abord
+      DfTrain[[var_name]] <- factor(DfTrain[[var_name]])
+      DfTest[[var_name]] <- factor(DfTest[[var_name]])
+      
+      if (ref_value %in% levels(DfTrain[[var_name]])) {
+        DfTrain[[var_name]] <- relevel(DfTrain[[var_name]], ref = ref_value)
+        DfTest[[var_name]] <- relevel(DfTest[[var_name]], ref = ref_value)
+        cat(var_name, ": Convertie en facteur avec '", ref_value, "' comme référence\n", sep="")
+      } else {
+        cat("Variable ", var_name, " convertie en facteur mais '", ref_value, 
+            "' n'est pas dans les niveaux disponibles: ", 
+            paste(levels(DfTrain[[var_name]]), collapse=", "), "\n", sep="")
+      }
+    } 
+    else {
+      cat(var_name, ": Variable présente mais n'est pas un facteur (type: ", class(DfTrain[[var_name]]), ")\n", sep="")
+    }
+  } else {
+    cat(var_name, ": Variable non présente dans les données\n", sep="")
   }
 }
-
 # ------------------------------------------------------------------------
 # 12) Entraînement du modèle
 # ------------------------------------------------------------------------
