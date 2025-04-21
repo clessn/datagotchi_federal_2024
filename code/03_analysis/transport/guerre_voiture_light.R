@@ -4,12 +4,9 @@ library(sf)
 library(ggplot2)
 library(magick)
 library(patchwork)
-library(showtext)
 
-# Load PixelOperator font
-font_add(family = "PixelOperator", regular = "PixelOperator.ttf", bold = "PixelOperator-Bold.ttf")
-# Enable showtext for all graphics devices
-showtext_auto()
+# 1. Load datasets (assuming data, sf_ridings, sf_rta are already available)
+# This follows similar steps to the original script, but we'll modify to show deviations
 
 # 2. Chargement des données spatiales depuis cartessn
 sf_ridings <- cartessn::spatial_canada_2022_electoral_ridings_aligned
@@ -139,7 +136,7 @@ sf_transport_map_clean <- sf_transport_map %>%
 options(future.globals.maxSize = 1000 * 1024^2)  # Increase limit to 1 GB
 sf_use_s2(FALSE)  # Disable sf S2 features to reduce memory usage
 
-# 15. Simplified theme for light mode maps with PixelOperator font and larger text
+# 15. Simplified theme for light mode maps
 theme_map_light <- function() {
   theme_minimal() +
     theme(
@@ -153,18 +150,16 @@ theme_map_light <- function() {
       axis.ticks = element_blank(),
       panel.grid = element_blank(),
       
-      # PixelOperator font with larger text sizes
-      text = element_text(family = "PixelOperator"),
-      plot.title = element_text(family = "PixelOperator", face = "bold", size = 24, color = "black", hjust = 0.5),
-      plot.subtitle = element_text(family = "PixelOperator", size = 18, color = "#555555", hjust = 0.5),
-      plot.caption = element_text(family = "PixelOperator", size = 16, color = "#666666", hjust = 1),
+      # Black text
+      plot.title = element_text(face = "bold", size = 14, color = "black", hjust = 0.5),
+      plot.subtitle = element_text(size = 11, color = "#555555", hjust = 0.5),
+      plot.caption = element_text(size = 12, color = "#666666", hjust = 1),
       
-      # Legend with larger text
+      # Legend
       legend.position = "bottom",
       legend.background = element_rect(fill = "white", color = NA),
-      legend.title = element_text(family = "PixelOperator", size = 16, color = "black"),
-      legend.text = element_text(family = "PixelOperator", size = 14, color = "#555555"),
-      legend.key.size = unit(1.5, "cm")
+      legend.title = element_text(size = 10, color = "black"),
+      legend.text = element_text(size = 9, color = "#555555")
     )
 }
 
@@ -220,8 +215,8 @@ canada_transport_diff_map <- ggplot(sf_transport_map_clean) +
     )
   ) +
   guides(
-    fill = guide_legend(override.aes = list(alpha = 0.8), order = 1, ncol = 4),
-    alpha = guide_legend(override.aes = list(fill = "#666666"), order = 2, ncol = 6)
+    fill = guide_legend(override.aes = list(alpha = 0.8), order = 1),
+    alpha = guide_legend(override.aes = list(fill = "#666666"), order = 2)
   )
 
 # 18. Save the Canada map
@@ -272,7 +267,61 @@ for (region in main_regions) {
          bg = "white")
 }
 
-# 21. Create a combined dashboard with main map and details for major cities
+# 21. Create alternative visualization focusing on specific modes
+# This will create one map per transport mode showing deviation from average
+
+# Define transport modes to create maps for
+transport_modes <- c("car", "suv", "public_transit", "walk", "bicycle")
+mode_names <- c(
+  "car" = "Voiture 🚗",
+  "suv" = "VUS 🚙",
+  "public_transit" = "Transport en commun 🚇",
+  "walk" = "Marche 🚶",
+  "bicycle" = "Vélo 🚲"
+)
+
+# Function to create mode-specific map
+create_mode_map <- function(mode, mode_name) {
+  # Get deviation column name
+  deviation_col <- paste0(mode, "_deviation")
+  
+  # Create custom breaks and color scheme for deviation
+  deviation_breaks <- c(-Inf, -10, -5, -2, 2, 5, 10, Inf)
+  deviation_labels <- c("< -10%", "-10% à -5%", "-5% à -2%", "-2% à +2%", "+2% à +5%", "+5% à +10%", "> +10%")
+  deviation_colors <- c("#053061", "#2166AC", "#92C5DE", "#F7F7F7", "#FDAE61", "#F46D43", "#A50026")
+  
+  # Create map
+  ggplot(sf_transport_map) +
+    geom_sf(aes_string(fill = deviation_col), color = "#DDDDDD", size = 0.2) +
+    scale_fill_gradientn(
+      name = paste0("Écart par rapport à la moyenne (", mode_name, ")"),
+      colors = deviation_colors,
+      breaks = c(-10, -5, 0, 5, 10),
+      labels = c("-10%", "-5%", "Moyenne", "+5%", "+10%"),
+      limits = c(-15, 15),
+      na.value = "#EEEEEE"
+    ) +
+    theme_map_light() +
+    labs(
+      title = paste0("ÉCART DE PRÉFÉRENCE: ", mode_name),
+      subtitle = "Différence en points de % par rapport à la moyenne nationale",
+      caption = paste0("Moyenne nationale pour ", mode_name, ": ", 
+                       round(national_averages[[paste0(mode, "_avg")]], 1), "%")
+    )
+}
+
+# Create and save mode-specific maps
+for (mode in transport_modes) {
+  mode_map <- create_mode_map(mode, mode_names[mode])
+  ggsave(paste0("canada_", mode, "_deviation_map.png"), 
+         mode_map, 
+         width = 12, 
+         height = 9, 
+         dpi = 200,
+         bg = "white")
+}
+
+# 22. Create a combined dashboard with main map and details for major cities
 # This includes the Canada map with city detail boxes
 
 # Definition of dimension parameters
@@ -282,7 +331,7 @@ city_height <- 400        # Height for city maps
 city_spacing <- 20        # Spacing between city maps
 section_spacing <- 40     # Spacing between sections
 
-# 22. Function to create city map with better proportions
+# 23. Create city map with better proportions
 create_city_map <- function(region_name, display_title = NULL) {
   # Use custom title if provided, otherwise use region_name
   display_name <- ifelse(is.null(display_title), toupper(region_name), toupper(display_title))
@@ -304,48 +353,48 @@ create_city_map <- function(region_name, display_title = NULL) {
   canvas_with_map <- image_composite(canvas, img_resized, 
                                      gravity = "center")
   
-  # Add title at bottom with PixelOperator font
+  # Add title at bottom
   canvas_with_title <- image_annotate(canvas_with_map, 
                                       display_name,
                                       color = "black", 
-                                      size = 36,  # Larger font size (was 28)
-                                      font = "PixelOperator-Bold",
+                                      size = 28,  # Increased font size
+                                      font = "Arial-Bold",
                                       gravity = "south",
                                       location = "+0+20")  # More space at bottom
   
   return(canvas_with_title)
 }
 
-# 23. Read and resize Canada map with legend
+# 24. Read and resize Canada map with legend
 canada_img <- image_read("canada_transport_diff_map.png")
 canada_resized <- image_scale(canada_img, paste0(toString(canvas_width - 40), "x", toString(canada_height)))
 
-# 24. Create canvas for Canada map
+# 25. Create canvas for Canada map
 canada_canvas <- image_blank(width = canvas_width, 
                              height = canada_height + 60,  # More space to avoid cropping
                              color = "white")
 
-# 25. Center Canada map
+# 26. Center Canada map
 canada_centered <- image_composite(canada_canvas, canada_resized, 
                                    gravity = "center")
 
-# 26. Create city maps with better proportions
+# 27. Create city maps with better proportions
 montreal_map <- create_city_map("montreal")
 toronto_map <- create_city_map("toronto")
 vancouver_map <- create_city_map("vancouver")
 quebec_map <- create_city_map("quebec_city", "QUÉBEC")
 
-# 27. Calculate lateral spacing to center city maps
+# 28. Calculate lateral spacing to center city maps
 city_width = image_info(montreal_map)$width
 city_total_width <- 4 * city_width + (3 * city_spacing)
 city_padding <- max(0, (canvas_width - city_total_width) / 2)
 
-# 28. Create more visible separators between cities
+# 29. Create more visible separators between cities
 city_separator <- image_blank(width = city_spacing, 
                               height = image_info(montreal_map)$height, 
                               color = "white")
 
-# 29. Assemble cities with spacing
+# 30. Assemble cities with spacing
 city_row <- image_append(c(montreal_map, 
                            city_separator,
                            toronto_map, 
@@ -355,7 +404,7 @@ city_row <- image_append(c(montreal_map,
                            quebec_map), 
                          stack = FALSE)
 
-# 30. Apply lateral padding
+# 31. Apply lateral padding
 if (city_padding > 0) {
   left_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
   right_padding <- image_blank(width = city_padding, height = image_info(city_row)$height, color = "white")
@@ -364,8 +413,8 @@ if (city_padding > 0) {
   city_row_padded <- city_row
 }
 
-# 31. Main title with increased dimensions using PixelOperator font
-title_height <- 120  # Increased height (was 100)
+# 32. Main title with increased dimensions
+title_height <- 100  # Increased height
 title_bg <- image_blank(width = canvas_width,
                         height = title_height,
                         color = "white")
@@ -373,12 +422,12 @@ title_bg <- image_blank(width = canvas_width,
 title <- image_annotate(title_bg,
                         "ÉCART DES PRÉFÉRENCES DE TRANSPORT PAR RAPPORT À LA MOYENNE",
                         color = "black",
-                        size = 60,  # Larger text size (was 48)
+                        size = 48,  # Increased size
                         gravity = "center",
-                        font = "PixelOperator-Bold")
+                        font = "Arial-Bold")
 
-# 32. Subtitle with increased dimensions using PixelOperator font
-subtitle_height <- 80  # Increased height (was 60)
+# 33. Subtitle with increased dimensions
+subtitle_height <- 60  # Increased height
 subtitle_bg <- image_blank(width = canvas_width,
                            height = subtitle_height,
                            color = "white")
@@ -386,77 +435,12 @@ subtitle_bg <- image_blank(width = canvas_width,
 subtitle <- image_annotate(subtitle_bg,
                            "Mode de transport avec la plus grande différence positive par circonscription électorale",
                            color = "#555555",
-                           size = 40,  # Larger text size (was 32)
+                           size = 32,  # Increased size
                            gravity = "center",
-                           font = "PixelOperator")
+                           font = "Arial")
 
-# 33. Create a legend manually with PixelOperator font
-legend_height <- 300  # Increased height for legend
-legend_bg <- image_blank(width = canvas_width,
-                         height = legend_height,
-                         color = "white")
-
-# Parameters for legend
-x_start <- 80
-y_row1 <- 60
-y_row2 <- 140
-x_spacing <- 400
-
-# Transport mode legend - First row
-legend_bg <- legend_bg %>%
-  # Voiture
-  image_annotate("Voiture 🚗", 
-                 font = "PixelOperator", size = 36, color = "#3498DB",
-                 location = paste0("+", x_start, "+", y_row1)) %>%
-  # VUS
-  image_annotate("VUS 🚙", 
-                 font = "PixelOperator", size = 36, color = "#E74C3C",
-                 location = paste0("+", x_start + x_spacing, "+", y_row1)) %>%
-  # Transport en commun
-  image_annotate("Transport en commun 🚇", 
-                 font = "PixelOperator", size = 36, color = "#2ECC71",
-                 location = paste0("+", x_start + 2*x_spacing, "+", y_row1)) %>%
-  # Marche
-  image_annotate("Marche 🚶", 
-                 font = "PixelOperator", size = 36, color = "#F1C40F",
-                 location = paste0("+", x_start + 3*x_spacing, "+", y_row1))
-
-# Transport mode legend - Second row
-legend_bg <- legend_bg %>%
-  # Vélo
-  image_annotate("Vélo 🚲", 
-                 font = "PixelOperator", size = 36, color = "#9B59B6",
-                 location = paste0("+", x_start, "+", y_row2)) %>%
-  # Moto
-  image_annotate("Moto 🏍️", 
-                 font = "PixelOperator", size = 36, color = "#E67E22",
-                 location = paste0("+", x_start + x_spacing, "+", y_row2)) %>%
-  # Aucun mode au-dessus
-  image_annotate("Aucun mode au-dessus de la moyenne", 
-                 font = "PixelOperator", size = 36, color = "#CCCCCC",
-                 location = paste0("+", x_start + 2*x_spacing, "+", y_row2))
-
-# Deviation intensity legend
-y_row3 <- 220
-legend_bg <- legend_bg %>%
-  image_annotate("Importance de l'écart:", 
-                 font = "PixelOperator-Bold", size = 36, color = "black",
-                 location = paste0("+", x_start, "+", y_row3)) %>%
-  image_annotate("0-5%", 
-                 font = "PixelOperator", size = 36, color = "#666666",
-                 location = paste0("+", x_start + x_spacing, "+", y_row3)) %>%
-  image_annotate("5-10%", 
-                 font = "PixelOperator", size = 36, color = "#666666",
-                 location = paste0("+", x_start + x_spacing + 200, "+", y_row3)) %>%
-  image_annotate("10-15%", 
-                 font = "PixelOperator", size = 36, color = "#666666",
-                 location = paste0("+", x_start + x_spacing + 400, "+", y_row3)) %>%
-  image_annotate("15%+", 
-                 font = "PixelOperator", size = 36, color = "#666666",
-                 location = paste0("+", x_start + x_spacing + 600, "+", y_row3))
-
-# 34. Methodological note with increased dimensions using PixelOperator font
-caption_height <- 100  # Increased height (was 80)
+# 34. Methodological note with increased dimensions
+caption_height <- 80  # Increased height
 caption_bg <- image_blank(width = canvas_width,
                           height = caption_height,
                           color = "white")
@@ -466,16 +450,16 @@ n_observations <- nrow(data)  # Use actual number of respondents
 caption <- image_annotate(caption_bg,
                           paste0("Source: Léger-Datagotchi 2025 | n=", format(n_observations, big.mark = " ")),
                           color = "#555555",
-                          size = 30,  # Larger text size (was 24)
-                          location = "+40+30",  # Adjusted position
-                          font = "PixelOperator-Bold")
+                          size = 24,  # Increased size
+                          location = "+40+25",  # Adjusted position
+                          font = "Arial-Bold")
 
 caption <- image_annotate(caption,
                           "Données pondérées selon: le genre, l'âge, la province, la langue, le niveau d'éducation, le revenu, l'immigration, le type d'habitation",
                           color = "#555555",
-                          size = 28,  # Larger text size (was 22)
-                          location = "+40+70",  # Adjusted position
-                          font = "PixelOperator")
+                          size = 22,  # Increased size
+                          location = "+40+55",  # Adjusted position
+                          font = "Arial-Bold")
 
 # 35. More visible separator line
 separator_height <- 3  # Increased thickness
@@ -495,10 +479,6 @@ final_image <- c(
   spacer,                          # Spacing
   separator,                       # Separator line
   spacer,                          # Spacing
-  legend_bg,                       # Custom legend
-  spacer,                          # Spacing
-  separator,                       # Separator line
-  spacer,                          # Spacing
   city_row_padded,                 # City maps
   spacer,                          # Spacing
   separator,                       # Separator line
@@ -511,7 +491,7 @@ final_image <- c(
 final_combined <- image_append(final_image, stack = TRUE)
 
 # 38. Add white border
-final_with_border <- image_border(final_combined, "white", "40x40")  # Larger border (was 30x30)
+final_with_border <- image_border(final_combined, "white", "30x30")  # Larger border
 
 # 39. Load logo (if available)
 logo_path <- "_SharedFolder_datagotchi_federal_2024/logos/FR/logo_black.png"
@@ -523,7 +503,7 @@ if (file.exists(logo_path)) {
   logo_resized <- image_scale(logo, paste0(logo_width, "x"))
   
   # 41. Calculate position for bottom right corner
-  margin <- 40  # Larger margin (was 30)
+  margin <- 30
   x_position <- image_info(final_with_border)$width - image_info(logo_resized)$width - margin
   y_position <- image_info(final_with_border)$height - image_info(logo_resized)$height - margin
   
@@ -535,165 +515,13 @@ if (file.exists(logo_path)) {
   )
   
   # 43. Save final image with logo
-  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada_pixeloperator_avec_logo.png")
+  image_write(final_with_logo, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada_avec_logo.png")
   
-  cat("Final image with logo created successfully: ecart_transport_canada_pixeloperator_avec_logo.png\n")
+  cat("Final image with logo created successfully: ecart_transport_canada_avec_logo.png\n")
 } else {
   # If logo not available, save without logo
-  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada_pixeloperator.png")
+  image_write(final_with_border, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada.png")
   
-  cat("Final image without logo created successfully: ecart_transport_canada_pixeloperator.png\n")
+  cat("Final image without logo created successfully: ecart_transport_canada.png\n")
 }
-
-# Create additional national average reference
-national_avg_text <- paste0(
-  "Moyennes nationales:\n",
-  "Voiture: ", round(national_averages$car_avg, 1), "%\n",
-  "VUS: ", round(national_averages$suv_avg, 1), "%\n",
-  "Transport en commun: ", round(national_averages$public_transit_avg, 1), "%\n",
-  "Marche: ", round(national_averages$walk_avg, 1), "%\n",
-  "Vélo: ", round(national_averages$bicycle_avg, 1), "%\n",
-  "Moto: ", round(national_averages$motorcycle_avg, 1), "%"
-)
-
-# Create a reference card with national averages using PixelOperator font
-avg_height <- 300
-avg_width <- 400
-avg_card <- image_blank(width = avg_width, height = avg_height, color = "white") %>%
-  image_annotate("MOYENNES NATIONALES", 
-                 font = "PixelOperator-Bold", size = 36, color = "black",
-                 gravity = "north", location = "+0+20") %>%
-  image_annotate(
-    paste0(
-      "Voiture: ", round(national_averages$car_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#3498DB",
-    location = "+20+80"
-  ) %>%
-  image_annotate(
-    paste0(
-      "VUS: ", round(national_averages$suv_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#E74C3C",
-    location = "+20+120"
-  ) %>%
-  image_annotate(
-    paste0(
-      "Transport en commun: ", round(national_averages$public_transit_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#2ECC71",
-    location = "+20+160"
-  ) %>%
-  image_annotate(
-    paste0(
-      "Marche: ", round(national_averages$walk_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#F1C40F",
-    location = "+20+200"
-  ) %>%
-  image_annotate(
-    paste0(
-      "Vélo: ", round(national_averages$bicycle_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#9B59B6",
-    location = "+20+240"
-  ) %>%
-  image_annotate(
-    paste0(
-      "Moto: ", round(national_averages$motorcycle_avg, 1), "%"
-    ),
-    font = "PixelOperator", size = 32, color = "#E67E22",
-    location = "+20+280"
-  )
-
-# Save the reference card
-image_write(avg_card, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/moyennes_nationales_reference.png")
-
-# 44. Create a version of the map with the reference card positioned in a corner
-# Define a position for the card (e.g., top-right corner of the Canada map)
-# This would need to be manually adjusted based on the final image layout
-
-# Create a version with the reference card
-final_with_reference <- image_read("_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada_pixeloperator.png")
-
-# Add average reference card to the main image at top-right
-margin_x <- 60
-margin_y <- 1200  # Position after city maps but before Canada map
-final_with_reference_and_card <- image_composite(
-  final_with_reference,
-  avg_card,
-  offset = paste0("+", margin_x, "+", margin_y)
-)
-
-# Save the version with the reference card
-image_write(final_with_reference_and_card, "_SharedFolder_datagotchi_federal_2024/graph/analyses/transport/ecart_transport_canada_pixeloperator_avec_reference.png")
-
-# 45. Create individual mode-specific deviation maps with PixelOperator font
-# Function to create mode-specific map with PixelOperator font
-create_pixel_mode_map <- function(mode, mode_name) {
-  # Get deviation column name
-  deviation_col <- paste0(mode, "_deviation")
-  
-  # Create custom breaks and color scheme for deviation
-  deviation_breaks <- c(-Inf, -10, -5, -2, 2, 5, 10, Inf)
-  deviation_labels <- c("< -10%", "-10% à -5%", "-5% à -2%", "-2% à +2%", "+2% à +5%", "+5% à +10%", "> +10%")
-  deviation_colors <- c("#053061", "#2166AC", "#92C5DE", "#F7F7F7", "#FDAE61", "#F46D43", "#A50026")
-  
-  # Create map with PixelOperator font
-  ggplot(sf_transport_map) +
-    geom_sf(aes_string(fill = deviation_col), color = "#DDDDDD", size = 0.2) +
-    scale_fill_gradientn(
-      name = paste0("Écart par rapport à la moyenne (", mode_name, ")"),
-      colors = deviation_colors,
-      breaks = c(-10, -5, 0, 5, 10),
-      labels = c("-10%", "-5%", "Moyenne", "+5%", "+10%"),
-      limits = c(-15, 15),
-      na.value = "#EEEEEE"
-    ) +
-    theme_minimal() +
-    theme(
-      # White background
-      plot.background = element_rect(fill = "white", color = NA),
-      panel.background = element_rect(fill = "white", color = NA),
-      
-      # Remove axes and grids
-      axis.title = element_blank(),
-      axis.text = element_blank(),
-      axis.ticks = element_blank(),
-      panel.grid = element_blank(),
-      
-      # PixelOperator font with larger text
-      text = element_text(family = "PixelOperator"),
-      plot.title = element_text(family = "PixelOperator", face = "bold", size = 26, color = "black", hjust = 0.5),
-      plot.subtitle = element_text(family = "PixelOperator", size = 20, color = "#555555", hjust = 0.5),
-      plot.caption = element_text(family = "PixelOperator", size = 18, color = "#666666", hjust = 1),
-      
-      # Legend with larger text
-      legend.position = "bottom",
-      legend.background = element_rect(fill = "white", color = NA),
-      legend.title = element_text(family = "PixelOperator", size = 18, color = "black"),
-      legend.text = element_text(family = "PixelOperator", size = 16, color = "#555555"),
-      legend.key.size = unit(1.5, "cm")
-    ) +
-    labs(
-      title = paste0("ÉCART DE PRÉFÉRENCE: ", mode_name),
-      subtitle = "Différence en points de % par rapport à la moyenne nationale",
-      caption = paste0("Moyenne nationale pour ", mode_name, ": ", 
-                       round(national_averages[[paste0(mode, "_avg")]], 1), "%")
-    )
-}
-
-# Create and save mode-specific maps with PixelOperator font
-for (mode in transport_modes) {
-  mode_map <- create_pixel_mode_map(mode, mode_names[mode])
-  ggsave(paste0("canada_", mode, "_deviation_pixeloperator_map.png"), 
-         mode_map, 
-         width = 12, 
-         height = 9, 
-         dpi = 200,
-         bg = "white")
-}
-
-# Final success message
-cat("All maps with PixelOperator font created successfully!\n")
 
