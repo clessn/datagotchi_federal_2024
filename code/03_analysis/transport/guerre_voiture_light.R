@@ -11,8 +11,25 @@ font_add(family = "PixelOperator", regular = "PixelOperator.ttf", bold = "PixelO
 # Enable showtext for all graphics devices
 showtext_auto()
 
+<<<<<<< HEAD
 # 1. Load datasets (assuming data, sf_ridings, sf_rta are already available)
 # This follows similar steps to the original script, but we'll modify to show deviations
+=======
+# Load and resize icons
+icon_size <- 80
+transport_imgs <- list(
+  car_icon = image_read(transport_icons$car) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  suv_icon = image_read(transport_icons$suv) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  transit_icon = image_read(transport_icons$transit) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  walk_icon = image_read(transport_icons$walk) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  bicycle_icon = image_read(transport_icons$bicycle) %>% image_scale(paste0(icon_size, "x", icon_size)),
+  moto_icon = image_read(transport_icons$moto) %>% image_scale(paste0(icon_size, "x", icon_size))
+)
+
+
+# 1. Chargement des données
+data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/df_latest.rds")
+>>>>>>> da7efda (?)
 
 # 2. Chargement des données spatiales depuis cartessn
 sf_ridings <- cartessn::spatial_canada_2022_electoral_ridings_aligned
