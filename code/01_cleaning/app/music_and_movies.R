@@ -23,8 +23,10 @@ extract_field <- function(field) {
 DataTmp <- DataRaw %>%
   mutate(
     artist_name = map_chr(music, extract_field("artist")),
-    genre = map_chr(music, extract_field("genre"))
+    genre = map_chr(music, extract_field("genre")),
+    movie = map_chr(cinema, extract_field("title")),
   )
 
 DataClean$lifestyle_favArtist <- DataTmp$artist_name
 DataClean$lifestyle_musicGenre <- DataTmp$genre
+DataClean$lifestyle_favMovie <- DataTmp$movie
