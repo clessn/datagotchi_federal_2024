@@ -305,3 +305,17 @@ DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister 
 DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Extremely important"] <- 1
 table(DataClean$tactical_iss_PMbilingue)
 
+# tactical_iss_dying_can
+
+table(DataRaw$tactical_iss_dying_can)
+DataClean$tactical_iss_dyingForCan_numeric <- NA
+DataClean$tactical_iss_dyingForCan_numeric[DataRaw$tactical_iss_dying_can == "Strongly disagree"] <-  0
+DataClean$tactical_iss_dyingForCan_numeric[DataRaw$tactical_iss_dying_can == "Somewhat disagree"] <-  0.33
+DataClean$tactical_iss_dyingForCan_numeric[DataRaw$tactical_iss_dying_can == "Somewhat agree"] <-  0.66
+DataClean$tactical_iss_dyingForCan_numeric[DataRaw$tactical_iss_dying_can == "Strongly agree"] <-  1
+table(DataClean$tactical_iss_dyingForCan_numeric)
+
+DataClean$tactical_iss_dyingForCan_bin <- NA
+DataClean$tactical_iss_dyingForCan_bin[DataRaw$tactical_iss_dying_can %in% c("Strongly disagree", "Somewhat disagree")] <- 0
+DataClean$tactical_iss_dyingForCan_bin[DataRaw$tactical_iss_dying_can %in% c("Strongly agree", "Somewhat agree")] <- 1
+table(DataClean$tactical_iss_dyingForCan_bin)
