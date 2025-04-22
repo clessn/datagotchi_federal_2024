@@ -568,9 +568,9 @@ transport_by_party_long$party_name <- factor(transport_by_party_long$party_name,
 
 # Modify the transport_plot ggplot code for light theme
 transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviation, fill = transport_mode)) +
-
+  
   # Thicker baseline with proper positioning
-
+  
   # Replace geom_hline with geom_segment
   geom_segment(
     x = 0.5,                 # Starting x position (0.5 position on the x-axis)
@@ -592,7 +592,7 @@ transport_plot <- ggplot(transport_by_party_long, aes(x = party_name, y = deviat
   
   # Keep the bar plot
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-   
+  
   # Add coord_cartesian to prevent clipping
   coord_cartesian(clip = "off") +
   
