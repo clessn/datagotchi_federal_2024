@@ -1,23 +1,10 @@
-library(haven)
-
-
-df <- haven::read_sav("_SharedFolder_datagotchi_federal_2024/data/panel/panel_questionnaire_April 22, 2025_12.50.sav")
 
 # SES
-## Postal code
 
-table(DataRaw$postal_code)
-
-DataClean$ses_postalCode <- DataRaw$postal_code
-
-table(DataClean$ses_postalCode)
 ## Sex ----------------------------------------------------------------------
 
-attributes(df$ses_sex)
-table(df$ses_sex)
-
-
-#data clean
+attributes(DataRaw$ses_sex)
+table(DataRaw$ses_sex)
 
 DataClean$ses_gender <- NA
 DataClean$ses_gender[DataRaw$ses_sex == 2] <- "male"
@@ -110,19 +97,19 @@ attributes(DataRaw$ses_province)
 table(DataRaw$ses_province)
 
 DataClean$ses_province <- NA
-DataClean$ses_province[DataRaw$ses_province == 1] <- "Alberta"
-DataClean$ses_province[DataRaw$ses_province == 2] <- "British Columbia"
-DataClean$ses_province[DataRaw$ses_province == 3] <- "Manitoba"
-DataClean$ses_province[DataRaw$ses_province == 4] <- "New Brunswick"
-DataClean$ses_province[DataRaw$ses_province == 5] <- "Newfoundland and Labrador"
-DataClean$ses_province[DataRaw$ses_province == 6] <- "Nova Scotia"
-DataClean$ses_province[DataRaw$ses_province == 7] <- "Northwest Territories"
-DataClean$ses_province[DataRaw$ses_province == 8] <- "Nunavut"
-DataClean$ses_province[DataRaw$ses_province == 9] <- "Ontario"
-DataClean$ses_province[DataRaw$ses_province == 10] <- "Prince Edward Island"
-DataClean$ses_province[DataRaw$ses_province == 11] <- "Quebec"
-DataClean$ses_province[DataRaw$ses_province == 12] <- "Saskatchewan"
-DataClean$ses_province[DataRaw$ses_province == 13] <- "Yukon"
+DataClean$ses_province[DataRaw$ses_province == 1] <- "AB"
+DataClean$ses_province[DataRaw$ses_province == 2] <- "BC"
+DataClean$ses_province[DataRaw$ses_province == 3] <- "MB"
+DataClean$ses_province[DataRaw$ses_province == 4] <- "NB"
+DataClean$ses_province[DataRaw$ses_province == 5] <- "NL"
+DataClean$ses_province[DataRaw$ses_province == 6] <- "NS"
+DataClean$ses_province[DataRaw$ses_province == 7] <- "NT"
+DataClean$ses_province[DataRaw$ses_province == 8] <- "NU"
+DataClean$ses_province[DataRaw$ses_province == 9] <- "ON"
+DataClean$ses_province[DataRaw$ses_province == 10] <- "PE"
+DataClean$ses_province[DataRaw$ses_province == 11] <- "QC"
+DataClean$ses_province[DataRaw$ses_province == 12] <- "SK"
+DataClean$ses_province[DataRaw$ses_province == 13] <- "YT"
 table(DataClean$ses_province)
 
 # Définir la correspondance entre provinces et régions
@@ -161,11 +148,6 @@ DataClean$ses_language <- factor(DataClean$ses_language, levels = c("english",
                                                                       "french",
                                                                       "other"))
 table(DataClean$ses_language)
-
-
-## religion --------------------------------------------------------------------
-
-
 
 
 ## education ---------------------------------------------------------------
@@ -210,8 +192,8 @@ DataClean$ses_income[DataRaw$ses_income == 5] <- "30001_to_60000"
 DataClean$ses_income[DataRaw$ses_income == 6] <- "60001_to_90000"
 DataClean$ses_income[DataRaw$ses_income == 7] <- "90001_to_110000"
 DataClean$ses_income[DataRaw$ses_income == 8] <- "110001_to_150000"
-DataClean$ses_income[DataRaw$ses_income == 9] <- "150001_to_200000"
-DataClean$ses_income[DataRaw$ses_income == 10] <- "more_than_200000"
+DataClean$ses_income[DataRaw$ses_income == 9] <- "more_than_150000"
+DataClean$ses_income[DataRaw$ses_income == 10] <- "more_than_150000"
 
 # Convertir en facteur avec les niveaux spécifiés
 DataClean$ses_income <- factor(DataClean$ses_income, 
@@ -221,11 +203,11 @@ DataClean$ses_income <- factor(DataClean$ses_income,
                                           "60001_to_90000",
                                           "90001_to_110000",
                                           "110001_to_150000",
-                                          "150001_to_200000",
-                                          "more_than_200000"))
+                                          "more_than_150000"))
 
 # Vérifier le résultat
 table(DataClean$ses_income)
+
 
 ## Dwelling - type ------------------------------------------------------------
 
@@ -249,4 +231,27 @@ DataClean$ses_dwelling[DataRaw$ses_dwelling == 21] <- "mobile_house"
 DataClean$ses_dwelling[DataRaw$ses_dwelling == 22] <- "other"
 table(DataClean$ses_dwelling)
 
+# Create a ses_dwelling_cat variable which contains either
+# apartment_complex, duplex, high_rise_apartment, mobile_home, stand_alone_house, or townhouse
+
+DataClean$ses_dwelling_cat <- NA
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 1] <- "high_rise_apartment"  
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 13] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 14] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 15] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 16] <- "apartment_complex"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 17] <- "duplex"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 18] <- "loft"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 19] <- "townhouse"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 20] <- "stand_alone_house"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 21] <- "mobile_home"
+DataClean$ses_dwelling_cat[DataRaw$ses_dwelling == 22] <- "other"
+DataClean$ses_dwelling_cat <- factor(DataClean$ses_dwelling_cat, 
+                                      levels = c("apartment_complex",
+                                                 "duplex",
+                                                 "high_rise_apartment",
+                                                 "mobile_home",
+                                                 "stand_alone_house",
+                                                 "townhouse"))
+table(DataClean$ses_dwelling_cat)
 

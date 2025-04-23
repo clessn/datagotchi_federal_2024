@@ -1,6 +1,8 @@
 library(dplyr)
 library(tidyr)
 
+weights_test <- readRDS("_SharedFolder_datagotchi_federal_2024/data/weights/df_weights_clean.rds")
+
 # Function to add weights to a dataset
 add_weights_to_dataframe <- function(DataClean, df_weights_path = "_SharedFolder_datagotchi_federal_2024/data/weights/df_weights_clean.rds") {
   # Load weighting data
