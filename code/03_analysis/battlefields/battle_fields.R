@@ -297,44 +297,70 @@ generate_region_map <- function(data, region_code, coordinates, output_path, bat
   return(invisible(p))
 }
 
-# Fonction pour générer la carte du Canada complet (tous les partis)
+# Fonction modifiée pour générer la carte du Canada complet (tous les partis)
+# Revenir à une version avec marges normales pour éviter la déformation
 generate_canada_map <- function(data, output_path) {
-  # Utiliser le même moteur mais avec des coordonnées Canada-wide
-  # Créer les coordonnées du Canada
-  canada_coords <- c("xmin" = -141, "xmax" = -52, "ymin" = 41, "ymax" = 83)
+  p <- ggplot() +
+    geom_sf(data = data, 
+            aes(fill = party, alpha = alpha_category),
+            color = "#777777", size = 0.25) +
+    scale_fill_manual(
+      values = party_colors,
+      name = NULL,
+      na.value = "#777777"
+    ) +
+    scale_alpha_identity() +
+    theme_minimal() +  
+    theme(
+      plot.background = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA),
+      legend.position = "none",
+      # Conserver des marges normales pour éviter la déformation
+      plot.margin = margin(10, 10, 10, 10, "pt"),
+      panel.grid = element_blank(),
+      axis.text = element_blank(),
+      axis.title = element_blank()
+    )
   
-  # Créer un mapping spécifique pour le Canada complet
-  region_mapping[["canada_complete"]] <- list(
-    "ridings" = unique(data$id_riding),
-    "coordinates" = canada_coords
-  )
-  region_names_fr[["canada_complete"]] <- "Canada complet"
-  
-  # Utiliser notre fonction améliorée pour générer la carte
-  p <- generate_region_map(data, "canada_complete", canada_coords, output_path, battlefield_mode = FALSE)
+  # Enregistrer la carte avec des dimensions appropriées
+  ggsave(output_path, p, width = 12, height = 8, dpi = 300, bg = "white")
+  cat("Carte du Canada sauvegardée à:", output_path, "\n")
   
   return(p)
 }
 
-# Fonction pour générer la carte des battlefields du Canada
+# De même pour la carte des battlefields du Canada
 generate_battlefield_map <- function(data, output_path) {
-  # Utiliser le même moteur mais avec des coordonnées Canada-wide et en mode battlefield
-  # Créer les coordonnées du Canada
-  canada_coords <- c("xmin" = -141, "xmax" = -52, "ymin" = 41, "ymax" = 83)
+  p <- ggplot() +
+    geom_sf(data = data, 
+            aes(fill = battlefield_intensity),
+            color = "#333333", size = 0.25) +
+    scale_fill_gradientn(
+      colors = c("black", "white", "#FFCC00", "#FFA500"),
+      values = c(0, 0.4, 0.7, 1),
+      limits = c(0, 100),
+      name = NULL
+    ) +
+    theme_minimal() +
+    theme(
+      plot.background = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA),
+      legend.position = "none",
+      # Conserver des marges normales pour éviter la déformation
+      plot.margin = margin(10, 10, 10, 10, "pt"),
+      panel.grid = element_blank(),
+      axis.text = element_blank(),
+      axis.title = element_blank()
+    )
   
-  # Créer un mapping spécifique pour le Canada complet
-  region_mapping[["canada_battlefield"]] <- list(
-    "ridings" = unique(data$id_riding),
-    "coordinates" = canada_coords
-  )
-  region_names_fr[["canada_battlefield"]] <- "Canada - Champs de bataille"
-  
-  # Utiliser notre fonction améliorée pour générer la carte
-  p <- generate_region_map(data, "canada_battlefield", canada_coords, output_path, battlefield_mode = TRUE)
+  # Enregistrer la carte avec des dimensions appropriées
+  ggsave(output_path, p, width = 12, height = 8, dpi = 300, bg = "white")
+  cat("Carte des champs de bataille sauvegardée à:", output_path, "\n")
   
   return(p)
 }
 
+# Fonction principale modifiée pour utiliser les nouvelles fonctions
 # Fonction principale modifiée pour utiliser les nouvelles fonctions
 main <- function() {
   cat("Début du traitement des cartes électorales régionales pour les réseaux sociaux\n")
@@ -343,6 +369,10 @@ main <- function() {
   if (!exists("map_data") || !exists("df")) {
     stop("Les données 'map_data' ou 'df' ne sont pas disponibles. Assurez-vous qu'elles sont correctement chargées.")
   }
+  
+  # S'assurer que region_mapping et region_names_fr sont accessibles globalement
+  region_mapping <<- region_mapping
+  region_names_fr <<- region_names_fr
   
   tryCatch({
     # Préparer les données
