@@ -290,9 +290,48 @@ table(DataClean$tactical_proBorderControl_bin)
 # tactical_iss_reducedeficit ----------------------------------------------
 # Reducing the deficit should be a priority, even if it means cutting services
 
+# numeric
+
+table(DataRaw$tactical_iss_reducedeficit)
+DataClean$tactical_proReduceDeficit_numeric <- NA
+DataClean$tactical_proReduceDeficit_numeric[DataRaw$tactical_iss_reducedeficit == "Strongly disagree"] <- 0
+DataClean$tactical_proReduceDeficit_numeric[DataRaw$tactical_iss_reducedeficit == "Somewhat disagree"] <- 0.33
+DataClean$tactical_proReduceDeficit_numeric[DataRaw$tactical_iss_reducedeficit == "Somewhat agree"] <- 0.66
+DataClean$tactical_proReduceDeficit_numeric[DataRaw$tactical_iss_reducedeficit == "Strongly agree"] <- 1
+table(DataClean$tactical_proReduceDeficit_numeric)
+
+# bin
+
+DataClean$tactical_proReduceDeficit_bin <- NA
+DataClean$tactical_proReduceDeficit_bin[DataRaw$tactical_iss_reducedeficit %in% c("Strongly disagree", "Somewhat disagree")] <- 0
+DataClean$tactical_proReduceDeficit_bin[DataRaw$tactical_iss_reducedeficit %in% c("Somewhat agree", "Strongly agree")] <- 1
+table(DataClean$tactical_proReduceDeficit_bin)
 
 # tactical_issue_lgbtq ----------------------------------------------------
 # To what extent should the federal government defend the rights of LGBTQ+ people?
+
+# numeric
+
+table(DataRaw$tactical_issue_lgbtq)
+DataClean$tactical_proDefenseLGBTQRights_numeric <- NA
+DataClean$tactical_proDefenseLGBTQRights_numeric[DataRaw$tactical_issue_lgbtq == "Much less"] <- 0
+DataClean$tactical_proDefenseLGBTQRights_numeric[DataRaw$tactical_issue_lgbtq == "Slightly less"] <- 0.25
+DataClean$tactical_proDefenseLGBTQRights_numeric[DataRaw$tactical_issue_lgbtq == "No more, no less"] <- 0.5
+DataClean$tactical_proDefenseLGBTQRights_numeric[DataRaw$tactical_issue_lgbtq == "Slightly more"] <- 0.75
+DataClean$tactical_proDefenseLGBTQRights_numeric[DataRaw$tactical_issue_lgbtq == "Much more"] <- 1
+table(DataClean$tactical_proDefenseLGBTQRights_numeric)
+
+# bin
+
+DataClean$tactical_moreDefenseLGBTQRights_bin <- NA
+DataClean$tactical_moreDefenseLGBTQRights_bin[DataRaw$tactical_issue_lgbtq %in% c("Much less","Slightly less", "No more, no less")] <- 0
+DataClean$tactical_moreDefenseLGBTQRights_bin[DataRaw$tactical_issue_lgbtq %in% c("Slightly more", "Much more")] <- 1
+table(DataClean$tactical_moreDefenseLGBTQRights_bin)
+
+DataClean$tactical_lessDefenseLGBTQRights_bin <- NA
+DataClean$tactical_lessDefenseLGBTQRights_bin[DataRaw$tactical_issue_lgbtq %in% c("Much less", "Slightly less")] <- 1
+DataClean$tactical_lessDefenseLGBTQRights_bin[DataRaw$tactical_issue_lgbtq %in% c("Slightly more", "Much more", "No more, no less")] <- 0
+table(DataClean$tactical_lessDefenseLGBTQRights_bin)
 
 # tactical_iss_bilinguisme -----------------------------------------------
 
@@ -305,7 +344,8 @@ DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister 
 DataClean$tactical_iss_PMbilingue[DataRaw$tactical_iss_bilingual_prime_minister == "Extremely important"] <- 1
 table(DataClean$tactical_iss_PMbilingue)
 
-# tactical_iss_dying_can
+
+# tactical_iss_dying_can --------------------------------------------------
 
 table(DataRaw$tactical_iss_dying_can)
 DataClean$tactical_iss_dyingForCan_numeric <- NA

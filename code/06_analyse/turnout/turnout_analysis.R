@@ -2,7 +2,8 @@
 
 #load data
 
-data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_app_Ponderee_20250330.rds")
+data <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/datagotchi2025_canada_appPonderees_20250330.rds")
+
 
 subset <- data %>%
 select(dv_turnout_bin)
@@ -92,4 +93,18 @@ ggplot(moyennes, aes(x = difference, y = reorder(label, difference), fill = diff
     plot.title = element_text(hjust = 0.5, face = "bold"),
     legend.position = "none"
   )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
