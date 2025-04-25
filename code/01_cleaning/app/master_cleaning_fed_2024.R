@@ -4,11 +4,17 @@ source("code/01_cleaning/app/package_checks.R")
 ## Mettre le chemin vers le fichier de données ici
 ## Faire ainsi pour pouvoir nommer le fichier de sortie avec la date de fin
 
-raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250422.csv"
+raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250424.csv"
 DataRaw <- read.csv(raw_file_path)
 
 # Clean variables ---------------------------------------------------------
 DataClean <- data.frame(id = 1:nrow(DataRaw))
+
+## Date de complétion de l'app
+DataClean <- DataRaw %>%
+  mutate(
+    dateCompletion = as.Date(DataRaw$X_time),
+  )
 
 ## ses -------------------------------------------------------------------------
 source("code/01_cleaning/app/ses.R")
@@ -46,3 +52,4 @@ n_respondents <- nrow(DataClean)
 file_name <- paste0(end_date, "_n", n_respondents, "datagotchi2025_canada_app.rds")
 saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", file_name))
 saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", "df_latest.rds"))
+
