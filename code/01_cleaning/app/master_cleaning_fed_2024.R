@@ -4,7 +4,7 @@ source("code/01_cleaning/app/package_checks.R")
 ## Mettre le chemin vers le fichier de données ici
 ## Faire ainsi pour pouvoir nommer le fichier de sortie avec la date de fin
 
-raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250422.csv"
+raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250424.csv"
 DataRaw <- read.csv(raw_file_path)
 
 # Clean variables ---------------------------------------------------------
@@ -27,6 +27,12 @@ source("code/01_cleaning/app/music_and_movies.R")
 
 ## Riding attribution (optional, can be commented out if not needed) -------------
 source("code/01_cleaning/app/transform_rta_to_ridings.R")
+
+## Date de complétion de l'app
+DataClean <- DataRaw %>%
+  mutate(
+    dateCompletion = as.Date(DataRaw$X_time),
+  )
 
 ## pondération
 source("code/01_cleaning/app/ponderation.R")
