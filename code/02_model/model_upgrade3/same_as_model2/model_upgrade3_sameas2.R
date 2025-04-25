@@ -85,7 +85,7 @@ write_log("Chargement des données")
 
 # Chemins des fichiers
 fichier_pilot <- "_SharedFolder_datagotchi_federal_2024/data/pilote/dataClean/datagotchi2025_canada_pilot_20250322.rds"
-fichier_app <- "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/20250415_n81812datagotchi2025_canada_app.rds"
+fichier_app <- "_SharedFolder_datagotchi_federal_2024/data/app/dataClean/20250421_n89416datagotchi2025_canada_app.rds"
 fichier_rta <- "_SharedFolder_datagotchi_federal_2024/data/modele/rta_predictions_partis.csv"
 fichier_resultats <- "_SharedFolder_datagotchi_federal_2024/data/modele/_previous/resultsTrainV4_31janvier2025.rds"
 fichier_modele_prev <- "_SharedFolder_datagotchi_federal_2024/data/modele/_previous/finalmodel_withOutInteractions.rds"
@@ -134,7 +134,86 @@ for (data_obj in c("DataPilot", "DataApp", "rta_predictions", "results_train", "
 }
 
 # ------------------------------------------------------------------------
-# 2.1) Sélection des données récentes pour DataApp
+# 2.1) Récupération de la variable X_time à partir des données brutes
+# ------------------------------------------------------------------------
+write_log("Récupération de la variable X_time à partir des données brutes")
+
+# Définir le chemin vers le fichier de données brutes
+fichier_raw <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250421.csv"
+
+# Vérifier l'existence du fichier
+if (!file.exists(fichier_raw)) {
+  write_log(paste0("ERREUR: Le fichier de données brutes ", fichier_raw, " n'existe pas."))
+  stop(paste0("Fichier manquant: ", fichier_raw))
+}
+
+# Chargement des données brutes
+DataRaw <- safe_operation(
+  read.csv(fichier_raw, stringsAsFactors = FALSE),
+  paste0("Erreur lors du chargement des données brutes: ", fichier_raw)
+)
+
+# Vérifier que DataRaw a été correctement chargé
+if (is.null(DataRaw)) {
+  write_log("ERREUR: Les données brutes n'ont pas été chargées correctement")
+  stop("Échec du chargement des données brutes")
+}
+
+# Vérifier que X_time existe dans les données brutes
+if (!"X_time" %in% names(DataRaw)) {
+  write_log("ERREUR: La variable X_time n'existe pas dans les données brutes")
+  stop("Variable X_time manquante dans les données brutes")
+}
+
+# Alternative si les jointures ne fonctionnent pas
+if (nrow(DataApp) == nrow(DataRaw)) {
+  DataApp$X_time <- DataRaw$X_time
+  write_log("Variable X_time ajoutée directement (même nombre de lignes)")
+} else {
+  write_log(paste0("AVERTISSEMENT: Nombre de lignes différent - DataRaw: ", 
+                nrow(DataRaw), ", DataApp: ", nrow(DataApp)))
+  
+  # Si les lignes sont différentes, on peut essayer une approche alternative
+  write_log("Tentative d'extraction d'un sous-ensemble des données brutes correspondant aux données de l'application")
+  
+  # Si X_id existe dans DataRaw et id existe dans DataApp, essayer de faire correspondre
+  if ("X_id" %in% names(DataRaw) && "id" %in% names(DataApp)) {
+    write_log("Tentative de correspondance par identifiants")
+    
+    # Renommer X_id en id pour faciliter la correspondance
+    DataRaw_subset <- DataRaw
+    names(DataRaw_subset)[names(DataRaw_subset) == "X_id"] <- "id"
+    
+    # Créer un vecteur de correspondance
+    match_indices <- match(DataApp$id, DataRaw_subset$id)
+    
+    # Ajouter X_time en utilisant les indices correspondants
+    DataApp$X_time <- DataRaw_subset$X_time[match_indices]
+    
+    # Vérifier combien de valeurs manquantes ont été créées
+    na_count <- sum(is.na(DataApp$X_time))
+    write_log(paste0("Variable X_time ajoutée par correspondance d'identifiants. Valeurs manquantes: ", 
+                    na_count, " (", round(na_count/nrow(DataApp)*100, 2), "%)"))
+  } else {
+    write_log("ERREUR: Impossible de faire correspondre les identifiants entre les deux sources de données")
+    stop("Échec de l'ajout de X_time")
+  }
+}
+
+# Convertir X_time en format Date pour les manipulations ultérieures
+DataApp$X_time <- safe_operation(
+  as.Date(DataApp$X_time),
+  "Erreur lors de la conversion de X_time en Date"
+)
+
+# Afficher la distribution des dates
+date_distribution_raw <- table(DataApp$X_time)
+write_log("Distribution des dates dans l'ensemble des données App:")
+print(date_distribution_raw)
+capture.output(date_distribution_raw, file = log_file, append = TRUE)
+
+# ------------------------------------------------------------------------
+# 2.2) Sélection des données récentes pour DataApp
 # ------------------------------------------------------------------------
 write_log("Sélection des 30,000 répondants les plus récents")
 
