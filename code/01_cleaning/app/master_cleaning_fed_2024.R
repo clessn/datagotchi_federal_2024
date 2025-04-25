@@ -10,6 +10,12 @@ DataRaw <- read.csv(raw_file_path)
 # Clean variables ---------------------------------------------------------
 DataClean <- data.frame(id = 1:nrow(DataRaw))
 
+## Date de complétion de l'app
+DataClean <- DataRaw %>%
+  mutate(
+    dateCompletion = as.Date(DataRaw$X_time),
+  )
+
 ## ses -------------------------------------------------------------------------
 source("code/01_cleaning/app/ses.R")
 
@@ -27,12 +33,6 @@ source("code/01_cleaning/app/music_and_movies.R")
 
 ## Riding attribution (optional, can be commented out if not needed) -------------
 source("code/01_cleaning/app/transform_rta_to_ridings.R")
-
-## Date de complétion de l'app
-DataClean <- DataRaw %>%
-  mutate(
-    dateCompletion = as.Date(DataRaw$X_time),
-  )
 
 ## pondération
 source("code/01_cleaning/app/ponderation.R")
@@ -52,3 +52,4 @@ n_respondents <- nrow(DataClean)
 file_name <- paste0(end_date, "_n", n_respondents, "datagotchi2025_canada_app.rds")
 saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", file_name))
 saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", "df_latest.rds"))
+
