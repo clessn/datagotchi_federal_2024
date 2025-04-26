@@ -4,7 +4,7 @@ library(dplyr)
 ## Mettre le chemin vers le fichier de données ici
 ## Faire ainsi pour pouvoir nommer le fichier de sortie avec la date de fin
 
-raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/panel/panel_questionnaire_April 22, 2025_12.50.sav"
+raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/panel/panel_questionnaire_April 22, 2025_12.50.sav" 
 DataRaw <- haven::read_sav(raw_file_path)
 
 # Clean variables ---------------------------------------------------------
