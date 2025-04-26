@@ -11,10 +11,7 @@ DataRaw <- read.csv(raw_file_path)
 DataClean <- data.frame(id = 1:nrow(DataRaw))
 
 ## Date de complétion de l'app
-DataClean <- DataRaw %>%
-  mutate(
-    dateCompletion = as.Date(DataRaw$X_time),
-  )
+DataClean$dateCompletion <- as.Date(DataRaw$X_time)
 
 ## ses -------------------------------------------------------------------------
 source("code/01_cleaning/app/ses.R")
