@@ -4,7 +4,11 @@ source("code/01_cleaning/app/package_checks.R")
 ## Mettre le chemin vers le fichier de données ici
 ## Faire ainsi pour pouvoir nommer le fichier de sortie avec la date de fin
 
+<<<<<<< HEAD
 raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250428.csv"
+=======
+raw_file_path <- "_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250427.csv"
+>>>>>>> 42d8a08 (grind)
 DataRaw <- read.csv(raw_file_path)
 
 # Clean variables ---------------------------------------------------------
