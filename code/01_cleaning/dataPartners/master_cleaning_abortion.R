@@ -23,8 +23,8 @@ source("code/01_cleaning/app/lifestyle.R")
 ## DV --------------------------------------------------------------
 source("code/01_cleaning/app/dv.R")
 
-## tactical ----------------------------------------------------------------
-source("code/01_cleaning/app/tactical.R")
+## abortion ----------------------------------------------------------------
+source("code/01_cleaning/app/abortion.R")
 
 ## music ----------------------------------------------------------------
 source("code/01_cleaning/app/music_and_movies.R")
@@ -48,6 +48,6 @@ end_date <- gsub("\\.csv$", "", unlist(strsplit(date_range, "-"))[2])  # Gets "2
 n_respondents <- nrow(DataClean)
 
 file_name <- paste0(end_date, "_n", n_respondents, "datagotchi2025_canada_app.rds")
-saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", file_name))
-saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/", "df_latest.rds"))
+saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/appPartners/ChantalBayard_", file_name))
+saveRDS(DataClean, paste0("_SharedFolder_datagotchi_federal_2024/data/appPartners/ChantalBayard_", "df_latest.rds"))
 
