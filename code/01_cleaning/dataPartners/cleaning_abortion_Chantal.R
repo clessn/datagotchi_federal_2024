@@ -4,6 +4,9 @@ library(dplyr)
 DataRaw <- read.csv("_SharedFolder_datagotchi_federal_2024/data/app/dataRaw/ECAN25_Data_20250305-20250506.csv")
 DataRaw <- DataRaw %>% 
   select(-starts_with("tactical"), 
+         -X_valid, 
+         -X_errors,
+         -prevision,
          tactical_abort_restrict,
          tactical_abortion_threat) %>%
   filter(X_time <= as.Date("2025-04-28"))
@@ -11,7 +14,10 @@ DataRaw <- DataRaw %>%
 # Data Clean (only relevant variables) ------------------------------------
 DataClean <- readRDS("_SharedFolder_datagotchi_federal_2024/data/app/dataClean/df_latest.rds")
 DataClean <- DataClean %>% 
-  select(-starts_with("tactical"), 
+  select(-starts_with("tactical"),
+         -date,
+         -dv_peoplePred,
+         -dv_peoplePred_num,
          tactical_abortionThreatExists,
          tactical_restrictAbort) %>%
   filter(dateCompletion <= as.Date("2025-04-28"))
