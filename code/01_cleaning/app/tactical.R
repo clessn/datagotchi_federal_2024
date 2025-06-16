@@ -359,3 +359,77 @@ DataClean$tactical_iss_dyingForCan_bin <- NA
 DataClean$tactical_iss_dyingForCan_bin[DataRaw$tactical_iss_dying_can %in% c("Strongly disagree", "Somewhat disagree")] <- 0
 DataClean$tactical_iss_dyingForCan_bin[DataRaw$tactical_iss_dying_can %in% c("Strongly agree", "Somewhat agree")] <- 1
 table(DataClean$tactical_iss_dyingForCan_bin)
+
+
+#### Partners 
+# tactical_ restrictAbort -----------------------------------------------------------
+## Do you support the adoption of a legislation to restrict abortion rights in Canada?
+table(DataRaw$tactical_abort_restrict)
+DataClean$tactical_restrictAbort <- NA
+DataClean$tactical_restrictAbort[DataRaw$tactical_abort_restrict == "Strongly disagree"] <- 0
+DataClean$tactical_restrictAbort[DataRaw$tactical_abort_restrict == "Somewhat disagree"] <- 0.33
+DataClean$tactical_restrictAbort[DataRaw$tactical_abort_restrict == "Somewhat agree"] <- 0.66
+DataClean$tactical_restrictAbort[DataRaw$tactical_abort_restrict == "Strongly agree"] <- 1
+table(DataClean$tactical_restrictAbort)
+
+
+# tactical_abortionThreatExists -------------------------------------------
+## Access to abortion in Canada is under threat
+table(DataRaw$tactical_abortion_threat)
+DataClean$tactical_abortionThreatExists <- NA
+DataClean$tactical_abortionThreatExists[DataRaw$tactical_abortion_threat == "Strongly disagree"] <- 0
+DataClean$tactical_abortionThreatExists[DataRaw$tactical_abortion_threat == "Somewhat disagree"] <- 0.33
+DataClean$tactical_abortionThreatExists[DataRaw$tactical_abortion_threat == "Somewhat agree"] <- 0.66
+DataClean$tactical_abortionThreatExists[DataRaw$tactical_abortion_threat == "Strongly agree"] <- 1
+table(DataClean$tactical_abortionThreatExists)
+
+
+# tactical_home_situation -------------------------------------------------
+table(DataRaw$tactical_home_situation)
+DataClean$tactical_dwellingSituation <- NA
+DataClean$tactical_dwellingSituation[DataRaw$tactical_home_situation == "I do not pay for my home"] <- "doNotPay"
+DataClean$tactical_dwellingSituation[DataRaw$tactical_home_situation == "I own my home"] <- "landlord"
+DataClean$tactical_dwellingSituation[DataRaw$tactical_home_situation == "I rent my home"] <- "tenant"
+DataClean$tactical_dwellingSituation[DataRaw$tactical_home_situation == "Other"] <- "other"
+DataClean$tactical_dwellingSituation <- factor(DataClean$tactical_dwellingSituation,
+                                                        levels = c("doNotPay",
+                                                                   "landlord",
+                                                                   "tenant",
+                                                                   "other"),
+                                                        ordered = TRUE)
+table(DataClean$tactical_dwellingSituation)
+
+
+# tactical_immigration_type.immigrants.construction -----------------------
+# Do you agree or disagree that Canada should allow more immigrants who work in home construction to come and live here?
+
+table(DataRaw$tactical_immigration_type.immigrants.construction)
+DataClean$tactical_moreImmigrantsConstruction <- NA
+DataClean$tactical_moreImmigrantsConstruction[DataRaw$tactical_immigration_type.immigrants.construction == "Strongly disagree"] <- 0
+DataClean$tactical_moreImmigrantsConstruction[DataRaw$tactical_immigration_type.immigrants.construction == "Somewhat disagree"] <- 0.25
+DataClean$tactical_moreImmigrantsConstruction[DataRaw$tactical_immigration_type.immigrants.construction == "Neither agree nor disagree"] <- 0.5
+DataClean$tactical_moreImmigrantsConstruction[DataRaw$tactical_immigration_type.immigrants.construction == "Somewhat agree"] <- 0.75
+DataClean$tactical_moreImmigrantsConstruction[DataRaw$tactical_immigration_type.immigrants.construction == "Strongly agree"] <- 1
+table(DataClean$tactical_moreImmigrantsConstruction)
+
+# tactical_immigration_type.immigrants.agricultural -----------------------
+# Do you agree or disagree that Canada should allow more immigrants who work in agricultural farming to come and live here?
+table(DataRaw$tactical_immigration_type.immigrants.agricultural)
+DataClean$tactical_moreImmigrantsAgriculture <- NA
+DataClean$tactical_moreImmigrantsAgriculture[DataRaw$tactical_immigration_type.immigrants.agricultural == "Strongly disagree"] <- 0
+DataClean$tactical_moreImmigrantsAgriculture[DataRaw$tactical_immigration_type.immigrants.agricultural == "Somewhat disagree"] <- 0.25
+DataClean$tactical_moreImmigrantsAgriculture[DataRaw$tactical_immigration_type.immigrants.agricultural == "Neither agree nor disagree"] <- 0.5
+DataClean$tactical_moreImmigrantsAgriculture[DataRaw$tactical_immigration_type.immigrants.agricultural == "Somewhat agree"] <- 0.75
+DataClean$tactical_moreImmigrantsAgriculture[DataRaw$tactical_immigration_type.immigrants.agricultural == "Strongly agree"] <- 1
+table(DataClean$tactical_moreImmigrantsAgriculture)
+
+# tactical_immigration_type.immigrants.live -------------------------------
+# Do you agree or disagree that Canada should allow more immigrants to come and live here?
+table(DataRaw$tactical_immigration_type.immigrants.live)
+DataClean$tactical_moreImmigrantsLive <- NA
+DataClean$tactical_moreImmigrantsLive[DataRaw$tactical_immigration_type.immigrants.live == "Strongly disagree"] <- 0
+DataClean$tactical_moreImmigrantsLive[DataRaw$tactical_immigration_type.immigrants.live == "Somewhat disagree"] <- 0.25
+DataClean$tactical_moreImmigrantsLive[DataRaw$tactical_immigration_type.immigrants.live == "Neither agree nor disagree"] <- 0.5
+DataClean$tactical_moreImmigrantsLive[DataRaw$tactical_immigration_type.immigrants.live == "Somewhat agree"] <- 0.75
+DataClean$tactical_moreImmigrantsLive[DataRaw$tactical_immigration_type.immigrants.live == "Strongly agree"] <- 1
+table(DataClean$tactical_moreImmigrantsLive)
