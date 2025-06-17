@@ -7,6 +7,13 @@ DataRaw <- DataRaw %>%
          -X_valid, 
          -X_errors,
          -prevision,
+         -prediction,
+         -skin,
+         -hair_color,
+         -hair_style,
+         -beard_color,
+         -accessories,
+         -confirmation,
          tactical_abort_restrict,
          tactical_abortion_threat) %>%
   filter(X_time <= as.Date("2025-04-28"))
