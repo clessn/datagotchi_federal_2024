@@ -89,7 +89,7 @@ table(DataClean$ses_ageGroup5Years)
 
 
 DataClean$ses_age_4Cat <- NA
-DataClean$ses_age_4Cat[DataRaw$age < 25 & DataRaw$age > 18] <- "18_24"
+DataClean$ses_age_4Cat[DataRaw$age < 25 & DataRaw$age >= 18] <- "18_24"
 DataClean$ses_age_4Cat[DataRaw$age >= 25 & DataRaw$age < 45] <- "25_44"
 DataClean$ses_age_4Cat[DataRaw$age >= 45 & DataRaw$age < 65] <- "45_64"
 DataClean$ses_age_4Cat[DataRaw$age >= 65] <- "65+"
